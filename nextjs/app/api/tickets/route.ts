@@ -15,7 +15,9 @@ AND "Release Date[Date]" = EMPTY
 ORDER BY created ASC, updated DESC
 `;
 
-const STORAGE_FILE = path.join(process.cwd(), "../ticket_data.json");
+// Use Railway volume if available, otherwise fall back to local directory
+const STORAGE_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || process.cwd();
+const STORAGE_FILE = path.join(STORAGE_DIR, "ticket_data.json");
 
 interface TicketData {
   [key: string]: {

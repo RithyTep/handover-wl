@@ -2,7 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
-const STORAGE_FILE = path.join(process.cwd(), "../ticket_data.json");
+// Use Railway volume if available, otherwise fall back to local directory
+const STORAGE_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || process.cwd();
+const STORAGE_FILE = path.join(STORAGE_DIR, "ticket_data.json");
+
+// Ensure storage directory exists
+if (!fs.existsSync(STORAGE_DIR)) {
+  fs.mkdirSync(STORAGE_DIR, { recursive: true });
+}
 
 export async function POST(request: NextRequest) {
   try {
