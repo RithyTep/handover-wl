@@ -16,11 +16,12 @@ console.log('Database connection config:', {
 
 const pool = new Pool({
   connectionString: databaseUrl,
-  // Railway's postgres-ssl template requires SSL for both internal and external connections
-  ssl: databaseUrl ? { rejectUnauthorized: false } : false,
-  max: 20, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 10000, // Return an error after 10 seconds if connection could not be established
+  ssl: {
+    rejectUnauthorized: false, // Always true for Railway
+  },
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
 });
 
 // Handle pool errors
