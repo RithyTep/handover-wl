@@ -6,6 +6,14 @@ import { Pool } from "pg";
 const databaseUrl = process.env.DATABASE_URL || '';
 const isInternalConnection = databaseUrl.includes('railway.internal');
 
+// Log connection info (without password)
+const urlForLogging = databaseUrl.replace(/:[^:@]+@/, ':****@');
+console.log('Database connection config:', {
+  url: urlForLogging,
+  isInternal: isInternalConnection,
+  sslEnabled: !isInternalConnection && !!databaseUrl,
+});
+
 const pool = new Pool({
   connectionString: databaseUrl,
   ssl: !isInternalConnection && databaseUrl ? { rejectUnauthorized: false } : false,
