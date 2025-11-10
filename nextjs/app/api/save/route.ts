@@ -3,8 +3,8 @@ import fs from "fs";
 import path from "path";
 
 // Use Railway volume if available, otherwise fall back to local directory
-// Check for volume at /data (Railway default mount point)
-const STORAGE_DIR = fs.existsSync("/data") ? "/data" : process.cwd();
+// Railway mounts volumes at /mnt
+const STORAGE_DIR = fs.existsSync("/mnt") ? "/mnt" : process.cwd();
 const STORAGE_FILE = path.join(STORAGE_DIR, "ticket_data.json");
 
 console.log("Storage directory:", STORAGE_DIR);

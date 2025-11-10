@@ -24,13 +24,15 @@ export async function GET() {
     cwd: process.cwd(),
     rootDirectories: rootDirs,
     pathChecks,
-    currentStorageDir: fs.existsSync("/data") ? "/data" : process.cwd(),
+    currentStorageDir: fs.existsSync("/mnt") ? "/mnt" : process.cwd(),
     currentStorageFile: path.join(
-      fs.existsSync("/data") ? "/data" : process.cwd(),
+      fs.existsSync("/mnt") ? "/mnt" : process.cwd(),
       "ticket_data.json"
     ),
     dataPathExists: fs.existsSync("/data"),
     dataPathWritable: fs.existsSync("/data") ? checkWritable("/data") : false,
+    mntPathExists: fs.existsSync("/mnt"),
+    mntPathWritable: fs.existsSync("/mnt") ? checkWritable("/mnt") : false,
     envVars: {
       RAILWAY_VOLUME_MOUNT_PATH: process.env.RAILWAY_VOLUME_MOUNT_PATH || "not set",
       NODE_ENV: process.env.NODE_ENV,
