@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
-import fs from "fs";
-import path from "path";
+import { loadTicketData, initDatabase } from "@/lib/db";
 
 const JIRA_URL = process.env.JIRA_URL;
 const JIRA_EMAIL = process.env.JIRA_EMAIL;
@@ -15,47 +14,15 @@ AND "Release Date[Date]" = EMPTY
 ORDER BY created ASC, updated DESC
 `;
 
-// Use Railway volume if available, otherwise fall back to local directory
-// Railway mounts volumes at /mnt
-const STORAGE_DIR = fs.existsSync("/mnt") ? "/mnt" : process.cwd();
-const STORAGE_FILE = path.join(STORAGE_DIR, "ticket_data.json");
-
-interface TicketData {
-  [key: string]: {
-    status: string;
-    action: string;
-    updated_at?: string;
-  };
-}
-
-function loadTicketData(): TicketData {
-  try {
-    console.log("Checking for storage file:", STORAGE_FILE);
-    console.log("File exists:", fs.existsSync(STORAGE_FILE));
-
-    if (fs.existsSync(STORAGE_FILE)) {
-      const data = fs.readFileSync(STORAGE_FILE, "utf8");
-      const parsed = JSON.parse(data);
-      console.log("Loaded ticket data, keys:", Object.keys(parsed).length);
-      return parsed;
-    } else {
-      console.log("No storage file found, returning empty data");
-    }
-  } catch (error) {
-    console.error("Error loading ticket data:", error);
-  }
-  return {};
-}
-
 export async function GET() {
   try {
+    // Initialize database table if it doesn't exist
+    await initDatabase();
+
     const auth = Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString("base64");
 
     console.log("Fetching tickets from Jira...");
-    console.log("URL:", `${JIRA_URL}/rest/api/3/search/jql`);
-    console.log("JQL:", JQL_QUERY.trim());
 
-    // Use the new /rest/api/3/search/jql endpoint (POST method)
     const response = await axios.post(
       `${JIRA_URL}/rest/api/3/search/jql`,
       {
@@ -72,7 +39,9 @@ export async function GET() {
       }
     );
 
-    const savedData = loadTicketData();
+    // Load saved data from database
+    const savedData = await loadTicketData();
+
     const tickets = response.data.issues.map((issue: any) => {
       const ticketKey = issue.key;
       const ticketData = savedData[ticketKey];
@@ -86,16 +55,17 @@ export async function GET() {
       };
     });
 
+    console.log("Returned", tickets.length, "tickets with saved data from PostgreSQL");
+
     return NextResponse.json({
       success: true,
       tickets,
       total: tickets.length,
+      storage: "postgresql"
     });
   } catch (error: any) {
     console.error("Error fetching Jira tickets:");
     console.error("Status:", error.response?.status);
-    console.error("Status Text:", error.response?.statusText);
-    console.error("Data:", error.response?.data);
     console.error("Message:", error.message);
 
     return NextResponse.json(
