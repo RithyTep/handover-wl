@@ -16,7 +16,8 @@ ORDER BY created ASC, updated DESC
 `;
 
 // Use Railway volume if available, otherwise fall back to local directory
-const STORAGE_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || process.cwd();
+// Check for volume at /data (Railway default mount point)
+const STORAGE_DIR = fs.existsSync("/data") ? "/data" : process.cwd();
 const STORAGE_FILE = path.join(STORAGE_DIR, "ticket_data.json");
 
 interface TicketData {

@@ -3,13 +3,12 @@ import fs from "fs";
 import path from "path";
 
 // Use Railway volume if available, otherwise fall back to local directory
-const STORAGE_DIR = process.env.RAILWAY_VOLUME_MOUNT_PATH || process.cwd();
+// Check for volume at /data (Railway default mount point)
+const STORAGE_DIR = fs.existsSync("/data") ? "/data" : process.cwd();
 const STORAGE_FILE = path.join(STORAGE_DIR, "ticket_data.json");
 
-// Ensure storage directory exists
-if (!fs.existsSync(STORAGE_DIR)) {
-  fs.mkdirSync(STORAGE_DIR, { recursive: true });
-}
+console.log("Storage directory:", STORAGE_DIR);
+console.log("Storage file:", STORAGE_FILE);
 
 export async function POST(request: NextRequest) {
   try {
