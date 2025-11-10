@@ -1,13 +1,9 @@
 import { Pool } from "pg";
 
 // Use DATABASE_URL from Railway PostgreSQL
-// SSL configuration:
-// - Production (Railway internal): Check if using internal hostname
-// - Local development: Always use SSL when DATABASE_URL is set
-const isRailwayInternal = process.env.DATABASE_URL?.includes('railway.internal');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_URL && !isRailwayInternal ? { rejectUnauthorized: false } : false,
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });
 
 // Initialize database table
