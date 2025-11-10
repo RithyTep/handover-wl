@@ -11,12 +11,13 @@ const urlForLogging = databaseUrl.replace(/:[^:@]+@/, ':****@');
 console.log('Database connection config:', {
   url: urlForLogging,
   isInternal: isInternalConnection,
-  sslEnabled: !isInternalConnection && !!databaseUrl,
+  sslEnabled: !!databaseUrl,
 });
 
 const pool = new Pool({
   connectionString: databaseUrl,
-  ssl: !isInternalConnection && databaseUrl ? { rejectUnauthorized: false } : false,
+  // Railway's postgres-ssl template requires SSL for both internal and external connections
+  ssl: databaseUrl ? { rejectUnauthorized: false } : false,
   max: 20, // Maximum number of clients in the pool
   idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
   connectionTimeoutMillis: 10000, // Return an error after 10 seconds if connection could not be established
