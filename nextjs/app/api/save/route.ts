@@ -13,6 +13,7 @@ console.log("Storage file:", STORAGE_FILE);
 export async function POST(request: NextRequest) {
   try {
     const data = await request.json();
+    console.log("Received save request with keys:", Object.keys(data).length);
 
     // Convert from status-{key}/action-{key} format to the JSON structure
     const formattedData: Record<string, any> = {};
@@ -35,9 +36,15 @@ export async function POST(request: NextRequest) {
       }
     });
 
+    console.log("Writing to file:", STORAGE_FILE);
+    console.log("Formatted data tickets:", Object.keys(formattedData).length);
+
     fs.writeFileSync(STORAGE_FILE, JSON.stringify(formattedData, null, 2));
 
-    return NextResponse.json({ success: true });
+    console.log("File written successfully");
+    console.log("File exists after write:", fs.existsSync(STORAGE_FILE));
+
+    return NextResponse.json({ success: true, savedTo: STORAGE_FILE, ticketCount: Object.keys(formattedData).length });
   } catch (error: any) {
     console.error("Error saving data:", error);
     return NextResponse.json(
