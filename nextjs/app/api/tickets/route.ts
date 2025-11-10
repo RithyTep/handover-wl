@@ -30,9 +30,16 @@ interface TicketData {
 
 function loadTicketData(): TicketData {
   try {
+    console.log("Checking for storage file:", STORAGE_FILE);
+    console.log("File exists:", fs.existsSync(STORAGE_FILE));
+
     if (fs.existsSync(STORAGE_FILE)) {
       const data = fs.readFileSync(STORAGE_FILE, "utf8");
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      console.log("Loaded ticket data, keys:", Object.keys(parsed).length);
+      return parsed;
+    } else {
+      console.log("No storage file found, returning empty data");
     }
   } catch (error) {
     console.error("Error loading ticket data:", error);
