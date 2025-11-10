@@ -9,6 +9,14 @@ const isInternalConnection = databaseUrl.includes('railway.internal');
 const pool = new Pool({
   connectionString: databaseUrl,
   ssl: !isInternalConnection && databaseUrl ? { rejectUnauthorized: false } : false,
+  max: 20, // Maximum number of clients in the pool
+  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
+  connectionTimeoutMillis: 10000, // Return an error after 10 seconds if connection could not be established
+});
+
+// Handle pool errors
+pool.on('error', (err) => {
+  console.error('Unexpected error on idle client', err);
 });
 
 // Initialize database table
