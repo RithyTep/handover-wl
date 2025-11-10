@@ -1,34 +1,8 @@
 import { Pool } from "pg";
-
-// Use DATABASE_URL from Railway PostgreSQL
-// Railway internal connections (postgres.railway.internal) don't use SSL
-// Railway external connections (proxy) do use SSL
-const databaseUrl = process.env.DATABASE_URL || '';
-const isInternalConnection = databaseUrl.includes('railway.internal');
-
-// Log connection info (without password)
-const urlForLogging = databaseUrl.replace(/:[^:@]+@/, ':****@');
-console.log('Database connection config:', {
-  url: urlForLogging,
-  isInternal: isInternalConnection,
-  sslEnabled: !!databaseUrl,
-});
-
 const pool = new Pool({
-  connectionString: databaseUrl,
-  ssl: {
-    rejectUnauthorized: false, // Always true for Railway
-  },
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 10000,
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });
-
-// Handle pool errors
-pool.on('error', (err) => {
-  console.error('Unexpected error on idle client', err);
-});
-
 // Initialize database table
 export async function initDatabase() {
   const client = await pool.connect();
