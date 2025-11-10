@@ -13,6 +13,7 @@ import {
   AlertTriangle,
   Search,
   Filter,
+  Copy,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -148,6 +149,50 @@ export default function Dashboard() {
     }
   };
 
+  const handleCopyForSlack = async () => {
+    try {
+      const JIRA_URL = process.env.NEXT_PUBLIC_JIRA_URL || "https://jira.example.com";
+
+      // Get all ticket keys with filled data
+      const ticketKeys = Object.keys(ticketData)
+        .filter((key) => key.startsWith("status-"))
+        .map((key) => key.replace("status-", ""));
+
+      // Filter tickets that have status or action filled
+      const filledTickets = ticketKeys.filter((ticketKey) => {
+        const status = ticketData[`status-${ticketKey}`];
+        const action = ticketData[`action-${ticketKey}`];
+        return status !== "--" || action !== "--";
+      });
+
+      if (filledTickets.length === 0) {
+        toast.error("No tickets with filled status or action");
+        return;
+      }
+
+      // Build Slack message
+      let message = "";
+      filledTickets.forEach((ticketKey, index) => {
+        const status = ticketData[`status-${ticketKey}`] || "--";
+        const action = ticketData[`action-${ticketKey}`] || "--";
+        const ticket = tickets.find((t) => t.key === ticketKey);
+        const summary = ticket?.summary || "";
+
+        message += `--- Ticket ${index + 1} ---\n`;
+        message += `Ticket Link: ${ticket?.jiraUrl || ""} ${summary}\n`;
+        message += `Status: ${status}\n`;
+        message += `Action: ${action}\n`;
+        message += `\n`;
+      });
+
+      // Copy to clipboard
+      await navigator.clipboard.writeText(message.trim());
+      toast.success(`Copied ${filledTickets.length} ticket(s) to clipboard`);
+    } catch (error: any) {
+      toast.error("Error copying to clipboard: " + error.message);
+    }
+  };
+
   const stats = getStats();
 
   // Filter tickets based on search
@@ -182,6 +227,10 @@ export default function Dashboard() {
             </div>
             <div className="flex gap-2 sm:gap-3 flex-wrap">
               <ThemeToggle variant="header" />
+              <Button variant="secondary" onClick={handleCopyForSlack} className="h-10 px-4">
+                <Copy className="h-4 w-4 mr-2" />
+                <span>Copy</span>
+              </Button>
               <Button variant="outline" onClick={handleSave} className="h-10 px-4">
                 <Save className="h-4 w-4 mr-2" />
                 <span>Save</span>
@@ -257,9 +306,8 @@ export default function Dashboard() {
                         return (
                           <tr
                             key={ticket.key}
-                            className={`border-b border-border hover:bg-muted/30 transition-colors ${
-                              index % 2 === 0 ? "bg-card" : "bg-muted/10"
-                            }`}
+                            className={`border-b border-border hover:bg-muted/30 transition-colors ${index % 2 === 0 ? "bg-card" : "bg-muted/10"
+                              }`}
                           >
                             <td className="p-2 sm:p-4 text-muted-foreground font-medium text-xs sm:text-sm">
                               {index + 1}
