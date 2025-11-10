@@ -111,10 +111,10 @@ cd "/Users/rithytep/SIDE PROJECT/jira-slack-integration"
 railway link
 
 # Add environment variables
-railway variables set JIRA_URL="https://yourcompany.atlassian.net"
-railway variables set JIRA_EMAIL="your-email@company.com"
-railway variables set JIRA_API_TOKEN="your_api_token"
-railway variables set SLACK_WEBHOOK_URL="https://hooks.slack.com/services/..."
+railway variables set JIRA_URL="https://olympian.atlassian.net"
+railway variables set JIRA_EMAIL="rithy.tep@techbodia.com"
+railway variables set JIRA_API_TOKEN="ATATT3xFfGF0Fo3dUT4cT3ZOot1KKI3zAXPF-k-cC9K1_NsDQiW94rbR9LiXLLTxDabajTRrq6FevSphf8ckzt1fVAzr58fQNTTm4xMipaRE2deFjwpm80J5kwJeXo6tOHXcaknmha5Qusq4i9GJwggD2r7cai2G_cCBNJwtsM2U9IxO_TdwwT0=2C78D821"
+railway variables set SLACK_WEBHOOK_URL="https://hooks.slack.com/services/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"
 railway variables set PORT="3000"
 railway variables set NODE_ENV="production"
 
