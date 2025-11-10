@@ -1,21 +1,8 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "api/index.py",
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "api/index.py"
-    }
-  ],
-  "env": {
-    "JIRA_URL": "@jira_url",
-    "JIRA_EMAIL": "@jira_email",
-    "JIRA_API_TOKEN": "@jira_api_token",
-    "SLACK_WEBHOOK_URL": "@slack_webhook_url"
-  }
+  "buildCommand": "cd nextjs && npm run build",
+  "devCommand": "cd nextjs && npm run dev",
+  "installCommand": "cd nextjs && npm install",
+  "framework": "nextjs",
+  "outputDirectory": "nextjs/.next"
 }

@@ -1,1 +1,1 @@
-web: python handover_gui.py
+web: cd nextjs && npm start
