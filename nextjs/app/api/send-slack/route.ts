@@ -10,7 +10,7 @@ const STORAGE_FILE = path.join(process.cwd(), "ticket_data.json");
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { ticketData, ticketSummaries } = body;
+    const { ticketData, ticketDetails } = body;
 
     // Save the data first
     fs.writeFileSync(STORAGE_FILE, JSON.stringify(ticketData, null, 2));
@@ -32,11 +32,16 @@ export async function POST(request: NextRequest) {
     filledTickets.forEach((ticketKey, index) => {
       const status = ticketData[`status-${ticketKey}`] || "--";
       const action = ticketData[`action-${ticketKey}`] || "--";
-      const summary = ticketSummaries?.[ticketKey] || "";
+      const details = ticketDetails?.[ticketKey] || {};
+      const summary = details.summary || "";
+      const wlMainType = details.wlMainTicketType || "--";
+      const wlSubType = details.wlSubTicketType || "--";
       const ticketUrl = `${JIRA_URL}/browse/${ticketKey}`;
 
       message += `--- Ticket ${index + 1} ---\n`;
       message += `Ticket Link: <${ticketUrl}|${ticketKey}> ${summary}\n`;
+      message += `WL Main Type: ${wlMainType}\n`;
+      message += `WL Sub Type: ${wlSubType}\n`;
       message += `Status: ${status}\n`;
       message += `Action: ${action}\n`;
       message += `\n`;

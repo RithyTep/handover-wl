@@ -136,15 +136,24 @@ export default function Dashboard() {
     const loadingToast = toast.loading("Sending to Slack...");
 
     try {
-      // Build ticket summaries map
-      const ticketSummaries: Record<string, string> = {};
+      // Build ticket details map
+      const ticketDetails: Record<string, any> = {};
       tickets.forEach((ticket) => {
-        ticketSummaries[ticket.key] = ticket.summary;
+        ticketDetails[ticket.key] = {
+          summary: ticket.summary,
+          status: ticket.status,
+          assignee: ticket.assignee,
+          created: ticket.created,
+          dueDate: ticket.dueDate,
+          wlMainTicketType: ticket.wlMainTicketType,
+          wlSubTicketType: ticket.wlSubTicketType,
+          customerLevel: ticket.customerLevel,
+        };
       });
 
       await axios.post("/api/send-slack", {
         ticketData,
-        ticketSummaries,
+        ticketDetails,
       });
 
       toast.dismiss(loadingToast);
@@ -183,16 +192,21 @@ export default function Dashboard() {
         return;
       }
 
-      // Build Slack message
+      // Build Slack message matching table columns
       let message = "";
       filledTickets.forEach((ticketKey, index) => {
         const status = ticketData[`status-${ticketKey}`] || "--";
         const action = ticketData[`action-${ticketKey}`] || "--";
         const ticket = tickets.find((t) => t.key === ticketKey);
         const summary = ticket?.summary || "";
+        const wlMainType = ticket?.wlMainTicketType || "--";
+        const wlSubType = ticket?.wlSubTicketType || "--";
+        const ticketUrl = `${JIRA_URL}/browse/${ticketKey}`;
 
         message += `--- Ticket ${index + 1} ---\n`;
-        message += `Ticket Link: ${ticket?.jiraUrl || ""} ${summary}\n`;
+        message += `Ticket Link: <${ticketUrl}|${ticketKey}> ${summary}\n`;
+        message += `WL Main Type: ${wlMainType}\n`;
+        message += `WL Sub Type: ${wlSubType}\n`;
         message += `Status: ${status}\n`;
         message += `Action: ${action}\n`;
         message += `\n`;
@@ -229,7 +243,7 @@ export default function Dashboard() {
               Handover
             </h1>
             <p className="text-[10px] text-muted-foreground mt-0.5">
-              v3.0.0 By Rithy Tep
+              v3.1.0 By Rithy Tep
             </p>
           </div>
           <ThemeToggle variant="header" />
