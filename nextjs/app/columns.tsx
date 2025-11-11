@@ -200,10 +200,10 @@ export const createColumns = ({
     header: "Status",
     enableHiding: false,
     cell: ({ row }) => {
-      const statusValue = ticketData[`status-${row.original.key}`] || "--"
       return (
         <Input
-          value={statusValue === "--" ? "" : statusValue}
+          key={`status-${row.original.key}`}
+          defaultValue={row.original.savedStatus === "--" ? "" : row.original.savedStatus}
           onChange={(e) =>
             updateTicketData(`status-${row.original.key}`, e.target.value || "--")
           }
@@ -218,10 +218,10 @@ export const createColumns = ({
     header: "Action",
     enableHiding: false,
     cell: ({ row }) => {
-      const actionValue = ticketData[`action-${row.original.key}`] || "--"
       return (
         <Input
-          value={actionValue === "--" ? "" : actionValue}
+          key={`action-${row.original.key}`}
+          defaultValue={row.original.savedAction === "--" ? "" : row.original.savedAction}
           onChange={(e) =>
             updateTicketData(`action-${row.original.key}`, e.target.value || "--")
           }

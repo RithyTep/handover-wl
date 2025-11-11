@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
@@ -74,14 +74,14 @@ export default function Dashboard() {
     }
   };
 
-  const updateTicketData = (key: string, value: string) => {
-    setTicketData({ ...ticketData, [key]: value });
-  };
+  const updateTicketData = useCallback((key: string, value: string) => {
+    setTicketData((prev) => ({ ...prev, [key]: value }));
+  }, []);
 
   // Create columns with current ticketData and update function
   const columns = useMemo(
     () => createColumns({ ticketData, updateTicketData }),
-    [ticketData]
+    [updateTicketData]
   );
 
   const getStats = () => {
