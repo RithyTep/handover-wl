@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Light mode colors (default) */
+    /* Light mode - Green theme */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -27,26 +27,26 @@
   }
 
   .dark {
-    /* Dark mode colors */
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 4%;
+    /* Dark mode - Sooner-inspired deep black */
+    --background: 0 0% 4%; /* #0A0A0A - Deep black */
+    --foreground: 0 0% 100%; /* Pure white text */
+    --card: 0 0% 7%; /* #111111 - Slightly lighter black */
     --card-foreground: 0 0% 100%;
-    --primary: 142 71% 45%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 9%;
-    --secondary-foreground: 220 9% 82%;
-    --muted: 0 0% 4%;
-    --muted-foreground: 220 9% 65%;
-    --accent: 142 71% 45%;
-    --accent-foreground: 0 0% 100%;
+    --primary: 0 0% 100%; /* White primary */
+    --primary-foreground: 0 0% 4%;
+    --secondary: 0 0% 9%; /* #161616 - Dark gray */
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 7%; /* #111111 */
+    --muted-foreground: 0 0% 60%; /* Light gray for subtle text */
+    --accent: 0 0% 100%;
+    --accent-foreground: 0 0% 4%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 15%;
-    --input: 0 0% 9%;
-    --ring: 142 71% 45%;
-    --success: 142 71% 45%;
-    --success-foreground: 0 0% 100%;
+    --border: 0 0% 20%; /* Soft gray borders */
+    --input: 0 0% 9%; /* Dark input background */
+    --ring: 0 0% 100%; /* White focus ring */
+    --success: 0 0% 100%;
+    --success-foreground: 0 0% 4%;
   }
 
   * {

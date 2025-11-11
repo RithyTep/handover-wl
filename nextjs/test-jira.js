@@ -25,12 +25,11 @@ async function testJira() {
   try {
     const auth = Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64');
 
-    const response = await axios.get(`${JIRA_URL}/rest/api/3/search`, {
-      params: {
-        jql: JQL_QUERY.trim(),
-        maxResults: 5,
-        fields: 'key,summary,status',
-      },
+    const response = await axios.post(`${JIRA_URL}/rest/api/3/search/jql`, {
+      jql: JQL_QUERY.trim(),
+      maxResults: 1,
+      fields: ['*all'], // Get ALL fields including custom fields
+    }, {
       headers: {
         'Authorization': `Basic ${auth}`,
         'Accept': 'application/json',
@@ -42,8 +41,28 @@ async function testJira() {
     console.log('Total tickets found:', response.data.total);
     console.log('\nFirst few tickets:');
     response.data.issues.forEach((issue, idx) => {
-      console.log(`  ${idx + 1}. ${issue.key}: ${issue.fields.summary}`);
+      console.log(`\n  ${idx + 1}. ${issue.key}: ${issue.fields.summary}`);
+      console.log(`     Status: ${issue.fields.status.name}`);
+      console.log(`     Assignee: ${issue.fields.assignee?.displayName || 'Unassigned'}`);
+      console.log(`     Created: ${issue.fields.created}`);
+      console.log(`     Due Date: ${issue.fields.duedate || 'None'}`);
+      console.log(`     Issue Type: ${issue.fields.issuetype?.name || 'None'}`);
     });
+
+    // Show all available fields to help identify custom field IDs
+    console.log('\n\n--- All available fields for first ticket ---');
+    if (response.data.issues.length > 0) {
+      const firstIssue = response.data.issues[0];
+      console.log('Field names:');
+      Object.keys(firstIssue.fields).forEach(fieldKey => {
+        const value = firstIssue.fields[fieldKey];
+        if (value && typeof value === 'object' && !Array.isArray(value)) {
+          console.log(`  ${fieldKey}: ${JSON.stringify(value).substring(0, 100)}...`);
+        } else {
+          console.log(`  ${fieldKey}: ${value}`);
+        }
+      });
+    }
   } catch (error) {
     console.error('❌ ERROR!');
     console.error('Status:', error.response?.status);

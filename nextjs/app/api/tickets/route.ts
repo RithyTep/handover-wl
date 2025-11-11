@@ -28,7 +28,19 @@ export async function GET() {
       {
         jql: JQL_QUERY.trim(),
         maxResults: 100,
-        fields: ["key", "summary", "status"],
+        fields: [
+          "key",
+          "summary",
+          "status",
+          "assignee",
+          "created",
+          "duedate",
+          "issuetype",
+          // Custom fields
+          "customfield_10451", // WL Main Ticket Type
+          "customfield_10453", // WL Sub Ticket Type
+          "customfield_10400", // Customer Level
+        ],
       },
       {
         headers: {
@@ -49,6 +61,15 @@ export async function GET() {
         key: ticketKey,
         summary: issue.fields.summary,
         status: issue.fields.status.name,
+        assignee: issue.fields.assignee?.displayName || "Unassigned",
+        assigneeAvatar: issue.fields.assignee?.avatarUrls?.["48x48"] || null,
+        created: issue.fields.created,
+        dueDate: issue.fields.duedate || null,
+        issueType: issue.fields.issuetype?.name || "None",
+        // Custom fields
+        wlMainTicketType: issue.fields.customfield_10451?.value || "None",
+        wlSubTicketType: issue.fields.customfield_10453?.value || "None",
+        customerLevel: issue.fields.customfield_10400 || "None",
         jiraUrl: `${JIRA_URL}/browse/${ticketKey}`,
         savedStatus: ticketData?.status || "--",
         savedAction: ticketData?.action || "--",
