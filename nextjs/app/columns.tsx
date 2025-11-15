@@ -42,24 +42,22 @@ function TicketLink({
 function AIEnhancedInput({
   ticket,
   field,
+  ticketKey,
   defaultValue,
   placeholder,
   onChange,
+  onAIUpdate,
 }: {
   ticket: Ticket;
   field: "status" | "action";
+  ticketKey: string;
   defaultValue: string;
   placeholder: string;
   onChange: (value: string) => void;
+  onAIUpdate: (ticketKey: string, field: "status" | "action", value: string) => void;
 }) {
-  const [value, setValue] = useState(defaultValue === "--" ? "" : defaultValue);
   const [loading, setLoading] = useState(false);
-
-  // Sync local state when defaultValue changes (e.g., from AI fill all)
-  useEffect(() => {
-    const displayValue = defaultValue === "--" ? "" : defaultValue;
-    setValue(displayValue);
-  }, [defaultValue]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleAIFill = async () => {
     setLoading(true);
@@ -70,8 +68,12 @@ function AIEnhancedInput({
       const suggestion = response.data.suggestion;
 
       const newValue = field === "status" ? suggestion.status : suggestion.action;
-      setValue(newValue);
+
+      // Update the ticket data state
       onChange(newValue);
+
+      // Update the ticket state to force re-render with new defaultValue
+      onAIUpdate(ticket.key, field, newValue);
 
       toast.dismiss(loadingToast);
       toast.success(`AI suggestion applied!`);
@@ -86,11 +88,10 @@ function AIEnhancedInput({
   return (
     <div className="flex items-center gap-1 w-full">
       <Input
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-          onChange(e.target.value || "--");
-        }}
+        ref={inputRef}
+        key={ticketKey}
+        defaultValue={defaultValue === "--" ? "" : defaultValue}
+        onChange={(e) => onChange(e.target.value || "--")}
         placeholder={placeholder}
         className="h-8 flex-1 bg-transparent text-xs"
       />
@@ -128,11 +129,15 @@ export type Ticket = {
 interface ColumnsProps {
   ticketData: Record<string, string>
   updateTicketData: (key: string, value: string) => void
+  updateTicketState: (ticketKey: string, field: "status" | "action", value: string) => void
+  renderKey: number
 }
 
 export const createColumns = ({
   ticketData,
   updateTicketData,
+  updateTicketState,
+  renderKey,
 }: ColumnsProps): ColumnDef<Ticket>[] => [
   {
     accessorKey: "index",
@@ -311,14 +316,15 @@ export const createColumns = ({
     header: "Status",
     enableHiding: false,
     cell: ({ row }) => {
-      const currentValue = ticketData[`status-${row.original.key}`] || row.original.savedStatus;
       return (
         <AIEnhancedInput
           ticket={row.original}
           field="status"
-          defaultValue={currentValue}
+          ticketKey={`status-${row.original.key}-${renderKey}`}
+          defaultValue={row.original.savedStatus}
           placeholder="Enter status..."
           onChange={(value) => updateTicketData(`status-${row.original.key}`, value)}
+          onAIUpdate={updateTicketState}
         />
       )
     },
@@ -328,14 +334,15 @@ export const createColumns = ({
     header: "Action",
     enableHiding: false,
     cell: ({ row }) => {
-      const currentValue = ticketData[`action-${row.original.key}`] || row.original.savedAction;
       return (
         <AIEnhancedInput
           ticket={row.original}
           field="action"
-          defaultValue={currentValue}
+          ticketKey={`action-${row.original.key}-${renderKey}`}
+          defaultValue={row.original.savedAction}
           placeholder="Enter action..."
           onChange={(value) => updateTicketData(`action-${row.original.key}`, value)}
+          onAIUpdate={updateTicketState}
         />
       )
     },

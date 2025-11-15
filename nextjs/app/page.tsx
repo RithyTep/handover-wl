@@ -43,6 +43,7 @@ export default function Dashboard() {
   const [ticketData, setTicketData] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState("tickets");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [renderKey, setRenderKey] = useState(0);
 
   // Handle tab changes from sidebar
   const handleTabChange = (tab: string) => {
@@ -110,10 +111,27 @@ export default function Dashboard() {
     setTicketData((prev) => ({ ...prev, [key]: value }));
   }, []);
 
+  const updateTicketState = useCallback((ticketKey: string, field: "status" | "action", value: string) => {
+    setTickets(prevTickets =>
+      prevTickets.map(ticket => {
+        if (ticket.key === ticketKey) {
+          return {
+            ...ticket,
+            savedStatus: field === "status" ? value : ticket.savedStatus,
+            savedAction: field === "action" ? value : ticket.savedAction,
+          };
+        }
+        return ticket;
+      })
+    );
+  }, []);
+
   // Create columns with current ticketData and update function
+  // ticketData is passed but not in deps - the AIEnhancedInput component
+  // handles syncing via useEffect when not focused
   const columns = useMemo(
-    () => createColumns({ ticketData, updateTicketData }),
-    [ticketData, updateTicketData]
+    () => createColumns({ ticketData, updateTicketData, updateTicketState, renderKey }),
+    [updateTicketData, updateTicketState, renderKey]
   );
 
   const getStats = () => {
@@ -135,6 +153,19 @@ export default function Dashboard() {
       newData[`action-${ticket.key}`] = quickFillAction;
     });
     setTicketData(newData);
+
+    // Update tickets state to trigger re-render with new defaultValues
+    setTickets(prevTickets =>
+      prevTickets.map(ticket => ({
+        ...ticket,
+        savedStatus: quickFillStatus,
+        savedAction: quickFillAction,
+      }))
+    );
+
+    // Force re-render of inputs
+    setRenderKey(prev => prev + 1);
+
     setQuickFillDialog(false);
     celebrate(); // 🎉
     toast.success("All tickets have been filled");
@@ -146,6 +177,19 @@ export default function Dashboard() {
       newData[key] = "--";
     });
     setTicketData(newData);
+
+    // Update tickets state to trigger re-render with cleared defaultValues
+    setTickets(prevTickets =>
+      prevTickets.map(ticket => ({
+        ...ticket,
+        savedStatus: "--",
+        savedAction: "--",
+      }))
+    );
+
+    // Force re-render of inputs
+    setRenderKey(prev => prev + 1);
+
     setClearDialog(false);
     toast.success("All fields have been cleared");
   };
@@ -273,6 +317,7 @@ export default function Dashboard() {
       // Process tickets in parallel (but limit concurrency to avoid rate limits)
       const batchSize = 3;
       const newData = { ...ticketData };
+      const updates: { ticketKey: string; status?: string; action?: string }[] = [];
       let successCount = 0;
       let errorCount = 0;
 
@@ -300,13 +345,21 @@ export default function Dashboard() {
             const currentStatus = ticketData[`status-${ticket.key}`];
             const currentAction = ticketData[`action-${ticket.key}`];
 
+            const update: { ticketKey: string; status?: string; action?: string } = {
+              ticketKey: ticket.key
+            };
+
             // Only update if currently empty
             if (!currentStatus || currentStatus === "--") {
               newData[`status-${ticket.key}`] = suggestion.status;
+              update.status = suggestion.status;
             }
             if (!currentAction || currentAction === "--") {
               newData[`action-${ticket.key}`] = suggestion.action;
+              update.action = suggestion.action;
             }
+
+            updates.push(update);
             successCount++;
           } else {
             console.error("Failed to fill ticket:", result.reason);
@@ -315,8 +368,26 @@ export default function Dashboard() {
         });
       }
 
-      // Update state with all new data
+      // Update ticket data state
       setTicketData(newData);
+
+      // Update tickets state to trigger re-render with new defaultValues
+      setTickets(prevTickets =>
+        prevTickets.map(ticket => {
+          const update = updates.find(u => u.ticketKey === ticket.key);
+          if (update) {
+            return {
+              ...ticket,
+              savedStatus: update.status || ticket.savedStatus,
+              savedAction: update.action || ticket.savedAction,
+            };
+          }
+          return ticket;
+        })
+      );
+
+      // Force re-render of inputs
+      setRenderKey(prev => prev + 1);
 
       toast.dismiss(loadingToast);
 
