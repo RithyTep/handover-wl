@@ -9,10 +9,10 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { ChevronDown, ChevronRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -102,7 +102,6 @@ export function TicketsTable<TData, TValue>({
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
@@ -113,11 +112,6 @@ export function TicketsTable<TData, TValue>({
       columnFilters,
       columnVisibility,
       rowSelection,
-    },
-    initialState: {
-      pagination: {
-        pageSize: 100,
-      },
     },
   })
 
@@ -145,9 +139,10 @@ export function TicketsTable<TData, TValue>({
           <Button
             variant="outline"
             onClick={toggleDetails}
-            className="h-9 px-3 text-xs border-border/30 hover:bg-muted/50 whitespace-nowrap"
+            className="h-9 w-9 p-0 border-border/30 hover:bg-muted/50"
+            title={showDetails ? "Hide Details" : "Show Details"}
           >
-            {showDetails ? "Hide Details" : "Show Details"}
+            {showDetails ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </Button>
         </div>
       </div>
@@ -219,30 +214,10 @@ export function TicketsTable<TData, TValue>({
         </div>
       </div>
 
-      {/* Pagination */}
+      {/* Ticket Count */}
       <div className="flex-shrink-0 flex items-center justify-between pt-1">
         <div className="text-[11px] text-muted-foreground">
           <span className="text-primary font-semibold">{table.getFilteredRowModel().rows.length}</span> tickets
-        </div>
-        <div className="flex gap-1.5">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="h-8 px-3 text-[11px] border-border/30 hover:bg-muted/50 disabled:opacity-30"
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="h-8 px-3 text-[11px] border-border/30 hover:bg-muted/50 disabled:opacity-30"
-          >
-            Next
-          </Button>
         </div>
       </div>
     </div>

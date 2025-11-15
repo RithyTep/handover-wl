@@ -12,6 +12,7 @@ import {
   RefreshCw,
   AlertTriangle,
   Copy,
+  Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +28,7 @@ import { TicketCard } from "@/components/ticket-card";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, Ticket } from "./columns";
+import { SchedulerDialog } from "@/components/scheduler-dialog";
 
 export default function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -40,6 +42,7 @@ export default function Dashboard() {
 
   const [clearDialog, setClearDialog] = useState(false);
   const [sendSlackDialog, setSendSlackDialog] = useState(false);
+  const [schedulerDialog, setSchedulerDialog] = useState(false);
 
   // 🎉 Confetti celebration helper
   const celebrate = () => {
@@ -204,7 +207,7 @@ export default function Dashboard() {
         const ticketUrl = `${JIRA_URL}/browse/${ticketKey}`;
 
         message += `--- Ticket ${index + 1} ---\n`;
-        message += `Ticket Link: <${ticketUrl}|${ticketKey}> ${summary}\n`;
+        message += `Ticket Link: <${ticketUrl}> ${summary}\n`;
         message += `WL Main Type: ${wlMainType}\n`;
         message += `WL Sub Type: ${wlSubType}\n`;
         message += `Status: ${status}\n`;
@@ -246,7 +249,17 @@ export default function Dashboard() {
               v3.1.0 By Rithy Tep
             </p>
           </div>
-          <ThemeToggle variant="header" />
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-9 sm:h-10 px-3 sm:px-4"
+              onClick={() => setSchedulerDialog(true)}
+            >
+              <Clock className="w-4 h-4" />
+            </Button>
+            <ThemeToggle variant="header" />
+          </div>
         </div>
 
         {/* Tickets Table - Scrollable */}
@@ -394,6 +407,9 @@ export default function Dashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Scheduler Dialog */}
+      <SchedulerDialog open={schedulerDialog} onOpenChange={setSchedulerDialog} />
     </div>
   );
 }
