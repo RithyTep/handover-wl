@@ -173,7 +173,7 @@ export default function Dashboard() {
 
   const handleCopyForSlack = async () => {
     try {
-      const JIRA_URL = process.env.NEXT_PUBLIC_JIRA_URL || "https://jira.example.com";
+      const JIRA_URL = process.env.NEXT_PUBLIC_JIRA_URL || "https://olympian.atlassian.net";
 
       // Get all ticket keys with filled data
       const ticketKeys = Object.keys(ticketData)
