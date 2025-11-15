@@ -15,7 +15,24 @@ export async function initDatabase() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       )
     `);
-    console.log("Database table initialized");
+
+    // Create settings table for scheduler and other app settings
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS app_settings (
+        key VARCHAR(100) PRIMARY KEY,
+        value TEXT NOT NULL,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Initialize scheduler enabled setting if not exists
+    await client.query(`
+      INSERT INTO app_settings (key, value, updated_at)
+      VALUES ('scheduler_enabled', 'true', CURRENT_TIMESTAMP)
+      ON CONFLICT (key) DO NOTHING
+    `);
+
+    console.log("Database tables initialized");
   } catch (error) {
     console.error("Error initializing database:", error);
   } finally {
@@ -81,6 +98,52 @@ export async function loadTicketData(): Promise<Record<string, { status: string;
   } catch (error) {
     console.error("Error loading ticket data:", error);
     return {};
+  } finally {
+    client.release();
+  }
+}
+
+// Get scheduler enabled state from database
+export async function getSchedulerEnabled(): Promise<boolean> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT value FROM app_settings WHERE key = 'scheduler_enabled'"
+    );
+
+    if (result.rows.length === 0) {
+      // Default to true if not set
+      return true;
+    }
+
+    return result.rows[0].value === 'true';
+  } catch (error) {
+    console.error("Error getting scheduler state:", error);
+    return true; // Default to true on error
+  } finally {
+    client.release();
+  }
+}
+
+// Set scheduler enabled state in database
+export async function setSchedulerEnabled(enabled: boolean): Promise<void> {
+  const client = await pool.connect();
+  try {
+    await client.query(
+      `
+      INSERT INTO app_settings (key, value, updated_at)
+      VALUES ('scheduler_enabled', $1, CURRENT_TIMESTAMP)
+      ON CONFLICT (key)
+      DO UPDATE SET
+        value = EXCLUDED.value,
+        updated_at = CURRENT_TIMESTAMP
+      `,
+      [enabled.toString()]
+    );
+    console.log("Scheduler state updated to:", enabled);
+  } catch (error) {
+    console.error("Error setting scheduler state:", error);
+    throw error;
   } finally {
     client.release();
   }

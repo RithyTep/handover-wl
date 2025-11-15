@@ -1,5 +1,6 @@
 import * as cron from "node-cron";
 import axios from "axios";
+import { getSchedulerEnabled } from "./db";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 const SCHEDULE_ENABLED = process.env.SCHEDULE_ENABLED === "true";
@@ -23,6 +24,14 @@ export function initScheduler() {
     "0 17 * * *", // At 17:00 (5:00 PM) every day
     async () => {
       console.log("[Scheduler] Running 5:00 PM GMT+7 scheduled task...");
+
+      // Check if scheduler is enabled in database
+      const isEnabled = await getSchedulerEnabled();
+      if (!isEnabled) {
+        console.log("[Scheduler] Task skipped - scheduler is disabled in database");
+        return;
+      }
+
       await sendScheduledSlackMessage("5:00 PM");
     },
     {
@@ -35,6 +44,14 @@ export function initScheduler() {
     "30 23 * * *", // At 23:30 (11:30 PM) every day
     async () => {
       console.log("[Scheduler] Running 11:30 PM GMT+7 scheduled task...");
+
+      // Check if scheduler is enabled in database
+      const isEnabled = await getSchedulerEnabled();
+      if (!isEnabled) {
+        console.log("[Scheduler] Task skipped - scheduler is disabled in database");
+        return;
+      }
+
       await sendScheduledSlackMessage("11:30 PM");
     },
     {
@@ -47,6 +64,7 @@ export function initScheduler() {
   console.log("[Scheduler] Scheduled tasks initialized:");
   console.log("  - Daily at 5:00 PM GMT+7 (Asia/Bangkok)");
   console.log("  - Daily at 11:30 PM GMT+7 (Asia/Bangkok)");
+  console.log("  - Tasks will check database state before running");
 }
 
 async function sendScheduledSlackMessage(timeLabel: string) {

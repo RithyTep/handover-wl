@@ -22,28 +22,51 @@ interface SchedulerDialogProps {
 export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
   const [triggering, setTriggering] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (open) {
-      const enabled = localStorage.getItem("scheduleEnabled");
-      setScheduleEnabled(enabled === "true");
+      fetchSchedulerState();
     }
   }, [open]);
 
-  const handleToggleSchedule = () => {
-    const newValue = !scheduleEnabled;
-    setScheduleEnabled(newValue);
-    localStorage.setItem("scheduleEnabled", newValue.toString());
+  const fetchSchedulerState = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get("/api/scheduler-state");
+      setScheduleEnabled(response.data.enabled);
+    } catch (error: any) {
+      console.error("Error fetching scheduler state:", error);
+      toast.error("Failed to load scheduler state");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    if (newValue) {
-      confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
-      toast.success("Scheduler enabled! Reports will be sent at 5:00 PM and 11:30 PM GMT+7");
-    } else {
-      toast.success("Scheduler disabled");
+  const handleToggleSchedule = async () => {
+    const newValue = !scheduleEnabled;
+    const loadingToast = toast.loading(newValue ? "Enabling scheduler..." : "Disabling scheduler...");
+
+    try {
+      await axios.post("/api/scheduler-state", { enabled: newValue });
+      setScheduleEnabled(newValue);
+
+      toast.dismiss(loadingToast);
+
+      if (newValue) {
+        confetti({
+          particleCount: 100,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+        toast.success("Scheduler enabled! Reports will be sent at 5:00 PM and 11:30 PM GMT+7");
+      } else {
+        toast.success("Scheduler disabled");
+      }
+    } catch (error: any) {
+      toast.dismiss(loadingToast);
+      toast.error("Failed to update scheduler: " + error.message);
+      console.error("Error updating scheduler state:", error);
     }
   };
 
@@ -85,7 +108,9 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
           <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
             <div className="flex items-center gap-2">
               <Badge variant={scheduleEnabled ? "default" : "secondary"} className="text-xs">
-                {scheduleEnabled ? (
+                {loading ? (
+                  <>Loading...</>
+                ) : scheduleEnabled ? (
                   <>
                     <CheckCircle2 className="w-3 h-3 mr-1" />
                     On
@@ -104,6 +129,7 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
               variant={scheduleEnabled ? "destructive" : "default"}
               size="sm"
               className="h-8"
+              disabled={loading}
             >
               {scheduleEnabled ? "Disable" : "Enable"}
             </Button>
