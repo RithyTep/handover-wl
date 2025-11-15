@@ -246,7 +246,7 @@ export default function Dashboard() {
               Handover
             </h1>
             <p className="text-[10px] text-muted-foreground mt-0.5">
-              v3.1.0 By Rithy Tep
+              v3.2.0 By Rithy Tep
             </p>
           </div>
           <div className="flex items-center gap-2">
