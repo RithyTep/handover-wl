@@ -4,6 +4,37 @@ import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { useRef } from "react"
+
+// Ticket link component
+function TicketLink({
+  ticket,
+  onHover,
+}: {
+  ticket: Ticket;
+  onHover: (ticket: Ticket, element: HTMLElement) => void;
+}) {
+  const linkRef = useRef<HTMLAnchorElement>(null);
+
+  const handleMouseEnter = () => {
+    if (linkRef.current) {
+      onHover(ticket, linkRef.current);
+    }
+  };
+
+  return (
+    <a
+      ref={linkRef}
+      href={ticket.jiraUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-foreground hover:text-primary underline-offset-2 hover:underline font-medium text-xs whitespace-nowrap transition-colors"
+      onMouseEnter={handleMouseEnter}
+    >
+      {ticket.key}
+    </a>
+  );
+}
 
 export type Ticket = {
   key: string
@@ -36,7 +67,7 @@ export const createColumns = ({
     header: "#",
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="text-primary/60 font-semibold text-[11px]">
+      <div className="text-muted-foreground font-medium text-xs">
         {row.index + 1}
       </div>
     ),
@@ -49,30 +80,30 @@ export const createColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-[11px] font-medium"
+          className="h-auto p-0 hover:bg-transparent text-xs font-medium"
         >
           Ticket
-          <ArrowUpDown className="ml-1 h-3 w-3" />
+          <ArrowUpDown className="ml-1.5 h-3 w-3" />
         </Button>
       )
     },
-    cell: ({ row }) => (
-      <a
-        href={row.original.jiraUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-primary hover:underline font-medium text-[11px] whitespace-nowrap"
-      >
-        {row.getValue("key")}
-      </a>
-    ),
+    cell: ({ row, table }) => {
+      const meta = table.options.meta as any;
+
+      return (
+        <TicketLink
+          ticket={row.original}
+          onHover={(ticket, element) => meta?.onTicketHover?.(ticket, element)}
+        />
+      );
+    },
   },
   {
     accessorKey: "summary",
     header: "Summary",
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="text-[11px] text-foreground truncate">
+      <div className="text-xs text-foreground truncate max-w-md">
         {row.getValue("summary")}
       </div>
     ),
@@ -81,7 +112,7 @@ export const createColumns = ({
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="text-[11px] text-foreground whitespace-nowrap">
+      <div className="text-xs text-muted-foreground whitespace-nowrap">
         {row.getValue("status")}
       </div>
     ),
@@ -94,19 +125,19 @@ export const createColumns = ({
       const assigneeAvatar = row.original.assigneeAvatar
 
       return (
-        <div className="flex items-center gap-1.5 whitespace-nowrap">
+        <div className="flex items-center gap-2 whitespace-nowrap">
           {assigneeAvatar ? (
             <img
               src={assigneeAvatar}
               alt={assignee}
-              className="w-5 h-5 rounded-full"
+              className="w-5 h-5 rounded-full ring-1 ring-border"
             />
           ) : (
-            <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[8px] font-medium">
+            <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[9px] font-medium text-muted-foreground">
               {assignee === "Unassigned" ? "?" : assignee.charAt(0).toUpperCase()}
             </div>
           )}
-          <span className="text-[11px] text-foreground">{assignee}</span>
+          <span className="text-xs text-foreground">{assignee}</span>
         </div>
       )
     },
@@ -128,7 +159,7 @@ export const createColumns = ({
     cell: ({ row }) => {
       const date = new Date(row.getValue("created"))
       return (
-        <div className="text-[11px] text-foreground whitespace-nowrap">
+        <div className="text-xs text-muted-foreground whitespace-nowrap">
           {date.toLocaleDateString()}
         </div>
       )
@@ -151,8 +182,8 @@ export const createColumns = ({
     cell: ({ row }) => {
       const dueDate = row.getValue("dueDate") as string | null
       return (
-        <div className="text-[11px] text-foreground whitespace-nowrap">
-          {dueDate ? new Date(dueDate).toLocaleDateString() : "None"}
+        <div className="text-xs text-muted-foreground whitespace-nowrap">
+          {dueDate ? new Date(dueDate).toLocaleDateString() : "—"}
         </div>
       )
     },
@@ -161,7 +192,7 @@ export const createColumns = ({
     accessorKey: "wlMainTicketType",
     header: () => <div className="whitespace-nowrap">WL Main Type</div>,
     cell: ({ row }) => (
-      <div className="text-[11px] text-foreground whitespace-nowrap">
+      <div className="text-xs text-muted-foreground whitespace-nowrap">
         {row.getValue("wlMainTicketType")}
       </div>
     ),
@@ -170,7 +201,7 @@ export const createColumns = ({
     accessorKey: "wlSubTicketType",
     header: () => <div className="whitespace-nowrap">WL Sub Type</div>,
     cell: ({ row }) => (
-      <div className="text-[11px] text-foreground whitespace-nowrap">
+      <div className="text-xs text-muted-foreground whitespace-nowrap">
         {row.getValue("wlSubTicketType")}
       </div>
     ),
@@ -182,15 +213,15 @@ export const createColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-[11px] font-medium"
+          className="h-auto p-0 hover:bg-transparent text-xs font-medium"
         >
           Customer Level
-          <ArrowUpDown className="ml-1 h-3 w-3" />
+          <ArrowUpDown className="ml-1.5 h-3 w-3" />
         </Button>
       )
     },
     cell: ({ row }) => (
-      <div className="text-[11px] text-foreground whitespace-nowrap">
+      <div className="text-xs text-muted-foreground whitespace-nowrap">
         {row.getValue("customerLevel")}
       </div>
     ),
@@ -207,8 +238,8 @@ export const createColumns = ({
           onChange={(e) =>
             updateTicketData(`status-${row.original.key}`, e.target.value || "--")
           }
-          placeholder="Status"
-          className="h-8 w-full min-w-[150px] bg-transparent border-border/20 focus:border-border/50 text-[11px] px-3"
+          placeholder="Enter status..."
+          className="h-8 w-full min-w-[180px] bg-transparent text-xs"
         />
       )
     },
@@ -225,8 +256,8 @@ export const createColumns = ({
           onChange={(e) =>
             updateTicketData(`action-${row.original.key}`, e.target.value || "--")
           }
-          placeholder="Action"
-          className="h-8 w-full min-w-[150px] bg-transparent border-border/20 focus:border-border/50 text-[11px] px-3"
+          placeholder="Enter action..."
+          className="h-8 w-full min-w-[200px] bg-transparent text-xs"
         />
       )
     },

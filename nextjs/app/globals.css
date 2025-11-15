@@ -2,51 +2,99 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @layer base {
   :root {
-    /* Light mode - Green theme */
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Linear-inspired Light mode - Neutral gray scale */
+    --background: 0 0% 100%; /* Pure white */
+    --foreground: 0 0% 9%; /* Almost black text */
+
+    /* Surfaces with subtle elevation */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --primary: 142.1 76.2% 36.3%;
-    --primary-foreground: 355.7 100% 97.3%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 142.1 76.2% 36.3%;
-    --success: 142.1 76.2% 36.3%;
-    --success-foreground: 355.7 100% 97.3%;
+    --card-foreground: 0 0% 9%;
+    --elevated: 0 0% 98%; /* Slightly elevated surfaces */
+
+    /* Primary - Dark neutral */
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary - Ghost/subtle */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 9%;
+
+    /* Muted - Subtle backgrounds */
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 45%; /* Mid gray text */
+
+    /* Accent - Same as primary for minimal look */
+    --accent: 0 0% 96%;
+    --accent-foreground: 0 0% 9%;
+
+    /* Destructive - Subtle red */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    /* Borders - Light gray with 1px solid */
+    --border: 0 0% 89%; /* #E3E3E3 */
+    --border-subtle: 0 0% 93%; /* Even lighter borders */
+    --input: 0 0% 89%;
+
+    /* Focus ring */
+    --ring: 0 0% 9%;
+
+    /* Success - Dark neutral (Linear-style) */
+    --success: 0 0% 9%;
+    --success-foreground: 0 0% 100%;
+
+    /* Hover states */
+    --hover: 0 0% 97%;
   }
 
   .dark {
-    /* Dark mode - Sooner-inspired deep black */
-    --background: 0 0% 4%; /* #0A0A0A - Deep black */
-    --foreground: 0 0% 100%; /* Pure white text */
-    --card: 0 0% 7%; /* #111111 - Slightly lighter black */
-    --card-foreground: 0 0% 100%;
-    --primary: 0 0% 100%; /* White primary */
-    --primary-foreground: 0 0% 4%;
-    --secondary: 0 0% 9%; /* #161616 - Dark gray */
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 7%; /* #111111 */
-    --muted-foreground: 0 0% 60%; /* Light gray for subtle text */
-    --accent: 0 0% 100%;
-    --accent-foreground: 0 0% 4%;
+    /* Linear-inspired True dark mode - Deep blacks */
+    --background: 0 0% 7%; /* #111111 - True dark */
+    --foreground: 0 0% 98%; /* Almost white text */
+
+    /* Surfaces with subtle elevation */
+    --card: 0 0% 8%; /* #141414 */
+    --card-foreground: 0 0% 98%;
+    --elevated: 0 0% 10%; /* #1A1A1A - Elevated surfaces */
+
+    /* Primary - White in dark mode */
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 7%;
+
+    /* Secondary - Dark gray */
+    --secondary: 0 0% 13%; /* #212121 */
+    --secondary-foreground: 0 0% 98%;
+
+    /* Muted - Dark surfaces */
+    --muted: 0 0% 13%;
+    --muted-foreground: 0 0% 60%; /* Light gray text */
+
+    /* Accent */
+    --accent: 0 0% 13%;
+    --accent-foreground: 0 0% 98%;
+
+    /* Destructive - Brighter in dark mode */
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 20%; /* Soft gray borders */
-    --input: 0 0% 9%; /* Dark input background */
-    --ring: 0 0% 100%; /* White focus ring */
-    --success: 0 0% 100%;
-    --success-foreground: 0 0% 4%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Borders - Subtle gray */
+    --border: 0 0% 16%; /* #2A2A2A */
+    --border-subtle: 0 0% 12%;
+    --input: 0 0% 13%;
+
+    /* Focus ring */
+    --ring: 0 0% 98%;
+
+    /* Success */
+    --success: 0 0% 98%;
+    --success-foreground: 0 0% 7%;
+
+    /* Hover states */
+    --hover: 0 0% 15%;
   }
 
   * {
@@ -55,25 +103,35 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Custom scrollbar */
+  /* Linear-style custom scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-muted;
+    @apply bg-transparent;
   }
 
   ::-webkit-scrollbar-thumb {
     @apply bg-border;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-muted-foreground/40;
+    @apply bg-muted-foreground/30;
+  }
+
+  /* Smooth transitions for dark mode */
+  * {
+    transition-property: background-color, border-color, color;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   }
 }

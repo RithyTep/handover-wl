@@ -13,6 +13,9 @@ import {
   AlertTriangle,
   Copy,
   Clock,
+  Command,
+  History,
+  Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,12 +31,22 @@ import { TicketCard } from "@/components/ticket-card";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, Ticket } from "./columns";
-import { SchedulerDialog } from "@/components/scheduler-dialog";
+import { SchedulerPage } from "@/components/scheduler-page";
+import { Sidebar } from "@/components/sidebar";
+import { CommandPalette } from "@/components/command-palette";
+import { cn } from "@/lib/utils";
 
 export default function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [ticketData, setTicketData] = useState<Record<string, string>>({});
+  const [activeTab, setActiveTab] = useState("tickets");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  // Handle tab changes from sidebar
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+  };
 
   // Dialog states
   const [quickFillDialog, setQuickFillDialog] = useState(false);
@@ -42,7 +55,6 @@ export default function Dashboard() {
 
   const [clearDialog, setClearDialog] = useState(false);
   const [sendSlackDialog, setSendSlackDialog] = useState(false);
-  const [schedulerDialog, setSchedulerDialog] = useState(false);
 
   // 🎉 Confetti celebration helper
   const celebrate = () => {
@@ -56,6 +68,22 @@ export default function Dashboard() {
   useEffect(() => {
     fetchTickets();
   }, []);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Cmd/Ctrl + S to save
+      if ((e.metaKey || e.ctrlKey) && e.key === 's') {
+        e.preventDefault();
+        handleSave();
+      }
+      // Cmd/Ctrl + Shift + L to toggle theme (handled by ThemeToggle component)
+      // / to focus search is handled by the Input component's autofocus
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [ticketData]);
 
   const fetchTickets = async () => {
     try {
@@ -229,100 +257,171 @@ export default function Dashboard() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-primary" />
-          <p className="text-muted-foreground">Loading tickets...</p>
+          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-foreground" />
+          <p className="text-sm text-muted-foreground">Loading tickets...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Minimal Header */}
-        <div className="flex-shrink-0 flex items-center justify-between px-3 sm:px-6 py-3 sm:py-4 border-b border-border/40">
-          <div>
-            <h1 className="text-lg sm:text-xl font-semibold tracking-tight text-foreground">
-              Handover
+    <>
+      {/* Command Palette */}
+      <CommandPalette
+        onQuickFill={() => setQuickFillDialog(true)}
+        onClear={() => setClearDialog(true)}
+        onSave={handleSave}
+        onSendSlack={() => setSendSlackDialog(true)}
+        onCopy={handleCopyForSlack}
+        onRefresh={() => window.location.reload()}
+        onScheduler={() => setActiveTab("scheduler")}
+      />
+
+      {/* Sidebar */}
+      <Sidebar
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        onCollapsedChange={setSidebarCollapsed}
+      />
+
+      {/* Main Content Area with Linear-inspired layout */}
+      <div
+        className={cn(
+          "h-screen bg-background flex flex-col overflow-hidden transition-all duration-180",
+          sidebarCollapsed ? "ml-14" : "ml-56"
+        )}
+      >
+        {/* Linear-style Header - 52px height, sticky */}
+        <header className="h-[52px] flex-shrink-0 flex items-center justify-between px-6 border-b border-border">
+          <div className="flex items-center gap-4">
+            <h1 className="text-sm font-semibold tracking-tight text-foreground">
+              Jira Handover
             </h1>
-            <p className="text-[10px] text-muted-foreground mt-0.5">
-              v3.2.0 By Rithy Tep
-            </p>
+            <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
+              <span className="px-2 py-0.5 rounded bg-muted/50">
+                {tickets.length} tickets
+              </span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
+            {/* Command Palette Hint */}
+            <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground bg-muted/50 border border-border rounded">
+              <Command className="w-3 h-3" />
+              <span>K</span>
+            </kbd>
             <Button
-              variant="outline"
-              size="sm"
-              className="h-9 sm:h-10 px-3 sm:px-4"
-              onClick={() => setSchedulerDialog(true)}
+              variant="ghost"
+              size="icon"
+              onClick={() => setActiveTab("scheduler")}
+              className="h-8 w-8"
+              title="Scheduler"
             >
               <Clock className="w-4 h-4" />
             </Button>
             <ThemeToggle variant="header" />
           </div>
-        </div>
+        </header>
 
-        {/* Tickets Table - Scrollable */}
-        <div className="flex-1 overflow-auto px-3 sm:px-6 py-3">
-          <TicketsTable
-            columns={columns}
-            data={tickets}
-            actionButtons={
+        {/* Main Content */}
+        <main className="flex-1 overflow-hidden px-6 py-4">
+          {/* Tickets Tab */}
+          {activeTab === "tickets" && (
+            <TicketsTable
+              columns={columns}
+              data={tickets}
+              actionButtons={
               <>
                 <Button
-                  variant="outline"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setQuickFillDialog(true)}
-                  className="h-7 sm:h-8 px-2 sm:px-3 text-xs border-border/40 hover:bg-muted/50"
+                  className="h-8"
                   title="Quick Fill"
                 >
-                  <Zap className="w-3 h-3 sm:mr-1.5" />
+                  <Zap className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="hidden sm:inline">Fill</span>
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => setClearDialog(true)}
-                  className="h-7 sm:h-8 px-2 sm:px-3 text-xs border-border/40 hover:bg-muted/50"
-                  title="Clear"
+                  className="h-8"
+                  title="Clear All"
                 >
-                  <Trash2 className="w-3 h-3 sm:mr-1.5" />
+                  <Trash2 className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="hidden sm:inline">Clear</span>
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="ghost"
+                  size="sm"
                   onClick={() => window.location.reload()}
-                  className="h-7 sm:h-8 w-7 sm:w-8 p-0 border-border/40 hover:bg-muted/50"
+                  className="h-8"
                   title="Refresh"
                 >
-                  <RefreshCw className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="hidden sm:inline">Refresh</span>
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="ghost"
+                  size="sm"
                   onClick={handleCopyForSlack}
-                  className="h-7 sm:h-8 px-2 sm:px-3 text-xs border-border/40 hover:bg-muted/50"
-                  title="Copy"
+                  className="h-8"
+                  title="Copy for Slack"
                 >
-                  <Copy className="w-3 h-3 sm:mr-1.5" />
+                  <Copy className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="hidden sm:inline">Copy</span>
                 </Button>
                 <Button
                   variant="outline"
+                  size="sm"
                   onClick={handleSave}
-                  className="h-7 sm:h-8 px-2 sm:px-3 text-xs border-border/40 hover:bg-muted/50"
-                  title="Save"
+                  className="h-8"
+                  title="Save Changes"
                 >
-                  <Save className="w-3 h-3 sm:mr-1.5" />
+                  <Save className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="hidden sm:inline">Save</span>
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="default"
+                  size="sm"
                   onClick={() => setSendSlackDialog(true)}
-                  className="h-7 sm:h-8 px-2 sm:px-3 text-xs border-border/40 hover:bg-muted/50"
+                  className="h-8"
                   title="Send to Slack"
                 >
-                  <Send className="w-3 h-3 sm:mr-1.5" />
+                  <Send className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="hidden sm:inline">Send</span>
                 </Button>
-
               </>
             }
           />
-        </div>
-      </main>
+          )}
+
+          {/* Scheduler Tab */}
+          {activeTab === "scheduler" && <SchedulerPage />}
+
+          {/* History Tab - Coming Soon */}
+          {activeTab === "history" && (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <History className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <h2 className="text-lg font-semibold mb-2">History Logs</h2>
+                <p className="text-sm text-muted-foreground">Coming soon...</p>
+              </div>
+            </div>
+          )}
+
+          {/* Settings Tab - Coming Soon */}
+          {activeTab === "settings" && (
+            <div className="flex items-center justify-center h-full">
+              <div className="text-center">
+                <Settings className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+                <h2 className="text-lg font-semibold mb-2">Settings</h2>
+                <p className="text-sm text-muted-foreground">Coming soon...</p>
+              </div>
+            </div>
+          )}
+        </main>
+      </div>
 
       {/* Quick Fill Dialog */}
       <Dialog open={quickFillDialog} onOpenChange={setQuickFillDialog}>
@@ -407,9 +506,6 @@ export default function Dashboard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-
-      {/* Scheduler Dialog */}
-      <SchedulerDialog open={schedulerDialog} onOpenChange={setSchedulerDialog} />
-    </div>
+    </>
   );
 }

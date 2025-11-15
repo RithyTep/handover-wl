@@ -24,6 +24,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { TicketPreview } from "@/components/ticket-preview"
+import { Ticket } from "@/app/columns"
 
 interface TicketsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -40,6 +42,8 @@ export function TicketsTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
+  const [previewTicket, setPreviewTicket] = React.useState<Ticket | null>(null)
+  const [previewAnchor, setPreviewAnchor] = React.useState<HTMLElement | null>(null)
 
   // Load showDetails from localStorage
   const [showDetails, setShowDetails] = React.useState(() => {
@@ -96,6 +100,29 @@ export function TicketsTable<TData, TValue>({
     })
   }
 
+  const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleTicketHover = React.useCallback((ticket: Ticket | null, element: HTMLElement | null) => {
+    // Clear any pending close timeout
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+
+    setPreviewTicket(ticket)
+    setPreviewAnchor(element)
+  }, [])
+
+  const handleClosePreview = React.useCallback(() => {
+    // Immediately close the preview
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setPreviewTicket(null)
+    setPreviewAnchor(null)
+  }, [])
+
   const table = useReactTable({
     data,
     columns,
@@ -113,20 +140,16 @@ export function TicketsTable<TData, TValue>({
       columnVisibility,
       rowSelection,
     },
+    meta: {
+      onTicketHover: handleTicketHover,
+    },
   })
 
   return (
-    <div className="w-full h-full flex flex-col gap-2">
-      {/* Search and Action Buttons Row */}
-      <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
-        {/* Action Buttons - Top on mobile, Right on desktop */}
-        {actionButtons && (
-          <div className="flex items-center justify-end gap-1.5 sm:gap-2 order-1 sm:order-2">
-            {actionButtons}
-          </div>
-        )}
-
-        {/* Search and Show Details - Bottom on mobile, Left on desktop */}
+    <div className="w-full h-full flex flex-col gap-3">
+      {/* Search and Action Buttons Row - Linear style */}
+      <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+        {/* Search and Show Details - Left side */}
         <div className="flex items-center gap-2 order-2 sm:order-1">
           <Input
             placeholder="Search tickets..."
@@ -134,31 +157,39 @@ export function TicketsTable<TData, TValue>({
             onChange={(event) =>
               table.getColumn("summary")?.setFilterValue(event.target.value)
             }
-            className="h-9 flex-1 sm:w-[250px] bg-transparent border-border/30 focus:border-border text-sm sm:text-xs"
+            className="h-8 flex-1 sm:w-[280px] bg-transparent border-border text-sm"
           />
           <Button
-            variant="outline"
+            variant="ghost"
+            size="icon"
             onClick={toggleDetails}
-            className="h-9 w-9 p-0 border-border/30 hover:bg-muted/50"
+            className="h-8 w-8"
             title={showDetails ? "Hide Details" : "Show Details"}
           >
             {showDetails ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </Button>
         </div>
+
+        {/* Action Buttons - Right side */}
+        {actionButtons && (
+          <div className="flex items-center justify-end gap-1.5 order-1 sm:order-2">
+            {actionButtons}
+          </div>
+        )}
       </div>
 
-      {/* Minimal Table */}
-      <div className="flex-1 border border-border/30 rounded overflow-hidden">
+      {/* Linear-style Table */}
+      <div className="flex-1 border border-border rounded-md overflow-hidden bg-card">
         <div className="h-full overflow-auto">
           <Table className="min-w-full md:min-w-[1400px]">
-            <TableHeader className="bg-muted/50">
+            <TableHeader className="bg-muted/30">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="border-b border-border/30 hover:bg-transparent">
+                <TableRow key={headerGroup.id} className="border-b border-border hover:bg-transparent">
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead
                         key={header.id}
-                        className="h-10 px-3 text-[11px] font-medium text-muted-foreground tracking-wider border-r border-border/30 last:border-r-0"
+                        className="h-9 px-3 text-xs font-medium text-muted-foreground uppercase tracking-wide border-r border-border/50 last:border-r-0"
                         style={{
                           width: header.getSize() !== 150 ? header.getSize() : undefined,
                         }}
@@ -181,12 +212,12 @@ export function TicketsTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="border-b border-border/20 hover:bg-muted/30 transition-colors"
+                    className="border-b border-border/50 hover:bg-muted/20 transition-colors duration-150"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="px-3 py-2.5 border-r border-border/20 last:border-r-0"
+                        className="px-3 py-2 border-r border-border/30 last:border-r-0"
                         style={{
                           width: cell.column.getSize() !== 150 ? cell.column.getSize() : undefined,
                         }}
@@ -203,7 +234,7 @@ export function TicketsTable<TData, TValue>({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-24 text-center text-muted-foreground"
+                    className="h-24 text-center text-muted-foreground text-sm"
                   >
                     No results.
                   </TableCell>
@@ -214,12 +245,23 @@ export function TicketsTable<TData, TValue>({
         </div>
       </div>
 
-      {/* Ticket Count */}
-      <div className="flex-shrink-0 flex items-center justify-between pt-1">
-        <div className="text-[11px] text-muted-foreground">
-          <span className="text-primary font-semibold">{table.getFilteredRowModel().rows.length}</span> tickets
+      {/* Ticket Count - Linear style */}
+      <div className="flex-shrink-0 flex items-center justify-between">
+        <div className="text-xs text-muted-foreground font-medium">
+          <span className="text-foreground">{table.getFilteredRowModel().rows.length}</span> tickets
         </div>
       </div>
+
+      {/* Ticket Preview */}
+      {previewTicket && (
+        <TicketPreview
+          ticket={previewTicket}
+          isOpen={!!previewTicket}
+          onClose={handleClosePreview}
+          onMouseLeave={handleClosePreview}
+          anchorElement={previewAnchor}
+        />
+      )}
     </div>
   )
 }
