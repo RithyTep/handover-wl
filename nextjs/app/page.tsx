@@ -16,6 +16,7 @@ import {
   Command,
   History,
   Settings,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -251,11 +252,12 @@ export default function Dashboard() {
     }
   };
 
+
   const stats = getStats();
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
+      <div className="flex items-center justify-center min-h-dvh bg-background">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-foreground" />
           <p className="text-sm text-muted-foreground">Loading tickets...</p>
@@ -287,7 +289,7 @@ export default function Dashboard() {
       {/* Main Content Area with Linear-inspired layout */}
       <div
         className={cn(
-          "h-screen bg-background flex flex-col overflow-hidden transition-all duration-180",
+          "h-dvh bg-background flex flex-col overflow-hidden transition-all duration-180",
           sidebarCollapsed ? "ml-14" : "ml-56"
         )}
       >

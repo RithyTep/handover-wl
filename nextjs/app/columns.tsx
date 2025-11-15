@@ -1,10 +1,12 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useRef } from "react"
+import { useRef, useState, useEffect } from "react"
+import { toast } from "sonner"
+import axios from "axios"
 
 // Ticket link component
 function TicketLink({
@@ -33,6 +35,76 @@ function TicketLink({
     >
       {ticket.key}
     </a>
+  );
+}
+
+// AI-enhanced input for STATUS/ACTION
+function AIEnhancedInput({
+  ticket,
+  field,
+  defaultValue,
+  placeholder,
+  onChange,
+}: {
+  ticket: Ticket;
+  field: "status" | "action";
+  defaultValue: string;
+  placeholder: string;
+  onChange: (value: string) => void;
+}) {
+  const [value, setValue] = useState(defaultValue === "--" ? "" : defaultValue);
+  const [loading, setLoading] = useState(false);
+
+  // Sync local state when defaultValue changes (e.g., from AI fill all)
+  useEffect(() => {
+    const displayValue = defaultValue === "--" ? "" : defaultValue;
+    setValue(displayValue);
+  }, [defaultValue]);
+
+  const handleAIFill = async () => {
+    setLoading(true);
+    const loadingToast = toast.loading("Generating suggestion...");
+
+    try {
+      const response = await axios.post("/api/ai-autofill", { ticket });
+      const suggestion = response.data.suggestion;
+
+      const newValue = field === "status" ? suggestion.status : suggestion.action;
+      setValue(newValue);
+      onChange(newValue);
+
+      toast.dismiss(loadingToast);
+      toast.success(`AI suggestion applied!`);
+    } catch (error: any) {
+      toast.dismiss(loadingToast);
+      toast.error(error.response?.data?.error || "Failed to generate suggestion");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-1 w-full">
+      <Input
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onChange(e.target.value || "--");
+        }}
+        placeholder={placeholder}
+        className="h-8 flex-1 bg-transparent text-xs"
+      />
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleAIFill}
+        disabled={loading}
+        className="h-8 w-8 flex-shrink-0"
+        title="AI auto-fill"
+      >
+        <Sparkles className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+      </Button>
+    </div>
   );
 }
 
@@ -124,6 +196,14 @@ export const createColumns = ({
       const assignee = row.getValue("assignee") as string
       const assigneeAvatar = row.original.assigneeAvatar
 
+      // Add role labels for specific assignees
+      const getAssigneeDisplay = (name: string) => {
+        if (name.toLowerCase().includes("leo")) {
+          return `${name} (PO)`;
+        }
+        return name;
+      };
+
       return (
         <div className="flex items-center gap-2 whitespace-nowrap">
           {assigneeAvatar ? (
@@ -137,7 +217,7 @@ export const createColumns = ({
               {assignee === "Unassigned" ? "?" : assignee.charAt(0).toUpperCase()}
             </div>
           )}
-          <span className="text-xs text-foreground">{assignee}</span>
+          <span className="text-xs text-foreground">{getAssigneeDisplay(assignee)}</span>
         </div>
       )
     },
@@ -231,15 +311,14 @@ export const createColumns = ({
     header: "Status",
     enableHiding: false,
     cell: ({ row }) => {
+      const currentValue = ticketData[`status-${row.original.key}`] || row.original.savedStatus;
       return (
-        <Input
-          key={`status-${row.original.key}`}
-          defaultValue={row.original.savedStatus === "--" ? "" : row.original.savedStatus}
-          onChange={(e) =>
-            updateTicketData(`status-${row.original.key}`, e.target.value || "--")
-          }
+        <AIEnhancedInput
+          ticket={row.original}
+          field="status"
+          defaultValue={currentValue}
           placeholder="Enter status..."
-          className="h-8 w-full min-w-[180px] bg-transparent text-xs"
+          onChange={(value) => updateTicketData(`status-${row.original.key}`, value)}
         />
       )
     },
@@ -249,15 +328,14 @@ export const createColumns = ({
     header: "Action",
     enableHiding: false,
     cell: ({ row }) => {
+      const currentValue = ticketData[`action-${row.original.key}`] || row.original.savedAction;
       return (
-        <Input
-          key={`action-${row.original.key}`}
-          defaultValue={row.original.savedAction === "--" ? "" : row.original.savedAction}
-          onChange={(e) =>
-            updateTicketData(`action-${row.original.key}`, e.target.value || "--")
-          }
+        <AIEnhancedInput
+          ticket={row.original}
+          field="action"
+          defaultValue={currentValue}
           placeholder="Enter action..."
-          className="h-8 w-full min-w-[200px] bg-transparent text-xs"
+          onChange={(value) => updateTicketData(`action-${row.original.key}`, value)}
         />
       )
     },

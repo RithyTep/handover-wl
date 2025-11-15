@@ -21,14 +21,14 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
   const navItems = [
     { id: "tickets", icon: ClipboardList, label: "Tickets" },
     { id: "scheduler", icon: Clock, label: "Scheduler" },
-    { id: "history", icon: History, label: "History" },
-    { id: "settings", icon: Settings, label: "Settings" },
+    // { id: "history", icon: History, label: "History" },
+    // { id: "settings", icon: Settings, label: "Settings" },
   ];
 
   return (
     <nav
       className={cn(
-        "fixed left-0 top-0 h-screen bg-background border-r border-border flex flex-col transition-all duration-180 ease-out z-40",
+        "fixed left-0 top-0 h-dvh bg-background border-r border-border flex flex-col transition-all duration-180 ease-out z-40",
         collapsed ? "w-14" : "w-56"
       )}
     >

@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table"
 import { TicketPreview } from "@/components/ticket-preview"
 import { Ticket } from "@/app/columns"
+import { TicketFiltersComponent, TicketFilters } from "@/components/ticket-filters"
 
 interface TicketsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -44,6 +45,7 @@ export function TicketsTable<TData, TValue>({
   )
   const [previewTicket, setPreviewTicket] = React.useState<Ticket | null>(null)
   const [previewAnchor, setPreviewAnchor] = React.useState<HTMLElement | null>(null)
+  const [activeFilters, setActiveFilters] = React.useState<TicketFilters>({})
 
   // Load showDetails from localStorage
   const [showDetails, setShowDetails] = React.useState(() => {
@@ -102,6 +104,79 @@ export function TicketsTable<TData, TValue>({
 
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
+  // Extract unique values for filters
+  const filterOptions = React.useMemo(() => {
+    const ticketsData = data as Ticket[];
+    return {
+      assignees: Array.from(new Set(ticketsData.map(t => t.assignee))).filter(Boolean).sort(),
+      statuses: Array.from(new Set(ticketsData.map(t => t.status))).filter(Boolean).sort(),
+      mainTypes: Array.from(new Set(ticketsData.map(t => t.wlMainTicketType))).filter(v => v && v !== "N/A").sort(),
+      subTypes: Array.from(new Set(ticketsData.map(t => t.wlSubTicketType))).filter(v => v && v !== "N/A").sort(),
+      customerLevels: Array.from(new Set(ticketsData.map(t => t.customerLevel))).filter(v => v && v !== "N/A").sort(),
+    };
+  }, [data]);
+
+  // Apply filters to data
+  const filteredData = React.useMemo(() => {
+    const ticketsData = data as Ticket[];
+
+    return ticketsData.filter((ticket) => {
+      // Assignee filter
+      if (activeFilters.assignee && ticket.assignee !== activeFilters.assignee) {
+        return false;
+      }
+
+      // Status filter
+      if (activeFilters.status && ticket.status !== activeFilters.status) {
+        return false;
+      }
+
+      // WL Main Type filter
+      if (activeFilters.wlMainTicketType && ticket.wlMainTicketType !== activeFilters.wlMainTicketType) {
+        return false;
+      }
+
+      // WL Sub Type filter
+      if (activeFilters.wlSubTicketType && ticket.wlSubTicketType !== activeFilters.wlSubTicketType) {
+        return false;
+      }
+
+      // Customer Level filter
+      if (activeFilters.customerLevel && ticket.customerLevel !== activeFilters.customerLevel) {
+        return false;
+      }
+
+      // Date range filter
+      if (activeFilters.dateFrom) {
+        const ticketDate = new Date(ticket.created);
+        const fromDate = new Date(activeFilters.dateFrom);
+        if (ticketDate < fromDate) {
+          return false;
+        }
+      }
+
+      if (activeFilters.dateTo) {
+        const ticketDate = new Date(ticket.created);
+        const toDate = new Date(activeFilters.dateTo);
+        toDate.setHours(23, 59, 59, 999); // Include the entire day
+        if (ticketDate > toDate) {
+          return false;
+        }
+      }
+
+      // JQL Query filter (basic implementation - matches against summary and key)
+      if (activeFilters.jqlQuery) {
+        const query = activeFilters.jqlQuery.toLowerCase();
+        const searchText = `${ticket.key} ${ticket.summary} ${ticket.status} ${ticket.assignee}`.toLowerCase();
+        if (!searchText.includes(query)) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [data, activeFilters]);
+
   const handleTicketHover = React.useCallback((ticket: Ticket | null, element: HTMLElement | null) => {
     // Clear any pending close timeout
     if (closeTimeoutRef.current) {
@@ -124,7 +199,7 @@ export function TicketsTable<TData, TValue>({
   }, [])
 
   const table = useReactTable({
-    data,
+    data: filteredData as TData[],
     columns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
@@ -168,6 +243,14 @@ export function TicketsTable<TData, TValue>({
           >
             {showDetails ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </Button>
+          <TicketFiltersComponent
+            availableAssignees={filterOptions.assignees}
+            availableStatuses={filterOptions.statuses}
+            availableMainTypes={filterOptions.mainTypes}
+            availableSubTypes={filterOptions.subTypes}
+            availableCustomerLevels={filterOptions.customerLevels}
+            onFiltersChange={setActiveFilters}
+          />
         </div>
 
         {/* Action Buttons - Right side */}
