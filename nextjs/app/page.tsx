@@ -113,7 +113,7 @@ export default function Dashboard() {
   // Create columns with current ticketData and update function
   const columns = useMemo(
     () => createColumns({ ticketData, updateTicketData }),
-    [updateTicketData]
+    [ticketData, updateTicketData]
   );
 
   const getStats = () => {
@@ -252,6 +252,88 @@ export default function Dashboard() {
     }
   };
 
+  const handleAIFillAll = async () => {
+    // Find tickets with missing status or action
+    const missingTickets = tickets.filter((ticket) => {
+      const status = ticketData[`status-${ticket.key}`];
+      const action = ticketData[`action-${ticket.key}`];
+      return !status || status === "--" || !action || action === "--";
+    });
+
+    if (missingTickets.length === 0) {
+      toast.info("All tickets already have status and action filled");
+      return;
+    }
+
+    const loadingToast = toast.loading(
+      `AI filling ${missingTickets.length} ticket(s)...`
+    );
+
+    try {
+      // Process tickets in parallel (but limit concurrency to avoid rate limits)
+      const batchSize = 3;
+      const newData = { ...ticketData };
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (let i = 0; i < missingTickets.length; i += batchSize) {
+        const batch = missingTickets.slice(i, i + batchSize);
+
+        // Update progress
+        toast.loading(
+          `AI filling ${i + 1}-${Math.min(i + batchSize, missingTickets.length)} of ${missingTickets.length}...`,
+          { id: loadingToast }
+        );
+
+        // Process batch in parallel
+        const batchResults = await Promise.allSettled(
+          batch.map(async (ticket) => {
+            const response = await axios.post("/api/ai-autofill", { ticket });
+            return { ticket, suggestion: response.data.suggestion };
+          })
+        );
+
+        // Update ticket data with results
+        batchResults.forEach((result) => {
+          if (result.status === "fulfilled") {
+            const { ticket, suggestion } = result.value;
+            const currentStatus = ticketData[`status-${ticket.key}`];
+            const currentAction = ticketData[`action-${ticket.key}`];
+
+            // Only update if currently empty
+            if (!currentStatus || currentStatus === "--") {
+              newData[`status-${ticket.key}`] = suggestion.status;
+            }
+            if (!currentAction || currentAction === "--") {
+              newData[`action-${ticket.key}`] = suggestion.action;
+            }
+            successCount++;
+          } else {
+            console.error("Failed to fill ticket:", result.reason);
+            errorCount++;
+          }
+        });
+      }
+
+      // Update state with all new data
+      setTicketData(newData);
+
+      toast.dismiss(loadingToast);
+
+      if (errorCount === 0) {
+        celebrate();
+        toast.success(`Successfully AI-filled ${successCount} ticket(s)`);
+      } else {
+        toast.warning(
+          `Filled ${successCount} ticket(s), ${errorCount} failed`
+        );
+      }
+    } catch (error: any) {
+      toast.dismiss(loadingToast);
+      toast.error("Error during AI fill: " + error.message);
+    }
+  };
+
 
   const stats = getStats();
 
@@ -270,6 +352,7 @@ export default function Dashboard() {
     <>
       {/* Command Palette */}
       <CommandPalette
+        onAIFillAll={handleAIFillAll}
         onQuickFill={() => setQuickFillDialog(true)}
         onClear={() => setClearDialog(true)}
         onSave={handleSave}
@@ -333,6 +416,16 @@ export default function Dashboard() {
               data={tickets}
               actionButtons={
               <>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleAIFillAll}
+                  className="h-8"
+                  title="AI Fill All Missing"
+                >
+                  <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                  <span className="hidden sm:inline">AI Fill</span>
+                </Button>
                 <Button
                   variant="ghost"
                   size="sm"

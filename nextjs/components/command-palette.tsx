@@ -23,11 +23,13 @@ import {
   Moon,
   Sun,
   Search,
+  Sparkles,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 
 interface CommandPaletteProps {
   onQuickFill?: () => void;
+  onAIFillAll?: () => void;
   onClear?: () => void;
   onSave?: () => void;
   onSendSlack?: () => void;
@@ -38,6 +40,7 @@ interface CommandPaletteProps {
 
 export function CommandPalette({
   onQuickFill,
+  onAIFillAll,
   onClear,
   onSave,
   onSendSlack,
@@ -102,6 +105,12 @@ export function CommandPalette({
         <CommandSeparator />
 
         <CommandGroup heading="Quick Actions">
+          {onAIFillAll && (
+            <CommandItem onSelect={() => runCommand(onAIFillAll)}>
+              <Sparkles className="mr-2 h-4 w-4" />
+              <span>AI Fill All Missing</span>
+            </CommandItem>
+          )}
           {onQuickFill && (
             <CommandItem onSelect={() => runCommand(onQuickFill)}>
               <Zap className="mr-2 h-4 w-4" />

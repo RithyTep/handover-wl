@@ -243,14 +243,6 @@ export function TicketsTable<TData, TValue>({
           >
             {showDetails ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
           </Button>
-          <TicketFiltersComponent
-            availableAssignees={filterOptions.assignees}
-            availableStatuses={filterOptions.statuses}
-            availableMainTypes={filterOptions.mainTypes}
-            availableSubTypes={filterOptions.subTypes}
-            availableCustomerLevels={filterOptions.customerLevels}
-            onFiltersChange={setActiveFilters}
-          />
         </div>
 
         {/* Action Buttons - Right side */}
