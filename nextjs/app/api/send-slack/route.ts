@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import axios from "axios";
 import fs from "fs";
 import path from "path";
 
-const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
+const SLACK_CHANNEL = process.env.SLACK_CHANNEL;
 const JIRA_URL = process.env.JIRA_URL;
 const STORAGE_FILE = path.join(process.cwd(), "ticket_data.json");
 
@@ -14,6 +14,51 @@ export async function POST(request: NextRequest) {
 
     // Save the data first
     fs.writeFileSync(STORAGE_FILE, JSON.stringify(ticketData, null, 2));
+
+    // Check for Bot Token (required for thread replies)
+    if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
+      return NextResponse.json(
+        { success: false, error: "Missing SLACK_BOT_TOKEN or SLACK_CHANNEL" },
+        { status: 400 }
+      );
+    }
+
+    // Find the latest message from "Support WL - Rithy"
+    const historyResponse = await fetch(
+      `https://slack.com/api/conversations.history?channel=${SLACK_CHANNEL}&limit=50`,
+      {
+        headers: {
+          "Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
+        },
+      }
+    );
+    const historyResult = await historyResponse.json();
+
+    if (!historyResult.ok) {
+      return NextResponse.json(
+        { success: false, error: `Failed to fetch messages: ${historyResult.error}` },
+        { status: 400 }
+      );
+    }
+
+    // Find a message containing "Ticket Handover Information"
+    let targetTs = null;
+
+    for (const msg of historyResult.messages) {
+      // Look for message with "Ticket Handover Information" text
+      if (msg.text && msg.text.includes("Ticket Handover Information")) {
+        targetTs = msg.ts;
+        break;
+      }
+    }
+
+    // If no handover message found, don't send anything
+    if (!targetTs) {
+      return NextResponse.json({
+        success: true,
+        message: "No handover message found to reply to - skipped sending"
+      });
+    }
 
     // Build Slack message
     const ticketKeys = Object.keys(ticketData)
@@ -27,7 +72,8 @@ export async function POST(request: NextRequest) {
       return status !== "--" || action !== "--";
     });
 
-    let message = "";
+    // Build message with @support wl mention
+    let message = "Ticket Handover Information\n\n";
 
     filledTickets.forEach((ticketKey, index) => {
       const status = ticketData[`status-${ticketKey}`] || "--";
@@ -46,15 +92,37 @@ export async function POST(request: NextRequest) {
       message += `Action: ${action}\n`;
       message += `\n`;
     });
-
-    // Post to Slack
-    await axios.post(SLACK_WEBHOOK_URL!, {
-      text: message.trim(),
-      unfurl_links: false,
-      unfurl_media: false,
+      message += `===========================\n`;
+    // Post as thread reply using Bot Token
+    const postResponse = await fetch("https://slack.com/api/chat.postMessage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
+      },
+      body: JSON.stringify({
+        channel: SLACK_CHANNEL,
+        text: message.trim(),
+        thread_ts: targetTs, // Reply to the latest user message
+        unfurl_links: false,
+        unfurl_media: false,
+      }),
     });
 
-    return NextResponse.json({ success: true });
+    const postResult = await postResponse.json();
+
+    if (!postResult.ok) {
+      return NextResponse.json(
+        { success: false, error: postResult.error },
+        { status: 400 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      thread_ts: targetTs,
+      message_ts: postResult.ts
+    });
   } catch (error: any) {
     console.error("Error sending to Slack:", error);
     return NextResponse.json(

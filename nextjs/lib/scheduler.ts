@@ -19,11 +19,11 @@ export function initScheduler() {
   scheduledTasks.forEach((task) => task.stop());
   scheduledTasks = [];
 
-  // Schedule 5:00 PM GMT+7 (17:00 Bangkok time)
+  // Schedule 5:16 PM GMT+7 (17:16 Bangkok time)
   const task1 = cron.schedule(
-    "0 17 * * *", // At 17:00 (5:00 PM) every day
+    "16 17 * * *", // At 17:16 (5:16 PM) every day
     async () => {
-      console.log("[Scheduler] Running 5:00 PM GMT+7 scheduled task...");
+      console.log("[Scheduler] Running 5:16 PM GMT+7 scheduled task...");
 
       // Check if scheduler is enabled in database
       const isEnabled = await getSchedulerEnabled();
@@ -32,18 +32,18 @@ export function initScheduler() {
         return;
       }
 
-      await sendScheduledSlackMessage("5:00 PM");
+      await sendScheduledSlackMessage("5:16 PM");
     },
     {
       timezone: "Asia/Bangkok", // GMT+7
     }
   );
 
-  // Schedule 11:30 PM GMT+7 (23:30 Bangkok time)
+  // Schedule 11:46 PM GMT+7 (23:46 Bangkok time)
   const task2 = cron.schedule(
-    "30 23 * * *", // At 23:30 (11:30 PM) every day
+    "46 23 * * *", // At 23:46 (11:46 PM) every day
     async () => {
-      console.log("[Scheduler] Running 11:30 PM GMT+7 scheduled task...");
+      console.log("[Scheduler] Running 11:46 PM GMT+7 scheduled task...");
 
       // Check if scheduler is enabled in database
       const isEnabled = await getSchedulerEnabled();
@@ -52,7 +52,7 @@ export function initScheduler() {
         return;
       }
 
-      await sendScheduledSlackMessage("11:30 PM");
+      await sendScheduledSlackMessage("11:46 PM");
     },
     {
       timezone: "Asia/Bangkok", // GMT+7
@@ -62,8 +62,8 @@ export function initScheduler() {
   scheduledTasks.push(task1, task2);
 
   console.log("[Scheduler] Scheduled tasks initialized:");
-  console.log("  - Daily at 5:00 PM GMT+7 (Asia/Bangkok)");
-  console.log("  - Daily at 11:30 PM GMT+7 (Asia/Bangkok)");
+  console.log("  - Daily at 5:16 PM GMT+7 (Asia/Bangkok)");
+  console.log("  - Daily at 11:46 PM GMT+7 (Asia/Bangkok)");
   console.log("  - Tasks will check database state before running");
 }
 

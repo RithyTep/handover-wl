@@ -46,7 +46,7 @@ export function SchedulerPage() {
           spread: 70,
           origin: { y: 0.6 },
         });
-        toast.success("Scheduler enabled! Reports will be sent at 5:00 PM and 11:30 PM GMT+7");
+        toast.success("Scheduler enabled! Reports will be sent at 5:16 PM and 11:46 PM GMT+7");
       } else {
         toast.success("Scheduler disabled");
       }
@@ -164,7 +164,7 @@ export function SchedulerPage() {
               <p className="text-xs text-muted-foreground">Daily handover summary</p>
             </div>
             <div className="text-right">
-              <p className="text-lg font-semibold">5:00 PM</p>
+              <p className="text-lg font-semibold">5:16 PM</p>
               <Badge variant="outline" className="text-xs mt-1">GMT+7</Badge>
             </div>
           </div>
@@ -175,7 +175,7 @@ export function SchedulerPage() {
               <p className="text-xs text-muted-foreground">End of day summary</p>
             </div>
             <div className="text-right">
-              <p className="text-lg font-semibold">11:30 PM</p>
+              <p className="text-lg font-semibold">11:46 PM</p>
               <Badge variant="outline" className="text-xs mt-1">GMT+7</Badge>
             </div>
           </div>

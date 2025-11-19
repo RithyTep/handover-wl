@@ -2,7 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
 import { loadTicketData } from "@/lib/db";
 
-const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
+const SLACK_CHANNEL = process.env.SLACK_CHANNEL;
 const JIRA_URL = process.env.JIRA_URL;
 const JIRA_EMAIL = process.env.JIRA_EMAIL;
 const JIRA_API_TOKEN = process.env.JIRA_API_TOKEN;
@@ -83,8 +84,46 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Scheduled Task] ${filledTickets.length} tickets with updates`);
 
+    // Check for Bot Token
+    if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
+      throw new Error("Missing SLACK_BOT_TOKEN or SLACK_CHANNEL");
+    }
+
+    // Find message containing "Ticket Handover Information" to reply to
+    const historyResponse = await fetch(
+      `https://slack.com/api/conversations.history?channel=${SLACK_CHANNEL}&limit=50`,
+      {
+        headers: {
+          "Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
+        },
+      }
+    );
+    const historyResult = await historyResponse.json();
+
+    if (!historyResult.ok) {
+      throw new Error(`Failed to fetch messages: ${historyResult.error}`);
+    }
+
+    // Find a message containing "Ticket Handover Information"
+    let targetTs = null;
+    for (const msg of historyResult.messages) {
+      if (msg.text && msg.text.includes("Ticket Handover Information")) {
+        targetTs = msg.ts;
+        break;
+      }
+    }
+
+    // If no handover message found, skip sending
+    if (!targetTs) {
+      console.log("[Scheduled Task] No handover message found to reply to - skipped");
+      return NextResponse.json({
+        success: true,
+        message: "No handover message found to reply to - skipped sending"
+      });
+    }
+
     // Build Slack message
-    let message = `*Sent by Scheduler - ${new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok", dateStyle: "full", timeStyle: "short" })}*\n\n`;
+    let message = "Ticket Handover Information\n\n";
 
     if (filledTickets.length === 0) {
       message += "_No ticket updates to report._\n";
@@ -101,24 +140,38 @@ export async function POST(request: NextRequest) {
         message += `\n`;
       });
     }
+    message += `===========================\n`;
 
-    // Post to Slack
-    if (!SLACK_WEBHOOK_URL) {
-      throw new Error("SLACK_WEBHOOK_URL is not configured");
-    }
-
-    await axios.post(SLACK_WEBHOOK_URL, {
-      text: message.trim(),
-      unfurl_links: false,
-      unfurl_media: false,
+    // Post as thread reply using Bot Token
+    const postResponse = await fetch("https://slack.com/api/chat.postMessage", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
+      },
+      body: JSON.stringify({
+        channel: SLACK_CHANNEL,
+        text: message.trim(),
+        thread_ts: targetTs,
+        unfurl_links: false,
+        unfurl_media: false,
+      }),
     });
 
-    console.log("[Scheduled Task] Successfully sent to Slack");
+    const postResult = await postResponse.json();
+
+    if (!postResult.ok) {
+      throw new Error(`Failed to post message: ${postResult.error}`);
+    }
+
+    console.log("[Scheduled Task] Successfully sent to Slack as thread reply");
 
     return NextResponse.json({
       success: true,
       ticketsProcessed: tickets.length,
       ticketsWithUpdates: filledTickets.length,
+      thread_ts: targetTs,
+      message_ts: postResult.ts,
       sentAt: new Date().toISOString(),
     });
   } catch (error: any) {
