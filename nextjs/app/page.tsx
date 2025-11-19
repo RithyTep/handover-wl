@@ -28,27 +28,18 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { TicketCard } from "@/components/ticket-card";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, Ticket } from "./columns";
 import { SchedulerPage } from "@/components/scheduler-page";
-import { Sidebar } from "@/components/sidebar";
 import { CommandPalette } from "@/components/command-palette";
-import { cn } from "@/lib/utils";
 
 export default function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [loading, setLoading] = useState(true);
   const [ticketData, setTicketData] = useState<Record<string, string>>({});
   const [activeTab, setActiveTab] = useState("tickets");
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [renderKey, setRenderKey] = useState(0);
-
-  // Handle tab changes from sidebar
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
 
   // Dialog states
   const [quickFillDialog, setQuickFillDialog] = useState(false);
@@ -111,27 +102,10 @@ export default function Dashboard() {
     setTicketData((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  const updateTicketState = useCallback((ticketKey: string, field: "status" | "action", value: string) => {
-    setTickets(prevTickets =>
-      prevTickets.map(ticket => {
-        if (ticket.key === ticketKey) {
-          return {
-            ...ticket,
-            savedStatus: field === "status" ? value : ticket.savedStatus,
-            savedAction: field === "action" ? value : ticket.savedAction,
-          };
-        }
-        return ticket;
-      })
-    );
-  }, []);
-
   // Create columns with current ticketData and update function
-  // ticketData is passed but not in deps - the AIEnhancedInput component
-  // handles syncing via useEffect when not focused
   const columns = useMemo(
-    () => createColumns({ ticketData, updateTicketData, updateTicketState, renderKey }),
-    [updateTicketData, updateTicketState, renderKey]
+    () => createColumns({ ticketData, updateTicketData, renderKey }),
+    [updateTicketData, renderKey]
   );
 
   const getStats = () => {
@@ -433,33 +407,20 @@ export default function Dashboard() {
         onScheduler={() => setActiveTab("scheduler")}
       />
 
-      {/* Sidebar */}
-      <Sidebar
-        activeTab={activeTab}
-        onTabChange={handleTabChange}
-        onCollapsedChange={setSidebarCollapsed}
-      />
+      {/* Main Content Area */}
+      <div className="h-dvh bg-background flex flex-col overflow-hidden">
 
-      {/* Main Content Area with Linear-inspired layout */}
-      <div
-        className={cn(
-          "h-dvh bg-background flex flex-col overflow-hidden transition-all duration-180",
-          sidebarCollapsed ? "ml-14" : "ml-56"
-        )}
-      >
-        {/* Linear-style Header - 52px height, sticky */}
-        <header className="h-[52px] flex-shrink-0 flex items-center justify-between px-6 border-b border-border">
-          <div className="flex items-center gap-4">
-            <h1 className="text-sm font-semibold tracking-tight text-foreground">
-              Jira Handover
-            </h1>
-            <div className="hidden sm:flex items-center gap-2 text-xs text-muted-foreground">
-              <span className="px-2 py-0.5 rounded bg-muted/50">
-                {tickets.length} tickets
-              </span>
-            </div>
-          </div>
+        {/* Header */}
+        <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-border bg-background">
           <div className="flex items-center gap-2">
+            <h1 className="text-sm font-semibold text-foreground">
+              Handover
+            </h1>
+            <span className="text-xs text-muted-foreground">
+              {tickets.length}
+            </span>
+          </div>
+          <div className="flex items-center gap-1">
             {/* Command Palette Hint */}
             <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground bg-muted/50 border border-border rounded">
               <Command className="w-3 h-3" />
@@ -469,7 +430,7 @@ export default function Dashboard() {
               variant="ghost"
               size="icon"
               onClick={() => setActiveTab("scheduler")}
-              className="h-8 w-8"
+              className="h-9 w-9 sm:h-8 sm:w-8"
               title="Scheduler"
             >
               <Clock className="w-4 h-4" />
@@ -479,14 +440,14 @@ export default function Dashboard() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-hidden px-6 py-4">
+        <main className="flex-1 overflow-hidden px-4 sm:px-6 py-4 sm:py-4 pb-20 sm:pb-4">
           {/* Tickets Tab */}
           {activeTab === "tickets" && (
             <TicketsTable
               columns={columns}
               data={tickets}
               actionButtons={
-              <>
+              <div className="hidden sm:flex items-center gap-1">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -495,7 +456,7 @@ export default function Dashboard() {
                   title="AI Fill All Missing"
                 >
                   <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                  <span className="hidden sm:inline">AI Fill</span>
+                  <span>AI Fill</span>
                 </Button>
                 <Button
                   variant="ghost"
@@ -505,7 +466,7 @@ export default function Dashboard() {
                   title="Quick Fill"
                 >
                   <Zap className="w-3.5 h-3.5 mr-1.5" />
-                  <span className="hidden sm:inline">Fill</span>
+                  <span>Fill</span>
                 </Button>
                 <Button
                   variant="ghost"
@@ -515,7 +476,7 @@ export default function Dashboard() {
                   title="Clear All"
                 >
                   <Trash2 className="w-3.5 h-3.5 mr-1.5" />
-                  <span className="hidden sm:inline">Clear</span>
+                  <span>Clear</span>
                 </Button>
                 <Button
                   variant="ghost"
@@ -525,7 +486,7 @@ export default function Dashboard() {
                   title="Refresh"
                 >
                   <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
-                  <span className="hidden sm:inline">Refresh</span>
+                  <span>Refresh</span>
                 </Button>
                 <Button
                   variant="ghost"
@@ -535,7 +496,7 @@ export default function Dashboard() {
                   title="Copy for Slack"
                 >
                   <Copy className="w-3.5 h-3.5 mr-1.5" />
-                  <span className="hidden sm:inline">Copy</span>
+                  <span>Copy</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -545,7 +506,7 @@ export default function Dashboard() {
                   title="Save Changes"
                 >
                   <Save className="w-3.5 h-3.5 mr-1.5" />
-                  <span className="hidden sm:inline">Save</span>
+                  <span>Save</span>
                 </Button>
                 <Button
                   variant="default"
@@ -555,9 +516,9 @@ export default function Dashboard() {
                   title="Send to Slack"
                 >
                   <Send className="w-3.5 h-3.5 mr-1.5" />
-                  <span className="hidden sm:inline">Send</span>
+                  <span>Send</span>
                 </Button>
-              </>
+              </div>
             }
           />
           )}
@@ -589,9 +550,50 @@ export default function Dashboard() {
         </main>
       </div>
 
+      {/* Mobile Bottom Navigation */}
+      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:hidden z-50">
+        <div className="flex items-center justify-around">
+          <button
+            onClick={handleAIFillAll}
+            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-muted/80 transition-all active:scale-95"
+          >
+            <Sparkles className="w-5 h-5 text-foreground/70" />
+            <span className="text-[9px] font-medium text-muted-foreground mt-0.5">AI</span>
+          </button>
+          <button
+            onClick={() => setQuickFillDialog(true)}
+            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-muted/80 transition-all active:scale-95"
+          >
+            <Zap className="w-5 h-5 text-foreground/70" />
+            <span className="text-[9px] font-medium text-muted-foreground mt-0.5">Fill</span>
+          </button>
+          <button
+            onClick={() => setClearDialog(true)}
+            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-muted/80 transition-all active:scale-95"
+          >
+            <Trash2 className="w-5 h-5 text-foreground/70" />
+            <span className="text-[9px] font-medium text-muted-foreground mt-0.5">Clear</span>
+          </button>
+          <button
+            onClick={handleSave}
+            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-muted/80 transition-all active:scale-95"
+          >
+            <Save className="w-5 h-5 text-foreground/70" />
+            <span className="text-[9px] font-medium text-muted-foreground mt-0.5">Save</span>
+          </button>
+          <button
+            onClick={() => setSendSlackDialog(true)}
+            className="flex flex-col items-center justify-center min-w-[52px] min-h-[44px] px-2 rounded-xl bg-primary text-primary-foreground active:bg-primary/90 transition-all active:scale-95"
+          >
+            <Send className="w-5 h-5" />
+            <span className="text-[9px] font-medium mt-0.5">Send</span>
+          </button>
+        </div>
+      </div>
+
       {/* Quick Fill Dialog */}
       <Dialog open={quickFillDialog} onOpenChange={setQuickFillDialog}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Quick Fill All Tickets</DialogTitle>
             <DialogDescription>
@@ -606,6 +608,7 @@ export default function Dashboard() {
                 value={quickFillStatus}
                 onChange={(e) => setQuickFillStatus(e.target.value)}
                 placeholder="Enter status..."
+                className="h-11 sm:h-10 text-base sm:text-sm"
               />
             </div>
             <div>
@@ -615,35 +618,36 @@ export default function Dashboard() {
                 value={quickFillAction}
                 onChange={(e) => setQuickFillAction(e.target.value)}
                 placeholder="Enter action..."
+                className="h-11 sm:h-10 text-base sm:text-sm"
               />
             </div>
           </div>
-          <DialogFooter className="gap-2 mt-4">
-            <Button variant="outline" onClick={() => setQuickFillDialog(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2 mt-4">
+            <Button variant="outline" onClick={() => setQuickFillDialog(false)} className="h-11 sm:h-10 w-full sm:w-auto">
               Cancel
             </Button>
-            <Button onClick={handleQuickFill}>Apply to all</Button>
+            <Button onClick={handleQuickFill} className="h-11 sm:h-10 w-full sm:w-auto">Apply to all</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
       {/* Clear All Dialog */}
       <Dialog open={clearDialog} onOpenChange={setClearDialog}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <div className="w-12 h-12 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center mx-auto mb-4">
-              <AlertTriangle className="w-6 h-6" />
+            <div className="w-14 h-14 sm:w-12 sm:h-12 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center mx-auto mb-4">
+              <AlertTriangle className="w-7 h-7 sm:w-6 sm:h-6" />
             </div>
-            <DialogTitle className="text-center">Clear all fields?</DialogTitle>
-            <DialogDescription className="text-center">
+            <DialogTitle className="text-center text-lg">Clear all fields?</DialogTitle>
+            <DialogDescription className="text-center text-sm">
               This will clear all status and action fields. This action cannot be
               undone.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setClearDialog(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2 mt-4">
+            <Button variant="outline" onClick={() => setClearDialog(false)} className="h-11 sm:h-10 w-full sm:w-auto">
               Cancel
             </Button>
-            <Button variant="destructive" onClick={handleClearAll}>
+            <Button variant="destructive" onClick={handleClearAll} className="h-11 sm:h-10 w-full sm:w-auto">
               Clear all
             </Button>
           </DialogFooter>
@@ -652,21 +656,21 @@ export default function Dashboard() {
 
       {/* Send Slack Dialog */}
       <Dialog open={sendSlackDialog} onOpenChange={setSendSlackDialog}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <div className="w-12 h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center mx-auto mb-4">
-              <Send className="w-6 h-6" />
+            <div className="w-14 h-14 sm:w-12 sm:h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center mx-auto mb-4">
+              <Send className="w-7 h-7 sm:w-6 sm:h-6" />
             </div>
-            <DialogTitle className="text-center">Send to Slack?</DialogTitle>
-            <DialogDescription className="text-center">
+            <DialogTitle className="text-center text-lg">Send to Slack?</DialogTitle>
+            <DialogDescription className="text-center text-sm">
               This will save your changes and post the handover report to Slack.
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setSendSlackDialog(false)}>
+          <DialogFooter className="flex-col sm:flex-row gap-2 mt-4">
+            <Button variant="outline" onClick={() => setSendSlackDialog(false)} className="h-11 sm:h-10 w-full sm:w-auto">
               Cancel
             </Button>
-            <Button variant="success" onClick={handleSendSlack}>
+            <Button variant="success" onClick={handleSendSlack} className="h-11 sm:h-10 w-full sm:w-auto">
               Send to Slack
             </Button>
           </DialogFooter>

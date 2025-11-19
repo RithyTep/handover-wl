@@ -1,12 +1,10 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, Sparkles } from "lucide-react"
+import { ArrowUpDown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { useRef, useState, useEffect } from "react"
-import { toast } from "sonner"
-import axios from "axios"
+import { useRef } from "react"
 
 // Ticket link component
 function TicketLink({
@@ -38,74 +36,29 @@ function TicketLink({
   );
 }
 
-// AI-enhanced input for STATUS/ACTION
-function AIEnhancedInput({
-  ticket,
-  field,
+// Simple input for STATUS/ACTION
+function SimpleInput({
   ticketKey,
   defaultValue,
   placeholder,
   onChange,
-  onAIUpdate,
 }: {
-  ticket: Ticket;
-  field: "status" | "action";
   ticketKey: string;
   defaultValue: string;
   placeholder: string;
   onChange: (value: string) => void;
-  onAIUpdate: (ticketKey: string, field: "status" | "action", value: string) => void;
 }) {
-  const [loading, setLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleAIFill = async () => {
-    setLoading(true);
-    const loadingToast = toast.loading("Generating suggestion...");
-
-    try {
-      const response = await axios.post("/api/ai-autofill", { ticket });
-      const suggestion = response.data.suggestion;
-
-      const newValue = field === "status" ? suggestion.status : suggestion.action;
-
-      // Update the ticket data state
-      onChange(newValue);
-
-      // Update the ticket state to force re-render with new defaultValue
-      onAIUpdate(ticket.key, field, newValue);
-
-      toast.dismiss(loadingToast);
-      toast.success(`AI suggestion applied!`);
-    } catch (error: any) {
-      toast.dismiss(loadingToast);
-      toast.error(error.response?.data?.error || "Failed to generate suggestion");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div className="flex items-center gap-1 w-full">
-      <Input
-        ref={inputRef}
-        key={ticketKey}
-        defaultValue={defaultValue === "--" ? "" : defaultValue}
-        onChange={(e) => onChange(e.target.value || "--")}
-        placeholder={placeholder}
-        className="h-8 flex-1 bg-transparent text-xs"
-      />
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={handleAIFill}
-        disabled={loading}
-        className="h-8 w-8 flex-shrink-0"
-        title="AI auto-fill"
-      >
-        <Sparkles className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-      </Button>
-    </div>
+    <Input
+      ref={inputRef}
+      key={ticketKey}
+      defaultValue={defaultValue === "--" ? "" : defaultValue}
+      onChange={(e) => onChange(e.target.value || "--")}
+      placeholder={placeholder}
+      className="h-11 sm:h-8 bg-background border-border text-sm sm:text-xs w-full sm:min-w-[250px] touch-manipulation rounded-lg focus:ring-2 focus:ring-primary/20"
+    />
   );
 }
 
@@ -129,22 +82,20 @@ export type Ticket = {
 interface ColumnsProps {
   ticketData: Record<string, string>
   updateTicketData: (key: string, value: string) => void
-  updateTicketState: (ticketKey: string, field: "status" | "action", value: string) => void
   renderKey: number
 }
 
 export const createColumns = ({
   ticketData,
   updateTicketData,
-  updateTicketState,
   renderKey,
 }: ColumnsProps): ColumnDef<Ticket>[] => [
   {
     accessorKey: "index",
-    header: "#",
+    header: () => <span className="hidden sm:inline">#</span>,
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="text-muted-foreground font-medium text-xs">
+      <div className="text-muted-foreground font-medium text-xs hidden sm:block">
         {row.index + 1}
       </div>
     ),
@@ -180,7 +131,7 @@ export const createColumns = ({
     header: "Summary",
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="text-xs text-foreground truncate max-w-md">
+      <div className="text-xs text-foreground line-clamp-2 sm:truncate sm:max-w-md">
         {row.getValue("summary")}
       </div>
     ),
@@ -317,14 +268,11 @@ export const createColumns = ({
     enableHiding: false,
     cell: ({ row }) => {
       return (
-        <AIEnhancedInput
-          ticket={row.original}
-          field="status"
+        <SimpleInput
           ticketKey={`status-${row.original.key}-${renderKey}`}
           defaultValue={row.original.savedStatus}
           placeholder="Enter status..."
           onChange={(value) => updateTicketData(`status-${row.original.key}`, value)}
-          onAIUpdate={updateTicketState}
         />
       )
     },
@@ -335,14 +283,11 @@ export const createColumns = ({
     enableHiding: false,
     cell: ({ row }) => {
       return (
-        <AIEnhancedInput
-          ticket={row.original}
-          field="action"
+        <SimpleInput
           ticketKey={`action-${row.original.key}-${renderKey}`}
           defaultValue={row.original.savedAction}
           placeholder="Enter action..."
           onChange={(value) => updateTicketData(`action-${row.original.key}`, value)}
-          onAIUpdate={updateTicketState}
         />
       )
     },

@@ -15,7 +15,6 @@ import {
 import { ChevronDown, ChevronRight } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -62,7 +61,7 @@ export function TicketsTable<TData, TValue>({
         const saved = localStorage.getItem('showDetails')
         const isVisible = saved ? JSON.parse(saved) : false
         return {
-          assignee: isVisible,
+          assignee: true, // Always visible
           created: isVisible,
           dueDate: isVisible,
           status: isVisible,
@@ -72,7 +71,7 @@ export function TicketsTable<TData, TValue>({
         }
       }
       return {
-        assignee: false,
+        assignee: true, // Always visible
         created: false,
         dueDate: false,
         status: false,
@@ -92,7 +91,7 @@ export function TicketsTable<TData, TValue>({
       localStorage.setItem('showDetails', JSON.stringify(newVisibility))
     }
     setColumnVisibility({
-      assignee: newVisibility,
+      assignee: true, // Always visible
       created: newVisibility,
       dueDate: newVisibility,
       status: newVisibility,
@@ -222,39 +221,112 @@ export function TicketsTable<TData, TValue>({
 
   return (
     <div className="w-full h-full flex flex-col gap-3">
-      {/* Search and Action Buttons Row - Linear style */}
-      <div className="flex-shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        {/* Search and Show Details - Left side */}
-        <div className="flex items-center gap-2 order-2 sm:order-1">
-          <Input
-            placeholder="Search tickets..."
-            value={(table.getColumn("summary")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("summary")?.setFilterValue(event.target.value)
-            }
-            className="h-8 flex-1 sm:w-[280px] bg-transparent border-border text-sm"
-          />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleDetails}
-            className="h-8 w-8"
-            title={showDetails ? "Hide Details" : "Show Details"}
-          >
-            {showDetails ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-          </Button>
-        </div>
+      {/* Action Buttons Row - Desktop only */}
+      <div className="flex-shrink-0 hidden sm:flex items-center justify-between gap-3">
+        {/* Show Details Toggle - Left side */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={toggleDetails}
+          className="h-8 w-8"
+          title={showDetails ? "Hide Details" : "Show Details"}
+        >
+          {showDetails ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+        </Button>
 
         {/* Action Buttons - Right side */}
-        {actionButtons && (
-          <div className="flex items-center justify-end gap-1.5 order-1 sm:order-2">
-            {actionButtons}
-          </div>
-        )}
+        {actionButtons}
       </div>
 
-      {/* Linear-style Table */}
-      <div className="flex-1 border border-border rounded-md overflow-hidden bg-card">
+      {/* Mobile Card View */}
+      <div className="flex-1 overflow-auto sm:hidden">
+        <div className="space-y-3">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row, index) => {
+              const ticket = row.original as Ticket;
+              return (
+                <div
+                  key={row.id}
+                  className="bg-card border border-border rounded-lg overflow-hidden shadow-sm"
+                >
+                  {/* Header */}
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-muted/30">
+                    <div className="flex items-center gap-2.5">
+                      <span className="text-[11px] font-medium text-muted-foreground tabular-nums">
+                        {index + 1}
+                      </span>
+                      <a
+                        href={ticket.jiraUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+                      >
+                        {ticket.key}
+                      </a>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {ticket.assigneeAvatar ? (
+                        <img
+                          src={ticket.assigneeAvatar}
+                          alt={ticket.assignee}
+                          className="w-5 h-5 rounded-full"
+                        />
+                      ) : (
+                        <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[9px] font-medium text-muted-foreground">
+                          {ticket.assignee === "Unassigned" ? "?" : ticket.assignee.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-4 space-y-4">
+                    {/* Summary */}
+                    <p className="text-[13px] text-foreground/80 leading-relaxed line-clamp-2">{ticket.summary}</p>
+
+                    {/* Inputs */}
+                    <div className="space-y-3">
+                      <div>
+                        <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Status</label>
+                        {row.getVisibleCells()
+                          .filter((cell) => cell.column.id === "savedStatus")
+                          .map((cell) => (
+                            <div key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </div>
+                          ))}
+                      </div>
+                      <div>
+                        <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Action</label>
+                        {row.getVisibleCells()
+                          .filter((cell) => cell.column.id === "savedAction")
+                          .map((cell) => (
+                            <div key={cell.id}>
+                              {flexRender(
+                                cell.column.columnDef.cell,
+                                cell.getContext()
+                              )}
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })
+          ) : (
+            <div className="text-center py-8 text-muted-foreground text-sm">
+              No results.
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="flex-1 border border-border rounded-md overflow-hidden bg-card hidden sm:block">
         <div className="h-full overflow-auto">
           <Table className="min-w-full md:min-w-[1400px]">
             <TableHeader className="bg-muted/30">
@@ -283,7 +355,7 @@ export function TicketsTable<TData, TValue>({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row, index) => (
+                table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
@@ -317,13 +389,6 @@ export function TicketsTable<TData, TValue>({
               )}
             </TableBody>
           </Table>
-        </div>
-      </div>
-
-      {/* Ticket Count - Linear style */}
-      <div className="flex-shrink-0 flex items-center justify-between">
-        <div className="text-xs text-muted-foreground font-medium">
-          <span className="text-foreground">{table.getFilteredRowModel().rows.length}</span> tickets
         </div>
       </div>
 
