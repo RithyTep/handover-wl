@@ -96,11 +96,24 @@ async function fetchTicketHistory(ticketKey: string) {
       return '';
     };
 
-    // Get last 5 comments with full text
+    // Get last 5 comments with full text, excluding Rovo and bot comments
     const allComments = data.fields?.comment?.comments || [];
     console.log(`Found ${allComments.length} total comments for ${ticketKey}`);
-    
-    const recentComments = allComments.slice(-5).map((c: any) => {
+
+    // Filter out Rovo and bot comments
+    const filteredComments = allComments.filter((c: any) => {
+      const authorName = (c.author?.displayName || c.author?.name || "Unknown").toLowerCase();
+      const isRovoOrBot =
+        authorName.includes('rovo') ||
+        authorName.includes('bot') ||
+        authorName.includes('automation') ||
+        c.author?.accountType === 'app';
+      return !isRovoOrBot;
+    });
+
+    console.log(`Filtered ${allComments.length - filteredComments.length} Rovo/bot comments`);
+
+    const recentComments = filteredComments.slice(-5).map((c: any) => {
       const commentText = extractCommentText(c);
       return {
         id: c.id,
@@ -112,7 +125,7 @@ async function fetchTicketHistory(ticketKey: string) {
       };
     });
 
-    console.log(`Extracted ${recentComments.length} recent comments`);
+    console.log(`Extracted ${recentComments.length} recent human comments`);
 
     // Get recent status changes from changelog (last 3)
     const changelog = data.changelog?.histories || [];

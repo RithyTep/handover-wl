@@ -77,58 +77,18 @@ export async function POST(request: NextRequest) {
 
     console.log(`[Scheduled Task] Found ${tickets.length} tickets`);
 
-    // Filter tickets that have status or action filled
-    const filledTickets = tickets.filter(
-      (ticket) => ticket.savedStatus !== "--" || ticket.savedAction !== "--"
-    );
-
-    console.log(`[Scheduled Task] ${filledTickets.length} tickets with updates`);
-
     // Check for Bot Token
     if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
       throw new Error("Missing SLACK_BOT_TOKEN or SLACK_CHANNEL");
     }
 
-    // Find message containing "Ticket Handover Information" to reply to
-    const historyResponse = await fetch(
-      `https://slack.com/api/conversations.history?channel=${SLACK_CHANNEL}&limit=50`,
-      {
-        headers: {
-          "Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
-        },
-      }
-    );
-    const historyResult = await historyResponse.json();
+    // Build Slack message with scheduler timestamp (show -- for empty status/action)
+    let message = `*Sent by Scheduler - ${new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok", dateStyle: "full", timeStyle: "short" })}*\n\nPlease refer to this ticket information\n\n`;
 
-    if (!historyResult.ok) {
-      throw new Error(`Failed to fetch messages: ${historyResult.error}`);
-    }
-
-    // Find a message containing "Ticket Handover Information"
-    let targetTs = null;
-    for (const msg of historyResult.messages) {
-      if (msg.text && msg.text.includes("Ticket Handover Information")) {
-        targetTs = msg.ts;
-        break;
-      }
-    }
-
-    // If no handover message found, skip sending
-    if (!targetTs) {
-      console.log("[Scheduled Task] No handover message found to reply to - skipped");
-      return NextResponse.json({
-        success: true,
-        message: "No handover message found to reply to - skipped sending"
-      });
-    }
-
-    // Build Slack message
-    let message = "Ticket Handover Information\n\n";
-
-    if (filledTickets.length === 0) {
-      message += "_No ticket updates to report._\n";
+    if (tickets.length === 0) {
+      message += "_No tickets to report._\n";
     } else {
-      filledTickets.forEach((ticket, index) => {
+      tickets.forEach((ticket, index) => {
         const ticketUrl = `${JIRA_URL}/browse/${ticket.key}`;
 
         message += `--- Ticket ${index + 1} ---\n`;
@@ -142,7 +102,7 @@ export async function POST(request: NextRequest) {
     }
     message += `===========================\n`;
 
-    // Post as thread reply using Bot Token
+    // Post message to channel using Bot Token
     const postResponse = await fetch("https://slack.com/api/chat.postMessage", {
       method: "POST",
       headers: {
@@ -152,7 +112,6 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         channel: SLACK_CHANNEL,
         text: message.trim(),
-        thread_ts: targetTs,
         unfurl_links: false,
         unfurl_media: false,
       }),
@@ -164,13 +123,11 @@ export async function POST(request: NextRequest) {
       throw new Error(`Failed to post message: ${postResult.error}`);
     }
 
-    console.log("[Scheduled Task] Successfully sent to Slack as thread reply");
+    console.log("[Scheduled Task] Successfully sent to Slack");
 
     return NextResponse.json({
       success: true,
       ticketsProcessed: tickets.length,
-      ticketsWithUpdates: filledTickets.length,
-      thread_ts: targetTs,
       message_ts: postResult.ts,
       sentAt: new Date().toISOString(),
     });
