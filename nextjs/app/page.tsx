@@ -12,7 +12,6 @@ import {
   RefreshCw,
   AlertTriangle,
   Copy,
-  Clock,
   Command,
   History,
   Settings,
@@ -31,7 +30,6 @@ import { Input } from "@/components/ui/input";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, Ticket } from "./columns";
-import { SchedulerPage } from "@/components/scheduler-page";
 import { CommandPalette } from "@/components/command-palette";
 
 export default function Dashboard() {
@@ -404,7 +402,6 @@ export default function Dashboard() {
         onSendSlack={() => setSendSlackDialog(true)}
         onCopy={handleCopyForSlack}
         onRefresh={() => window.location.reload()}
-        onScheduler={() => setActiveTab("scheduler")}
       />
 
       {/* Main Content Area */}
@@ -426,15 +423,6 @@ export default function Dashboard() {
               <Command className="w-3 h-3" />
               <span>K</span>
             </kbd>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setActiveTab("scheduler")}
-              className="h-9 w-9 sm:h-8 sm:w-8"
-              title="Scheduler"
-            >
-              <Clock className="w-4 h-4" />
-            </Button>
             <ThemeToggle variant="header" />
           </div>
         </header>
@@ -522,9 +510,6 @@ export default function Dashboard() {
             }
           />
           )}
-
-          {/* Scheduler Tab */}
-          {activeTab === "scheduler" && <SchedulerPage />}
 
           {/* History Tab - Coming Soon */}
           {activeTab === "history" && (

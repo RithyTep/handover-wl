@@ -20,7 +20,6 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
 
   const navItems = [
     { id: "tickets", icon: ClipboardList, label: "Tickets" },
-    { id: "scheduler", icon: Clock, label: "Scheduler" },
     // { id: "history", icon: History, label: "History" },
     // { id: "settings", icon: Settings, label: "Settings" },
   ];

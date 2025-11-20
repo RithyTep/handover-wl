@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import axios from "axios";
-import { loadTicketData } from "@/lib/db";
+import { loadTicketData, getCustomChannelId, getMemberMentions } from "@/lib/db";
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 const SLACK_CHANNEL = process.env.SLACK_CHANNEL;
@@ -19,6 +19,12 @@ ORDER BY created ASC, updated DESC
 export async function POST(request: NextRequest) {
   try {
     console.log("[Scheduled Task] Fetching tickets from Jira...");
+
+    // Get custom channel ID or use default
+    const customChannelId = await getCustomChannelId();
+    const channelToUse = customChannelId || SLACK_CHANNEL;
+
+    console.log(`[Scheduled Task] Using channel: ${channelToUse}${customChannelId ? ' (custom)' : ' (default)'}`);
 
     // Fetch tickets from Jira
     const auth = Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString("base64");
@@ -78,12 +84,20 @@ export async function POST(request: NextRequest) {
     console.log(`[Scheduled Task] Found ${tickets.length} tickets`);
 
     // Check for Bot Token
-    if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
+    if (!SLACK_BOT_TOKEN || !channelToUse) {
       throw new Error("Missing SLACK_BOT_TOKEN or SLACK_CHANNEL");
     }
 
     // Build Slack message with scheduler timestamp (show -- for empty status/action)
-    let message = `*Sent by Scheduler - ${new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok", dateStyle: "full", timeStyle: "short" })}*\n\nPlease refer to this ticket information\n\n`;
+    let message = `*Sent by Scheduler - ${new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok", dateStyle: "full", timeStyle: "short" })}*\n\nPlease refer to this ticket information\n`;
+
+    // Add member mentions if configured
+    const mentions = await getMemberMentions();
+    if (mentions) {
+      message += `${mentions}\n`;
+    }
+
+    message += `\n`;
 
     if (tickets.length === 0) {
       message += "_No tickets to report._\n";
@@ -110,7 +124,7 @@ export async function POST(request: NextRequest) {
         "Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
       },
       body: JSON.stringify({
-        channel: SLACK_CHANNEL,
+        channel: channelToUse,
         text: message.trim(),
         unfurl_links: false,
         unfurl_media: false,
@@ -129,6 +143,7 @@ export async function POST(request: NextRequest) {
       success: true,
       ticketsProcessed: tickets.length,
       message_ts: postResult.ts,
+      ticketMessage: message.trim(), // Return the formatted ticket message for thread comments
       sentAt: new Date().toISOString(),
     });
   } catch (error: any) {

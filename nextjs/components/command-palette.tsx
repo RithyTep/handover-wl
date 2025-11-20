@@ -35,7 +35,6 @@ interface CommandPaletteProps {
   onSendSlack?: () => void;
   onCopy?: () => void;
   onRefresh?: () => void;
-  onScheduler?: () => void;
 }
 
 export function CommandPalette({
@@ -46,7 +45,6 @@ export function CommandPalette({
   onSendSlack,
   onCopy,
   onRefresh,
-  onScheduler,
 }: CommandPaletteProps) {
   const [open, setOpen] = useState(false);
   const { setTheme, theme } = useTheme();
@@ -92,12 +90,6 @@ export function CommandPalette({
             <CommandItem onSelect={() => runCommand(onCopy)}>
               <Copy className="mr-2 h-4 w-4" />
               <span>Copy for Slack</span>
-            </CommandItem>
-          )}
-          {onScheduler && (
-            <CommandItem onSelect={() => runCommand(onScheduler)}>
-              <Clock className="mr-2 h-4 w-4" />
-              <span>Open Scheduler</span>
             </CommandItem>
           )}
         </CommandGroup>
