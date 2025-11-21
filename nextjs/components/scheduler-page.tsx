@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { Clock, Play, CheckCircle2, XCircle, Calendar, Bell, Save, Zap, Hash, AtSign } from "lucide-react";
+import { Clock, Play, CheckCircle2, XCircle, Bell, Save, Zap, Hash, AtSign, Key, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -12,30 +12,34 @@ import { Label } from "@/components/ui/label";
 
 export function SchedulerPage() {
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
-  const [triggering, setTriggering] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [time1, setTime1] = useState("17:10");
-  const [time2, setTime2] = useState("22:40");
   const [triggeringComments, setTriggeringComments] = useState(false);
   const [customChannelId, setCustomChannelId] = useState("");
-  const [memberMentions, setMemberMentions] = useState("");
+
+  // Shift-based settings
+  const [eveningToken, setEveningToken] = useState("");
+  const [nightToken, setNightToken] = useState("");
+  const [eveningMentions, setEveningMentions] = useState("");
+  const [nightMentions, setNightMentions] = useState("");
 
   useEffect(() => {
     fetchSchedulerState();
-    fetchTriggerTimes();
     fetchCustomChannelId();
-    fetchMemberMentions();
+    fetchShiftSettings();
   }, []);
 
-  const fetchTriggerTimes = async () => {
+  const fetchShiftSettings = async () => {
     try {
-      const response = await axios.get("/api/trigger-times");
+      const response = await axios.get("/api/shift-tokens");
       if (response.data.success) {
-        setTime1(response.data.times.time1);
-        setTime2(response.data.times.time2);
+        const { eveningToken, nightToken, eveningMentions, nightMentions } = response.data.data;
+        setEveningToken(eveningToken);
+        setNightToken(nightToken);
+        setEveningMentions(eveningMentions);
+        setNightMentions(nightMentions);
       }
     } catch (error: any) {
-      console.error("Error fetching trigger times:", error);
+      console.error("Error fetching shift settings:", error);
     }
   };
 
@@ -68,7 +72,7 @@ export function SchedulerPage() {
           spread: 70,
           origin: { y: 0.6 },
         });
-        toast.success("Scheduler enabled! Reports will be sent at 5:10 PM and 10:40 PM GMT+7");
+        toast.success("Scheduler enabled! Reports will be sent at configured times.");
       } else {
         toast.success("Scheduler disabled");
       }
@@ -76,20 +80,6 @@ export function SchedulerPage() {
       toast.dismiss(loadingToast);
       toast.error("Failed to update scheduler: " + error.message);
       console.error("Error updating scheduler state:", error);
-    }
-  };
-
-  const handleSaveTriggerTimes = async () => {
-    const loadingToast = toast.loading("Saving trigger times...");
-
-    try {
-      await axios.post("/api/trigger-times", { time1, time2 });
-
-      toast.dismiss(loadingToast);
-      toast.success(`Trigger times updated to ${time1} and ${time2}. Restart the server to apply changes.`);
-    } catch (error: any) {
-      toast.dismiss(loadingToast);
-      toast.error("Error saving trigger times: " + error.message);
     }
   };
 
@@ -118,51 +108,22 @@ export function SchedulerPage() {
     }
   };
 
-  const fetchMemberMentions = async () => {
-    try {
-      const response = await axios.get("/api/member-mentions");
-      if (response.data.success && response.data.mentions) {
-        setMemberMentions(response.data.mentions);
-      }
-    } catch (error: any) {
-      console.error("Error fetching member mentions:", error);
-    }
-  };
-
-  const handleSaveMemberMentions = async () => {
-    const loadingToast = toast.loading("Saving member mentions...");
+  const handleSaveShiftSettings = async () => {
+    const loadingToast = toast.loading("Saving shift settings...");
 
     try {
-      await axios.post("/api/member-mentions", { mentions: memberMentions });
-
-      toast.dismiss(loadingToast);
-      toast.success("Member mentions saved successfully!");
-    } catch (error: any) {
-      toast.dismiss(loadingToast);
-      toast.error("Error saving mentions: " + error.message);
-    }
-  };
-
-  const handleTestScheduler = async () => {
-    setTriggering(true);
-    const loadingToast = toast.loading("Triggering scheduler...");
-
-    try {
-      await axios.post("/api/trigger-schedule");
-
-      toast.dismiss(loadingToast);
-      confetti({
-        particleCount: 200,
-        spread: 100,
-        origin: { y: 0.5 },
-        colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
+      await axios.post("/api/shift-tokens", {
+        eveningToken,
+        nightToken,
+        eveningMentions,
+        nightMentions
       });
-      toast.success("Scheduler triggered successfully! Check your Slack channel.");
+
+      toast.dismiss(loadingToast);
+      toast.success("Shift settings saved successfully!");
     } catch (error: any) {
       toast.dismiss(loadingToast);
-      toast.error("Error triggering scheduler: " + error.message);
-    } finally {
-      setTriggering(false);
+      toast.error("Error saving shift settings: " + error.message);
     }
   };
 
@@ -171,7 +132,6 @@ export function SchedulerPage() {
     const loadingToast = toast.loading("Scanning for handover messages and posting replies...");
 
     try {
-      // Directly call scan-and-reply endpoint (no new handover message)
       const response = await axios.post("/api/scan-and-reply-handover");
 
       toast.dismiss(loadingToast);
@@ -211,7 +171,7 @@ export function SchedulerPage() {
       <div>
         <h2 className="text-2xl font-semibold tracking-tight mb-2">Scheduler</h2>
         <p className="text-sm text-muted-foreground">
-          Automatically send handover reports to Slack at scheduled times.
+          Configure shift-based handover reports with custom user tokens.
         </p>
       </div>
 
@@ -256,69 +216,12 @@ export function SchedulerPage() {
               <div>
                 <p className="text-sm font-medium mb-1">Active</p>
                 <p className="text-xs text-muted-foreground">
-                  Reports will be automatically sent to Slack at the scheduled times below.
+                  Reports will be sent based on shift configuration. Only shifts with valid user tokens will trigger.
                 </p>
               </div>
             </div>
           </div>
         )}
-      </div>
-
-      {/* Schedule Times */}
-      <div className="border border-border rounded-lg p-6 bg-card">
-        <div className="flex items-center gap-2 mb-4">
-          <Calendar className="w-4 h-4 text-muted-foreground" />
-          <h3 className="text-base font-semibold">Schedule Times</h3>
-        </div>
-
-        <div className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <Label htmlFor="time1" className="text-sm font-medium mb-2 block">
-                Evening Report
-              </Label>
-              <Input
-                id="time1"
-                type="time"
-                value={time1}
-                onChange={(e) => setTime1(e.target.value)}
-                className="w-full"
-              />
-              <p className="text-xs text-muted-foreground mt-1">Daily handover summary</p>
-            </div>
-
-            <div>
-              <Label htmlFor="time2" className="text-sm font-medium mb-2 block">
-                Night Report
-              </Label>
-              <Input
-                id="time2"
-                type="time"
-                value={time2}
-                onChange={(e) => setTime2(e.target.value)}
-                className="w-full"
-              />
-              <p className="text-xs text-muted-foreground mt-1">End of day summary</p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Badge variant="outline" className="text-xs">GMT+7</Badge>
-            <p className="text-xs text-muted-foreground">
-              Server restart required for changes to take effect
-            </p>
-          </div>
-
-          <Button
-            onClick={handleSaveTriggerTimes}
-            variant="default"
-            size="sm"
-            className="w-full sm:w-auto"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            Save Trigger Times
-          </Button>
-        </div>
       </div>
 
       {/* Custom Channel ID */}
@@ -358,69 +261,129 @@ export function SchedulerPage() {
         </div>
       </div>
 
-      {/* Test Scheduler */}
-      <div className="border border-border rounded-lg p-6 bg-card">
-        <h3 className="text-base font-semibold mb-2">Manual Triggers</h3>
-        <p className="text-sm text-muted-foreground mb-4">
-          Manually trigger scheduled tasks to test your configuration.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <Button
-            onClick={handleTestScheduler}
-            disabled={triggering}
-            variant="outline"
-            className="w-full sm:w-auto"
-          >
-            <Play className="w-4 h-4 mr-2" />
-            {triggering ? "Sending..." : "Trigger Handover Report"}
-          </Button>
-          <Button
-            onClick={handleTriggerScheduledComments}
-            disabled={triggeringComments}
-            variant="outline"
-            className="w-full sm:w-auto"
-          >
-            <Zap className="w-4 h-4 mr-2" />
-            {triggeringComments ? "Posting..." : "Trigger Scheduled Comments"}
-          </Button>
-        </div>
-      </div>
-
-      {/* Member Mentions */}
+      {/* Evening Shift Settings */}
       <div className="border border-border rounded-lg p-6 bg-card">
         <div className="flex items-center gap-2 mb-4">
-          <AtSign className="w-4 h-4 text-muted-foreground" />
-          <h3 className="text-base font-semibold">Member Mentions</h3>
+          <Sun className="w-4 h-4 text-orange-500" />
+          <h3 className="text-base font-semibold">Evening Shift</h3>
         </div>
 
         <div className="space-y-4">
           <div>
-            <Label htmlFor="mentions" className="text-sm font-medium mb-2 block">
-              Slack Member IDs or Mentions
+            <Label htmlFor="eveningToken" className="text-sm font-medium mb-2 block">
+              <Key className="w-3 h-3 inline mr-1" />
+              Evening User Token
             </Label>
             <Input
-              id="mentions"
+              id="eveningToken"
+              type="password"
+              value={eveningToken}
+              onChange={(e) => setEveningToken(e.target.value)}
+              placeholder="xoxp-..."
+              className="w-full font-mono"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Slack user token for evening report. Leave empty to disable evening report.
+            </p>
+          </div>
+
+          <div>
+            <Label htmlFor="eveningMentions" className="text-sm font-medium mb-2 block">
+              <AtSign className="w-3 h-3 inline mr-1" />
+              Evening Mentions
+            </Label>
+            <Input
+              id="eveningMentions"
               type="text"
-              value={memberMentions}
-              onChange={(e) => setMemberMentions(e.target.value)}
+              value={eveningMentions}
+              onChange={(e) => setEveningMentions(e.target.value)}
               placeholder="<@U123456> <@U789012> or @channel"
               className="w-full"
             />
             <p className="text-xs text-muted-foreground mt-1">
-              These mentions will appear below "Please refer to this ticket information" in handover messages
+              Member mentions for evening shift handover
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Night Shift Settings */}
+      <div className="border border-border rounded-lg p-6 bg-card">
+        <div className="flex items-center gap-2 mb-4">
+          <Moon className="w-4 h-4 text-blue-500" />
+          <h3 className="text-base font-semibold">Night Shift</h3>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <Label htmlFor="nightToken" className="text-sm font-medium mb-2 block">
+              <Key className="w-3 h-3 inline mr-1" />
+              Night User Token
+            </Label>
+            <Input
+              id="nightToken"
+              type="password"
+              value={nightToken}
+              onChange={(e) => setNightToken(e.target.value)}
+              placeholder="xoxp-..."
+              className="w-full font-mono"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Slack user token for night report. Leave empty to disable night report.
             </p>
           </div>
 
-          <Button
-            onClick={handleSaveMemberMentions}
-            variant="default"
-            size="sm"
-            className="w-full sm:w-auto"
-          >
-            <Save className="w-4 h-4 mr-2" />
-            Save Member Mentions
-          </Button>
+          <div>
+            <Label htmlFor="nightMentions" className="text-sm font-medium mb-2 block">
+              <AtSign className="w-3 h-3 inline mr-1" />
+              Night Mentions
+            </Label>
+            <Input
+              id="nightMentions"
+              type="text"
+              value={nightMentions}
+              onChange={(e) => setNightMentions(e.target.value)}
+              placeholder="<@U123456> <@U789012> or @channel"
+              className="w-full"
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              Member mentions for night shift handover
+            </p>
+          </div>
         </div>
+      </div>
+
+      {/* Save All Settings Button */}
+      <div className="border border-border rounded-lg p-6 bg-card">
+        <Button
+          onClick={handleSaveShiftSettings}
+          variant="default"
+          size="lg"
+          className="w-full"
+        >
+          <Save className="w-4 h-4 mr-2" />
+          Save All Shift Settings
+        </Button>
+        <p className="text-xs text-muted-foreground mt-2 text-center">
+          Save tokens and mentions for both evening and night shifts
+        </p>
+      </div>
+
+      {/* Manual Triggers */}
+      <div className="border border-border rounded-lg p-6 bg-card">
+        <h3 className="text-base font-semibold mb-2">Manual Trigger</h3>
+        <p className="text-sm text-muted-foreground mb-4">
+          Manually scan and reply to handover messages.
+        </p>
+        <Button
+          onClick={handleTriggerScheduledComments}
+          disabled={triggeringComments}
+          variant="outline"
+          className="w-full"
+        >
+          <Zap className="w-4 h-4 mr-2" />
+          {triggeringComments ? "Posting..." : "Trigger Scheduled Comments"}
+        </Button>
       </div>
     </div>
   );

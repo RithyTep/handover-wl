@@ -461,4 +461,176 @@ export async function setMemberMentions(mentions: string): Promise<void> {
   }
 }
 
+// Get evening user token
+export async function getEveningUserToken(): Promise<string | null> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT value FROM app_settings WHERE key = 'evening_user_token'"
+    );
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    return result.rows[0].value;
+  } catch (error) {
+    console.error("Error getting evening user token:", error);
+    return null;
+  } finally {
+    client.release();
+  }
+}
+
+// Set evening user token
+export async function setEveningUserToken(token: string): Promise<void> {
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      INSERT INTO app_settings (key, value, updated_at)
+      VALUES ('evening_user_token', $1, CURRENT_TIMESTAMP)
+      ON CONFLICT (key)
+      DO UPDATE SET
+        value = EXCLUDED.value,
+        updated_at = CURRENT_TIMESTAMP
+    `, [token]);
+
+    console.log("Evening user token updated");
+  } catch (error) {
+    console.error("Error setting evening user token:", error);
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+// Get night user token
+export async function getNightUserToken(): Promise<string | null> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT value FROM app_settings WHERE key = 'night_user_token'"
+    );
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    return result.rows[0].value;
+  } catch (error) {
+    console.error("Error getting night user token:", error);
+    return null;
+  } finally {
+    client.release();
+  }
+}
+
+// Set night user token
+export async function setNightUserToken(token: string): Promise<void> {
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      INSERT INTO app_settings (key, value, updated_at)
+      VALUES ('night_user_token', $1, CURRENT_TIMESTAMP)
+      ON CONFLICT (key)
+      DO UPDATE SET
+        value = EXCLUDED.value,
+        updated_at = CURRENT_TIMESTAMP
+    `, [token]);
+
+    console.log("Night user token updated");
+  } catch (error) {
+    console.error("Error setting night user token:", error);
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+// Get evening member mentions
+export async function getEveningMentions(): Promise<string | null> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT value FROM app_settings WHERE key = 'evening_mentions'"
+    );
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    return result.rows[0].value;
+  } catch (error) {
+    console.error("Error getting evening mentions:", error);
+    return null;
+  } finally {
+    client.release();
+  }
+}
+
+// Set evening member mentions
+export async function setEveningMentions(mentions: string): Promise<void> {
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      INSERT INTO app_settings (key, value, updated_at)
+      VALUES ('evening_mentions', $1, CURRENT_TIMESTAMP)
+      ON CONFLICT (key)
+      DO UPDATE SET
+        value = EXCLUDED.value,
+        updated_at = CURRENT_TIMESTAMP
+    `, [mentions]);
+
+    console.log("Evening mentions updated:", mentions);
+  } catch (error) {
+    console.error("Error setting evening mentions:", error);
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
+// Get night member mentions
+export async function getNightMentions(): Promise<string | null> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT value FROM app_settings WHERE key = 'night_mentions'"
+    );
+
+    if (result.rows.length === 0) {
+      return null;
+    }
+
+    return result.rows[0].value;
+  } catch (error) {
+    console.error("Error getting night mentions:", error);
+    return null;
+  } finally {
+    client.release();
+  }
+}
+
+// Set night member mentions
+export async function setNightMentions(mentions: string): Promise<void> {
+  const client = await pool.connect();
+  try {
+    await client.query(`
+      INSERT INTO app_settings (key, value, updated_at)
+      VALUES ('night_mentions', $1, CURRENT_TIMESTAMP)
+      ON CONFLICT (key)
+      DO UPDATE SET
+        value = EXCLUDED.value,
+        updated_at = CURRENT_TIMESTAMP
+    `, [mentions]);
+
+    console.log("Night mentions updated:", mentions);
+  } catch (error) {
+    console.error("Error setting night mentions:", error);
+    throw error;
+  } finally {
+    client.release();
+  }
+}
+
 export default pool;

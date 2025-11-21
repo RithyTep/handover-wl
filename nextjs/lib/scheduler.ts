@@ -1,6 +1,6 @@
 import * as cron from "node-cron";
 import axios from "axios";
-import { getSchedulerEnabled, getEnabledScheduledComments, getTriggerTimes } from "./db";
+import { getSchedulerEnabled, getEnabledScheduledComments, getTriggerTimes, getEveningUserToken, getNightUserToken } from "./db";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 const SCHEDULE_ENABLED = process.env.SCHEDULE_ENABLED === "true";
@@ -43,7 +43,7 @@ export async function initScheduler() {
         return;
       }
 
-      await sendScheduledSlackMessage(time1);
+      await sendScheduledSlackMessage(time1, "evening");
     },
     {
       timezone: "Asia/Bangkok", // GMT+7
@@ -63,7 +63,7 @@ export async function initScheduler() {
         return;
       }
 
-      await sendScheduledSlackMessage(time2);
+      await sendScheduledSlackMessage(time2, "night");
     },
     {
       timezone: "Asia/Bangkok", // GMT+7
@@ -96,11 +96,23 @@ export async function initScheduler() {
   console.log("  - Tasks will check database state before running");
 }
 
-async function sendScheduledSlackMessage(timeLabel: string) {
+async function sendScheduledSlackMessage(timeLabel: string, shift: "evening" | "night") {
   try {
+    // Check if token exists for this shift
+    const token = shift === "evening"
+      ? await getEveningUserToken()
+      : await getNightUserToken();
+
+    if (!token) {
+      console.log(`[Scheduler] Skipping ${shift} shift (${timeLabel}) - no user token configured`);
+      return;
+    }
+
+    console.log(`[Scheduler] Triggering ${shift} shift (${timeLabel}) with configured user token`);
+
     const response = await axios.post(
       `${APP_URL}/api/scheduled-slack`,
-      {},
+      { shift }, // Pass shift type to API
       {
         headers: {
           "Content-Type": "application/json",
@@ -323,8 +335,9 @@ function matchesCronPart(cronPart: string, currentValue: number, min: number, ma
   return parseInt(cronPart) === currentValue;
 }
 
-// Export for manual testing
+// Export for manual testing - triggers both shifts
 export async function triggerScheduledTask() {
-  console.log("[Scheduler] Manually triggering scheduled task...");
-  await sendScheduledSlackMessage("Manual Trigger");
+  console.log("[Scheduler] Manually triggering scheduled tasks for both shifts...");
+  await sendScheduledSlackMessage("Manual Trigger - Evening", "evening");
+  await sendScheduledSlackMessage("Manual Trigger - Night", "night");
 }
