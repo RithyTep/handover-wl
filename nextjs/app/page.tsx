@@ -31,6 +31,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, Ticket } from "./columns";
 import { CommandPalette } from "@/components/command-palette";
+import { Navigation } from "@/components/navigation";
 
 export default function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -409,10 +410,8 @@ export default function Dashboard() {
 
         {/* Header */}
         <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-border bg-background">
-          <div className="flex items-center gap-2">
-            <h1 className="text-sm font-semibold text-foreground">
-              Handover
-            </h1>
+          <div className="flex items-center gap-4">
+            <Navigation />
             <span className="text-xs text-muted-foreground">
               {tickets.length}
             </span>

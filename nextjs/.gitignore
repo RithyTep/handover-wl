@@ -35,3 +35,4 @@ next-env.d.ts
 
 # ticket data
 ticket_data.json
+achievements_data.json
