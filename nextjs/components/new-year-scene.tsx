@@ -214,7 +214,7 @@ export function NewYearScene() {
                         <img
                           src="/aba.jpg"
                           alt="QR Code"
-                          className="w-full object-contain border-2 border-red-300 shadow-lg rounded-lg bg-white p-2"
+                          className="w-32 sm:w-48 mx-auto object-contain border-2 border-red-300 shadow-lg rounded-lg bg-white p-1 sm:p-2"
                         />
                         <div className="text-right">
                           <div className="text-gray-600">{mailContent.sign}</div>
