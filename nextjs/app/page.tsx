@@ -16,7 +16,10 @@ import {
   History,
   Settings,
   Sparkles,
+  Snowflake,
+  Gift,
 } from "lucide-react";
+import { ChristmasLoading } from "@/components/christmas-loading";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -27,11 +30,11 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, Ticket } from "./columns";
 import { CommandPalette } from "@/components/command-palette";
 import { Navigation } from "@/components/navigation";
+import { NewYearScene } from "@/components/new-year-scene";
 
 export default function Dashboard() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -283,7 +286,7 @@ export default function Dashboard() {
     }
 
     const loadingToast = toast.loading(
-      `AI filling ${missingTickets.length} ticket(s)...`
+      `Santa filling ${missingTickets.length} ticket(s)...`
     );
 
     try {
@@ -299,7 +302,7 @@ export default function Dashboard() {
 
         // Update progress
         toast.loading(
-          `AI filling ${i + 1}-${Math.min(i + batchSize, missingTickets.length)} of ${missingTickets.length}...`,
+          `Santa filling ${i + 1}-${Math.min(i + batchSize, missingTickets.length)} of ${missingTickets.length}...`,
           { id: loadingToast }
         );
 
@@ -383,11 +386,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-dvh bg-background">
-        <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-2 text-foreground" />
-          <p className="text-sm text-muted-foreground">Loading tickets...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-dvh christmas-bg">
+        <ChristmasLoading />
       </div>
     );
   }
@@ -406,23 +406,28 @@ export default function Dashboard() {
       />
 
       {/* Main Content Area */}
-      <div className="h-dvh bg-background flex flex-col overflow-hidden">
+      <div className="h-dvh christmas-bg flex flex-col overflow-hidden relative">
+        <NewYearScene />
 
         {/* Header */}
-        <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-border bg-background">
+        <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-white/20 bg-black/20 backdrop-blur-sm z-10">
           <div className="flex items-center gap-4">
-            <Navigation />
-            <span className="text-xs text-muted-foreground">
+            <div className="flex items-center gap-2">
+               <h1 className="text-2xl text-white christmas-header-text flex items-center gap-2">
+                  <span className="text-2xl">🎄</span>
+                  <span className="font-script christmas-title-gradient">Handover</span>
+               </h1>
+            </div>
+            <span className="text-xs text-white/80 font-medium bg-white/10 px-2 py-0.5 rounded-full">
               {tickets.length}
             </span>
           </div>
           <div className="flex items-center gap-1">
             {/* Command Palette Hint */}
-            <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground bg-muted/50 border border-border rounded">
+            <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-white/70 bg-white/10 border border-white/20 rounded">
               <Command className="w-3 h-3" />
               <span>K</span>
             </kbd>
-            <ThemeToggle variant="header" />
           </div>
         </header>
 
@@ -434,22 +439,22 @@ export default function Dashboard() {
               columns={columns}
               data={tickets}
               actionButtons={
-              <div className="hidden sm:flex items-center gap-1">
+              <div className="hidden sm:flex items-center gap-3 pt-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleAIFillAll}
-                  className="h-8"
-                  title="AI Fill All Missing"
+                  className="h-9 px-4 text-red-100 bg-red-900/50 hover:bg-red-900/70 border border-red-500/30 snow-btn"
+                  title="Santa Fill All Missing"
                 >
-                  <Sparkles className="w-3.5 h-3.5 mr-1.5" />
-                  <span>AI Fill</span>
+                  <Snowflake className="w-3.5 h-3.5 mr-1.5" />
+                  <span>Santa Fill</span>
                 </Button>
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => setQuickFillDialog(true)}
-                  className="h-8"
+                  className="h-9 px-4 text-blue-100 bg-blue-900/50 hover:bg-blue-900/70 border border-blue-500/30 snow-btn"
                   title="Quick Fill"
                 >
                   <Zap className="w-3.5 h-3.5 mr-1.5" />
@@ -459,7 +464,7 @@ export default function Dashboard() {
                   variant="ghost"
                   size="sm"
                   onClick={() => setClearDialog(true)}
-                  className="h-8"
+                  className="h-9 px-4 text-yellow-100 bg-yellow-900/50 hover:bg-yellow-900/70 border border-yellow-500/30 snow-btn"
                   title="Clear All"
                 >
                   <Trash2 className="w-3.5 h-3.5 mr-1.5" />
@@ -469,7 +474,7 @@ export default function Dashboard() {
                   variant="ghost"
                   size="sm"
                   onClick={() => window.location.reload()}
-                  className="h-8"
+                  className="h-9 px-4 text-purple-100 bg-purple-900/50 hover:bg-purple-900/70 border border-purple-500/30 snow-btn"
                   title="Refresh"
                 >
                   <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
@@ -479,7 +484,7 @@ export default function Dashboard() {
                   variant="ghost"
                   size="sm"
                   onClick={handleCopyForSlack}
-                  className="h-8"
+                  className="h-9 px-4 text-cyan-100 bg-cyan-900/50 hover:bg-cyan-900/70 border border-cyan-500/30 snow-btn"
                   title="Copy for Slack"
                 >
                   <Copy className="w-3.5 h-3.5 mr-1.5" />
@@ -489,7 +494,7 @@ export default function Dashboard() {
                   variant="outline"
                   size="sm"
                   onClick={handleSave}
-                  className="h-8"
+                  className="h-9 px-4 text-emerald-100 bg-emerald-900/50 hover:bg-emerald-900/70 border border-emerald-500/30 snow-btn"
                   title="Save Changes"
                 >
                   <Save className="w-3.5 h-3.5 mr-1.5" />
@@ -499,7 +504,7 @@ export default function Dashboard() {
                   variant="default"
                   size="sm"
                   onClick={() => setSendSlackDialog(true)}
-                  className="h-8"
+                  className="h-9 px-4 bg-green-600 hover:bg-green-700 text-white border-none snow-btn shadow-lg shadow-green-900/20"
                   title="Send to Slack"
                 >
                   <Send className="w-3.5 h-3.5 mr-1.5" />
@@ -539,38 +544,33 @@ export default function Dashboard() {
         <div className="flex items-center justify-around">
           <button
             onClick={handleAIFillAll}
-            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-muted/80 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-red-900/80 transition-all active:scale-95 snow-btn bg-red-900/40 border border-red-500/30"
           >
-            <Sparkles className="w-5 h-5 text-foreground/70" />
-            <span className="text-[9px] font-medium text-muted-foreground mt-0.5">AI</span>
+            <Snowflake className="w-5 h-5 text-red-200" />
           </button>
           <button
             onClick={() => setQuickFillDialog(true)}
-            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-muted/80 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-blue-900/80 transition-all active:scale-95 snow-btn bg-blue-900/40 border border-blue-500/30"
           >
-            <Zap className="w-5 h-5 text-foreground/70" />
-            <span className="text-[9px] font-medium text-muted-foreground mt-0.5">Fill</span>
+            <Zap className="w-5 h-5 text-blue-200" />
           </button>
           <button
             onClick={() => setClearDialog(true)}
-            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-muted/80 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-yellow-900/80 transition-all active:scale-95 snow-btn bg-yellow-900/40 border border-yellow-500/30"
           >
-            <Trash2 className="w-5 h-5 text-foreground/70" />
-            <span className="text-[9px] font-medium text-muted-foreground mt-0.5">Clear</span>
+            <Trash2 className="w-5 h-5 text-yellow-200" />
           </button>
           <button
             onClick={handleSave}
-            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-muted/80 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-emerald-900/80 transition-all active:scale-95 snow-btn bg-emerald-900/40 border border-emerald-500/30"
           >
-            <Save className="w-5 h-5 text-foreground/70" />
-            <span className="text-[9px] font-medium text-muted-foreground mt-0.5">Save</span>
+            <Save className="w-5 h-5 text-emerald-200" />
           </button>
           <button
             onClick={() => setSendSlackDialog(true)}
-            className="flex flex-col items-center justify-center min-w-[52px] min-h-[44px] px-2 rounded-xl bg-primary text-primary-foreground active:bg-primary/90 transition-all active:scale-95"
+            className="flex flex-col items-center justify-center min-w-[52px] min-h-[44px] px-2 rounded-xl bg-green-600 text-white active:bg-green-700 transition-all active:scale-95 snow-btn shadow-lg shadow-green-900/20"
           >
             <Send className="w-5 h-5" />
-            <span className="text-[9px] font-medium mt-0.5">Send</span>
           </button>
         </div>
       </div>

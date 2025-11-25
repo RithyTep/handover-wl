@@ -1,7 +1,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown } from "lucide-react"
+import { ArrowUpDown, Gift } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useRef } from "react"
@@ -28,7 +28,7 @@ function TicketLink({
       href={ticket.jiraUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-foreground hover:text-primary underline-offset-2 hover:underline font-medium text-xs whitespace-nowrap transition-colors"
+      className="text-white hover:text-white/80 underline-offset-2 hover:underline font-medium text-xs whitespace-nowrap transition-colors"
       onMouseEnter={handleMouseEnter}
     >
       {ticket.key}
@@ -51,14 +51,17 @@ function SimpleInput({
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <Input
-      ref={inputRef}
-      key={ticketKey}
-      defaultValue={defaultValue === "--" ? "" : defaultValue}
-      onChange={(e) => onChange(e.target.value || "--")}
-      placeholder={placeholder}
-      className="h-11 sm:h-8 bg-background border-border text-sm sm:text-xs w-full sm:min-w-[250px] touch-manipulation rounded-lg focus:ring-2 focus:ring-primary/20"
-    />
+    <div className="relative">
+      <Input
+        ref={inputRef}
+        key={ticketKey}
+        defaultValue={defaultValue === "--" ? "" : defaultValue}
+        onChange={(e) => onChange(e.target.value || "--")}
+        placeholder={placeholder}
+        className="h-11 sm:h-8 bg-white/10 border-white/20 text-white placeholder:text-white/40 text-sm sm:text-xs w-full sm:min-w-[250px] touch-manipulation rounded-lg focus:ring-2 focus:ring-white/30 pr-8"
+      />
+      <Gift className="w-3.5 h-3.5 text-white/40 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+    </div>
   );
 }
 
@@ -95,7 +98,7 @@ export const createColumns = ({
     header: () => <span className="hidden sm:inline">#</span>,
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="text-muted-foreground font-medium text-xs hidden sm:block">
+      <div className="text-white/70 font-medium text-xs hidden sm:block">
         {row.index + 1}
       </div>
     ),
@@ -108,7 +111,7 @@ export const createColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-xs font-medium"
+          className="h-auto p-0 hover:bg-transparent text-xs font-medium text-white/90 hover:text-white"
         >
           Ticket
           <ArrowUpDown className="ml-1.5 h-3 w-3" />
@@ -131,7 +134,7 @@ export const createColumns = ({
     header: "Summary",
     enableHiding: false,
     cell: ({ row }) => (
-      <div className="text-xs text-foreground line-clamp-2 sm:truncate sm:max-w-md">
+      <div className="text-xs text-white line-clamp-2 sm:truncate sm:max-w-md">
         {row.getValue("summary")}
       </div>
     ),
@@ -140,7 +143,7 @@ export const createColumns = ({
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <div className="text-xs text-muted-foreground whitespace-nowrap">
+      <div className="text-xs text-white/70 whitespace-nowrap">
         {row.getValue("status")}
       </div>
     ),
@@ -166,14 +169,14 @@ export const createColumns = ({
             <img
               src={assigneeAvatar}
               alt={assignee}
-              className="w-5 h-5 rounded-full ring-1 ring-border"
+              className="w-5 h-5 rounded-full ring-1 ring-white/30"
             />
           ) : (
-            <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[9px] font-medium text-muted-foreground">
+            <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[9px] font-medium text-white">
               {assignee === "Unassigned" ? "?" : assignee.charAt(0).toUpperCase()}
             </div>
           )}
-          <span className="text-xs text-foreground">{getAssigneeDisplay(assignee)}</span>
+          <span className="text-xs text-white">{getAssigneeDisplay(assignee)}</span>
         </div>
       )
     },
@@ -185,7 +188,7 @@ export const createColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-[11px] font-medium"
+          className="h-auto p-0 hover:bg-transparent text-[11px] font-medium text-white/90 hover:text-white"
         >
           Created
           <ArrowUpDown className="ml-1 h-3 w-3" />
@@ -195,7 +198,7 @@ export const createColumns = ({
     cell: ({ row }) => {
       const date = new Date(row.getValue("created"))
       return (
-        <div className="text-xs text-muted-foreground whitespace-nowrap">
+        <div className="text-xs text-white/70 whitespace-nowrap">
           {date.toLocaleDateString()}
         </div>
       )
@@ -208,7 +211,7 @@ export const createColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-[11px] font-medium"
+          className="h-auto p-0 hover:bg-transparent text-[11px] font-medium text-white/90 hover:text-white"
         >
           Due Date
           <ArrowUpDown className="ml-1 h-3 w-3" />
@@ -218,7 +221,7 @@ export const createColumns = ({
     cell: ({ row }) => {
       const dueDate = row.getValue("dueDate") as string | null
       return (
-        <div className="text-xs text-muted-foreground whitespace-nowrap">
+        <div className="text-xs text-white/70 whitespace-nowrap">
           {dueDate ? new Date(dueDate).toLocaleDateString() : "—"}
         </div>
       )
@@ -228,7 +231,7 @@ export const createColumns = ({
     accessorKey: "wlMainTicketType",
     header: () => <div className="whitespace-nowrap">WL Main Type</div>,
     cell: ({ row }) => (
-      <div className="text-xs text-muted-foreground whitespace-nowrap">
+      <div className="text-xs text-white/70 whitespace-nowrap">
         {row.getValue("wlMainTicketType")}
       </div>
     ),
@@ -237,7 +240,7 @@ export const createColumns = ({
     accessorKey: "wlSubTicketType",
     header: () => <div className="whitespace-nowrap">WL Sub Type</div>,
     cell: ({ row }) => (
-      <div className="text-xs text-muted-foreground whitespace-nowrap">
+      <div className="text-xs text-white/70 whitespace-nowrap">
         {row.getValue("wlSubTicketType")}
       </div>
     ),
@@ -249,7 +252,7 @@ export const createColumns = ({
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-xs font-medium"
+          className="h-auto p-0 hover:bg-transparent text-xs font-medium text-white/90 hover:text-white"
         >
           Customer Level
           <ArrowUpDown className="ml-1.5 h-3 w-3" />
@@ -257,7 +260,7 @@ export const createColumns = ({
       )
     },
     cell: ({ row }) => (
-      <div className="text-xs text-muted-foreground whitespace-nowrap">
+      <div className="text-xs text-white/70 whitespace-nowrap">
         {row.getValue("customerLevel")}
       </div>
     ),

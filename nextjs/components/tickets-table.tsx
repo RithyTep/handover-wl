@@ -46,40 +46,35 @@ export function TicketsTable<TData, TValue>({
   const [previewAnchor, setPreviewAnchor] = React.useState<HTMLElement | null>(null)
   const [activeFilters, setActiveFilters] = React.useState<TicketFilters>({})
 
-  // Load showDetails from localStorage
-  const [showDetails, setShowDetails] = React.useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('showDetails')
-      return saved ? JSON.parse(saved) : false
-    }
-    return false
+  // Load showDetails from localStorage (after mount to avoid hydration mismatch)
+  const [showDetails, setShowDetails] = React.useState(false)
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
+    assignee: true,
+    created: false,
+    dueDate: false,
+    status: false,
+    wlMainTicketType: false,
+    wlSubTicketType: false,
+    customerLevel: false,
   })
 
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>(() => {
-      if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem('showDetails')
-        const isVisible = saved ? JSON.parse(saved) : false
-        return {
-          assignee: true, // Always visible
-          created: isVisible,
-          dueDate: isVisible,
-          status: isVisible,
-          wlMainTicketType: isVisible,
-          wlSubTicketType: isVisible,
-          customerLevel: isVisible,
-        }
-      }
-      return {
-        assignee: true, // Always visible
-        created: false,
-        dueDate: false,
-        status: false,
-        wlMainTicketType: false,
-        wlSubTicketType: false,
-        customerLevel: false,
-      }
-    })
+  // Load from localStorage after mount
+  React.useEffect(() => {
+    const saved = localStorage.getItem('showDetails')
+    if (saved) {
+      const isVisible = JSON.parse(saved)
+      setShowDetails(isVisible)
+      setColumnVisibility({
+        assignee: true,
+        created: isVisible,
+        dueDate: isVisible,
+        status: isVisible,
+        wlMainTicketType: isVisible,
+        wlSubTicketType: isVisible,
+        customerLevel: isVisible,
+      })
+    }
+  }, [])
   const [rowSelection, setRowSelection] = React.useState({})
 
   // Toggle all detail columns
@@ -226,12 +221,13 @@ export function TicketsTable<TData, TValue>({
         {/* Show Details Toggle - Left side */}
         <Button
           variant="ghost"
-          size="icon"
+          size="sm"
           onClick={toggleDetails}
-          className="h-8 w-8"
+          className="h-9 px-3 text-white/80 hover:text-white hover:bg-white/10 border border-white/20"
           title={showDetails ? "Hide Details" : "Show Details"}
         >
-          {showDetails ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+          {showDetails ? <ChevronDown className="w-4 h-4 mr-1.5" /> : <ChevronRight className="w-4 h-4 mr-1.5" />}
+          <span>{showDetails ? "Hide" : "Details"}</span>
         </Button>
 
         {/* Action Buttons - Right side */}
@@ -239,27 +235,34 @@ export function TicketsTable<TData, TValue>({
       </div>
 
       {/* Mobile Card View */}
-      <div className="flex-1 overflow-auto sm:hidden">
-        <div className="space-y-3">
+      <div className="flex-1 block sm:hidden overflow-auto pb-24">
+        <div className="space-y-4 px-1">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, index) => {
-              const ticket = row.original as Ticket;
+              const ticket = row.original as any;
+              
+              // Christmas row coloring
+              let cardClass = "";
+              if (index % 3 === 0) cardClass = "christmas-row-gold";
+              else if (index % 3 === 1) cardClass = "christmas-row-red";
+              else cardClass = "christmas-row-green";
+
               return (
                 <div
                   key={row.id}
-                  className="bg-card border border-border rounded-lg overflow-hidden shadow-sm"
+                  className={`border border-white/20 rounded-lg overflow-hidden shadow-sm ${cardClass}`}
                 >
                   {/* Header */}
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-muted/30">
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-white/20 bg-black/10">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[11px] font-medium text-muted-foreground tabular-nums">
+                      <span className="text-[11px] font-medium text-white/80 tabular-nums">
                         {index + 1}
                       </span>
                       <a
                         href={ticket.jiraUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm font-semibold text-foreground hover:text-primary transition-colors"
+                        className="text-sm font-semibold text-white hover:text-white/80 transition-colors"
                       >
                         {ticket.key}
                       </a>
@@ -269,10 +272,10 @@ export function TicketsTable<TData, TValue>({
                         <img
                           src={ticket.assigneeAvatar}
                           alt={ticket.assignee}
-                          className="w-5 h-5 rounded-full"
+                          className="w-5 h-5 rounded-full ring-1 ring-white/30"
                         />
                       ) : (
-                        <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center text-[9px] font-medium text-muted-foreground">
+                        <div className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[9px] font-medium text-white">
                           {ticket.assignee === "Unassigned" ? "?" : ticket.assignee.charAt(0).toUpperCase()}
                         </div>
                       )}
@@ -282,12 +285,12 @@ export function TicketsTable<TData, TValue>({
                   {/* Content */}
                   <div className="p-4 space-y-4">
                     {/* Summary */}
-                    <p className="text-[13px] text-foreground/80 leading-relaxed line-clamp-2">{ticket.summary}</p>
+                    <p className="text-[13px] text-white/90 leading-relaxed line-clamp-2">{ticket.summary}</p>
 
                     {/* Inputs */}
                     <div className="space-y-3">
                       <div>
-                        <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Status</label>
+                        <label className="text-[10px] font-medium text-white/70 uppercase tracking-wider mb-1.5 block">Status</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedStatus")
                           .map((cell) => (
@@ -300,7 +303,7 @@ export function TicketsTable<TData, TValue>({
                           ))}
                       </div>
                       <div>
-                        <label className="text-[10px] font-medium text-muted-foreground uppercase tracking-wider mb-1.5 block">Action</label>
+                        <label className="text-[10px] font-medium text-white/70 uppercase tracking-wider mb-1.5 block">Action</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedAction")
                           .map((cell) => (
@@ -325,18 +328,18 @@ export function TicketsTable<TData, TValue>({
         </div>
       </div>
 
-      {/* Desktop Table View */}
-      <div className="flex-1 border border-border rounded-md overflow-hidden bg-card hidden sm:block">
-        <div className="h-full overflow-auto">
+      {/* Desktop Table View - Hidden on mobile */}
+      <div className="border border-white/20 rounded-md overflow-hidden hidden sm:flex sm:flex-col shadow-xl">
+        <div className="overflow-auto">
           <Table className="min-w-full md:min-w-[1400px]">
-            <TableHeader className="bg-muted/30">
+            <TableHeader className="bg-black/40 sticky top-0 z-10 backdrop-blur-md">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="border-b border-border hover:bg-transparent">
+                <TableRow key={headerGroup.id} className="border-b border-white/10 hover:bg-transparent">
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead
                         key={header.id}
-                        className="h-9 px-3 text-xs font-medium text-muted-foreground uppercase tracking-wide border-r border-border/50 last:border-r-0"
+                        className="h-10 px-3 text-xs font-bold text-white/90 uppercase tracking-wide border-r border-white/10 last:border-r-0"
                         style={{
                           width: header.getSize() !== 150 ? header.getSize() : undefined,
                         }}
@@ -355,16 +358,23 @@ export function TicketsTable<TData, TValue>({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
+                table.getRowModel().rows.map((row, index) => {
+                  // Christmas row coloring
+                  let rowClass = "";
+                  if (index % 3 === 0) rowClass = "christmas-row-gold";
+                  else if (index % 3 === 1) rowClass = "christmas-row-red";
+                  else rowClass = "christmas-row-green";
+
+                  return (
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="border-b border-border/50 hover:bg-muted/20 transition-colors duration-150"
+                    className={`border-b border-white/10 transition-colors duration-150 ${rowClass} hover:brightness-110`}
                   >
-                    {row.getVisibleCells().map((cell) => (
+                    {row.getVisibleCells().map((cell, cellIndex) => (
                       <TableCell
                         key={cell.id}
-                        className="px-3 py-2 border-r border-border/30 last:border-r-0"
+                        className={`px-3 py-2 border-r border-white/10 last:border-r-0 ${cellIndex === 0 ? 'candy-cane-border' : ''}`}
                         style={{
                           width: cell.column.getSize() !== 150 ? cell.column.getSize() : undefined,
                         }}
@@ -376,7 +386,7 @@ export function TicketsTable<TData, TValue>({
                       </TableCell>
                     ))}
                   </TableRow>
-                ))
+                )})
               ) : (
                 <TableRow>
                   <TableCell

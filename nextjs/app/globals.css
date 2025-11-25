@@ -1,12 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
 @layer base {
   :root {
-    /* Linear-inspired Light mode - Neutral gray scale */
+    --font-script: "Gochi Hand", cursive;
+    --font-sans-serif: "Poppins", sans-serif;
+    /* ... existing vars ... */
     --background: 0 0% 100%; /* Pure white */
     --foreground: 0 0% 9%; /* Almost black text */
 
@@ -107,6 +110,14 @@
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    cursor: url('/cursors/christmas-cursor.png'), auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Christmas cursor for clickable elements */
+  a, button, [role="button"], input[type="submit"], input[type="button"],
+  select, .cursor-pointer, [onclick], label[for] {
+    cursor: url('/cursors/christmas-pointer.png'), pointer !important;
   }
 
   /* Linear-style custom scrollbar */
@@ -133,5 +144,787 @@
     transition-property: background-color, border-color, color;
     transition-duration: 150ms;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer utilities {
+  .christmas-bg {
+    background: linear-gradient(to bottom, #20202c 0%, #515175 100%);
+    position: relative;
+    font-family: var(--font-sans-serif);
+  }
+
+  .font-script {
+    font-family: var(--font-script);
+  }
+
+  .font-sans-serif {
+    font-family: var(--font-sans-serif);
+  }
+
+  /* New Year Header */
+  .ny-header {
+    text-align: center;
+  }
+
+  .ny-header h1 {
+    margin-bottom: 20px;
+  }
+
+  .newYear {
+    font-family: var(--font-script);
+    font-size: calc(2rem + 5vw);
+    line-height: 1;
+    letter-spacing: 0.02em;
+    background: repeating-linear-gradient(
+      45deg,
+      #d80e13,
+      #d80e13 10px,
+      #ffffff 10px,
+      #ffffff 20px
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.24), 0 2.8px 2.2px rgba(0, 0, 0, 0.034);
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.2));
+  }
+
+  .title, .countdown {
+    font-family: var(--font-sans-serif);
+    text-transform: uppercase;
+    font-weight: 200;
+    letter-spacing: 0.4em;
+    line-height: 1;
+    margin: 0 0 1.5em;
+    padding: 0;
+    font-size: 1.3rem;
+    color: #fff;
+  }
+
+  .title:before, .title:after {
+    content: " ***** ";
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    color: #bad594;
+  }
+
+  .countdown {
+    display: flex;
+    gap: 0.35em;
+    justify-content: center;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* Snowflakes */
+  .winter-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  .snowflake {
+    position: absolute;
+    top: -2vh;
+    background-color: #fff;
+    border-radius: 100%;
+    opacity: 0.8;
+    animation: fall linear infinite;
+  }
+
+  .snowflake._sm { width: 2px; height: 2px; }
+  .snowflake._md { width: 3px; height: 3px; }
+  .snowflake._lg { width: 5px; height: 5px; }
+
+  @keyframes fall {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(20vw, 110vh); }
+  }
+
+  /* Ground */
+  .ground {
+    border-top-right-radius: 71vw 40px;
+    height: 61px;
+    background: white;
+  }
+  .ground:before {
+    border-radius: 50%;
+    content: " ";
+    position: absolute;
+    width: 71vw;
+    height: 100px;
+    top: 10px;
+    right: -33vw;
+    background: white;
+  }
+  .ground:after {
+    border-radius: 50%;
+    content: " ";
+    position: absolute;
+    width: 38vw;
+    height: 70px;
+    top: 5px;
+    right: -41vw;
+    background: white;
+  }
+
+  /* Mailbox */
+  .mailbox {
+    width: 120px;
+    height: 170px;
+  }
+  .mailbox .basis {
+    position: absolute;
+    width: 16px;
+    height: 65px;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #222;
+  }
+  .mailbox .box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 130px;
+    background: #d71536;
+    border-radius: 0 0 7px 7px;
+    border: 5px solid #b90b21;
+  }
+  .mailbox .box:before {
+    content: "";
+    position: absolute;
+    bottom: calc(100% + 5px);
+    left: -15px;
+    right: -15px;
+    height: 20px;
+    border-radius: 7px;
+    background-color: #b90b21;
+  }
+  .mailbox .box:after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    right: -5px;
+    height: 5px;
+    background-color: #600307;
+  }
+  .mailbox .box-title {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 5px;
+    text-align: center;
+    font-size: 1.25rem;
+    line-height: 1em;
+    color: white;
+  }
+  .mailbox .letters {
+    overflow: hidden;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 85px;
+    top: -50px;
+    left: 0;
+    right: 0;
+  }
+  .mailbox .letters:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 15px;
+    width: 75px;
+    background: #600307;
+    border-radius: 5px;
+  }
+  .mailbox .letter {
+    overflow: hidden;
+    position: absolute;
+    z-index: 1;
+    border-radius: 2px;
+  }
+  .mailbox .letter-first {
+    width: 70px;
+    height: 42px;
+    top: 50px;
+    left: 10px;
+    transform: rotate(80deg);
+  }
+  .mailbox .letter-first .letter-image {
+    position: absolute;
+    top: -3px;
+    left: -4px;
+    width: calc(100% + 10px);
+  }
+  .mailbox .letter-second {
+    width: 70px;
+    height: 45px;
+    top: 65px;
+    right: 12px;
+    transform: rotate(100deg);
+  }
+  .mailbox .letter-second .letter-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  /* Mail Dialog */
+  .mail {
+    background: repeating-linear-gradient(
+      -45deg,
+      #f6ebd8,
+      #f6ebd8 20px,
+      #41945f 20px,
+      #41945f 40px,
+      #f6ebd8 40px,
+      #f6ebd8 60px,
+      #c44141 60px,
+      #c44141 80px
+    );
+    padding: 15px;
+    border-radius: 4px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  }
+  .mail-inner {
+    background: #f6ebd8;
+    padding: 20px;
+    border-radius: 2px;
+  }
+
+  /* Candy Fireworks */
+  .candy {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: explode 1.25s ease-out forwards;
+    z-index: 100;
+  }
+
+  @keyframes explode {
+    0% {
+      transform: scale(0.5) translate(0, 0);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.2) translate(var(--x), var(--y));
+      opacity: 0;
+    }
+  }
+
+  .snow-btn {
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    text-align: center;
+    color: #fff;
+    /* background-image: 
+      linear-gradient(to bottom, #f12828, #a00332, #9f0f31),
+      linear-gradient(to bottom, #ae0034, #6f094c); */
+    background-clip: padding-box, border-box;
+    background-origin: padding-box, border-box;
+    box-shadow: 
+      inset 0 1px rgb(255 255 255 / .25),
+      inset 0 -1px rgb(0 0 0 / .1),
+      0 2px 4px rgb(0 0 0 / .25);
+    overflow: visible !important;
+  }
+  
+  
+  .snow-btn::after {
+    --overflow-x: 4px;
+    --snow-image: url('https://assets.codepen.io/4175254/snow-cap-test-2.png');
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: calc(var(--overflow-x) * -1);
+    border-image-source: var(--snow-image);
+    border-image-slice: calc(6 * 56 / 20) fill;
+    border-image-width: calc(28px / 3);
+    border-image-repeat: round;
+    width: calc(100% + var(--overflow-x) * 2);
+    height: 28px;
+    filter: drop-shadow(0 2px 1px rgb(0 0 0 / .25));
+    opacity: 1;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  @keyframes fade-in {
+    0%,
+    50% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  .canvas {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  /* Snowfall Animation - Removed in favor of Canvas */
+  /* .snowflake { ... } */
+
+  
+  /* Christmas Lights */
+  .christmas-lights {
+    display: flex;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    position: absolute;
+    top: -10px;
+    width: 100%;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  .christmas-lights li {
+    position: relative;
+    margin: 20px;
+    padding: 0;
+    list-style: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #fff;
+    animation-name: flash-1;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+
+  .christmas-lights li:nth-child(2n+1) {
+    background: #f00;
+    animation-name: flash-2;
+    animation-duration: 0.4s;
+  }
+
+  .christmas-lights li:nth-child(4n+2) {
+    background: #f90;
+    animation-name: flash-3;
+    animation-duration: 1.1s;
+  }
+
+  .christmas-lights li:nth-child(odd) {
+    animation-duration: 1.8s;
+  }
+
+  .christmas-lights li:nth-child(3n+1) {
+    animation-duration: 1.4s;
+  }
+
+  .christmas-lights li:before {
+    content: "";
+    position: absolute;
+    background: #222;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    top: -2px;
+    left: 1px;
+  }
+
+  .christmas-lights li:after {
+    content: "";
+    top: -14px;
+    left: 9px;
+    position: absolute;
+    width: 52px;
+    height: 19px;
+    border-bottom: solid #222 2px;
+    border-radius: 50%;
+  }
+
+  .christmas-lights li:last-child:after {
+    content: none;
+  }
+
+  @keyframes flash-1 {
+    0%, 100% { background: #0f0; box-shadow: 0px 5px 24px 3px #0f0; }
+    50% { background: rgba(0,255,0,0.4); box-shadow: 0px 5px 24px 3px rgba(0,255,0,0.2); }
+  }
+
+  @keyframes flash-2 {
+    0%, 100% { background: #f00; box-shadow: 0px 5px 24px 3px #f00; }
+    50% { background: rgba(255,0,0,0.4); box-shadow: 0px 5px 24px 3px rgba(255,0,0,0.2); }
+  }
+
+  @keyframes flash-3 {
+    0%, 100% { background: #f90; box-shadow: 0px 5px 24px 3px #f90; }
+    50% { background: rgba(255,153,0,0.4); box-shadow: 0px 5px 24px 3px rgba(255,153,0,0.2); }
+  }
+
+  /* ============================================
+     ENHANCED REALISTIC CANDY CANE LOADING
+     ============================================ */
+
+  .christmas-loader {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    min-height: 300px;
+  }
+
+  /* Floating Snow Particles */
+  .snow-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .snow-particle {
+    position: absolute;
+    top: -10px;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, #fff 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+    border-radius: 50%;
+    animation: snow-fall linear infinite;
+    opacity: 0.8;
+  }
+
+  @keyframes snow-fall {
+    0% {
+      transform: translateY(-10px) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    90% {
+      opacity: 0.8;
+    }
+    100% {
+      transform: translateY(300px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  /* Main Candy Cane Container */
+  .candy-cane-realistic {
+    position: relative;
+    width: 50px;
+    height: 200px;
+    animation: candy-swing-3d 2.5s ease-in-out infinite;
+    transform-style: preserve-3d;
+    filter: drop-shadow(8px 16px 24px rgba(0, 0, 0, 0.4));
+  }
+
+  @keyframes candy-swing-3d {
+    0%, 100% {
+      transform: rotate(-12deg) translateY(0);
+    }
+    25% {
+      transform: rotate(-8deg) translateY(-5px);
+    }
+    50% {
+      transform: rotate(12deg) translateY(0);
+    }
+    75% {
+      transform: rotate(8deg) translateY(-5px);
+    }
+  }
+
+  /* The curved hook - 3D effect */
+  .candy-hook-3d {
+    position: absolute;
+    top: -35px;
+    left: -18px;
+    width: 86px;
+    height: 55px;
+    overflow: hidden;
+  }
+
+  .candy-hook-outer {
+    position: absolute;
+    top: 15px;
+    left: 0;
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    background:
+      repeating-conic-gradient(
+        from 0deg,
+        #dc2626 0deg 15deg,
+        #fef2f2 15deg 30deg
+      );
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 25px), #fff calc(100% - 25px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 25px), #fff calc(100% - 25px));
+    animation: stripe-rotate 4s linear infinite;
+    box-shadow:
+      inset 4px 4px 8px rgba(255, 255, 255, 0.4),
+      inset -4px -4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .candy-hook-shine {
+    position: absolute;
+    top: 20px;
+    left: 8px;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      transparent 50%
+    );
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 20px), #fff calc(100% - 20px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 20px), #fff calc(100% - 20px));
+    pointer-events: none;
+  }
+
+  @keyframes stripe-rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* The straight stem - 3D effect */
+  .candy-stem-3d {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 160px;
+    border-radius: 25px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    overflow: hidden;
+    background: linear-gradient(
+      90deg,
+      #f5f5f5 0%,
+      #ffffff 30%,
+      #f5f5f5 70%,
+      #e5e5e5 100%
+    );
+  }
+
+  .candy-stripe-wrapper {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
+  .candy-stripes {
+    position: absolute;
+    top: -200%;
+    left: 0;
+    width: 100%;
+    height: 400%;
+    background: repeating-linear-gradient(
+      -55deg,
+      transparent 0px,
+      transparent 12px,
+      #dc2626 12px,
+      #dc2626 24px,
+      transparent 24px,
+      transparent 36px
+    );
+    animation: stripe-move 1.5s linear infinite;
+  }
+
+  @keyframes stripe-move {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(36px);
+    }
+  }
+
+  /* Glossy shine effect */
+  .candy-shine {
+    position: absolute;
+    top: 0;
+    left: 5px;
+    width: 15px;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    border-radius: 25px;
+    pointer-events: none;
+  }
+
+  /* Shadow on candy */
+  .candy-shadow {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 15px;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(0, 0, 0, 0.15) 100%
+    );
+    border-radius: 25px;
+    pointer-events: none;
+  }
+
+  /* Sparkle effects - 3D */
+  .candy-sparkle-3d {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+    animation: sparkle-3d 2s ease-in-out infinite;
+  }
+
+  .candy-sparkle-3d:nth-child(2) { animation-delay: 0.3s; }
+  .candy-sparkle-3d:nth-child(3) { animation-delay: 0.6s; }
+  .candy-sparkle-3d:nth-child(4) { animation-delay: 0.9s; }
+
+  @keyframes sparkle-3d {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0) rotate(0deg);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.2) rotate(180deg);
+    }
+  }
+
+  /* Christmas Ornaments */
+  .ornament {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    animation: ornament-float 3s ease-in-out infinite;
+  }
+
+  .ornament::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    background: #fbbf24;
+    border-radius: 2px;
+  }
+
+  .ornament-1 {
+    top: 20%;
+    left: -40px;
+    background: radial-gradient(circle at 30% 30%, #ef4444, #991b1b);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    animation-delay: 0s;
+  }
+
+  .ornament-2 {
+    top: 50%;
+    right: -35px;
+    background: radial-gradient(circle at 30% 30%, #22c55e, #166534);
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.4);
+    animation-delay: 0.5s;
+  }
+
+  .ornament-3 {
+    bottom: 25%;
+    left: -30px;
+    background: radial-gradient(circle at 30% 30%, #3b82f6, #1e40af);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    animation-delay: 1s;
+  }
+
+  @keyframes ornament-float {
+    0%, 100% {
+      transform: translateY(0) rotate(-5deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(5deg);
+    }
+  }
+
+  /* Loading Text Animation */
+  .loading-text-wrapper {
+    margin-top: 32px;
+    display: flex;
+    align-items: baseline;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .loading-letter {
+    display: inline-block;
+    animation: letter-bounce 1.4s ease-in-out infinite;
+  }
+
+  @keyframes letter-bounce {
+    0%, 100% {
+      transform: translateY(0);
+      color: #fef2f2;
+    }
+    25% {
+      transform: translateY(-8px);
+      color: #fca5a5;
+    }
+    50% {
+      transform: translateY(0);
+      color: #22c55e;
+    }
+    75% {
+      transform: translateY(-4px);
+      color: #86efac;
+    }
+  }
+
+  .loading-dots {
+    display: inline-flex;
+    margin-left: 2px;
+  }
+
+  .loading-dots span {
+    display: inline-block;
+    animation: dot-pulse 1.4s ease-in-out infinite;
+    color: #fbbf24;
+  }
+
+  @keyframes dot-pulse {
+    0%, 100% {
+      opacity: 0.3;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.3);
+    }
   }
 }

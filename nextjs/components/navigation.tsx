@@ -15,12 +15,6 @@ export function Navigation() {
       icon: ClipboardList,
       active: pathname === "/",
     },
-    {
-      href: "/achievements",
-      label: "Achievements",
-      icon: Trophy,
-      active: pathname === "/achievements",
-    },
   ];
 
   return (
