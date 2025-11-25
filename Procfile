@@ -1,1 +1,1 @@
-web: cd nextjs && npm start
+web: npm start
