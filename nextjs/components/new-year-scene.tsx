@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 export function NewYearScene() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -37,88 +36,71 @@ export function NewYearScene() {
     return () => clearInterval(timer);
   }, []);
 
-  // Snowflakes Logic
+  // Snowflakes Logic - Reduced count for better performance
   useEffect(() => {
     const wrapper = winterWrapperRef.current;
     if (!wrapper) return;
 
     const createSnowflakes = (count: number, className: string) => {
+      const fragment = document.createDocumentFragment();
       for (let i = 0; i < count; i++) {
         const snowflake = document.createElement("div");
         snowflake.className = `snowflake ${className}`;
-        
-        // Random positioning and animation
-        const left = Math.random() * 100 + "vw";
-        const animationDuration = (Math.random() * 20 + 10) + "s"; // 10-30s
-        const animationDelay = (Math.random() * -20) + "s";
-        const blur = (Math.random() * 2 - 1) + "px";
-
-        snowflake.style.left = left;
-        snowflake.style.animationDuration = animationDuration;
-        snowflake.style.animationDelay = animationDelay;
-        if (className.includes("_sm") || className.includes("_md")) {
-             snowflake.style.filter = `blur(${blur})`;
-        }
-
-        wrapper.appendChild(snowflake);
+        snowflake.style.left = Math.random() * 100 + "vw";
+        snowflake.style.animationDuration = (Math.random() * 15 + 10) + "s";
+        snowflake.style.animationDelay = (Math.random() * -15) + "s";
+        fragment.appendChild(snowflake);
       }
+      wrapper.appendChild(fragment);
     };
 
-    createSnowflakes(100, "_sm"); // Reduced count for performance
-    createSnowflakes(30, "_md");
-    createSnowflakes(20, "_lg");
+    // Reduced snowflake counts significantly
+    createSnowflakes(30, "_sm");
+    createSnowflakes(15, "_md");
+    createSnowflakes(10, "_lg");
 
     return () => {
       if (wrapper) wrapper.innerHTML = '';
     };
   }, []);
 
-  // Fireworks Logic
-  const startFireworks = (e: React.MouseEvent | MouseEvent) => {
-    const candyCount = 20; // Reduced for performance
-    const colors = ["#ADD8E6", "#B2F2BB", "#FFFACD", "#FFE4E1", "#FFB6C1", "#D8BFD8"];
-    
-    // Use clientX/Y from event
-    const clientX = e.clientX;
-    const clientY = e.clientY;
+  // Fireworks Logic - Optimized with fewer particles
+  const startFireworks = useCallback((x: number, y: number) => {
+    const candyCount = 8;
+    const colors = ["#ADD8E6", "#B2F2BB", "#FFFACD", "#FFB6C1"];
+    const fragment = document.createDocumentFragment();
 
     for (let i = 0; i < candyCount; i++) {
       const candy = document.createElement("div");
-      candy.classList.add("candy");
-      
-      const randomColor = colors[Math.floor(Math.random() * colors.length)];
-      candy.style.background = randomColor;
-      
-      const size = Math.random() * 10 + 10;
+      candy.className = "candy";
+      candy.style.background = colors[i % colors.length];
+      const size = Math.random() * 8 + 8;
       candy.style.width = `${size}px`;
       candy.style.height = `${size}px`;
-      
-      const angle = Math.random() * 2 * Math.PI;
-      const distance = Math.random() * 100 + 20; // px distance
-      const x = Math.cos(angle) * distance + "px";
-      const y = Math.sin(angle) * distance + "px";
-      
-      candy.style.setProperty("--x", x);
-      candy.style.setProperty("--y", y);
-      candy.style.left = `${clientX}px`;
-      candy.style.top = `${clientY}px`;
-      
-      document.body.appendChild(candy);
-      
-      setTimeout(() => candy.remove(), 1250);
+      const angle = (i / candyCount) * 2 * Math.PI;
+      const distance = Math.random() * 60 + 30;
+      candy.style.setProperty("--x", Math.cos(angle) * distance + "px");
+      candy.style.setProperty("--y", Math.sin(angle) * distance + "px");
+      candy.style.left = `${x}px`;
+      candy.style.top = `${y}px`;
+      fragment.appendChild(candy);
     }
-  };
 
-  // Auto Fireworks
+    document.body.appendChild(fragment);
+    setTimeout(() => {
+      document.querySelectorAll('.candy').forEach(c => c.remove());
+    }, 1200);
+  }, []);
+
+  // Auto Fireworks - Less frequent
   useEffect(() => {
     const interval = setInterval(() => {
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * (window.innerHeight * 0.6);
-        // Simulate event object
-        startFireworks({ clientX: x, clientY: y } as any);
-    }, 2000);
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * (window.innerHeight * 0.5);
+      startFireworks(x, y);
+    }, 4000);
     return () => clearInterval(interval);
-  }, []);
+  }, [startFireworks]);
 
   // Mailbox Logic
   const handleOpenMail = () => {
