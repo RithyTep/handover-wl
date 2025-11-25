@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "sonner";
+import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -13,16 +13,19 @@ export const metadata: Metadata = {
   description: "Manage and track Jira ticket handovers",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#111111",
+};
+
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
-    <html lang="en" className="dark">
-      <head>
-        {/* Force dark mode for Christmas theme */}
-      </head>
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={spaceGrotesk.className}>
         {children}
         <Toaster position="top-right" duration={3000} />

@@ -46,7 +46,6 @@ export function TicketsTable<TData, TValue>({
   const [previewAnchor, setPreviewAnchor] = React.useState<HTMLElement | null>(null)
   const [activeFilters, setActiveFilters] = React.useState<TicketFilters>({})
 
-  // Load showDetails from localStorage (after mount to avoid hydration mismatch)
   const [showDetails, setShowDetails] = React.useState(false)
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({
     assignee: true,
@@ -58,7 +57,6 @@ export function TicketsTable<TData, TValue>({
     customerLevel: false,
   })
 
-  // Load from localStorage after mount
   React.useEffect(() => {
     const saved = localStorage.getItem('showDetails')
     if (saved) {
@@ -77,16 +75,14 @@ export function TicketsTable<TData, TValue>({
   }, [])
   const [rowSelection, setRowSelection] = React.useState({})
 
-  // Toggle all detail columns
   const toggleDetails = () => {
     const newVisibility = !showDetails
     setShowDetails(newVisibility)
-    // Save to localStorage
     if (typeof window !== 'undefined') {
       localStorage.setItem('showDetails', JSON.stringify(newVisibility))
     }
     setColumnVisibility({
-      assignee: true, // Always visible
+      assignee: true,
       created: newVisibility,
       dueDate: newVisibility,
       status: newVisibility,
@@ -98,7 +94,6 @@ export function TicketsTable<TData, TValue>({
 
   const closeTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
-  // Extract unique values for filters
   const filterOptions = React.useMemo(() => {
     const ticketsData = data as Ticket[];
     return {
@@ -110,37 +105,30 @@ export function TicketsTable<TData, TValue>({
     };
   }, [data]);
 
-  // Apply filters to data
   const filteredData = React.useMemo(() => {
     const ticketsData = data as Ticket[];
 
     return ticketsData.filter((ticket) => {
-      // Assignee filter
       if (activeFilters.assignee && ticket.assignee !== activeFilters.assignee) {
         return false;
       }
 
-      // Status filter
       if (activeFilters.status && ticket.status !== activeFilters.status) {
         return false;
       }
 
-      // WL Main Type filter
       if (activeFilters.wlMainTicketType && ticket.wlMainTicketType !== activeFilters.wlMainTicketType) {
         return false;
       }
 
-      // WL Sub Type filter
       if (activeFilters.wlSubTicketType && ticket.wlSubTicketType !== activeFilters.wlSubTicketType) {
         return false;
       }
 
-      // Customer Level filter
       if (activeFilters.customerLevel && ticket.customerLevel !== activeFilters.customerLevel) {
         return false;
       }
 
-      // Date range filter
       if (activeFilters.dateFrom) {
         const ticketDate = new Date(ticket.created);
         const fromDate = new Date(activeFilters.dateFrom);
@@ -152,13 +140,12 @@ export function TicketsTable<TData, TValue>({
       if (activeFilters.dateTo) {
         const ticketDate = new Date(ticket.created);
         const toDate = new Date(activeFilters.dateTo);
-        toDate.setHours(23, 59, 59, 999); // Include the entire day
+        toDate.setHours(23, 59, 59, 999);
         if (ticketDate > toDate) {
           return false;
         }
       }
 
-      // JQL Query filter (basic implementation - matches against summary and key)
       if (activeFilters.jqlQuery) {
         const query = activeFilters.jqlQuery.toLowerCase();
         const searchText = `${ticket.key} ${ticket.summary} ${ticket.status} ${ticket.assignee}`.toLowerCase();
@@ -172,7 +159,6 @@ export function TicketsTable<TData, TValue>({
   }, [data, activeFilters]);
 
   const handleTicketHover = React.useCallback((ticket: Ticket | null, element: HTMLElement | null) => {
-    // Clear any pending close timeout
     if (closeTimeoutRef.current) {
       clearTimeout(closeTimeoutRef.current);
       closeTimeoutRef.current = null;
@@ -183,7 +169,6 @@ export function TicketsTable<TData, TValue>({
   }, [])
 
   const handleClosePreview = React.useCallback(() => {
-    // Immediately close the preview
     if (closeTimeoutRef.current) {
       clearTimeout(closeTimeoutRef.current);
       closeTimeoutRef.current = null;
@@ -216,9 +201,7 @@ export function TicketsTable<TData, TValue>({
 
   return (
     <div className="w-full h-full flex flex-col gap-3">
-      {/* Action Buttons Row - Desktop only */}
       <div className="flex-shrink-0 hidden sm:flex items-center justify-between gap-3">
-        {/* Show Details Toggle - Left side */}
         <Button
           variant="ghost"
           size="sm"
@@ -230,18 +213,15 @@ export function TicketsTable<TData, TValue>({
           <span>{showDetails ? "Hide" : "Details"}</span>
         </Button>
 
-        {/* Action Buttons - Right side */}
         {actionButtons}
       </div>
 
-      {/* Mobile Card View */}
       <div className="flex-1 block sm:hidden overflow-auto pb-24">
         <div className="space-y-4 px-1">
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row, index) => {
-              const ticket = row.original as any;
-              
-              // Christmas row coloring
+              const ticket = row.original as Ticket;
+
               let cardClass = "";
               if (index % 3 === 0) cardClass = "christmas-row-gold";
               else if (index % 3 === 1) cardClass = "christmas-row-red";
@@ -252,7 +232,6 @@ export function TicketsTable<TData, TValue>({
                   key={row.id}
                   className={`border border-white/20 rounded-lg overflow-hidden shadow-sm ${cardClass}`}
                 >
-                  {/* Header */}
                   <div className="flex items-center justify-between px-4 py-3 border-b border-white/20 bg-black/10">
                     <div className="flex items-center gap-2.5">
                       <span className="text-[11px] font-medium text-white/80 tabular-nums">
@@ -282,12 +261,9 @@ export function TicketsTable<TData, TValue>({
                     </div>
                   </div>
 
-                  {/* Content */}
                   <div className="p-4 space-y-4">
-                    {/* Summary */}
                     <p className="text-[13px] text-white/90 leading-relaxed line-clamp-2">{ticket.summary}</p>
 
-                    {/* Inputs */}
                     <div className="space-y-3">
                       <div>
                         <label className="text-[10px] font-medium text-white/70 uppercase tracking-wider mb-1.5 block">Status</label>
@@ -328,7 +304,6 @@ export function TicketsTable<TData, TValue>({
         </div>
       </div>
 
-      {/* Desktop Table View - Hidden on mobile */}
       <div className="border border-white/20 rounded-md overflow-hidden hidden sm:flex sm:flex-col shadow-xl">
         <div className="overflow-auto">
           <Table className="min-w-full md:min-w-[1400px]">
@@ -359,7 +334,6 @@ export function TicketsTable<TData, TValue>({
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => {
-                  // Christmas row coloring
                   let rowClass = "";
                   if (index % 3 === 0) rowClass = "christmas-row-gold";
                   else if (index % 3 === 1) rowClass = "christmas-row-red";
@@ -402,7 +376,6 @@ export function TicketsTable<TData, TValue>({
         </div>
       </div>
 
-      {/* Ticket Preview */}
       {previewTicket && (
         <TicketPreview
           ticket={previewTicket}

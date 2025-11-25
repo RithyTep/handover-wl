@@ -9,94 +9,52 @@
   :root {
     --font-script: "Gochi Hand", cursive;
     --font-sans-serif: "Poppins", sans-serif;
-    /* ... existing vars ... */
-    --background: 0 0% 100%; /* Pure white */
-    --foreground: 0 0% 9%; /* Almost black text */
-
-    /* Surfaces with subtle elevation */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 9%;
-    --elevated: 0 0% 98%; /* Slightly elevated surfaces */
-
-    /* Primary - Dark neutral */
+    --elevated: 0 0% 98%;
     --primary: 0 0% 9%;
     --primary-foreground: 0 0% 100%;
-
-    /* Secondary - Ghost/subtle */
     --secondary: 0 0% 96%;
     --secondary-foreground: 0 0% 9%;
-
-    /* Muted - Subtle backgrounds */
     --muted: 0 0% 96%;
-    --muted-foreground: 0 0% 45%; /* Mid gray text */
-
-    /* Accent - Same as primary for minimal look */
+    --muted-foreground: 0 0% 45%;
     --accent: 0 0% 96%;
     --accent-foreground: 0 0% 9%;
-
-    /* Destructive - Subtle red */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-
-    /* Borders - Light gray with 1px solid */
-    --border: 0 0% 89%; /* #E3E3E3 */
-    --border-subtle: 0 0% 93%; /* Even lighter borders */
+    --border: 0 0% 89%;
+    --border-subtle: 0 0% 93%;
     --input: 0 0% 89%;
-
-    /* Focus ring */
     --ring: 0 0% 9%;
-
-    /* Success - Dark neutral (Linear-style) */
     --success: 0 0% 9%;
     --success-foreground: 0 0% 100%;
-
-    /* Hover states */
     --hover: 0 0% 97%;
   }
 
   .dark {
-    /* Linear-inspired True dark mode - Deep blacks */
-    --background: 0 0% 7%; /* #111111 - True dark */
-    --foreground: 0 0% 98%; /* Almost white text */
-
-    /* Surfaces with subtle elevation */
-    --card: 0 0% 8%; /* #141414 */
+    --background: 0 0% 7%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
-    --elevated: 0 0% 10%; /* #1A1A1A - Elevated surfaces */
-
-    /* Primary - White in dark mode */
+    --elevated: 0 0% 10%;
     --primary: 0 0% 98%;
     --primary-foreground: 0 0% 7%;
-
-    /* Secondary - Dark gray */
-    --secondary: 0 0% 13%; /* #212121 */
+    --secondary: 0 0% 13%;
     --secondary-foreground: 0 0% 98%;
-
-    /* Muted - Dark surfaces */
     --muted: 0 0% 13%;
-    --muted-foreground: 0 0% 60%; /* Light gray text */
-
-    /* Accent */
+    --muted-foreground: 0 0% 60%;
     --accent: 0 0% 13%;
     --accent-foreground: 0 0% 98%;
-
-    /* Destructive - Brighter in dark mode */
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-
-    /* Borders - Subtle gray */
-    --border: 0 0% 16%; /* #2A2A2A */
+    --border: 0 0% 16%;
     --border-subtle: 0 0% 12%;
     --input: 0 0% 13%;
-
-    /* Focus ring */
     --ring: 0 0% 98%;
-
-    /* Success */
     --success: 0 0% 98%;
     --success-foreground: 0 0% 7%;
-
-    /* Hover states */
     --hover: 0 0% 15%;
   }
 
@@ -114,13 +72,11 @@
     -webkit-overflow-scrolling: touch;
   }
 
-  /* Christmas cursor for clickable elements */
   a, button, [role="button"], input[type="submit"], input[type="button"],
   select, .cursor-pointer, [onclick], label[for] {
     cursor: url('/cursors/christmas-pointer.png'), pointer !important;
   }
 
-  /* Linear-style custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -139,7 +95,6 @@
     @apply bg-muted-foreground/30;
   }
 
-  /* Smooth transitions for dark mode */
   * {
     transition-property: background-color, border-color, color;
     transition-duration: 150ms;
@@ -162,7 +117,6 @@
     font-family: var(--font-sans-serif);
   }
 
-  /* New Year Header */
   .ny-header {
     text-align: center;
   }
@@ -216,7 +170,6 @@
     margin: 0 auto;
   }
 
-  /* Snowflakes */
   .winter-wrapper {
     position: absolute;
     top: 0;
@@ -245,12 +198,12 @@
     100% { transform: translate(20vw, 110vh); }
   }
 
-  /* Ground */
   .ground {
     border-top-right-radius: 71vw 40px;
     height: 61px;
     background: white;
   }
+
   .ground:before {
     border-radius: 50%;
     content: " ";
@@ -261,6 +214,7 @@
     right: -33vw;
     background: white;
   }
+
   .ground:after {
     border-radius: 50%;
     content: " ";
@@ -272,11 +226,11 @@
     background: white;
   }
 
-  /* Mailbox */
   .mailbox {
     width: 120px;
     height: 170px;
   }
+
   .mailbox .basis {
     position: absolute;
     width: 16px;
@@ -286,6 +240,7 @@
     transform: translateX(-50%);
     background: #222;
   }
+
   .mailbox .box {
     position: absolute;
     top: 0;
@@ -296,6 +251,7 @@
     border-radius: 0 0 7px 7px;
     border: 5px solid #b90b21;
   }
+
   .mailbox .box:before {
     content: "";
     position: absolute;
@@ -306,6 +262,7 @@
     border-radius: 7px;
     background-color: #b90b21;
   }
+
   .mailbox .box:after {
     content: "";
     position: absolute;
@@ -315,6 +272,7 @@
     height: 5px;
     background-color: #600307;
   }
+
   .mailbox .box-title {
     position: absolute;
     left: 0;
@@ -325,6 +283,7 @@
     line-height: 1em;
     color: white;
   }
+
   .mailbox .letters {
     overflow: hidden;
     position: absolute;
@@ -335,6 +294,7 @@
     left: 0;
     right: 0;
   }
+
   .mailbox .letters:after {
     content: "";
     position: absolute;
@@ -346,12 +306,14 @@
     background: #600307;
     border-radius: 5px;
   }
+
   .mailbox .letter {
     overflow: hidden;
     position: absolute;
     z-index: 1;
     border-radius: 2px;
   }
+
   .mailbox .letter-first {
     width: 70px;
     height: 42px;
@@ -359,12 +321,14 @@
     left: 10px;
     transform: rotate(80deg);
   }
+
   .mailbox .letter-first .letter-image {
     position: absolute;
     top: -3px;
     left: -4px;
     width: calc(100% + 10px);
   }
+
   .mailbox .letter-second {
     width: 70px;
     height: 45px;
@@ -372,6 +336,7 @@
     right: 12px;
     transform: rotate(100deg);
   }
+
   .mailbox .letter-second .letter-image {
     position: absolute;
     top: 0;
@@ -379,7 +344,6 @@
     width: 100%;
   }
 
-  /* Mail Dialog */
   .mail {
     background: repeating-linear-gradient(
       -45deg,
@@ -396,13 +360,13 @@
     border-radius: 4px;
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   }
+
   .mail-inner {
     background: #f6ebd8;
     padding: 20px;
     border-radius: 2px;
   }
 
-  /* Candy Fireworks */
   .candy {
     position: absolute;
     border-radius: 50%;
@@ -428,19 +392,15 @@
     border-radius: 6px;
     text-align: center;
     color: #fff;
-    /* background-image: 
-      linear-gradient(to bottom, #f12828, #a00332, #9f0f31),
-      linear-gradient(to bottom, #ae0034, #6f094c); */
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
-    box-shadow: 
+    box-shadow:
       inset 0 1px rgb(255 255 255 / .25),
       inset 0 -1px rgb(0 0 0 / .1),
       0 2px 4px rgb(0 0 0 / .25);
     overflow: visible !important;
   }
-  
-  
+
   .snow-btn::after {
     --overflow-x: 4px;
     --snow-image: url('https://assets.codepen.io/4175254/snow-cap-test-2.png');
@@ -461,8 +421,7 @@
   }
 
   @keyframes fade-in {
-    0%,
-    50% {
+    0%, 50% {
       opacity: 0;
     }
     100% {
@@ -476,11 +435,6 @@
     pointer-events: none;
   }
 
-  /* Snowfall Animation - Removed in favor of Canvas */
-  /* .snowflake { ... } */
-
-  
-  /* Christmas Lights */
   .christmas-lights {
     display: flex;
     justify-content: center;
@@ -571,5 +525,4 @@
     0%, 100% { background: #f90; box-shadow: 0px 5px 24px 3px #f90; }
     50% { background: rgba(255,153,0,0.4); box-shadow: 0px 5px 24px 3px rgba(255,153,0,0.2); }
   }
-
 }

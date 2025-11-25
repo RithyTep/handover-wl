@@ -12,10 +12,11 @@ export async function POST(request: NextRequest) {
       message: "Scheduled task triggered manually",
       triggeredAt: new Date().toISOString(),
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("[Manual Trigger] Error:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: message },
       { status: 500 }
     );
   }

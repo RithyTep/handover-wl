@@ -39,7 +39,6 @@ interface DashboardClientProps {
 export function DashboardClient({ initialTickets }: DashboardClientProps) {
   const [tickets, setTickets] = useState<Ticket[]>(initialTickets);
   const [ticketData, setTicketData] = useState<Record<string, string>>(() => {
-    // Initialize ticket data from initial tickets
     const data: Record<string, string> = {};
     initialTickets.forEach((ticket: Ticket) => {
       data[`status-${ticket.key}`] = ticket.savedStatus;
@@ -49,8 +48,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
   });
   const [activeTab, setActiveTab] = useState("tickets");
   const [renderKey, setRenderKey] = useState(0);
-
-  // Dialog states
   const [quickFillDialog, setQuickFillDialog] = useState(false);
   const [quickFillStatus, setQuickFillStatus] = useState("Pending");
   const [quickFillAction, setQuickFillAction] = useState("Will check tomorrow");
@@ -58,7 +55,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
   const [clearDialog, setClearDialog] = useState(false);
   const [sendSlackDialog, setSendSlackDialog] = useState(false);
 
-  // Confetti celebration helper
   const celebrate = () => {
     confetti({
       particleCount: 100,
@@ -71,7 +67,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
     setTicketData((prev) => ({ ...prev, [key]: value }));
   }, []);
 
-  // Create columns with current ticketData and update function
   const columns = useMemo(
     () => createColumns({ ticketData, updateTicketData, renderKey }),
     [updateTicketData, renderKey]
@@ -84,8 +79,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
       newData[`action-${ticket.key}`] = quickFillAction;
     });
     setTicketData(newData);
-
-    // Update tickets state to trigger re-render with new defaultValues
     setTickets(prevTickets =>
       prevTickets.map(ticket => ({
         ...ticket,
@@ -93,8 +86,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         savedAction: quickFillAction,
       }))
     );
-
-    // Force re-render of inputs
     setRenderKey(prev => prev + 1);
 
     setQuickFillDialog(false);
@@ -108,8 +99,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
       newData[key] = "--";
     });
     setTicketData(newData);
-
-    // Update tickets state to trigger re-render with cleared defaultValues
     setTickets(prevTickets =>
       prevTickets.map(ticket => ({
         ...ticket,
@@ -117,10 +106,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         savedAction: "--",
       }))
     );
-
-    // Force re-render of inputs
     setRenderKey(prev => prev + 1);
-
     setClearDialog(false);
     toast.success("All fields have been cleared");
   };
@@ -132,9 +118,10 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
       toast.dismiss(loadingToast);
       celebrate();
       toast.success("Your changes have been saved");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Error saving: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error saving: " + message);
     }
   };
 
@@ -143,8 +130,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
     const loadingToast = toast.loading("Sending to Slack...");
 
     try {
-      // Build ticket details map
-      const ticketDetails: Record<string, any> = {};
+      const ticketDetails: Record<string, Record<string, unknown>> = {};
       tickets.forEach((ticket) => {
         ticketDetails[ticket.key] = {
           summary: ticket.summary,
@@ -164,17 +150,17 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
       });
 
       toast.dismiss(loadingToast);
-      // Epic celebration for Slack send!
       confetti({
         particleCount: 200,
         spread: 100,
         origin: { y: 0.5 },
-        colors: ['#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF']
+        colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
       });
       toast.success("Successfully sent to Slack");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Error: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error: " + message);
     }
   };
 
@@ -182,12 +168,10 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
     try {
       const JIRA_URL = process.env.NEXT_PUBLIC_JIRA_URL || "https://olympian.atlassian.net";
 
-      // Get all ticket keys with filled data
       const ticketKeys = Object.keys(ticketData)
         .filter((key) => key.startsWith("status-"))
         .map((key) => key.replace("status-", ""));
 
-      // Filter tickets that have status or action filled
       const filledTickets = ticketKeys.filter((ticketKey) => {
         const status = ticketData[`status-${ticketKey}`];
         const action = ticketData[`action-${ticketKey}`];
@@ -199,7 +183,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         return;
       }
 
-      // Build Slack message matching table columns
       let message = "";
       filledTickets.forEach((ticketKey, index) => {
         const status = ticketData[`status-${ticketKey}`] || "--";
@@ -219,16 +202,15 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         message += `\n`;
       });
 
-      // Copy to clipboard
       await navigator.clipboard.writeText(message.trim());
       toast.success(`Copied ${filledTickets.length} ticket(s) to clipboard`);
-    } catch (error: any) {
-      toast.error("Error copying to clipboard: " + error.message);
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error copying to clipboard: " + errorMsg);
     }
   };
 
   const handleAIFillAll = async () => {
-    // Find tickets with missing status or action
     const missingTickets = tickets.filter((ticket) => {
       const status = ticketData[`status-${ticket.key}`];
       const action = ticketData[`action-${ticket.key}`];
@@ -245,7 +227,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
     );
 
     try {
-      // Process tickets in parallel (but limit concurrency to avoid rate limits)
       const batchSize = 3;
       const newData = { ...ticketData };
       const updates: { ticketKey: string; status?: string; action?: string }[] = [];
@@ -255,13 +236,11 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
       for (let i = 0; i < missingTickets.length; i += batchSize) {
         const batch = missingTickets.slice(i, i + batchSize);
 
-        // Update progress
         toast.loading(
           `Santa filling ${i + 1}-${Math.min(i + batchSize, missingTickets.length)} of ${missingTickets.length}...`,
           { id: loadingToast }
         );
 
-        // Process batch in parallel
         const batchResults = await Promise.allSettled(
           batch.map(async (ticket) => {
             const response = await axios.post("/api/ai-autofill", { ticket });
@@ -269,7 +248,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
           })
         );
 
-        // Update ticket data with results
         batchResults.forEach((result) => {
           if (result.status === "fulfilled") {
             const { ticket, suggestion } = result.value;
@@ -280,7 +258,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
               ticketKey: ticket.key
             };
 
-            // Only update if currently empty
             if (!currentStatus || currentStatus === "--") {
               newData[`status-${ticket.key}`] = suggestion.status;
               update.status = suggestion.status;
@@ -299,10 +276,8 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         });
       }
 
-      // Update ticket data state
       setTicketData(newData);
 
-      // Update tickets state to trigger re-render with new defaultValues
       setTickets(prevTickets =>
         prevTickets.map(ticket => {
           const update = updates.find(u => u.ticketKey === ticket.key);
@@ -317,7 +292,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         })
       );
 
-      // Force re-render of inputs
       setRenderKey(prev => prev + 1);
 
       toast.dismiss(loadingToast);
@@ -330,15 +304,15 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
           `Filled ${successCount} ticket(s), ${errorCount} failed`
         );
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Error during AI fill: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error during AI fill: " + message);
     }
   };
 
   return (
     <>
-      {/* Command Palette */}
       <CommandPalette
         onAIFillAll={handleAIFillAll}
         onQuickFill={() => setQuickFillDialog(true)}
@@ -349,11 +323,9 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         onRefresh={() => window.location.reload()}
       />
 
-      {/* Main Content Area */}
       <div className="h-dvh christmas-bg flex flex-col overflow-hidden relative">
         <NewYearScene />
 
-        {/* Header */}
         <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-white/20 bg-black/20 backdrop-blur-sm z-10">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
@@ -367,7 +339,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
             </span>
           </div>
           <div className="flex items-center gap-1">
-            {/* Command Palette Hint */}
             <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-white/70 bg-white/10 border border-white/20 rounded">
               <Command className="w-3 h-3" />
               <span>K</span>
@@ -375,9 +346,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
           </div>
         </header>
 
-        {/* Main Content */}
         <main className="flex-1 overflow-hidden px-4 sm:px-6 py-4 sm:py-4 pb-20 sm:pb-4">
-          {/* Tickets Tab */}
           {activeTab === "tickets" && (
             <TicketsTable
               columns={columns}
@@ -459,7 +428,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
           />
           )}
 
-          {/* History Tab - Coming Soon */}
           {activeTab === "history" && (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
@@ -470,7 +438,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
             </div>
           )}
 
-          {/* Settings Tab - Coming Soon */}
           {activeTab === "settings" && (
             <div className="flex items-center justify-center h-full">
               <div className="text-center">
@@ -483,7 +450,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         </main>
       </div>
 
-      {/* Mobile Bottom Navigation */}
       <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:hidden z-50">
         <div className="flex items-center justify-around">
           <button
@@ -519,7 +485,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         </div>
       </div>
 
-      {/* Quick Fill Dialog */}
       <Dialog open={quickFillDialog} onOpenChange={setQuickFillDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -558,7 +523,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {/* Clear All Dialog */}
+
       <Dialog open={clearDialog} onOpenChange={setClearDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
@@ -582,7 +547,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         </DialogContent>
       </Dialog>
 
-      {/* Send Slack Dialog */}
       <Dialog open={sendSlackDialog} onOpenChange={setSendSlackDialog}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

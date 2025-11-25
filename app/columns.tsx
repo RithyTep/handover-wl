@@ -1,12 +1,34 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, Gift } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { useRef, memo } from "react"
+import { memo, useRef } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, Gift } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-// Memoized ticket link component - prevents re-renders when parent table updates
+export interface Ticket {
+  key: string;
+  summary: string;
+  status: string;
+  assignee: string;
+  assigneeAvatar: string | null;
+  created: string;
+  dueDate: string | null;
+  issueType: string;
+  wlMainTicketType: string;
+  wlSubTicketType: string;
+  customerLevel: string;
+  jiraUrl: string;
+  savedStatus: string;
+  savedAction: string;
+}
+
+interface ColumnsProps {
+  ticketData: Record<string, string>;
+  updateTicketData: (key: string, value: string) => void;
+  renderKey: number;
+}
+
 const TicketLink = memo(function TicketLink({
   ticket,
   onHover,
@@ -36,7 +58,6 @@ const TicketLink = memo(function TicketLink({
   );
 });
 
-// Memoized simple input for STATUS/ACTION - prevents re-renders for unchanged rows
 const SimpleInput = memo(function SimpleInput({
   ticketKey,
   defaultValue,
@@ -65,27 +86,15 @@ const SimpleInput = memo(function SimpleInput({
   );
 });
 
-export type Ticket = {
-  key: string
-  summary: string
-  status: string
-  assignee: string
-  assigneeAvatar: string | null
-  created: string
-  dueDate: string | null
-  issueType: string
-  wlMainTicketType: string
-  wlSubTicketType: string
-  customerLevel: string
-  jiraUrl: string
-  savedStatus: string
-  savedAction: string
+function getAssigneeDisplay(name: string): string {
+  if (name.toLowerCase().includes("leo")) {
+    return `${name} (PO)`;
+  }
+  return name;
 }
 
-interface ColumnsProps {
-  ticketData: Record<string, string>
-  updateTicketData: (key: string, value: string) => void
-  renderKey: number
+function formatDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString();
 }
 
 export const createColumns = ({
@@ -106,21 +115,18 @@ export const createColumns = ({
   {
     accessorKey: "key",
     enableHiding: false,
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-xs font-medium text-white/90 hover:text-white"
-        >
-          Ticket
-          <ArrowUpDown className="ml-1.5 h-3 w-3" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="h-auto p-0 hover:bg-transparent text-xs font-medium text-white/90 hover:text-white"
+      >
+        Ticket
+        <ArrowUpDown className="ml-1.5 h-3 w-3" />
+      </Button>
+    ),
     cell: ({ row, table }) => {
-      const meta = table.options.meta as any;
-
+      const meta = table.options.meta as { onTicketHover?: (ticket: Ticket, element: HTMLElement) => void };
       return (
         <TicketLink
           ticket={row.original}
@@ -152,16 +158,8 @@ export const createColumns = ({
     accessorKey: "assignee",
     header: "Assignee",
     cell: ({ row }) => {
-      const assignee = row.getValue("assignee") as string
-      const assigneeAvatar = row.original.assigneeAvatar
-
-      // Add role labels for specific assignees
-      const getAssigneeDisplay = (name: string) => {
-        if (name.toLowerCase().includes("leo")) {
-          return `${name} (PO)`;
-        }
-        return name;
-      };
+      const assignee = row.getValue("assignee") as string;
+      const assigneeAvatar = row.original.assigneeAvatar;
 
       return (
         <div className="flex items-center gap-2 whitespace-nowrap">
@@ -178,53 +176,46 @@ export const createColumns = ({
           )}
           <span className="text-xs text-white">{getAssigneeDisplay(assignee)}</span>
         </div>
-      )
+      );
     },
   },
   {
     accessorKey: "created",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-[11px] font-medium text-white/90 hover:text-white"
-        >
-          Created
-          <ArrowUpDown className="ml-1 h-3 w-3" />
-        </Button>
-      )
-    },
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("created"))
-      return (
-        <div className="text-xs text-white/70 whitespace-nowrap">
-          {date.toLocaleDateString()}
-        </div>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="h-auto p-0 hover:bg-transparent text-[11px] font-medium text-white/90 hover:text-white"
+      >
+        Created
+        <ArrowUpDown className="ml-1 h-3 w-3" />
+      </Button>
+    ),
+    cell: ({ row }) => (
+      <div className="text-xs text-white/70 whitespace-nowrap">
+        {formatDate(row.getValue("created"))}
+      </div>
+    ),
   },
   {
     accessorKey: "dueDate",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-[11px] font-medium text-white/90 hover:text-white"
-        >
-          Due Date
-          <ArrowUpDown className="ml-1 h-3 w-3" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="h-auto p-0 hover:bg-transparent text-[11px] font-medium text-white/90 hover:text-white"
+      >
+        Due Date
+        <ArrowUpDown className="ml-1 h-3 w-3" />
+      </Button>
+    ),
     cell: ({ row }) => {
-      const dueDate = row.getValue("dueDate") as string | null
+      const dueDate = row.getValue("dueDate") as string | null;
       return (
         <div className="text-xs text-white/70 whitespace-nowrap">
-          {dueDate ? new Date(dueDate).toLocaleDateString() : "—"}
+          {dueDate ? formatDate(dueDate) : "—"}
         </div>
-      )
+      );
     },
   },
   {
@@ -247,18 +238,16 @@ export const createColumns = ({
   },
   {
     accessorKey: "customerLevel",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="h-auto p-0 hover:bg-transparent text-xs font-medium text-white/90 hover:text-white"
-        >
-          Customer Level
-          <ArrowUpDown className="ml-1.5 h-3 w-3" />
-        </Button>
-      )
-    },
+    header: ({ column }) => (
+      <Button
+        variant="ghost"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        className="h-auto p-0 hover:bg-transparent text-xs font-medium text-white/90 hover:text-white"
+      >
+        Customer Level
+        <ArrowUpDown className="ml-1.5 h-3 w-3" />
+      </Button>
+    ),
     cell: ({ row }) => (
       <div className="text-xs text-white/70 whitespace-nowrap">
         {row.getValue("customerLevel")}
@@ -269,30 +258,26 @@ export const createColumns = ({
     accessorKey: "savedStatus",
     header: "Status",
     enableHiding: false,
-    cell: ({ row }) => {
-      return (
-        <SimpleInput
-          ticketKey={`status-${row.original.key}-${renderKey}`}
-          defaultValue={row.original.savedStatus}
-          placeholder="Enter status..."
-          onChange={(value) => updateTicketData(`status-${row.original.key}`, value)}
-        />
-      )
-    },
+    cell: ({ row }) => (
+      <SimpleInput
+        ticketKey={`status-${row.original.key}-${renderKey}`}
+        defaultValue={row.original.savedStatus}
+        placeholder="Enter status..."
+        onChange={(value) => updateTicketData(`status-${row.original.key}`, value)}
+      />
+    ),
   },
   {
     accessorKey: "savedAction",
     header: "Action",
     enableHiding: false,
-    cell: ({ row }) => {
-      return (
-        <SimpleInput
-          ticketKey={`action-${row.original.key}-${renderKey}`}
-          defaultValue={row.original.savedAction}
-          placeholder="Enter action..."
-          onChange={(value) => updateTicketData(`action-${row.original.key}`, value)}
-        />
-      )
-    },
+    cell: ({ row }) => (
+      <SimpleInput
+        ticketKey={`action-${row.original.key}-${renderKey}`}
+        defaultValue={row.original.savedAction}
+        placeholder="Enter action..."
+        onChange={(value) => updateTicketData(`action-${row.original.key}`, value)}
+      />
+    ),
   },
-]
+];

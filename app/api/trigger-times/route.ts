@@ -5,9 +5,10 @@ export async function GET() {
   try {
     const times = await getTriggerTimes();
     return NextResponse.json({ success: true, times });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: message },
       { status: 500 }
     );
   }
@@ -40,9 +41,10 @@ export async function POST(req: NextRequest) {
       message: "Trigger times updated",
       times: { time1, time2 },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: message },
       { status: 500 }
     );
   }

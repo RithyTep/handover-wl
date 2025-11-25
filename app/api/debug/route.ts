@@ -3,7 +3,6 @@ import fs from "fs";
 import path from "path";
 
 export async function GET() {
-  // Check common volume mount paths
   const commonPaths = ["/data", "/mnt", "/volume", "/app/data", "/storage"];
   const pathChecks = commonPaths.map((p) => ({
     path: p,
@@ -11,7 +10,6 @@ export async function GET() {
     isWritable: fs.existsSync(p) ? checkWritable(p) : false,
   }));
 
-  // List root directories
   const rootDirs = fs.readdirSync("/").filter((name) => {
     try {
       return fs.statSync(path.join("/", name)).isDirectory();

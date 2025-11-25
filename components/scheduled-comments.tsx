@@ -43,14 +43,12 @@ export default function ScheduledComments() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingComment, setEditingComment] = useState<ScheduledComment | null>(null);
 
-  // Form state
   const [commentType, setCommentType] = useState<'jira' | 'slack'>('slack');
   const [ticketKey, setTicketKey] = useState("");
   const [commentText, setCommentText] = useState("");
   const [cronSchedule, setCronSchedule] = useState("");
   const [enabled, setEnabled] = useState(true);
 
-  // Fetch scheduled comments
   const fetchComments = async () => {
     try {
       const response = await fetch("/api/scheduled-comments");
@@ -67,7 +65,6 @@ export default function ScheduledComments() {
     fetchComments();
   }, []);
 
-  // Reset form
   const resetForm = () => {
     setCommentType('slack');
     setTicketKey("");
@@ -77,13 +74,11 @@ export default function ScheduledComments() {
     setEditingComment(null);
   };
 
-  // Open dialog for new comment
   const handleNew = () => {
     resetForm();
     setDialogOpen(true);
   };
 
-  // Open dialog for editing
   const handleEdit = (comment: ScheduledComment) => {
     setEditingComment(comment);
     setCommentType(comment.comment_type);
@@ -94,16 +89,13 @@ export default function ScheduledComments() {
     setDialogOpen(true);
   };
 
-  // Save (create or update)
   const handleSave = async () => {
     setLoading(true);
 
     try {
-      // For Slack comments, use a placeholder cron since they post after handover messages
       const finalCronSchedule = commentType === 'slack' ? '0 0 * * *' : cronSchedule;
 
       if (editingComment) {
-        // Update
         const response = await fetch("/api/scheduled-comments", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -124,7 +116,6 @@ export default function ScheduledComments() {
           resetForm();
         }
       } else {
-        // Create
         const response = await fetch("/api/scheduled-comments", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -151,7 +142,6 @@ export default function ScheduledComments() {
     }
   };
 
-  // Delete
   const handleDelete = async (id: number) => {
     if (!confirm("Are you sure you want to delete this scheduled comment?")) {
       return;
@@ -174,7 +164,6 @@ export default function ScheduledComments() {
     }
   };
 
-  // Format date
   const formatDate = (dateString?: string | null) => {
     if (!dateString) return "Never";
     return new Date(dateString).toLocaleString("en-US", {
@@ -185,9 +174,7 @@ export default function ScheduledComments() {
     });
   };
 
-  // Get cron description
   const getCronDescription = (cron: string) => {
-    // Simple cron descriptions
     if (cron === "0 9 * * *") return "Daily at 9:00 AM";
     if (cron === "0 17 * * *") return "Daily at 5:00 PM";
     if (cron === "0 */2 * * *") return "Every 2 hours";

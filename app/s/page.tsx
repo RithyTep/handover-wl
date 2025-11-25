@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { SchedulerPage } from "@/components/scheduler-page";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,40 +13,49 @@ import {
 } from "@/components/ui/dialog";
 import { Lock } from "lucide-react";
 
+const AUTH_KEY = "scheduler_auth";
+const AUTH_PASSWORD = "khmer4er";
+
 export default function SecretScheduler() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [showDialog, setShowDialog] = useState(true);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (password === "khmer4er") {
-      setIsAuthenticated(true);
-      setShowDialog(false);
-      setError("");
-      // Store in sessionStorage to keep authenticated during the session
-      sessionStorage.setItem("scheduler_auth", "true");
-    } else {
-      setError("Incorrect password");
-      setPassword("");
-    }
-  };
-
-  // Check if already authenticated in this session
   useEffect(() => {
-    const isAuth = sessionStorage.getItem("scheduler_auth") === "true";
+    const isAuth = sessionStorage.getItem(AUTH_KEY) === "true";
     if (isAuth) {
       setIsAuthenticated(true);
       setShowDialog(false);
     }
   }, []);
 
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === AUTH_PASSWORD) {
+      setIsAuthenticated(true);
+      setShowDialog(false);
+      setError("");
+      sessionStorage.setItem(AUTH_KEY, "true");
+    } else {
+      setError("Incorrect password");
+      setPassword("");
+    }
+  }, [password]);
+
+  const handlePasswordChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setError("");
+  }, []);
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Dialog open={showDialog} onOpenChange={() => {}}>
-          <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
+          <DialogContent
+            className="sm:max-w-md"
+            onInteractOutside={(e) => e.preventDefault()}
+          >
             <DialogHeader>
               <div className="w-14 h-14 sm:w-12 sm:h-12 rounded-full bg-primary/20 text-primary flex items-center justify-center mx-auto mb-4">
                 <Lock className="w-7 h-7 sm:w-6 sm:h-6" />
@@ -61,17 +70,12 @@ export default function SecretScheduler() {
                 <Input
                   type="password"
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                    setError("");
-                  }}
+                  onChange={handlePasswordChange}
                   placeholder="Enter password"
                   className="h-11 sm:h-10 text-base sm:text-sm"
                   autoFocus
                 />
-                {error && (
-                  <p className="text-sm text-red-500 mt-2">{error}</p>
-                )}
+                {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
               </div>
               <Button type="submit" className="w-full h-11 sm:h-10">
                 Unlock

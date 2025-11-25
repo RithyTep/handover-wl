@@ -34,17 +34,14 @@ export function TicketPreview({
         let left = rect.right + padding;
         let top = rect.top;
 
-        // If preview would go off right side, show on left
         if (left + previewWidth > window.innerWidth - padding) {
           left = rect.left - previewWidth - padding;
         }
 
-        // If preview would go off bottom, adjust up
         if (top + previewHeight > window.innerHeight - padding) {
           top = window.innerHeight - previewHeight - padding;
         }
 
-        // If preview would go off top, adjust down
         if (top < padding) {
           top = padding;
         }
@@ -66,11 +63,8 @@ export function TicketPreview({
   if (!isOpen) return null;
 
   const handleMouseLeave = (e: React.MouseEvent) => {
-    // Only close if we're actually leaving the card entirely
-    // Check if the mouse is moving to a child element
     const relatedTarget = e.relatedTarget as HTMLElement;
     if (previewRef.current && relatedTarget) {
-      // Don't close if moving to a child element
       if (previewRef.current.contains(relatedTarget)) {
         return;
       }
@@ -80,7 +74,6 @@ export function TicketPreview({
 
   return (
     <>
-      {/* Preview Panel */}
       <div
         ref={previewRef}
         data-ticket-preview

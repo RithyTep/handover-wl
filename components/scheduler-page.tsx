@@ -16,7 +16,6 @@ export function SchedulerPage() {
   const [triggeringComments, setTriggeringComments] = useState(false);
   const [customChannelId, setCustomChannelId] = useState("");
 
-  // Shift-based settings
   const [eveningToken, setEveningToken] = useState("");
   const [nightToken, setNightToken] = useState("");
   const [eveningMentions, setEveningMentions] = useState("");
@@ -38,7 +37,7 @@ export function SchedulerPage() {
         setEveningMentions(eveningMentions);
         setNightMentions(nightMentions);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching shift settings:", error);
     }
   };
@@ -48,7 +47,7 @@ export function SchedulerPage() {
     try {
       const response = await axios.get("/api/scheduler-state");
       setScheduleEnabled(response.data.enabled);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching scheduler state:", error);
       toast.error("Failed to load scheduler state");
     } finally {
@@ -76,9 +75,10 @@ export function SchedulerPage() {
       } else {
         toast.success("Scheduler disabled");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Failed to update scheduler: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Failed to update scheduler: " + message);
       console.error("Error updating scheduler state:", error);
     }
   };
@@ -89,7 +89,7 @@ export function SchedulerPage() {
       if (response.data.success && response.data.channelId) {
         setCustomChannelId(response.data.channelId);
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching custom channel ID:", error);
     }
   };
@@ -102,9 +102,10 @@ export function SchedulerPage() {
 
       toast.dismiss(loadingToast);
       toast.success("Custom channel ID saved successfully!");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Error saving channel ID: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error saving channel ID: " + message);
     }
   };
 
@@ -121,9 +122,10 @@ export function SchedulerPage() {
 
       toast.dismiss(loadingToast);
       toast.success("Shift settings saved successfully!");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Error saving shift settings: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error saving shift settings: " + message);
     }
   };
 
@@ -146,9 +148,10 @@ export function SchedulerPage() {
       } else {
         toast.info(response.data.message || "No handover messages found that need replies");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Error scanning messages: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error scanning messages: " + message);
     } finally {
       setTriggeringComments(false);
     }
@@ -167,7 +170,6 @@ export function SchedulerPage() {
 
   return (
     <div className="w-full h-full flex flex-col gap-6 max-w-2xl">
-      {/* Header */}
       <div>
         <h2 className="text-2xl font-semibold tracking-tight mb-2">Scheduler</h2>
         <p className="text-sm text-muted-foreground">
@@ -175,7 +177,6 @@ export function SchedulerPage() {
         </p>
       </div>
 
-      {/* Status Card */}
       <div className="border border-border rounded-lg p-6 bg-card">
         <div className="flex items-start justify-between mb-6">
           <div className="flex items-center gap-3">
@@ -224,7 +225,6 @@ export function SchedulerPage() {
         )}
       </div>
 
-      {/* Custom Channel ID */}
       <div className="border border-border rounded-lg p-6 bg-card">
         <div className="flex items-center gap-2 mb-4">
           <Hash className="w-4 h-4 text-muted-foreground" />
@@ -261,7 +261,6 @@ export function SchedulerPage() {
         </div>
       </div>
 
-      {/* Evening Shift Settings */}
       <div className="border border-border rounded-lg p-6 bg-card">
         <div className="flex items-center gap-2 mb-4">
           <Sun className="w-4 h-4 text-orange-500" />
@@ -307,7 +306,6 @@ export function SchedulerPage() {
         </div>
       </div>
 
-      {/* Night Shift Settings */}
       <div className="border border-border rounded-lg p-6 bg-card">
         <div className="flex items-center gap-2 mb-4">
           <Moon className="w-4 h-4 text-blue-500" />
@@ -353,7 +351,6 @@ export function SchedulerPage() {
         </div>
       </div>
 
-      {/* Save All Settings Button */}
       <div className="border border-border rounded-lg p-6 bg-card">
         <Button
           onClick={handleSaveShiftSettings}
@@ -369,7 +366,6 @@ export function SchedulerPage() {
         </p>
       </div>
 
-      {/* Manual Triggers */}
       <div className="border border-border rounded-lg p-6 bg-card">
         <h3 className="text-base font-semibold mb-2">Manual Trigger</h3>
         <p className="text-sm text-muted-foreground mb-4">

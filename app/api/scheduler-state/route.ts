@@ -10,9 +10,10 @@ export async function GET(request: NextRequest) {
       success: true,
       enabled,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: message },
       { status: 500 }
     );
   }
@@ -38,9 +39,10 @@ export async function POST(request: NextRequest) {
       enabled,
       message: `Scheduler ${enabled ? "enabled" : "disabled"} successfully`,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: message },
       { status: 500 }
     );
   }

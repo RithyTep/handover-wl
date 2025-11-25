@@ -55,13 +55,11 @@ export function BackupClient({ initialBackups }: BackupClientProps) {
   const [creating, setCreating] = useState(false);
   const [restoring, setRestoring] = useState(false);
 
-  // Dialog states
   const [restoreDialog, setRestoreDialog] = useState(false);
   const [selectedBackup, setSelectedBackup] = useState<BackupItem | null>(null);
 
   const handleRefresh = async () => {
     setLoading(true);
-    // Revalidate cache and refresh
     await fetch("/api/revalidate?tag=backups");
     router.refresh();
     setLoading(false);
@@ -81,14 +79,14 @@ export function BackupClient({ initialBackups }: BackupClientProps) {
 
       if (data.success) {
         toast.success(`Backup #${data.backup.id} created successfully`);
-        // Revalidate cache and refresh
         await fetch("/api/revalidate?tag=backups");
         router.refresh();
       } else {
         toast.error(data.error || "Failed to create backup");
       }
-    } catch (error: any) {
-      toast.error("Error creating backup: " + error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error creating backup: " + message);
     } finally {
       setCreating(false);
     }
@@ -111,14 +109,14 @@ export function BackupClient({ initialBackups }: BackupClientProps) {
         toast.success(`Restored from backup #${selectedBackup.id}`);
         setRestoreDialog(false);
         setSelectedBackup(null);
-        // Revalidate all caches after restore
         await fetch("/api/revalidate");
         router.refresh();
       } else {
         toast.error(data.error || "Failed to restore backup");
       }
-    } catch (error: any) {
-      toast.error("Error restoring backup: " + error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error restoring backup: " + message);
     } finally {
       setRestoring(false);
     }

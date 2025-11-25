@@ -25,7 +25,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { message, thread_ts } = body;
 
-    // Post message to Slack (optionally in a thread)
     const response = await fetch("https://slack.com/api/chat.postMessage", {
       method: "POST",
       headers: {
@@ -35,7 +34,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         channel: SLACK_CHANNEL,
         text: message,
-        ...(thread_ts && { thread_ts }), // Reply in thread if ts provided
+        ...(thread_ts && { thread_ts }),
         unfurl_links: false,
         unfurl_media: false,
       }),
@@ -56,16 +55,16 @@ export async function POST(request: NextRequest) {
       channel: result.channel,
       message: "Message posted successfully"
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error posting to Slack:", error);
+    const errMessage = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: errMessage },
       { status: 500 }
     );
   }
 }
 
-// Get recent messages to find thread_ts
 export async function GET(request: NextRequest) {
   try {
     if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
@@ -75,7 +74,6 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // First, test the token by getting auth info
     const authTest = await fetch("https://slack.com/api/auth.test", {
       headers: {
         "Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
@@ -127,17 +125,17 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Return recent messages with their timestamps
-    const messages = result.messages.map((msg: any) => ({
+    const messages = result.messages.map((msg: { ts: string; text?: string; user?: string }) => ({
       ts: msg.ts,
-      text: msg.text?.substring(0, 100) + (msg.text?.length > 100 ? "..." : ""),
+      text: msg.text?.substring(0, 100) + (msg.text && msg.text.length > 100 ? "..." : ""),
       user: msg.user,
     }));
 
     return NextResponse.json({ success: true, messages });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: message },
       { status: 500 }
     );
   }

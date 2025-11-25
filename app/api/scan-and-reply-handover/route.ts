@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
 
     const handoverMessage = historyData.messages.find(
-      (msg: any) => msg.text && msg.text.includes("*Ticket Handover Information*")
+      (msg: { text?: string }) => msg.text && msg.text.includes("*Ticket Handover Information*")
     );
 
     if (!handoverMessage) {
@@ -133,9 +133,10 @@ export async function POST(request: NextRequest) {
       replyTs: postData.ts,
       ticketsCount: tickets.length,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: message },
       { status: 500 }
     );
   }

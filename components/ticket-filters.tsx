@@ -60,7 +60,6 @@ export function TicketFiltersComponent({
   const [filterName, setFilterName] = useState("");
   const [showSaveInput, setShowSaveInput] = useState(false);
 
-  // Load saved filters from localStorage
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("savedFilters");
@@ -70,7 +69,6 @@ export function TicketFiltersComponent({
     }
   }, []);
 
-  // Count active filters
   const activeFilterCount = Object.values(filters).filter((v) => v && v !== "").length;
 
   const handleFilterChange = (key: keyof TicketFilters, value: string) => {
@@ -165,7 +163,6 @@ export function TicketFiltersComponent({
         </div>
 
         <div className="p-4 space-y-4 max-h-[500px] overflow-y-auto">
-          {/* Assignee Filter */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Assignee
@@ -188,7 +185,6 @@ export function TicketFiltersComponent({
             </Select>
           </div>
 
-          {/* Status Filter */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Status
@@ -211,7 +207,6 @@ export function TicketFiltersComponent({
             </Select>
           </div>
 
-          {/* WL Main Type Filter */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               WL Main Type
@@ -234,7 +229,6 @@ export function TicketFiltersComponent({
             </Select>
           </div>
 
-          {/* WL Sub Type Filter */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               WL Sub Type
@@ -257,7 +251,6 @@ export function TicketFiltersComponent({
             </Select>
           </div>
 
-          {/* Customer Level Filter */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Customer Level
@@ -280,7 +273,6 @@ export function TicketFiltersComponent({
             </Select>
           </div>
 
-          {/* Date Range */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide flex items-center gap-1.5">
               <Calendar className="w-3 h-3" />
@@ -304,7 +296,6 @@ export function TicketFiltersComponent({
             </div>
           </div>
 
-          {/* JQL Query */}
           <div className="space-y-2">
             <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               JQL Query (Advanced)
@@ -322,7 +313,6 @@ export function TicketFiltersComponent({
 
           <Separator />
 
-          {/* Saved Filters Section */}
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">

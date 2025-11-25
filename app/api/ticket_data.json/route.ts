@@ -22,10 +22,11 @@ export async function GET() {
         { status: 404 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error reading ticket_data.json:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to read ticket data", details: error.message },
+      { error: "Failed to read ticket data", details: message },
       { status: 500 }
     );
   }

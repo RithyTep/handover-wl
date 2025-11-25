@@ -12,8 +12,21 @@ export function SnowCanvas() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
+    interface Snowflake {
+      x: number;
+      y: number;
+      size: number;
+      speed: number;
+      velY: number;
+      velX: number;
+      opacity: number;
+      stepSize: number;
+      step: number;
+      angle: number;
+    }
+
     let animationFrameId: number;
-    const flakes: any[] = [];
+    const flakes: Snowflake[] = [];
     const flakeCount = 200;
     let mX = -100;
     let mY = -100;
@@ -23,7 +36,7 @@ export function SnowCanvas() {
       canvas.height = window.innerHeight;
     };
 
-    const reset = (flake: any) => {
+    const reset = (flake: Snowflake) => {
       flake.x = Math.floor(Math.random() * canvas.width);
       flake.y = 0;
       flake.size = (Math.random() * 3) + 2;

@@ -20,8 +20,6 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
 
   const navItems = [
     { id: "tickets", icon: ClipboardList, label: "Tickets" },
-    // { id: "history", icon: History, label: "History" },
-    // { id: "settings", icon: Settings, label: "Settings" },
   ];
 
   return (
@@ -31,7 +29,6 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
         collapsed ? "w-14" : "w-56"
       )}
     >
-      {/* Logo/Brand */}
       <div className={cn(
         "h-[52px] border-b border-border flex items-center",
         collapsed ? "justify-center px-2" : "px-4"
@@ -48,7 +45,6 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
         )}
       </div>
 
-      {/* Navigation Links */}
       <div className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -74,7 +70,6 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
         })}
       </div>
 
-      {/* Collapse Toggle */}
       <div className="border-t border-border p-2">
         <button
           onClick={() => handleCollapsedChange(!collapsed)}

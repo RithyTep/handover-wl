@@ -8,7 +8,6 @@ export function NewYearScene() {
   const [mailContent, setMailContent] = useState({ text: "", sign: "" });
   const winterWrapperRef = useRef<HTMLDivElement>(null);
 
-  // Countdown Logic
   useEffect(() => {
     const calculateTime = () => {
       const today = new Date();
@@ -36,7 +35,6 @@ export function NewYearScene() {
     return () => clearInterval(timer);
   }, []);
 
-  // Snowflakes Logic - Reduced count for better performance
   useEffect(() => {
     const wrapper = winterWrapperRef.current;
     if (!wrapper) return;
@@ -54,7 +52,6 @@ export function NewYearScene() {
       wrapper.appendChild(fragment);
     };
 
-    // Reduced snowflake counts significantly
     createSnowflakes(30, "_sm");
     createSnowflakes(15, "_md");
     createSnowflakes(10, "_lg");
@@ -64,7 +61,6 @@ export function NewYearScene() {
     };
   }, []);
 
-  // Fireworks Logic - Optimized with fewer particles
   const startFireworks = useCallback((x: number, y: number) => {
     const candyCount = 8;
     const colors = ["#ADD8E6", "#B2F2BB", "#FFFACD", "#FFB6C1"];
@@ -92,7 +88,6 @@ export function NewYearScene() {
     }, 1200);
   }, []);
 
-  // Auto Fireworks - Less frequent
   useEffect(() => {
     const interval = setInterval(() => {
       const x = Math.random() * window.innerWidth;
@@ -102,7 +97,6 @@ export function NewYearScene() {
     return () => clearInterval(interval);
   }, [startFireworks]);
 
-  // Mailbox Logic
   const handleOpenMail = () => {
     const greetings = [
         "Merry Christmas and a Happy New Year! May your days be filled with joy, laughter, and the warmth of loved ones. Don’t forget to leave me some cookies and milk—Santa needs his fuel for all that gift delivering! Stay jolly and bright!",
@@ -131,7 +125,6 @@ export function NewYearScene() {
   return (
     <>
       <div className="winter-wrapper pointer-events-none" ref={winterWrapperRef} />
-      {/* Fireworks click area - hidden on mobile to allow scrolling */}
 
       <div className="ny-header fixed bottom-32 left-0 right-0 z-0 pointer-events-none scale-75 sm:scale-100 origin-bottom">
         <h1>
@@ -167,9 +160,7 @@ export function NewYearScene() {
           </div>
         </div>
       </div>
-      
-      {/* Shadow button for click area if needed, but mailbox div handles it */}
-      
+
       {showMail && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4"

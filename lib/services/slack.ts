@@ -6,7 +6,7 @@ const { SLACK_BOT_TOKEN, SLACK_CHANNEL_ID } = process.env;
 
 async function callApi(
   endpoint: string,
-  body: Record<string, any>,
+  body: Record<string, unknown>,
   token: string = SLACK_BOT_TOKEN!
 ): Promise<SlackResponse> {
   const controller = new AbortController();
@@ -24,11 +24,12 @@ async function callApi(
     });
     clearTimeout(timeoutId);
     return await response.json();
-  } catch (error: any) {
+  } catch (error: unknown) {
     clearTimeout(timeoutId);
+    const err = error as { name?: string; message?: string };
     return {
       ok: false,
-      error: error.name === "AbortError" ? "Request timeout" : error.message,
+      error: err.name === "AbortError" ? "Request timeout" : err.message || "Unknown error",
     };
   }
 }

@@ -13,11 +13,12 @@ export async function GET() {
       total: tickets.length,
       storage: "postgresql",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Failed to fetch tickets";
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Failed to fetch tickets",
+        error: message,
       },
       { status: 500 }
     );

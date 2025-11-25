@@ -8,28 +8,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        // Linear-style primary: solid dark/white
         default: "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
-
-        // Linear-style destructive: subtle red
         destructive:
           "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-
-        // Linear-style outline: 1px solid border with subtle hover
         outline:
           "border border-border bg-transparent text-foreground hover:bg-muted/50",
-
-        // Linear-style secondary: light gray background
         secondary:
           "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-
-        // Linear-style ghost: transparent with subtle hover
         ghost: "text-foreground hover:bg-muted/50 hover:text-foreground",
-
-        // Link variant
         link: "text-foreground underline-offset-4 hover:underline",
-
-        // Success variant
         success: "bg-success text-success-foreground shadow-sm hover:bg-success/90",
       },
       size: {

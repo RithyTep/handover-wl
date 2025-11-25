@@ -1,13 +1,10 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-// Support multiple AI providers
-const AI_PROVIDER = process.env.AI_PROVIDER || "groq"; // groq, openai, gemini
+const AI_PROVIDER = process.env.AI_PROVIDER || "groq";
 
-// Initialize client based on provider
 const getAIClient = () => {
   if (AI_PROVIDER === "groq") {
-    // Groq uses OpenAI-compatible API
     return new OpenAI({
       apiKey: process.env.GROQ_API_KEY,
       baseURL: "https://api.groq.com/openai/v1",
@@ -20,7 +17,6 @@ const getAIClient = () => {
   return null;
 };
 
-// Fetch ticket history and comments from Jira
 async function fetchTicketHistory(ticketKey: string) {
   try {
     const JIRA_URL = process.env.JIRA_URL;
@@ -34,7 +30,6 @@ async function fetchTicketHistory(ticketKey: string) {
 
     const auth = Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString("base64");
 
-    // Fetch issue with comments and changelog
     const response = await fetch(
       `${JIRA_URL}/rest/api/3/issue/${ticketKey}?expand=changelog,comment`,
       {
@@ -52,138 +47,130 @@ async function fetchTicketHistory(ticketKey: string) {
 
     const data = await response.json();
 
-    // Helper function to extract comment text recursively from ADF
-    const extractCommentText = (comment: any): string => {
-      // Try ADF format first
-      if (comment.body?.content) {
+    const extractCommentText = (comment: Record<string, unknown>): string => {
+      const body = comment.body as { content?: unknown[] } | string | undefined;
+      if (typeof body === 'object' && body !== null && 'content' in body && Array.isArray(body.content)) {
         let text = '';
-        
-        const extractFromNode = (node: any): string => {
+
+        const extractFromNode = (node: Record<string, unknown>): string => {
           let nodeText = '';
-          
-          // Handle text nodes
-          if (node.type === 'text' && node.text) {
+
+          if (node.type === 'text' && typeof node.text === 'string') {
             nodeText += node.text + ' ';
           }
-          
-          // Handle paragraphs, headings, etc.
-          if (node.content && Array.isArray(node.content)) {
+
+          if (Array.isArray(node.content)) {
             for (const child of node.content) {
-              nodeText += extractFromNode(child);
+              nodeText += extractFromNode(child as Record<string, unknown>);
             }
           }
-          
-          // Add line breaks for block elements
-          if (['paragraph', 'heading', 'listItem'].includes(node.type)) {
+
+          if (['paragraph', 'heading', 'listItem'].includes(node.type as string)) {
             nodeText += '\n';
           }
-          
+
           return nodeText;
         };
-        
-        for (const node of comment.body.content) {
-          text += extractFromNode(node);
+
+        for (const node of body.content) {
+          text += extractFromNode(node as Record<string, unknown>);
         }
-        
+
         return text.trim();
       }
-      
-      // Fallback to plain text
-      if (typeof comment.body === 'string') {
-        return comment.body;
+
+      if (typeof body === 'string') {
+        return body;
       }
-      
+
       return '';
     };
 
-    // Get last 5 comments with full text, excluding Rovo and bot comments
     const allComments = data.fields?.comment?.comments || [];
     console.log(`Found ${allComments.length} total comments for ${ticketKey}`);
 
-    // Filter out Rovo and bot comments
-    const filteredComments = allComments.filter((c: any) => {
-      const authorName = (c.author?.displayName || c.author?.name || "Unknown").toLowerCase();
+    const filteredComments = allComments.filter((c: Record<string, unknown>) => {
+      const author = c.author as { displayName?: string; name?: string; accountType?: string } | undefined;
+      const authorName = (author?.displayName || author?.name || "Unknown").toLowerCase();
       const isRovoOrBot =
         authorName.includes('rovo') ||
         authorName.includes('bot') ||
         authorName.includes('automation') ||
-        c.author?.accountType === 'app';
+        author?.accountType === 'app';
       return !isRovoOrBot;
     });
 
     console.log(`Filtered ${allComments.length - filteredComments.length} Rovo/bot comments`);
 
-    const recentComments = filteredComments.slice(-5).map((c: any) => {
+    const recentComments = filteredComments.slice(-5).map((c: Record<string, unknown>) => {
       const commentText = extractCommentText(c);
+      const author = c.author as { displayName?: string; name?: string } | undefined;
       return {
         id: c.id,
-        author: c.author?.displayName || c.author?.name || "Unknown",
+        author: author?.displayName || author?.name || "Unknown",
         body: commentText,
-        created: new Date(c.created).toLocaleDateString(),
+        created: new Date(c.created as string).toLocaleDateString(),
         createdRaw: c.created,
-        updated: c.updated ? new Date(c.updated).toLocaleDateString() : null,
+        updated: c.updated ? new Date(c.updated as string).toLocaleDateString() : null,
       };
     });
 
     console.log(`Extracted ${recentComments.length} recent human comments`);
 
-    // Get recent status changes from changelog (last 3)
     const changelog = data.changelog?.histories || [];
     const statusChanges = changelog
-      .filter((h: any) => h.items?.some((i: any) => i.field === "status"))
+      .filter((h: Record<string, unknown>) => (h.items as Array<{ field: string }>)?.some((i) => i.field === "status"))
       .slice(-3)
-      .map((h: any) => {
-        const statusItem = h.items.find((i: any) => i.field === "status");
+      .map((h: Record<string, unknown>) => {
+        const items = h.items as Array<{ field: string; fromString?: string; toString?: string }>;
+        const statusItem = items.find((i) => i.field === "status");
+        const author = h.author as { displayName?: string } | undefined;
         return {
           from: statusItem?.fromString,
           to: statusItem?.toString,
-          date: new Date(h.created).toLocaleDateString(),
-          author: h.author?.displayName || "Unknown",
+          date: new Date(h.created as string).toLocaleDateString(),
+          author: author?.displayName || "Unknown",
         };
       });
 
-    // Get assignee changes
     const assigneeChanges = changelog
-      .filter((h: any) => h.items?.some((i: any) => i.field === "assignee"))
+      .filter((h: Record<string, unknown>) => (h.items as Array<{ field: string }>)?.some((i) => i.field === "assignee"))
       .slice(-2)
-      .map((h: any) => {
-        const assigneeItem = h.items.find((i: any) => i.field === "assignee");
+      .map((h: Record<string, unknown>) => {
+        const items = h.items as Array<{ field: string; fromString?: string; toString?: string }>;
+        const assigneeItem = items.find((i) => i.field === "assignee");
         return {
           from: assigneeItem?.fromString || "Unassigned",
           to: assigneeItem?.toString || "Unassigned",
-          date: new Date(h.created).toLocaleDateString(),
+          date: new Date(h.created as string).toLocaleDateString(),
         };
       });
-
-    // Extract description
     let description = '';
     if (data.fields?.description) {
       if (data.fields.description.content) {
-        // ADF format
-        const extractFromNode = (node: any): string => {
+        const extractFromNode = (node: Record<string, unknown>): string => {
           let text = '';
-          if (node.type === 'text' && node.text) {
+          if (node.type === 'text' && typeof node.text === 'string') {
             text += node.text + ' ';
           }
           if (node.content && Array.isArray(node.content)) {
             for (const child of node.content) {
-              text += extractFromNode(child);
+              text += extractFromNode(child as Record<string, unknown>);
             }
           }
           return text;
         };
-        
+
         for (const node of data.fields.description.content) {
-          description += extractFromNode(node);
+          description += extractFromNode(node as Record<string, unknown>);
         }
       } else if (typeof data.fields.description === 'string') {
-        // Plain text
         description = data.fields.description;
       }
     }
 
     return {
-      comments: recentComments.reverse(), // Most recent first
+      comments: recentComments.reverse(),
       statusChanges,
       assigneeChanges,
       description: description.trim(),
@@ -206,7 +193,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Check if API key is configured
     const apiKey = AI_PROVIDER === "groq"
       ? process.env.GROQ_API_KEY
       : process.env.OPENAI_API_KEY;
@@ -229,11 +215,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // Fetch ticket history and comments
     console.log(`Fetching history for ticket: ${ticket.key}`);
     const history = await fetchTicketHistory(ticket.key);
 
-    // Build context with HEAVY emphasis on comments
     let context = `TICKET BASICS:
 Key: ${ticket.key}
 Summary: ${ticket.summary}
@@ -244,28 +228,24 @@ Customer Level: ${ticket.customerLevel || 'N/A'}
 Created: ${new Date(ticket.created).toLocaleDateString()}
 Due Date: ${ticket.dueDate ? new Date(ticket.dueDate).toLocaleDateString() : 'N/A'}`;
 
-    // Track if we have recent activity
     let hasRecentActivity = false;
 
-    // Add history information if available
     console.log("🚀 ~ POST ~ history:", history);
     
     if (history) {
-      // PRIORITY 1: Recent Comments (MOST IMPORTANT)
       if (history.comments && history.comments.length > 0) {
         hasRecentActivity = true;
         context += `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📝 RECENT COMMENTS (MOST IMPORTANT - READ THESE FIRST):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
-        
-        history.comments.forEach((comment: any, index: number) => {
+
+        history.comments.forEach((comment: { body: string; created: string; author: string }, index: number) => {
           const isLatest = index === 0;
           const marker = isLatest ? '🔥 [LATEST COMMENT]' : `[Comment ${history.comments.length - index}]`;
           const commentText = typeof comment.body === 'string'
             ? comment.body
             : String(comment.body || '');
-          
-          // Use more text for the latest comment
+
           const maxLength = isLatest ? 800 : 400;
           const truncated = commentText.length > maxLength;
           const displayText = truncated 
@@ -279,26 +259,23 @@ Content: ${displayText}`;
         });
       }
 
-      // PRIORITY 2: Status Changes
       if (history.statusChanges && history.statusChanges.length > 0) {
         hasRecentActivity = true;
         context += `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📊 RECENT STATUS CHANGES:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`;
-        history.statusChanges.forEach((change: any) => {
+        history.statusChanges.forEach((change: { date: string; from: string; to: string; author: string }) => {
           context += `\n- ${change.date}: ${change.from} → ${change.to} (by ${change.author})`;
         });
       }
 
-      // PRIORITY 3: Assignee Changes
       if (history.assigneeChanges && history.assigneeChanges.length > 0) {
         context += `\n\n👤 RECENT ASSIGNEE CHANGES:`;
-        history.assigneeChanges.forEach((change: any) => {
+        history.assigneeChanges.forEach((change: { date: string; from: string; to: string }) => {
           context += `\n- ${change.date}: ${change.from} → ${change.to}`;
         });
       }
 
-      // PRIORITY 4: Original Description (least important)
       if (history.description) {
         context += `\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📄 ORIGINAL DESCRIPTION (for background only):
@@ -313,7 +290,6 @@ ${history.description.slice(0, 300)}${history.description.length > 300 ? '...' :
 
     context = context.trim();
 
-    // Enhanced prompt that emphasizes comments
     const prompt = `You are an AI assistant creating handover notes for a support team. Your PRIMARY job is to analyze the MOST RECENT COMMENT to understand what's happening NOW.
 
 ${context}
@@ -386,7 +362,6 @@ Respond with ONLY this JSON (no markdown, no backticks):
 
     console.log(`Calling ${AI_PROVIDER.toUpperCase()} API for ticket:`, ticket.key);
 
-    // Select model based on provider
     const model = AI_PROVIDER === "groq"
       ? "llama-3.3-70b-versatile"
       : "gpt-4o-mini";
@@ -403,7 +378,7 @@ Respond with ONLY this JSON (no markdown, no backticks):
           content: prompt,
         },
       ],
-      temperature: 0.3, // Lower temperature for more focused, consistent output
+      temperature: 0.3,
       max_tokens: 300,
       response_format: { type: "json_object" },
     });
@@ -422,11 +397,9 @@ Respond with ONLY this JSON (no markdown, no backticks):
       throw new Error("Invalid JSON response from AI");
     }
 
-    // Validate and sanitize response
     const status = (parsed.status?.trim() || "Pending review - check ticket details").slice(0, 200);
     const action = (parsed.action?.trim() || "Review ticket and determine next steps").slice(0, 200);
 
-    // Log word counts for monitoring
     const statusWords = status.split(/\s+/).length;
     const actionWords = action.split(/\s+/).length;
     
@@ -448,11 +421,11 @@ Respond with ONLY this JSON (no markdown, no backticks):
         wordCounts: { status: statusWords, action: actionWords },
       },
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error generating AI suggestion:", error);
 
-    // Check if it's an API error
-    if (error.status === 401) {
+    const apiError = error as { status?: number; message?: string };
+    if (apiError.status === 401) {
       return NextResponse.json(
         {
           success: false,
@@ -462,10 +435,11 @@ Respond with ONLY this JSON (no markdown, no backticks):
       );
     }
 
+    const message = error instanceof Error ? error.message : "Failed to generate suggestion";
     return NextResponse.json(
       {
         success: false,
-        error: error.message || "Failed to generate suggestion",
+        error: message,
         suggestion: {
           status: "Error generating status - please review ticket manually",
           action: "Manually review ticket history and add handover notes",

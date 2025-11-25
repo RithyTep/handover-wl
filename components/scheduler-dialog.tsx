@@ -35,7 +35,7 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
     try {
       const response = await axios.get("/api/scheduler-state");
       setScheduleEnabled(response.data.enabled);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error fetching scheduler state:", error);
       toast.error("Failed to load scheduler state");
     } finally {
@@ -63,9 +63,10 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
       } else {
         toast.success("Scheduler disabled");
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Failed to update scheduler: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Failed to update scheduler: " + message);
       console.error("Error updating scheduler state:", error);
     }
   };
@@ -85,9 +86,10 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
         colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
       });
       toast.success("Scheduler triggered successfully! Check your Slack channel.");
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.dismiss(loadingToast);
-      toast.error("Error triggering scheduler: " + error.message);
+      const message = error instanceof Error ? error.message : "Unknown error";
+      toast.error("Error triggering scheduler: " + message);
     } finally {
       setTriggering(false);
     }
@@ -104,7 +106,6 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
         </DialogHeader>
 
         <div className="space-y-3 mt-4">
-          {/* Status & Toggle */}
           <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
             <div className="flex items-center gap-2">
               <Badge variant={scheduleEnabled ? "default" : "secondary"} className="text-xs">
@@ -135,7 +136,6 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
             </Button>
           </div>
 
-          {/* Schedule Times */}
           <div className="space-y-2">
             <div className="flex items-center justify-between p-3 bg-muted/50 rounded-md">
               <span className="text-sm">5:00 PM</span>
@@ -147,7 +147,6 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
             </div>
           </div>
 
-          {/* Test Button */}
           <Button
             onClick={handleTestScheduler}
             disabled={triggering}

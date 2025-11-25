@@ -12,10 +12,8 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { ticketData, ticketDetails } = body;
 
-    // Save the data first
     fs.writeFileSync(STORAGE_FILE, JSON.stringify(ticketData, null, 2));
 
-    // Check for Bot Token
     if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
       return NextResponse.json(
         { success: false, error: "Missing SLACK_BOT_TOKEN or SLACK_CHANNEL" },
@@ -23,12 +21,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build Slack message
     const ticketKeys = Object.keys(ticketData)
       .filter((key) => key.startsWith("status-"))
       .map((key) => key.replace("status-", ""));
 
-    // Build message with all tickets (show -- for empty status/action)
     let message = "Please refer to this ticket information\n\n";
 
     ticketKeys.forEach((ticketKey, index) => {
@@ -49,7 +45,6 @@ export async function POST(request: NextRequest) {
       message += `\n`;
     });
       message += `===========================\n`;
-    // Post message to channel using Bot Token
     const postResponse = await fetch("https://slack.com/api/chat.postMessage", {
       method: "POST",
       headers: {
@@ -77,10 +72,11 @@ export async function POST(request: NextRequest) {
       success: true,
       message_ts: postResult.ts
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error sending to Slack:", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { success: false, error: error.message },
+      { success: false, error: message },
       { status: 500 }
     );
   }

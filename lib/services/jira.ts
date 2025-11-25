@@ -25,10 +25,16 @@ export async function fetchTickets(
   return response.data.issues;
 }
 
+type CustomField = { value?: string } | undefined;
+
 export function transformIssue(
   issue: JiraIssue,
   savedData?: TicketData
 ): Ticket {
+  const mainTicketType = issue.fields[JIRA.FIELDS.WL_MAIN_TICKET_TYPE] as CustomField;
+  const subTicketType = issue.fields[JIRA.FIELDS.WL_SUB_TICKET_TYPE] as CustomField;
+  const customerLevel = issue.fields[JIRA.FIELDS.CUSTOMER_LEVEL] as string | undefined;
+
   return {
     key: issue.key,
     summary: issue.fields.summary,
@@ -38,9 +44,9 @@ export function transformIssue(
     created: issue.fields.created,
     dueDate: issue.fields.duedate || null,
     issueType: issue.fields.issuetype?.name || "None",
-    wlMainTicketType: issue.fields[JIRA.FIELDS.WL_MAIN_TICKET_TYPE]?.value || "None",
-    wlSubTicketType: issue.fields[JIRA.FIELDS.WL_SUB_TICKET_TYPE]?.value || "None",
-    customerLevel: issue.fields[JIRA.FIELDS.CUSTOMER_LEVEL] || "None",
+    wlMainTicketType: mainTicketType?.value || "None",
+    wlSubTicketType: subTicketType?.value || "None",
+    customerLevel: customerLevel || "None",
     jiraUrl: `${JIRA_URL}/browse/${issue.key}`,
     savedStatus: savedData?.status || "--",
     savedAction: savedData?.action || "--",
