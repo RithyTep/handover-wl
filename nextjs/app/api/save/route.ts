@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { saveTicketData, initDatabase } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
@@ -34,10 +35,16 @@ export async function POST(request: NextRequest) {
 
     console.log("Successfully saved to database");
 
+    // Revalidate cache tags so homepage gets fresh data (Next.js 16 API)
+    revalidateTag("tickets", { expire: 0 });
+    revalidateTag("dashboard", { expire: 0 });
+    console.log("Cache revalidated for tickets and dashboard");
+
     return NextResponse.json({
       success: true,
       ticketCount: Object.keys(formattedData).length,
-      storage: "postgresql"
+      storage: "postgresql",
+      cacheRevalidated: true
     });
   } catch (error: any) {
     console.error("Error saving data:", error);

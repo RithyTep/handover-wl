@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { ClipboardList, Trophy } from "lucide-react";
+import { ClipboardList, Trophy, Database } from "lucide-react";
 
 export function Navigation() {
   const pathname = usePathname();
@@ -14,6 +14,12 @@ export function Navigation() {
       label: "Handover",
       icon: ClipboardList,
       active: pathname === "/",
+    },
+    {
+      href: "/backup",
+      label: "Backup",
+      icon: Database,
+      active: pathname === "/backup",
     },
   ];
 

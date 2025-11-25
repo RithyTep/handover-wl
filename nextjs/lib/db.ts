@@ -67,6 +67,19 @@ export async function initDatabase() {
       END $$;
     `);
 
+    // Create backups table for storing periodic backups
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS backups (
+        id SERIAL PRIMARY KEY,
+        backup_type VARCHAR(50) NOT NULL DEFAULT 'auto',
+        ticket_data JSONB,
+        app_settings JSONB,
+        scheduled_comments JSONB,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        description TEXT
+      )
+    `);
+
     // Store custom trigger times in app_settings
     await client.query(`
       INSERT INTO app_settings (key, value, updated_at)
@@ -628,6 +641,192 @@ export async function setNightMentions(mentions: string): Promise<void> {
   } catch (error) {
     console.error("Error setting night mentions:", error);
     throw error;
+  } finally {
+    client.release();
+  }
+}
+
+// Backup Interface
+export interface Backup {
+  id: number;
+  backup_type: 'auto' | 'manual';
+  ticket_data: Record<string, { status: string; action: string }> | null;
+  app_settings: Record<string, string> | null;
+  scheduled_comments: ScheduledComment[] | null;
+  created_at: Date;
+  description: string | null;
+}
+
+// Create a new backup
+export async function createBackup(
+  backupType: 'auto' | 'manual' = 'auto',
+  description?: string
+): Promise<Backup | null> {
+  const client = await pool.connect();
+  try {
+    // Collect all data from tables
+    const ticketResult = await client.query("SELECT ticket_key, status, action FROM ticket_data");
+    const settingsResult = await client.query("SELECT key, value FROM app_settings");
+    const commentsResult = await client.query("SELECT * FROM scheduled_comments");
+
+    // Transform ticket data to object format
+    const ticketData: Record<string, { status: string; action: string }> = {};
+    ticketResult.rows.forEach(row => {
+      ticketData[row.ticket_key] = { status: row.status, action: row.action };
+    });
+
+    // Transform settings to object format
+    const appSettings: Record<string, string> = {};
+    settingsResult.rows.forEach(row => {
+      appSettings[row.key] = row.value;
+    });
+
+    // Insert backup
+    const result = await client.query(
+      `
+      INSERT INTO backups (backup_type, ticket_data, app_settings, scheduled_comments, description, created_at)
+      VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP)
+      RETURNING *
+      `,
+      [
+        backupType,
+        JSON.stringify(ticketData),
+        JSON.stringify(appSettings),
+        JSON.stringify(commentsResult.rows),
+        description || `${backupType === 'auto' ? 'Automatic' : 'Manual'} backup`
+      ]
+    );
+
+    console.log("Created backup:", result.rows[0].id);
+    return result.rows[0];
+  } catch (error) {
+    console.error("Error creating backup:", error);
+    return null;
+  } finally {
+    client.release();
+  }
+}
+
+// Get all backups
+export async function getBackups(limit: number = 50): Promise<Backup[]> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      "SELECT * FROM backups ORDER BY created_at DESC LIMIT $1",
+      [limit]
+    );
+    return result.rows;
+  } catch (error) {
+    console.error("Error getting backups:", error);
+    return [];
+  } finally {
+    client.release();
+  }
+}
+
+// Get a specific backup by ID
+export async function getBackupById(id: number): Promise<Backup | null> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query("SELECT * FROM backups WHERE id = $1", [id]);
+    return result.rows[0] || null;
+  } catch (error) {
+    console.error("Error getting backup:", error);
+    return null;
+  } finally {
+    client.release();
+  }
+}
+
+// Restore from a backup
+export async function restoreFromBackup(backupId: number): Promise<boolean> {
+  const client = await pool.connect();
+  try {
+    // Get the backup
+    const backupResult = await client.query("SELECT * FROM backups WHERE id = $1", [backupId]);
+    if (backupResult.rows.length === 0) {
+      console.error("Backup not found:", backupId);
+      return false;
+    }
+
+    const backup = backupResult.rows[0];
+
+    await client.query("BEGIN");
+
+    // Restore ticket_data
+    if (backup.ticket_data) {
+      await client.query("DELETE FROM ticket_data");
+      for (const [ticketKey, data] of Object.entries(backup.ticket_data as Record<string, { status: string; action: string }>)) {
+        await client.query(
+          "INSERT INTO ticket_data (ticket_key, status, action, updated_at) VALUES ($1, $2, $3, CURRENT_TIMESTAMP)",
+          [ticketKey, data.status, data.action]
+        );
+      }
+    }
+
+    // Restore app_settings
+    if (backup.app_settings) {
+      await client.query("DELETE FROM app_settings");
+      for (const [key, value] of Object.entries(backup.app_settings as Record<string, string>)) {
+        await client.query(
+          "INSERT INTO app_settings (key, value, updated_at) VALUES ($1, $2, CURRENT_TIMESTAMP)",
+          [key, value]
+        );
+      }
+    }
+
+    // Restore scheduled_comments
+    if (backup.scheduled_comments) {
+      await client.query("DELETE FROM scheduled_comments");
+      for (const comment of backup.scheduled_comments as ScheduledComment[]) {
+        await client.query(
+          `INSERT INTO scheduled_comments (comment_type, ticket_key, comment_text, cron_schedule, enabled, created_at, updated_at, last_posted_at)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+          [
+            comment.comment_type,
+            comment.ticket_key || null,
+            comment.comment_text,
+            comment.cron_schedule,
+            comment.enabled,
+            comment.created_at || new Date(),
+            comment.updated_at || new Date(),
+            comment.last_posted_at || null
+          ]
+        );
+      }
+    }
+
+    await client.query("COMMIT");
+    console.log("Restored from backup:", backupId);
+    return true;
+  } catch (error) {
+    await client.query("ROLLBACK");
+    console.error("Error restoring from backup:", error);
+    return false;
+  } finally {
+    client.release();
+  }
+}
+
+// Delete old backups (keep only the most recent N backups)
+export async function cleanupOldBackups(keepCount: number = 24): Promise<number> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(
+      `
+      DELETE FROM backups
+      WHERE id NOT IN (
+        SELECT id FROM backups ORDER BY created_at DESC LIMIT $1
+      )
+      RETURNING id
+      `,
+      [keepCount]
+    );
+    console.log("Cleaned up", result.rowCount, "old backups");
+    return result.rowCount || 0;
+  } catch (error) {
+    console.error("Error cleaning up old backups:", error);
+    return 0;
   } finally {
     client.release();
   }

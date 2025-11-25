@@ -1,6 +1,6 @@
 import * as cron from "node-cron";
 import axios from "axios";
-import { getSchedulerEnabled, getEnabledScheduledComments, getTriggerTimes, getEveningUserToken, getNightUserToken } from "./db";
+import { getSchedulerEnabled, getEnabledScheduledComments, getTriggerTimes, getEveningUserToken, getNightUserToken, createBackup, cleanupOldBackups } from "./db";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 const SCHEDULE_ENABLED = process.env.SCHEDULE_ENABLED === "true";
@@ -87,12 +87,39 @@ export async function initScheduler() {
     }
   );
 
-  scheduledTasks.push(task1, task2, commentTask);
+  // Schedule hourly backup - runs at the top of every hour
+  const backupTask = cron.schedule(
+    "0 * * * *", // Every hour at minute 0
+    async () => {
+      console.log("[Scheduler] Running hourly backup...");
+      try {
+        const backup = await createBackup('auto', 'Hourly automatic backup');
+        if (backup) {
+          console.log(`[Scheduler] Backup #${backup.id} created successfully`);
+          // Cleanup old backups (keep last 24)
+          const deleted = await cleanupOldBackups(24);
+          if (deleted > 0) {
+            console.log(`[Scheduler] Cleaned up ${deleted} old backups`);
+          }
+        } else {
+          console.error("[Scheduler] Failed to create backup");
+        }
+      } catch (error: any) {
+        console.error("[Scheduler] Backup failed:", error.message);
+      }
+    },
+    {
+      timezone: "Asia/Bangkok", // GMT+7
+    }
+  );
+
+  scheduledTasks.push(task1, task2, commentTask, backupTask);
 
   console.log("[Scheduler] Scheduled tasks initialized:");
   console.log(`  - Daily at ${time1} GMT+7 (Asia/Bangkok) - cron: ${cron1}`);
   console.log(`  - Daily at ${time2} GMT+7 (Asia/Bangkok) - cron: ${cron2}`);
   console.log("  - Scheduled comments checker every minute");
+  console.log("  - Hourly backup at minute 0 of every hour");
   console.log("  - Tasks will check database state before running");
 }
 
