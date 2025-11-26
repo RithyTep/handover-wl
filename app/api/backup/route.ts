@@ -12,7 +12,7 @@ export async function GET() {
         backup_type: b.backup_type,
         created_at: b.created_at,
         description: b.description,
-        ticket_count: b.ticket_data ? Object.keys(b.ticket_data).length : 0,
+        ticket_count: b.ticket_data ? Object.keys(b.ticket_data).length : 0, 
         settings_count: b.app_settings ? Object.keys(b.app_settings).length : 0,
         comments_count: b.scheduled_comments ? b.scheduled_comments.length : 0,
       })),
