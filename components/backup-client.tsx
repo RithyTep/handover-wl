@@ -6,7 +6,6 @@ import { toast } from "sonner";
 import {
   Database,
   RefreshCw,
-  Download,
   Upload,
   Clock,
   HardDrive,
@@ -52,7 +51,6 @@ export function BackupClient({ initialBackups }: BackupClientProps) {
   const router = useRouter();
   const [backups, setBackups] = useState<BackupItem[]>(initialBackups);
   const [loading, setLoading] = useState(false);
-  const [creating, setCreating] = useState(false);
   const [restoring, setRestoring] = useState(false);
 
   const [restoreDialog, setRestoreDialog] = useState(false);
@@ -64,32 +62,6 @@ export function BackupClient({ initialBackups }: BackupClientProps) {
     router.refresh();
     setLoading(false);
     toast.success("Backups refreshed");
-  };
-
-  const handleCreateBackup = async () => {
-    try {
-      setCreating(true);
-      const response = await fetch("/api/backup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "manual", description: "Manual backup" }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        toast.success(`Backup #${data.backup.id} created successfully`);
-        await fetch("/api/revalidate?tag=backups");
-        router.refresh();
-      } else {
-        toast.error(data.error || "Failed to create backup");
-      }
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Error creating backup: " + message);
-    } finally {
-      setCreating(false);
-    }
   };
 
   const handleRestore = async () => {
@@ -182,15 +154,6 @@ export function BackupClient({ initialBackups }: BackupClientProps) {
               <RefreshCw
                 className={`h-4 w-4 ${loading ? "animate-spin" : ""}`}
               />
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={handleCreateBackup}
-              disabled={creating}
-            >
-              <Download className={`h-4 w-4 mr-2 ${creating ? "animate-pulse" : ""}`} />
-              {creating ? "Creating..." : "Create Backup"}
             </Button>
           </div>
         </div>
