@@ -16,6 +16,8 @@ import {
   History,
   Settings,
   Snowflake,
+  MessageSquare,
+  FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +33,7 @@ import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, Ticket } from "@/app/columns";
 import { CommandPalette } from "@/components/command-palette";
 import { NewYearScene } from "@/components/new-year-scene";
+import Link from "next/link";
 
 interface DashboardClientProps {
   initialTickets: Ticket[];
@@ -339,6 +342,18 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
             </span>
           </div>
           <div className="flex items-center gap-1">
+            <Link href="/feedback">
+              <Button variant="ghost" size="sm" className="text-white/70 hover:text-white hover:bg-white/10">
+                <MessageSquare className="w-4 h-4 mr-1.5" />
+                <span className="hidden sm:inline">Feedback</span>
+              </Button>
+            </Link>
+            <Link href="/changelog">
+              <Button variant="ghost" size="sm" className="text-white/70 hover:text-white hover:bg-white/10">
+                <FileText className="w-4 h-4 mr-1.5" />
+                <span className="hidden sm:inline">Changelog</span>
+              </Button>
+            </Link>
             <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-white/70 bg-white/10 border border-white/20 rounded">
               <Command className="w-3 h-3" />
               <span>K</span>
