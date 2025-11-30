@@ -117,6 +117,16 @@ const changelog: ChangelogEntry[] = [
       { type: "improvement", description: "Railway deployment support" },
     ],
   },
+  {
+    version: "1.0.0",
+    date: "2024-09-01",
+    title: "Initial Release",
+    changes: [
+      { type: "feature", description: "Python GUI application for Jira handover management" },
+      { type: "feature", description: "Basic Slack notification integration" },
+      { type: "feature", description: "Local data storage" },
+    ],
+  },
 ];
 
 const typeConfig = {
