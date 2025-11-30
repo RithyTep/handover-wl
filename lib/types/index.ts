@@ -95,3 +95,12 @@ export interface ApiResponse<T = any> {
   data?: T;
   error?: string;
 }
+
+export interface Feedback {
+  id: number;
+  type: "bug" | "feedback" | "suggestion" | "feature";
+  title: string;
+  description: string;
+  created_at: Date;
+  status: "new" | "reviewed" | "resolved" | "dismissed";
+}
