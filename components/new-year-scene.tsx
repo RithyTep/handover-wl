@@ -126,19 +126,6 @@ export function NewYearScene() {
     <>
       <div className="winter-wrapper pointer-events-none" ref={winterWrapperRef} />
 
-      <div className="ny-header fixed bottom-32 left-0 right-0 z-0 pointer-events-none scale-75 sm:scale-100 origin-bottom">
-        <h1>
-          <div className="newYear">New Year</div>
-          <div className="title">coming in</div>
-        </h1>
-        <h2 className="countdown">
-          <div id="countdown-days">{timeLeft.days}d</div>
-          <div id="countdown-hours">{timeLeft.hours}h</div>
-          <div id="countdown-minutes">{timeLeft.minutes}m</div>
-          <div id="countdown-seconds">{timeLeft.seconds}s</div>
-        </h2>
-      </div>
-
       <div className="ground fixed bottom-0 left-0 right-0 z-10 pointer-events-none" />
 
       <div className="mailbox fixed bottom-[45px] right-[5vw] z-20 cursor-pointer" onClick={handleOpenMail}>
