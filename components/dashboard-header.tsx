@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, FileText, Command, Gamepad2 } from "lucide-react";
+import { MessageSquare, FileText, Command, Gamepad2, Flower2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "@/components/theme/theme-selector.component";
 import Link from "next/link";
@@ -21,6 +21,8 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
           ? "border-white/20 bg-black/20 backdrop-blur-sm"
           : theme === Theme.PIXEL
           ? "border-b-2 border-slate-800 bg-transparent pb-6"
+          : theme === Theme.LUNAR
+          ? "border-stone-800/50 bg-stone-900/30 backdrop-blur-sm"
           : "border-border bg-background/95 backdrop-blur-sm"
       )}
     >
@@ -33,17 +35,22 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
                 ? "text-white christmas-header-text"
                 : theme === Theme.PIXEL
                 ? "text-white tracking-tight"
+                : theme === Theme.LUNAR
+                ? "text-stone-200"
                 : "text-foreground"
             )}
           >
             {theme === Theme.CHRISTMAS && <span className="text-2xl">🎄</span>}
             {theme === Theme.PIXEL && <Gamepad2 className="w-8 h-8 text-indigo-400" />}
+            {theme === Theme.LUNAR && <Flower2 className="w-7 h-7 text-red-500" />}
             <span
               className={cn(
                 theme === Theme.CHRISTMAS
                   ? "font-script christmas-title-gradient"
                   : theme === Theme.PIXEL
                   ? "font-bold"
+                  : theme === Theme.LUNAR
+                  ? "font-semibold bg-gradient-to-r from-red-400 to-amber-400 bg-clip-text text-transparent"
                   : "font-semibold"
               )}
             >
@@ -58,6 +65,8 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
               ? "text-white/80 bg-white/10 rounded-full"
               : theme === Theme.PIXEL
               ? "bg-indigo-500 text-black pixel-shadow-sm border-2 border-black/20"
+              : theme === Theme.LUNAR
+              ? "lunar-badge"
               : "text-muted-foreground bg-muted rounded-full"
           )}
         >
@@ -75,6 +84,8 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
                 ? "text-white/70 hover:text-white hover:bg-white/10"
                 : theme === Theme.PIXEL
                 ? "text-slate-300 hover:text-indigo-400 transition-colors"
+                : theme === Theme.LUNAR
+                ? "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors"
                 : ""
             )}
           >
@@ -91,6 +102,8 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
                 ? "text-white/70 hover:text-white hover:bg-white/10"
                 : theme === Theme.PIXEL
                 ? "text-slate-300 hover:text-indigo-400 transition-colors"
+                : theme === Theme.LUNAR
+                ? "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors"
                 : ""
             )}
           >
@@ -105,6 +118,8 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
               ? "text-white/70 bg-white/10 border border-white/20 rounded"
               : theme === Theme.PIXEL
               ? "text-slate-500 border-2 border-slate-800 bg-slate-900"
+              : theme === Theme.LUNAR
+              ? "text-stone-500 bg-stone-900/50 border border-stone-800 rounded"
               : "bg-muted border border-border rounded"
           )}
         >

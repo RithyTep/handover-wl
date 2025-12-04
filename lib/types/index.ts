@@ -105,7 +105,7 @@ export interface Feedback {
   status: "new" | "reviewed" | "resolved" | "dismissed";
 }
 
-export type Theme = "default" | "christmas";
+export type Theme = "default" | "christmas" | "pixel" | "lunar";
 
 export interface ThemeInfo {
   id: Theme;

@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -148,6 +149,64 @@
 
   body.theme-pixel ::-webkit-scrollbar-thumb:hover {
     background: #475569;
+  }
+
+  /* Lunar theme styles */
+  body.theme-lunar {
+    font-family: 'Inter', sans-serif;
+    background-color: #0f0505;
+    color: #d6d3d1;
+  }
+
+  /* Lunar theme - ticket link color */
+  body.theme-lunar a[href*="jira"],
+  body.theme-lunar a[href*="atlassian"] {
+    color: #fbbf24;
+  }
+
+  body.theme-lunar a[href*="jira"]:hover,
+  body.theme-lunar a[href*="atlassian"]:hover {
+    color: #fcd34d;
+  }
+
+  /* Lunar theme - table input styles */
+  body.theme-lunar input[type="text"],
+  body.theme-lunar input:not([type]) {
+    background-color: #1a0f0f !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #d6d3d1 !important;
+    border-radius: 4px !important;
+  }
+
+  body.theme-lunar input[type="text"]::placeholder,
+  body.theme-lunar input:not([type])::placeholder {
+    color: #57534e !important;
+  }
+
+  body.theme-lunar input[type="text"]:focus,
+  body.theme-lunar input:not([type]):focus {
+    border-color: rgba(245, 158, 11, 0.5) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2) !important;
+  }
+
+  /* Lunar theme - custom scrollbar */
+  body.theme-lunar ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  body.theme-lunar ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  body.theme-lunar ::-webkit-scrollbar-thumb {
+    background: rgba(251, 191, 36, 0.1);
+    border-radius: 3px;
+  }
+
+  body.theme-lunar ::-webkit-scrollbar-thumb:hover {
+    background: rgba(251, 191, 36, 0.2);
   }
 
   ::-webkit-scrollbar {
@@ -661,5 +720,100 @@
   @keyframes flash-3 {
     0%, 100% { background: #f90; box-shadow: 0px 5px 24px 3px #f90; }
     50% { background: rgba(255,153,0,0.4); box-shadow: 0px 5px 24px 3px rgba(255,153,0,0.2); }
+  }
+
+  /* Lunar theme utilities */
+  .lunar-bg {
+    background-color: #0f0505;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+  }
+
+  .lunar-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+
+  .lunar-glow-red {
+    background: rgba(127, 29, 29, 0.2);
+  }
+
+  .lunar-glow-amber {
+    background: rgba(120, 53, 15, 0.1);
+  }
+
+  .lunar-glow-rose {
+    background: rgba(136, 19, 55, 0.1);
+  }
+
+  .lunar-btn {
+    @apply px-4 py-2 rounded-lg font-medium transition-all;
+  }
+
+  .lunar-btn-primary {
+    background: linear-gradient(to right, #dc2626, #f59e0b);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(220, 38, 38, 0.3);
+  }
+
+  .lunar-btn-primary:hover {
+    box-shadow: 0 10px 15px -3px rgba(220, 38, 38, 0.4);
+    transform: translateY(-1px);
+  }
+
+  .lunar-table-header {
+    @apply text-stone-500 text-xs uppercase tracking-wider;
+    background-color: rgba(28, 25, 23, 0.5);
+  }
+
+  .lunar-table-row {
+    @apply transition-colors;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .lunar-table-row:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+
+  .lunar-table-cell {
+    @apply py-4 px-4;
+  }
+
+  .lunar-card {
+    background-color: rgba(28, 25, 23, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 0.75rem;
+  }
+
+  .lunar-badge {
+    @apply text-xs font-medium px-2 py-0.5 rounded-full;
+    background: linear-gradient(to right, rgba(220, 38, 38, 0.2), rgba(245, 158, 11, 0.2));
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  /* Lunar Hongbao floating animation */
+  @keyframes hongbao-float {
+    0%, 100% {
+      transform: translateY(0) rotate(-5deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(5deg);
+    }
+  }
+
+  @keyframes hongbao-glow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(220, 38, 38, 0.3), 0 0 40px rgba(220, 38, 38, 0.1);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(220, 38, 38, 0.5), 0 0 60px rgba(220, 38, 38, 0.2);
+    }
+  }
+
+  .lunar-hongbao {
+    animation: hongbao-float 4s ease-in-out infinite, hongbao-glow 3s ease-in-out infinite;
   }
 }

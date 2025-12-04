@@ -25,7 +25,7 @@ export const useThemeStore = create<ThemeStore>((set) => ({
   loadFromLocalStorage: () => {
     if (typeof window === "undefined") return;
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === Theme.DEFAULT || stored === Theme.CHRISTMAS || stored === Theme.PIXEL) {
+    if (stored === Theme.DEFAULT || stored === Theme.CHRISTMAS || stored === Theme.PIXEL || stored === Theme.LUNAR) {
       set({ selectedTheme: stored as Theme });
     }
   },
@@ -46,7 +46,7 @@ export const useThemeStore = create<ThemeStore>((set) => ({
 
 if (typeof window !== "undefined") {
   const stored = localStorage.getItem(STORAGE_KEY);
-  if (stored === Theme.DEFAULT || stored === Theme.CHRISTMAS || stored === Theme.PIXEL) {
+  if (stored === Theme.DEFAULT || stored === Theme.CHRISTMAS || stored === Theme.PIXEL || stored === Theme.LUNAR) {
     useThemeStore.setState({ selectedTheme: stored as Theme });
   }
 }

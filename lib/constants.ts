@@ -20,6 +20,12 @@ export const THEMES: ThemeInfo[] = [
     description: "Retro pixel-art inspired theme with sharp edges",
     icon: "🎮",
   },
+  {
+    id: Theme.LUNAR,
+    name: "Lunar",
+    description: "Festive Lunar New Year theme with red and gold accents",
+    icon: "🧧",
+  },
 ];
 
 export const DEFAULT_THEME: Theme = Theme.CHRISTMAS;

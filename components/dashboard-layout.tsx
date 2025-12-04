@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { NewYearScene } from "@/components/new-year-scene";
+import { LunarScene } from "@/components/lunar-scene";
 import { DashboardHeader } from "./dashboard-header";
 import { DashboardContent } from "./dashboard-content";
 import { DashboardMobileActions } from "./dashboard-mobile-actions";
@@ -56,7 +57,7 @@ export function DashboardLayout({
   onSendSlackOpenChange,
 }: DashboardLayoutProps) {
   useEffect(() => {
-    document.body.classList.remove("theme-christmas", "theme-default", "theme-pixel");
+    document.body.classList.remove("theme-christmas", "theme-default", "theme-pixel", "theme-lunar");
     document.body.classList.add(`theme-${theme}`);
   }, [theme]);
 
@@ -78,11 +79,14 @@ export function DashboardLayout({
             ? "christmas-bg"
             : theme === Theme.PIXEL
             ? "pixel-bg p-6"
+            : theme === Theme.LUNAR
+            ? "lunar-bg"
             : "bg-background"
         )}
       >
         {theme === Theme.CHRISTMAS && <NewYearScene />}
         {theme === Theme.PIXEL && <PixelStatusBar />}
+        {theme === Theme.LUNAR && <LunarScene />}
         <DashboardHeader theme={theme} ticketCount={tickets.length} />
         <DashboardContent
           tickets={tickets}

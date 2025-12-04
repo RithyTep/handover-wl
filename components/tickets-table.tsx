@@ -214,6 +214,8 @@ export function TicketsTable<TData, TValue>({
               ? "text-white/80 hover:text-white hover:bg-white/10 border-white/20"
               : theme === Theme.PIXEL
               ? "bg-slate-900 border-2 border-slate-700 hover:border-indigo-500 hover:text-indigo-400 pixel-shadow"
+              : theme === Theme.LUNAR
+              ? "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg"
               : "text-foreground hover:bg-muted border-border"
           }`}
           title={showDetails ? "Hide Details" : "Show Details"}
@@ -241,18 +243,42 @@ export function TicketsTable<TData, TValue>({
               return (
                 <div
                   key={row.id}
-                  className={`border rounded-lg overflow-hidden shadow-sm ${theme === Theme.CHRISTMAS ? "border-white/20" : "border-border"} ${cardClass}`}
+                  className={`border rounded-lg overflow-hidden shadow-sm ${
+                    theme === Theme.CHRISTMAS
+                      ? "border-white/20"
+                      : theme === Theme.LUNAR
+                      ? "border-stone-800/50 lunar-card"
+                      : "border-border"
+                  } ${cardClass}`}
                 >
-                  <div className={`flex items-center justify-between px-4 py-3 border-b ${theme === Theme.CHRISTMAS ? "border-white/20 bg-black/10" : "border-border bg-card"}`}>
+                  <div className={`flex items-center justify-between px-4 py-3 border-b ${
+                    theme === Theme.CHRISTMAS
+                      ? "border-white/20 bg-black/10"
+                      : theme === Theme.LUNAR
+                      ? "border-stone-800/50 bg-stone-900/30"
+                      : "border-border bg-card"
+                  }`}>
                     <div className="flex items-center gap-2.5">
-                      <span className={`text-[11px] font-medium tabular-nums ${theme === Theme.CHRISTMAS ? "text-white/80" : "text-muted-foreground"}`}>
+                      <span className={`text-[11px] font-medium tabular-nums ${
+                        theme === Theme.CHRISTMAS
+                          ? "text-white/80"
+                          : theme === Theme.LUNAR
+                          ? "text-stone-500"
+                          : "text-muted-foreground"
+                      }`}>
                         {index + 1}
                       </span>
                       <a
                         href={ticket.jiraUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`text-sm font-semibold transition-colors ${theme === Theme.CHRISTMAS ? "text-white hover:text-white/80" : "text-foreground hover:text-primary"}`}
+                        className={`text-sm font-semibold transition-colors ${
+                          theme === Theme.CHRISTMAS
+                            ? "text-white hover:text-white/80"
+                            : theme === Theme.LUNAR
+                            ? "text-amber-400 hover:text-amber-300"
+                            : "text-foreground hover:text-primary"
+                        }`}
                       >
                         {ticket.key}
                       </a>
@@ -262,22 +288,52 @@ export function TicketsTable<TData, TValue>({
                         <img
                           src={ticket.assigneeAvatar}
                           alt={ticket.assignee}
-                          className={`w-5 h-5 rounded-full ring-1 ${theme === Theme.CHRISTMAS ? "ring-white/30" : "ring-border"}`}
+                          className={`w-5 h-5 rounded-full ring-1 ${
+                            theme === Theme.CHRISTMAS
+                              ? "ring-white/30"
+                              : theme === Theme.LUNAR
+                              ? "ring-stone-700"
+                              : "ring-border"
+                          }`}
                         />
                       ) : (
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium ${theme === Theme.CHRISTMAS ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium ${
+                          theme === Theme.CHRISTMAS
+                            ? "bg-white/20 text-white"
+                            : theme === Theme.LUNAR
+                            ? "bg-stone-800 text-stone-400"
+                            : "bg-muted text-muted-foreground"
+                        }`}>
                           {ticket.assignee === "Unassigned" ? "?" : ticket.assignee.charAt(0).toUpperCase()}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className={`p-4 space-y-4 ${theme === Theme.CHRISTMAS ? "" : "bg-card"}`}>
-                    <p className={`text-[13px] leading-relaxed line-clamp-2 ${theme === Theme.CHRISTMAS ? "text-white/90" : "text-foreground"}`}>{ticket.summary}</p>
+                  <div className={`p-4 space-y-4 ${
+                    theme === Theme.CHRISTMAS
+                      ? ""
+                      : theme === Theme.LUNAR
+                      ? "bg-transparent"
+                      : "bg-card"
+                  }`}>
+                    <p className={`text-[13px] leading-relaxed line-clamp-2 ${
+                      theme === Theme.CHRISTMAS
+                        ? "text-white/90"
+                        : theme === Theme.LUNAR
+                        ? "text-stone-300"
+                        : "text-foreground"
+                    }`}>{ticket.summary}</p>
 
                     <div className="space-y-3">
                       <div>
-                        <label className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${theme === Theme.CHRISTMAS ? "text-white/70" : "text-muted-foreground"}`}>Status</label>
+                        <label className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${
+                          theme === Theme.CHRISTMAS
+                            ? "text-white/70"
+                            : theme === Theme.LUNAR
+                            ? "text-stone-500"
+                            : "text-muted-foreground"
+                        }`}>Status</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedStatus")
                           .map((cell) => (
@@ -290,7 +346,13 @@ export function TicketsTable<TData, TValue>({
                           ))}
                       </div>
                       <div>
-                        <label className="text-[10px] font-medium text-white/70 uppercase tracking-wider mb-1.5 block">Action</label>
+                        <label className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${
+                          theme === Theme.CHRISTMAS
+                            ? "text-white/70"
+                            : theme === Theme.LUNAR
+                            ? "text-stone-500"
+                            : "text-muted-foreground"
+                        }`}>Action</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedAction")
                           .map((cell) => (
@@ -318,6 +380,8 @@ export function TicketsTable<TData, TValue>({
       <div className={`overflow-hidden hidden sm:flex sm:flex-col ${
         theme === Theme.PIXEL
           ? "border-2 border-slate-700 bg-slate-900/50 backdrop-blur-sm pixel-shadow"
+          : theme === Theme.LUNAR
+          ? "lunar-card border border-stone-800/50 shadow-xl"
           : "border border-white/20 rounded-md shadow-xl"
       }`}>
         <div className="overflow-auto">
@@ -327,6 +391,8 @@ export function TicketsTable<TData, TValue>({
                 ? "bg-black/40 backdrop-blur-md"
                 : theme === Theme.PIXEL
                 ? "bg-slate-950"
+                : theme === Theme.LUNAR
+                ? "lunar-table-header backdrop-blur-md"
                 : "bg-background backdrop-blur-md"
             }`}>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -335,6 +401,8 @@ export function TicketsTable<TData, TValue>({
                     ? "border-b border-white/10"
                     : theme === Theme.PIXEL
                     ? "border-b-2 border-slate-700"
+                    : theme === Theme.LUNAR
+                    ? "border-b border-stone-800/50"
                     : "border-b border-border"
                 }`}>
                   {headerGroup.headers.map((header) => {
@@ -346,6 +414,8 @@ export function TicketsTable<TData, TValue>({
                             ? "text-white/90 border-r border-white/10 last:border-r-0"
                             : theme === Theme.PIXEL
                             ? "text-slate-400 border-r-2 border-slate-800 last:border-r-0"
+                            : theme === Theme.LUNAR
+                            ? "text-stone-500 border-r border-stone-800/30 last:border-r-0"
                             : "text-foreground border-r border-border last:border-r-0"
                         }`}
                         style={{
@@ -364,7 +434,13 @@ export function TicketsTable<TData, TValue>({
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody className={theme === Theme.PIXEL ? "text-sm divide-y-2 divide-slate-800" : ""}>
+            <TableBody className={
+              theme === Theme.PIXEL
+                ? "text-sm divide-y-2 divide-slate-800"
+                : theme === Theme.LUNAR
+                ? "text-sm"
+                : ""
+            }>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => {
                   let rowClass = "";
@@ -383,6 +459,8 @@ export function TicketsTable<TData, TValue>({
                         ? `border-b border-white/10 ${rowClass} hover:brightness-110`
                         : theme === Theme.PIXEL
                         ? "hover:bg-slate-800/50"
+                        : theme === Theme.LUNAR
+                        ? "lunar-table-row"
                         : "border-b border-border hover:bg-muted/50"
                     }`}
                   >
@@ -394,6 +472,8 @@ export function TicketsTable<TData, TValue>({
                             ? `border-r border-white/10 last:border-r-0 ${cellIndex === 0 ? 'candy-cane-border' : ''}`
                             : theme === Theme.PIXEL
                             ? "border-r-2 border-slate-800 last:border-r-0"
+                            : theme === Theme.LUNAR
+                            ? "lunar-table-cell border-r border-stone-800/30 last:border-r-0 text-stone-300"
                             : "border-r border-border last:border-r-0"
                         }`}
                         style={{

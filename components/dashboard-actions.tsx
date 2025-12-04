@@ -10,6 +10,7 @@ import {
   Copy,
   Snowflake,
   Gamepad2,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -88,6 +89,60 @@ export function DashboardActions({
           icon: Send,
           onClick: onSendSlack,
           className: "bg-emerald-900/40 text-emerald-300 border-2 border-emerald-700 hover:bg-emerald-900/60 pixel-shadow-sm hover:translate-x-0.5 hover:translate-y-0.5",
+        },
+      ];
+    }
+
+    if (theme === Theme.LUNAR) {
+      return [
+        {
+          id: "ai-fill",
+          label: "Lucky Fill",
+          icon: Sparkles,
+          onClick: onAIFillAll,
+          className: "lunar-btn-primary text-white border-none",
+        },
+        {
+          id: "quick-fill",
+          label: "Fill",
+          icon: Zap,
+          onClick: () => onQuickFill("Pending", "Will check tomorrow"),
+          className: "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg",
+        },
+        {
+          id: "clear",
+          label: "Clear",
+          icon: Trash2,
+          onClick: onClear,
+          className: "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg",
+        },
+        {
+          id: "refresh",
+          label: "Refresh",
+          icon: RefreshCw,
+          onClick: onRefresh,
+          className: "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg",
+        },
+        {
+          id: "copy",
+          label: "Copy",
+          icon: Copy,
+          onClick: onCopy,
+          className: "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg",
+        },
+        {
+          id: "save",
+          label: "Save",
+          icon: Save,
+          onClick: onSave,
+          className: "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg",
+        },
+        {
+          id: "send",
+          label: "Send",
+          icon: Send,
+          onClick: onSendSlack,
+          className: "text-amber-200 bg-amber-900/30 hover:bg-amber-900/50 border border-amber-700/50 rounded-lg",
         },
       ];
     }
