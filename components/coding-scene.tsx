@@ -48,7 +48,7 @@ export function CodingScene() {
       <div className="coding-scanlines" />
 
       {/* Matrix rain */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-10">
         {drops.map((drop) => (
           <div
             key={drop.id}
@@ -75,21 +75,21 @@ export function CodingScene() {
 
       {/* 404 Error decoration */}
       <div className="fixed bottom-8 right-8 z-50 pointer-events-none font-mono">
-        <div className="coding-error-text text-6xl font-bold opacity-20">
+        <div className="coding-error-text text-6xl font-bold opacity-10">
           404
         </div>
-        <div className="text-green-500 text-xs opacity-40 mt-1">
+        <div className="text-green-600/50 text-xs mt-1">
           ERROR: TICKET_NOT_FOUND
         </div>
       </div>
 
       {/* Terminal prompt decoration */}
-      <div className="fixed top-20 left-8 z-50 pointer-events-none font-mono text-xs opacity-30">
-        <div className="text-green-500">
-          <span className="text-green-400">root@jira</span>
-          <span className="text-white">:</span>
-          <span className="text-blue-400">~/handover</span>
-          <span className="text-white">$ </span>
+      <div className="fixed top-20 left-8 z-50 pointer-events-none font-mono text-xs opacity-20">
+        <div className="text-green-600">
+          <span className="text-green-500/70">root@jira</span>
+          <span className="text-gray-500">:</span>
+          <span className="text-green-700/50">~/handover</span>
+          <span className="text-gray-500">$ </span>
           <span className="coding-cursor" />
         </div>
       </div>

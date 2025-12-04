@@ -69,34 +69,34 @@ export function DashboardMobileActions({
           icon: Bug,
           onClick: onAIFillAll,
           className: "coding-btn-primary active:opacity-80",
-          iconColor: "text-black",
+          iconColor: "text-green-400",
         },
         {
           id: "quick-fill",
           icon: Zap,
           onClick: onQuickFill,
-          className: "bg-black border border-green-900 active:bg-green-900/30",
-          iconColor: "text-green-400",
+          className: "bg-black border border-green-900/50 active:bg-green-900/20",
+          iconColor: "text-green-500/80",
         },
         {
           id: "clear",
           icon: Trash2,
           onClick: onClear,
-          className: "bg-black border border-green-900 active:bg-green-900/30",
-          iconColor: "text-green-400",
+          className: "bg-black border border-green-900/50 active:bg-green-900/20",
+          iconColor: "text-green-500/80",
         },
         {
           id: "save",
           icon: Save,
           onClick: onSave,
-          className: "bg-black border border-green-900 active:bg-green-900/30",
-          iconColor: "text-green-400",
+          className: "bg-black border border-green-900/50 active:bg-green-900/20",
+          iconColor: "text-green-500/80",
         },
         {
           id: "send",
           icon: Send,
           onClick: onSendSlack,
-          className: "bg-green-500 border border-green-400 active:bg-green-400",
+          className: "bg-green-600 border border-green-500 active:bg-green-500",
           iconColor: "text-black",
         },
       ];
@@ -150,7 +150,7 @@ export function DashboardMobileActions({
       theme === Theme.LUNAR
         ? "bg-stone-900/95 border-stone-800"
         : theme === Theme.CODING
-        ? "bg-black/95 border-green-900/50"
+        ? "bg-black/95 border-green-900/30"
         : "bg-background/95 border-border"
     )}>
       <div className="flex items-center justify-around">

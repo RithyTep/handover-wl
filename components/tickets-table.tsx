@@ -217,7 +217,7 @@ export function TicketsTable<TData, TValue>({
               : theme === Theme.LUNAR
               ? "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg"
               : theme === Theme.CODING
-              ? "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono"
+              ? "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/30 font-mono"
               : "text-foreground hover:bg-muted border-border"
           }`}
           title={showDetails ? "Hide Details" : "Show Details"}
@@ -251,7 +251,7 @@ export function TicketsTable<TData, TValue>({
                       : theme === Theme.LUNAR
                       ? "border-stone-800/50 lunar-card"
                       : theme === Theme.CODING
-                      ? "border-green-900/50 coding-card"
+                      ? "border-green-900/30 coding-card"
                       : "border-border"
                   } ${cardClass}`}
                 >
@@ -261,7 +261,7 @@ export function TicketsTable<TData, TValue>({
                       : theme === Theme.LUNAR
                       ? "border-stone-800/50 bg-stone-900/30"
                       : theme === Theme.CODING
-                      ? "border-green-900/50 bg-black/50"
+                      ? "border-green-900/30 bg-black/50"
                       : "border-border bg-card"
                   }`}>
                     <div className="flex items-center gap-2.5">
@@ -271,7 +271,7 @@ export function TicketsTable<TData, TValue>({
                           : theme === Theme.LUNAR
                           ? "text-stone-500"
                           : theme === Theme.CODING
-                          ? "text-green-600 font-mono"
+                          ? "text-green-600/70 font-mono"
                           : "text-muted-foreground"
                       }`}>
                         {index + 1}
@@ -286,7 +286,7 @@ export function TicketsTable<TData, TValue>({
                             : theme === Theme.LUNAR
                             ? "text-amber-400 hover:text-amber-300"
                             : theme === Theme.CODING
-                            ? "text-green-400 hover:text-green-300 font-mono"
+                            ? "text-green-500/80 hover:text-green-400 font-mono"
                             : "text-foreground hover:text-primary"
                         }`}
                       >
@@ -304,7 +304,7 @@ export function TicketsTable<TData, TValue>({
                               : theme === Theme.LUNAR
                               ? "ring-stone-700"
                               : theme === Theme.CODING
-                              ? "ring-green-900"
+                              ? "ring-green-900/50"
                               : "ring-border"
                           }`}
                         />
@@ -315,7 +315,7 @@ export function TicketsTable<TData, TValue>({
                             : theme === Theme.LUNAR
                             ? "bg-stone-800 text-stone-400"
                             : theme === Theme.CODING
-                            ? "bg-green-900/50 text-green-400 font-mono"
+                            ? "bg-green-900/30 text-green-500/80 font-mono"
                             : "bg-muted text-muted-foreground"
                         }`}>
                           {ticket.assignee === "Unassigned" ? "?" : ticket.assignee.charAt(0).toUpperCase()}
@@ -339,7 +339,7 @@ export function TicketsTable<TData, TValue>({
                         : theme === Theme.LUNAR
                         ? "text-stone-300"
                         : theme === Theme.CODING
-                        ? "text-green-300"
+                        ? "text-green-400/80"
                         : "text-foreground"
                     }`}>{ticket.summary}</p>
 
@@ -351,7 +351,7 @@ export function TicketsTable<TData, TValue>({
                             : theme === Theme.LUNAR
                             ? "text-stone-500"
                             : theme === Theme.CODING
-                            ? "text-green-600 font-mono"
+                            ? "text-green-600/70 font-mono"
                             : "text-muted-foreground"
                         }`}>Status</label>
                         {row.getVisibleCells()
@@ -372,7 +372,7 @@ export function TicketsTable<TData, TValue>({
                             : theme === Theme.LUNAR
                             ? "text-stone-500"
                             : theme === Theme.CODING
-                            ? "text-green-600 font-mono"
+                            ? "text-green-600/70 font-mono"
                             : "text-muted-foreground"
                         }`}>Action</label>
                         {row.getVisibleCells()
@@ -405,7 +405,7 @@ export function TicketsTable<TData, TValue>({
           : theme === Theme.LUNAR
           ? "lunar-card border border-stone-800/50 shadow-xl"
           : theme === Theme.CODING
-          ? "coding-card border border-green-900/50 shadow-xl shadow-green-900/20"
+          ? "coding-card border border-green-900/30 shadow-xl shadow-green-900/20"
           : "border border-white/20 rounded-md shadow-xl"
       }`}>
         <div className="overflow-auto">
@@ -430,7 +430,7 @@ export function TicketsTable<TData, TValue>({
                     : theme === Theme.LUNAR
                     ? "border-b border-stone-800/50"
                     : theme === Theme.CODING
-                    ? "border-b border-green-900/50"
+                    ? "border-b border-green-900/30"
                     : "border-b border-border"
                 }`}>
                   {headerGroup.headers.map((header) => {
@@ -445,7 +445,7 @@ export function TicketsTable<TData, TValue>({
                             : theme === Theme.LUNAR
                             ? "text-stone-500 border-r border-stone-800/30 last:border-r-0"
                             : theme === Theme.CODING
-                            ? "text-green-500 border-r border-green-900/30 last:border-r-0 font-mono"
+                            ? "text-green-500/70 border-r border-green-900/30 last:border-r-0 font-mono"
                             : "text-foreground border-r border-border last:border-r-0"
                         }`}
                         style={{
@@ -509,7 +509,7 @@ export function TicketsTable<TData, TValue>({
                             : theme === Theme.LUNAR
                             ? "lunar-table-cell border-r border-stone-800/30 last:border-r-0 text-stone-300"
                             : theme === Theme.CODING
-                            ? "coding-table-cell border-r border-green-900/30 last:border-r-0 text-green-300"
+                            ? "coding-table-cell border-r border-green-900/30 last:border-r-0 text-green-400/70"
                             : "border-r border-border last:border-r-0"
                         }`}
                         style={{

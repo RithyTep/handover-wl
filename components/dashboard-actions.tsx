@@ -162,42 +162,42 @@ export function DashboardActions({
           label: "Fill",
           icon: Zap,
           onClick: () => onQuickFill("Pending", "Will check tomorrow"),
-          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+          className: "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/50 font-mono",
         },
         {
           id: "clear",
           label: "Clear",
           icon: Trash2,
           onClick: onClear,
-          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+          className: "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/50 font-mono",
         },
         {
           id: "refresh",
           label: "Sync",
           icon: RefreshCw,
           onClick: onRefresh,
-          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+          className: "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/50 font-mono",
         },
         {
           id: "copy",
           label: "Copy",
           icon: Copy,
           onClick: onCopy,
-          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+          className: "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/50 font-mono",
         },
         {
           id: "save",
           label: "Save",
           icon: Save,
           onClick: onSave,
-          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+          className: "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/50 font-mono",
         },
         {
           id: "send",
           label: "Deploy",
           icon: Send,
           onClick: onSendSlack,
-          className: "text-black bg-green-500 hover:bg-green-400 border border-green-400 font-mono font-bold",
+          className: "text-black bg-green-600 hover:bg-green-500 border border-green-500 font-mono font-bold",
         },
       ];
     }
@@ -283,7 +283,7 @@ export function DashboardActions({
             <div className="h-6 w-0.5 bg-slate-800 mx-1" />
           )}
           {theme === Theme.CODING && action.id === "refresh" && (
-            <div className="h-6 w-px bg-green-900 mx-1" />
+            <div className="h-6 w-px bg-green-900/30 mx-1" />
           )}
         </Fragment>
       ))}
