@@ -1,0 +1,64 @@
+"use client";
+
+import { useMemo } from "react";
+import { TicketsTable } from "@/components/tickets-table";
+import { createColumns, type Ticket } from "@/app/columns";
+import { DashboardActions } from "./dashboard-actions";
+import type { Theme } from "@/lib/types";
+
+interface DashboardContentProps {
+  tickets: Ticket[];
+  ticketData: Record<string, string>;
+  updateTicketData: (key: string, value: string) => void;
+  renderKey: number;
+  theme: Theme;
+  onAIFillAll: () => void;
+  onQuickFill: (status: string, action: string) => void;
+  onClear: () => void;
+  onRefresh: () => void;
+  onCopy: () => void;
+  onSave: () => void;
+  onSendSlack: () => void;
+}
+
+export function DashboardContent({
+  tickets,
+  ticketData,
+  updateTicketData,
+  renderKey,
+  theme,
+  onAIFillAll,
+  onQuickFill,
+  onClear,
+  onRefresh,
+  onCopy,
+  onSave,
+  onSendSlack,
+}: DashboardContentProps) {
+  const columns = useMemo(
+    () => createColumns({ ticketData, updateTicketData, renderKey }),
+    [ticketData, updateTicketData, renderKey]
+  );
+
+  return (
+    <main className="flex-1 overflow-hidden px-4 sm:px-6 py-4 sm:py-4 pb-20 sm:pb-4">
+      <TicketsTable
+        columns={columns}
+        data={tickets}
+        theme={theme}
+        actionButtons={
+          <DashboardActions
+            theme={theme}
+            onAIFillAll={onAIFillAll}
+            onQuickFill={onQuickFill}
+            onClear={onClear}
+            onRefresh={onRefresh}
+            onCopy={onCopy}
+            onSave={onSave}
+            onSendSlack={onSendSlack}
+          />
+        }
+      />
+    </main>
+  );
+}
