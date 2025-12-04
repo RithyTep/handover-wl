@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, publicProcedure } from "../server";
+import { router, publicProcedure } from "@/server/trpc/server";
 import OpenAI from "openai";
 
 const ticketSchema = z.object({

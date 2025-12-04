@@ -5,12 +5,12 @@ import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { ChristmasLoading } from "@/components/christmas-loading";
 import { DashboardLayout } from "./dashboard-layout";
-import { useTickets } from "@/hooks/use-tickets";
-import { useTicketActions } from "@/hooks/use-ticket-actions";
+import { useTickets } from "@/hooks/ticket/use-tickets.hook";
+import { useTicketActions } from "@/hooks/ticket/use-ticket-actions.hook";
 import { useThemeStore } from "@/lib/stores/theme-store";
 import { Theme } from "@/enums/theme.enum";
 import { DEFAULT_THEME } from "@/lib/constants";
-import type { Ticket } from "@/app/columns";
+import type { Ticket } from "@/interfaces/ticket.interface";
 
 interface DashboardClientProps {
   initialTickets?: Ticket[];
@@ -19,7 +19,7 @@ interface DashboardClientProps {
 export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
   const { tickets, isLoading, refetch } = useTickets({ initialTickets });
   const selectedTheme = useThemeStore((state) => state.selectedTheme);
-  const theme: Theme = selectedTheme || DEFAULT_THEME;
+  const theme: Theme = selectedTheme ?? DEFAULT_THEME;
 
   const {
     ticketData,

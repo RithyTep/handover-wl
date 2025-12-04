@@ -1,39 +1,32 @@
-import { z } from "zod";
-import { router, publicProcedure } from "../server";
-import { getSchedulerEnabled, setSchedulerEnabled, getTriggerTimes, setTriggerTimes } from "@/lib/services";
+import { router, publicProcedure } from "@/server/trpc/server";
+import { SettingsService } from "@/server/services/settings.service";
+import { schedulerStateSchema, triggerTimesSchema } from "@/schemas/settings.schema";
 import { triggerScheduledTask } from "@/lib/scheduler";
+
+const settingsService = new SettingsService();
 
 export const schedulerRouter = router({
   getState: publicProcedure.query(async () => {
-    const enabled = await getSchedulerEnabled();
+    const enabled = await settingsService.getSchedulerEnabled();
     return { enabled };
   }),
 
   setState: publicProcedure
-    .input(
-      z.object({
-        enabled: z.boolean(),
-      })
-    )
+    .input(schedulerStateSchema)
     .mutation(async ({ input }) => {
-      await setSchedulerEnabled(input.enabled);
+      await settingsService.setSchedulerEnabled(input.enabled);
       return { success: true, enabled: input.enabled };
     }),
 
   getTriggerTimes: publicProcedure.query(async () => {
-    const times = await getTriggerTimes();
+    const times = await settingsService.getTriggerTimes();
     return times;
   }),
 
   setTriggerTimes: publicProcedure
-    .input(
-      z.object({
-        time1: z.string(),
-        time2: z.string(),
-      })
-    )
+    .input(triggerTimesSchema)
     .mutation(async ({ input }) => {
-      await setTriggerTimes(input.time1, input.time2);
+      await settingsService.setTriggerTimes(input.time1, input.time2);
       return { success: true };
     }),
 

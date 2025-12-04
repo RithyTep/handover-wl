@@ -83,7 +83,7 @@ export function SchedulerPage() {
 
   useEffect(() => {
     if (customChannel?.channelId) {
-      setCustomChannelId(customChannel.channelId);
+      setCustomChannelId(customChannel.channelId || "");
     }
   }, [customChannel]);
 
@@ -100,7 +100,7 @@ export function SchedulerPage() {
   const handleSaveCustomChannelId = async () => {
     const loadingToast = toast.loading("Saving custom channel ID...");
     try {
-      await saveCustomChannelMutation.mutateAsync({ channelId: customChannelId });
+      await saveCustomChannelMutation.mutateAsync({ channel_id: customChannelId });
     } finally {
       toast.dismiss(loadingToast);
     }
@@ -110,10 +110,10 @@ export function SchedulerPage() {
     const loadingToast = toast.loading("Saving shift settings...");
     try {
       await saveShiftSettingsMutation.mutateAsync({
-        eveningToken,
-        nightToken,
-        eveningMentions,
-        nightMentions,
+        evening_user_token: eveningToken,
+        night_user_token: nightToken,
+        evening_mentions: eveningMentions,
+        night_mentions: nightMentions,
       });
     } finally {
       toast.dismiss(loadingToast);

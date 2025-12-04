@@ -1,14 +1,13 @@
 import { z } from "zod";
-import { router, publicProcedure } from "../server";
-import { saveTicketData } from "@/lib/services";
+import { router, publicProcedure } from "@/server/trpc/server";
+import { TicketService } from "@/server/services/ticket.service";
+
+const ticketService = new TicketService();
 
 export const ticketDataRouter = router({
   save: publicProcedure
-    .input(
-      z.record(z.string(), z.string()) // Record<string, string> for ticketData
-    )
+    .input(z.record(z.string(), z.string()))
     .mutation(async ({ input }) => {
-      // Format the data like the original API route does
       const formattedData: Record<string, { status: string; action: string }> = {};
 
       for (const [key, value] of Object.entries(input)) {
@@ -22,11 +21,11 @@ export const ticketDataRouter = router({
           formattedData[ticketKey] = { status: "--", action: "--" };
         }
 
-        if (isStatus) formattedData[ticketKey].status = value as string;
-        if (isAction) formattedData[ticketKey].action = value as string;
+        if (isStatus) formattedData[ticketKey].status = value;
+        if (isAction) formattedData[ticketKey].action = value;
       }
 
-      await saveTicketData(formattedData);
+      await ticketService.saveTicketData(formattedData);
       return { success: true, ticketCount: Object.keys(formattedData).length };
     }),
 });

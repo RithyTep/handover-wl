@@ -26,8 +26,8 @@ export function useTheme() {
     }
   }, [themes, selectedTheme, initializeFromServer]);
 
-  const themeList: ThemeInfo[] = themes || [];
-  const currentTheme: Theme = selectedTheme || DEFAULT_THEME;
+  const themeList: ThemeInfo[] = themes ?? [];
+  const currentTheme: Theme = selectedTheme ?? DEFAULT_THEME;
 
   const setSelectedThemeMutation = trpc.theme.setSelected.useMutation();
 

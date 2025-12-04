@@ -11,7 +11,7 @@ import { ClearDialog } from "./clear-dialog";
 import { SendSlackDialog } from "./send-slack-dialog";
 import { cn } from "@/lib/utils";
 import { Theme } from "@/enums/theme.enum";
-import type { Ticket } from "@/app/columns";
+import type { Ticket } from "@/interfaces/ticket.interface";
 
 interface DashboardLayoutProps {
   theme: Theme;

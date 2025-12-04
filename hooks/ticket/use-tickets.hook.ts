@@ -1,5 +1,5 @@
 import { trpc } from "@/components/trpc-provider";
-import type { Ticket } from "@/app/columns";
+import type { Ticket } from "@/interfaces/ticket.interface";
 
 interface UseTicketsOptions {
   initialTickets?: Ticket[];

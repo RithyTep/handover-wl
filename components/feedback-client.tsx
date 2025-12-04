@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/components/trpc-provider";
+import { FeedbackType } from "@/enums/feedback.enum";
 
 interface FeedbackItem {
   id: number;
@@ -35,8 +36,6 @@ interface FeedbackItem {
   created_at: string;
   status: string;
 }
-
-type FeedbackType = "bug" | "feedback" | "suggestion" | "feature";
 
 interface FeedbackTypeOption {
   id: FeedbackType;
@@ -48,28 +47,28 @@ interface FeedbackTypeOption {
 
 const feedbackTypes: FeedbackTypeOption[] = [
   {
-    id: "bug",
+    id: FeedbackType.BUG,
     label: "Bug Report",
     description: "Report an issue or error",
     icon: Bug,
     color: "text-red-500 bg-red-500/10 border-red-500/20",
   },
   {
-    id: "feedback",
+    id: FeedbackType.FEEDBACK,
     label: "Feedback",
     description: "General feedback about the app",
     icon: MessageSquare,
     color: "text-blue-500 bg-blue-500/10 border-blue-500/20",
   },
   {
-    id: "suggestion",
+    id: FeedbackType.SUGGESTION,
     label: "Suggestion",
     description: "Suggest an improvement",
     icon: Lightbulb,
     color: "text-yellow-500 bg-yellow-500/10 border-yellow-500/20",
   },
   {
-    id: "feature",
+    id: FeedbackType.FEATURE,
     label: "New Feature",
     description: "Request a new feature",
     icon: Sparkles,

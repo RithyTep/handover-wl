@@ -24,7 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { TicketPreview } from "@/components/ticket-preview"
-import { Ticket } from "@/app/columns"
+import type { Ticket } from "@/interfaces/ticket.interface"
 import { TicketFiltersComponent, TicketFilters } from "@/components/ticket-filters"
 import { Theme } from "@/enums/theme.enum"
 

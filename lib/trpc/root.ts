@@ -10,11 +10,6 @@ import { feedbackRouter } from "./routers/feedback";
 import { settingsRouter } from "./routers/settings";
 import { scheduledCommentsRouter } from "./routers/scheduledComments";
 
-/**
- * This is the primary router for your server.
- *
- * All routers added in /api/routers should be manually added here.
- */
 export const appRouter = router({
   theme: themeRouter,
   tickets: ticketsRouter,
@@ -28,6 +23,4 @@ export const appRouter = router({
   scheduledComments: scheduledCommentsRouter,
 });
 
-// Export type router type signature,
-// NOT the router itself.
 export type AppRouter = typeof appRouter;

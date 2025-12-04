@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { trpc } from "@/components/trpc-provider";
-import type { Ticket } from "@/app/columns";
+import type { Ticket } from "@/interfaces/ticket.interface";
 
 interface UseTicketActionsProps {
   tickets: Ticket[];
@@ -174,7 +174,11 @@ export function useTicketActions({ tickets }: UseTicketActionsProps) {
   }, [tickets, ticketData, aiAutofillMutation]);
 
   const handleCopyForSlack = useCallback(async () => {
-    const JIRA_URL = process.env.NEXT_PUBLIC_JIRA_URL || "https://olympian.atlassian.net";
+    const JIRA_URL = process.env.NEXT_PUBLIC_JIRA_URL;
+    if (!JIRA_URL) {
+      toast.error("JIRA_URL not configured");
+      return;
+    }
 
     const ticketKeys = Object.keys(ticketData)
       .filter((key) => key.startsWith("status-"))
@@ -193,18 +197,17 @@ export function useTicketActions({ tickets }: UseTicketActionsProps) {
 
     let message = "";
     filledTickets.forEach((ticketKey, index) => {
-      const status = ticketData[`status-${ticketKey}`] || "--";
-      const action = ticketData[`action-${ticketKey}`] || "--";
+      const status = ticketData[`status-${ticketKey}`];
+      const action = ticketData[`action-${ticketKey}`];
       const ticket = tickets.find((t) => t.key === ticketKey);
-      const summary = ticket?.summary || "";
-      const wlMainType = ticket?.wlMainTicketType || "--";
-      const wlSubType = ticket?.wlSubTicketType || "--";
+      if (!ticket) return;
+
       const ticketUrl = `${JIRA_URL}/browse/${ticketKey}`;
 
       message += `--- Ticket ${index + 1} ---\n`;
-      message += `Ticket Link: <${ticketUrl}> ${summary}\n`;
-      message += `WL Main Type: ${wlMainType}\n`;
-      message += `WL Sub Type: ${wlSubType}\n`;
+      message += `Ticket Link: <${ticketUrl}> ${ticket.summary}\n`;
+      message += `WL Main Type: ${ticket.wlMainTicketType}\n`;
+      message += `WL Sub Type: ${ticket.wlSubTicketType}\n`;
       message += `Status: ${status}\n`;
       message += `Action: ${action}\n`;
       message += `\n`;

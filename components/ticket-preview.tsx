@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { X, ExternalLink, CheckCircle2, Clock, User, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Ticket } from "@/app/columns";
+import type { Ticket } from "@/interfaces/ticket.interface";
 
 interface TicketPreviewProps {
   ticket: Ticket;

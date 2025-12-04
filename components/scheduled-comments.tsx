@@ -26,7 +26,8 @@ import { Switch } from "@/components/ui/switch";
 import { Pencil, Trash2, Plus, Clock, CheckCircle2, MessageSquare, Ticket } from "lucide-react";
 import { trpc } from "@/components/trpc-provider";
 import { toast } from "sonner";
-import type { ScheduledComment as ScheduledCommentType } from "@/lib/types";
+import type { ScheduledComment as ScheduledCommentType } from "@/interfaces/scheduled-comment.interface";
+import { CommentType } from "@/enums/comment.enum";
 
 type ScheduledComment = Omit<ScheduledCommentType, 'created_at' | 'updated_at' | 'last_posted_at'> & {
   created_at?: string;
@@ -38,7 +39,7 @@ export default function ScheduledComments() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingComment, setEditingComment] = useState<ScheduledComment | null>(null);
 
-  const [commentType, setCommentType] = useState<'jira' | 'slack'>('slack');
+  const [commentType, setCommentType] = useState<CommentType>(CommentType.SLACK);
   const [ticketKey, setTicketKey] = useState("");
   const [commentText, setCommentText] = useState("");
   const [cronSchedule, setCronSchedule] = useState("");
@@ -81,7 +82,7 @@ export default function ScheduledComments() {
   const loading = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
   const resetForm = () => {
-    setCommentType('slack');
+    setCommentType(CommentType.SLACK);
     setTicketKey("");
     setCommentText("");
     setCronSchedule("");
@@ -105,14 +106,14 @@ export default function ScheduledComments() {
   };
 
   const handleSave = async () => {
-    const finalCronSchedule = commentType === 'slack' ? '0 0 * * *' : cronSchedule;
+    const finalCronSchedule = commentType === CommentType.SLACK ? '0 0 * * *' : cronSchedule;
 
     if (editingComment) {
       try {
         await updateMutation.mutateAsync({
           id: editingComment.id,
           comment_type: commentType,
-          ticket_key: commentType === 'jira' ? ticketKey : undefined,
+          ticket_key: commentType === CommentType.JIRA ? ticketKey : undefined,
           comment_text: commentText,
           cron_schedule: finalCronSchedule,
           enabled,
@@ -125,7 +126,7 @@ export default function ScheduledComments() {
       try {
         await createMutation.mutateAsync({
           comment_type: commentType,
-          ticket_key: commentType === 'jira' ? ticketKey : undefined,
+          ticket_key: commentType === CommentType.JIRA ? ticketKey : undefined,
           comment_text: commentText,
           cron_schedule: finalCronSchedule,
           enabled,
@@ -196,7 +197,7 @@ export default function ScheduledComments() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2 flex-wrap">
-                          {comment.comment_type === 'slack' ? (
+                          {comment.comment_type === CommentType.SLACK ? (
                             <span className="text-xs bg-blue-500/10 text-blue-600 px-2 py-1 rounded font-medium">
                               Slack Thread
                             </span>
@@ -216,7 +217,7 @@ export default function ScheduledComments() {
                         </div>
                         <p className="text-sm mb-2 line-clamp-2">{comment.comment_text}</p>
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                          {comment.comment_type === 'jira' && (
+                          {comment.comment_type === CommentType.JIRA && (
                             <span className="flex items-center gap-1">
                               <Clock className="h-3 w-3" />
                               {getCronDescription(comment.cron_schedule)}
@@ -262,7 +263,7 @@ export default function ScheduledComments() {
               {editingComment ? "Edit Scheduled Comment" : "New Scheduled Comment"}
             </DialogTitle>
             <DialogDescription>
-              {commentType === 'jira'
+              {commentType === CommentType.JIRA
                 ? "Schedule a comment to be posted to a Jira ticket using your user token."
                 : "Schedule a comment to be posted as a reply to handover Slack messages using your user token."}
             </DialogDescription>
@@ -271,18 +272,18 @@ export default function ScheduledComments() {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="comment_type">Comment Type</Label>
-              <Select value={commentType} onValueChange={(value: 'jira' | 'slack') => setCommentType(value)}>
+              <Select value={commentType} onValueChange={(value) => setCommentType(value as CommentType)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="slack">Slack Thread (replies to handover messages)</SelectItem>
-                  <SelectItem value="jira">Jira Ticket Comment</SelectItem>
+                  <SelectItem value={CommentType.SLACK}>Slack Thread (replies to handover messages)</SelectItem>
+                  <SelectItem value={CommentType.JIRA}>Jira Ticket Comment</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
-            {commentType === 'jira' && (
+            {commentType === CommentType.JIRA && (
               <div className="grid gap-2">
                 <Label htmlFor="ticket_key">Ticket Key</Label>
                 <Input
@@ -305,7 +306,7 @@ export default function ScheduledComments() {
               />
             </div>
 
-            {commentType === 'jira' && (
+            {commentType === CommentType.JIRA && (
               <div className="grid gap-2">
                 <Label htmlFor="cron_schedule">Cron Schedule</Label>
                 <Input
@@ -321,7 +322,7 @@ export default function ScheduledComments() {
               </div>
             )}
 
-            {commentType === 'slack' && (
+            {commentType === CommentType.SLACK && (
               <div className="p-3 bg-muted/50 rounded-md border border-border/50">
                 <p className="text-sm text-muted-foreground">
                   <strong>Note:</strong> Slack thread comments are automatically posted as replies to handover messages at 5:10 PM and 10:40 PM GMT+7.
@@ -341,7 +342,7 @@ export default function ScheduledComments() {
             </Button>
             <Button
               onClick={handleSave}
-              disabled={loading || !commentText || (commentType === 'jira' && (!ticketKey || !cronSchedule))}
+              disabled={loading || !commentText || (commentType === CommentType.JIRA && (!ticketKey || !cronSchedule))}
             >
               {loading ? "Saving..." : editingComment ? "Update" : "Create"}
             </Button>

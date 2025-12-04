@@ -5,23 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-export interface Ticket {
-  key: string;
-  summary: string;
-  status: string;
-  assignee: string;
-  assigneeAvatar: string | null;
-  created: string;
-  dueDate: string | null;
-  issueType: string;
-  wlMainTicketType: string;
-  wlSubTicketType: string;
-  customerLevel: string;
-  jiraUrl: string;
-  savedStatus: string;
-  savedAction: string;
-}
+import type { Ticket } from "@/interfaces/ticket.interface";
 
 interface ColumnsProps {
   ticketData: Record<string, string>;

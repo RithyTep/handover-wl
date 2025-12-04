@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, publicProcedure } from "../server";
+import { router, publicProcedure } from "@/server/trpc/server";
 import fs from "fs";
 import path from "path";
 

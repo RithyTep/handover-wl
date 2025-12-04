@@ -1,79 +1,66 @@
-import { z } from "zod";
-import { router, publicProcedure } from "../server";
-import { getSetting, setSetting } from "@/lib/services/database";
+import { router, publicProcedure } from "@/server/trpc/server";
+import { SettingsService } from "@/server/services/settings.service";
+import { customChannelSchema, memberMentionsSchema, shiftTokensSchema } from "@/schemas/settings.schema";
+
+const settingsService = new SettingsService();
 
 export const settingsRouter = router({
   getCustomChannel: publicProcedure.query(async () => {
-    const channelId = await getSetting("custom_channel_id");
-    return { success: true, channelId: channelId || null };
+    const channelId = await settingsService.getCustomChannelId();
+    return { success: true, channelId };
   }),
 
   setCustomChannel: publicProcedure
-    .input(
-      z.object({
-        channelId: z.string(),
-      })
-    )
+    .input(customChannelSchema)
     .mutation(async ({ input }) => {
-      await setSetting("custom_channel_id", input.channelId);
-      return { success: true, channelId: input.channelId };
+      await settingsService.setCustomChannelId(input.channel_id);
+      return { success: true, channelId: input.channel_id };
     }),
 
   getShiftTokens: publicProcedure.query(async () => {
-    const eveningToken = await getSetting("evening_token") || "";
-    const nightToken = await getSetting("night_token") || "";
-    const eveningMentions = await getSetting("evening_mentions") || "";
-    const nightMentions = await getSetting("night_mentions") || "";
+    const eveningToken = await settingsService.getEveningUserToken();
+    const nightToken = await settingsService.getNightUserToken();
+    const eveningMentions = await settingsService.getEveningMentions();
+    const nightMentions = await settingsService.getNightMentions();
 
     return {
       success: true,
       data: {
-        eveningToken,
-        nightToken,
-        eveningMentions,
-        nightMentions,
+        eveningToken: eveningToken || "",
+        nightToken: nightToken || "",
+        eveningMentions: eveningMentions || "",
+        nightMentions: nightMentions || "",
       },
     };
   }),
 
   setShiftTokens: publicProcedure
-    .input(
-      z.object({
-        eveningToken: z.string().optional(),
-        nightToken: z.string().optional(),
-        eveningMentions: z.string().optional(),
-        nightMentions: z.string().optional(),
-      })
-    )
+    .input(shiftTokensSchema)
     .mutation(async ({ input }) => {
-      if (input.eveningToken !== undefined) {
-        await setSetting("evening_token", input.eveningToken);
+      if (input.evening_user_token) {
+        await settingsService.setEveningUserToken(input.evening_user_token);
       }
-      if (input.nightToken !== undefined) {
-        await setSetting("night_token", input.nightToken);
+      if (input.night_user_token) {
+        await settingsService.setNightUserToken(input.night_user_token);
       }
-      if (input.eveningMentions !== undefined) {
-        await setSetting("evening_mentions", input.eveningMentions);
+      if (input.evening_mentions) {
+        await settingsService.setEveningMentions(input.evening_mentions);
       }
-      if (input.nightMentions !== undefined) {
-        await setSetting("night_mentions", input.nightMentions);
+      if (input.night_mentions) {
+        await settingsService.setNightMentions(input.night_mentions);
       }
       return { success: true };
     }),
 
   getMemberMentions: publicProcedure.query(async () => {
-    const mentions = await getSetting("member_mentions") || "";
-    return { success: true, mentions };
+    const mentions = await settingsService.getMemberMentions();
+    return { success: true, mentions: mentions || "" };
   }),
 
   setMemberMentions: publicProcedure
-    .input(
-      z.object({
-        mentions: z.string(),
-      })
-    )
+    .input(memberMentionsSchema)
     .mutation(async ({ input }) => {
-      await setSetting("member_mentions", input.mentions);
+      await settingsService.setMemberMentions(input.mentions);
       return { success: true, mentions: input.mentions };
     }),
 });

@@ -103,7 +103,17 @@ export async function initDatabase(): Promise<void> {
       )
     `);
 
-    console.log("[DatabaseRepository] Tables initialized");
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS feedback (
+        id SERIAL PRIMARY KEY,
+        type VARCHAR(50) NOT NULL,
+        title VARCHAR(200) NOT NULL,
+        description TEXT NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        status VARCHAR(50) DEFAULT 'new'
+      )
+    `);
+
   }, undefined);
 }
 

@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 import { TicketsTable } from "@/components/tickets-table";
-import { createColumns, type Ticket } from "@/app/columns";
+import { createColumns } from "@/app/columns";
+import type { Ticket } from "@/interfaces/ticket.interface";
 import { DashboardActions } from "./dashboard-actions";
 import { Theme } from "@/enums/theme.enum";
 
