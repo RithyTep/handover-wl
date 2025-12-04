@@ -26,7 +26,7 @@ import {
 import { TicketPreview } from "@/components/ticket-preview"
 import { Ticket } from "@/app/columns"
 import { TicketFiltersComponent, TicketFilters } from "@/components/ticket-filters"
-import type { Theme } from "@/lib/types"
+import { Theme } from "@/enums/theme.enum"
 
 interface TicketsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -39,7 +39,7 @@ export function TicketsTable<TData, TValue>({
   columns,
   data,
   actionButtons,
-  theme = "christmas",
+  theme = Theme.CHRISTMAS,
 }: TicketsTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -235,18 +235,18 @@ export function TicketsTable<TData, TValue>({
               return (
                 <div
                   key={row.id}
-                  className={`border rounded-lg overflow-hidden shadow-sm ${theme === "christmas" ? "border-white/20" : "border-border"} ${cardClass}`}
+                  className={`border rounded-lg overflow-hidden shadow-sm ${theme === Theme.CHRISTMAS ? "border-white/20" : "border-border"} ${cardClass}`}
                 >
-                  <div className={`flex items-center justify-between px-4 py-3 border-b ${theme === "christmas" ? "border-white/20 bg-black/10" : "border-border bg-card"}`}>
+                  <div className={`flex items-center justify-between px-4 py-3 border-b ${theme === Theme.CHRISTMAS ? "border-white/20 bg-black/10" : "border-border bg-card"}`}>
                     <div className="flex items-center gap-2.5">
-                      <span className={`text-[11px] font-medium tabular-nums ${theme === "christmas" ? "text-white/80" : "text-muted-foreground"}`}>
+                      <span className={`text-[11px] font-medium tabular-nums ${theme === Theme.CHRISTMAS ? "text-white/80" : "text-muted-foreground"}`}>
                         {index + 1}
                       </span>
                       <a
                         href={ticket.jiraUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`text-sm font-semibold transition-colors ${theme === "christmas" ? "text-white hover:text-white/80" : "text-foreground hover:text-primary"}`}
+                        className={`text-sm font-semibold transition-colors ${theme === Theme.CHRISTMAS ? "text-white hover:text-white/80" : "text-foreground hover:text-primary"}`}
                       >
                         {ticket.key}
                       </a>
@@ -256,22 +256,22 @@ export function TicketsTable<TData, TValue>({
                         <img
                           src={ticket.assigneeAvatar}
                           alt={ticket.assignee}
-                          className={`w-5 h-5 rounded-full ring-1 ${theme === "christmas" ? "ring-white/30" : "ring-border"}`}
+                          className={`w-5 h-5 rounded-full ring-1 ${theme === Theme.CHRISTMAS ? "ring-white/30" : "ring-border"}`}
                         />
                       ) : (
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium ${theme === "christmas" ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
+                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium ${theme === Theme.CHRISTMAS ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"}`}>
                           {ticket.assignee === "Unassigned" ? "?" : ticket.assignee.charAt(0).toUpperCase()}
                         </div>
                       )}
                     </div>
                   </div>
 
-                  <div className={`p-4 space-y-4 ${theme === "christmas" ? "" : "bg-card"}`}>
-                    <p className={`text-[13px] leading-relaxed line-clamp-2 ${theme === "christmas" ? "text-white/90" : "text-foreground"}`}>{ticket.summary}</p>
+                  <div className={`p-4 space-y-4 ${theme === Theme.CHRISTMAS ? "" : "bg-card"}`}>
+                    <p className={`text-[13px] leading-relaxed line-clamp-2 ${theme === Theme.CHRISTMAS ? "text-white/90" : "text-foreground"}`}>{ticket.summary}</p>
 
                     <div className="space-y-3">
                       <div>
-                        <label className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${theme === "christmas" ? "text-white/70" : "text-muted-foreground"}`}>Status</label>
+                        <label className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${theme === Theme.CHRISTMAS ? "text-white/70" : "text-muted-foreground"}`}>Status</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedStatus")
                           .map((cell) => (
@@ -312,14 +312,14 @@ export function TicketsTable<TData, TValue>({
       <div className="border border-white/20 rounded-md overflow-hidden hidden sm:flex sm:flex-col shadow-xl">
         <div className="overflow-auto">
           <Table className="min-w-full md:min-w-[1400px]">
-            <TableHeader className={`sticky top-0 z-10 backdrop-blur-md ${theme === "christmas" ? "bg-black/40" : "bg-background"}`}>
+            <TableHeader className={`sticky top-0 z-10 backdrop-blur-md ${theme === Theme.CHRISTMAS ? "bg-black/40" : "bg-background"}`}>
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className={`border-b hover:bg-transparent ${theme === "christmas" ? "border-white/10" : "border-border"}`}>
+                <TableRow key={headerGroup.id} className={`border-b hover:bg-transparent ${theme === Theme.CHRISTMAS ? "border-white/10" : "border-border"}`}>
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead
                         key={header.id}
-                        className={`h-10 px-3 text-xs font-bold uppercase tracking-wide border-r last:border-r-0 ${theme === "christmas" ? "text-white/90 border-white/10" : "text-foreground border-border"}`}
+                        className={`h-10 px-3 text-xs font-bold uppercase tracking-wide border-r last:border-r-0 ${theme === Theme.CHRISTMAS ? "text-white/90 border-white/10" : "text-foreground border-border"}`}
                         style={{
                           width: header.getSize() !== 150 ? header.getSize() : undefined,
                         }}
@@ -340,7 +340,7 @@ export function TicketsTable<TData, TValue>({
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => {
                   let rowClass = "";
-                  if (theme === "christmas") {
+                  if (theme === Theme.CHRISTMAS) {
                     if (index % 3 === 0) rowClass = "christmas-row-gold";
                     else if (index % 3 === 1) rowClass = "christmas-row-red";
                     else rowClass = "christmas-row-green";
@@ -350,12 +350,12 @@ export function TicketsTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className={`border-b transition-colors duration-150 ${theme === "christmas" ? `border-white/10 ${rowClass} hover:brightness-110` : "border-border hover:bg-muted/50"}`}
+                    className={`border-b transition-colors duration-150 ${theme === Theme.CHRISTMAS ? `border-white/10 ${rowClass} hover:brightness-110` : "border-border hover:bg-muted/50"}`}
                   >
                     {row.getVisibleCells().map((cell, cellIndex) => (
                       <TableCell
                         key={cell.id}
-                        className={`px-3 py-2 border-r last:border-r-0 ${theme === "christmas" ? `border-white/10 ${cellIndex === 0 ? 'candy-cane-border' : ''}` : "border-border"}`}
+                        className={`px-3 py-2 border-r last:border-r-0 ${theme === Theme.CHRISTMAS ? `border-white/10 ${cellIndex === 0 ? 'candy-cane-border' : ''}` : "border-border"}`}
                         style={{
                           width: cell.column.getSize() !== 150 ? cell.column.getSize() : undefined,
                         }}

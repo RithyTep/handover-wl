@@ -8,7 +8,7 @@ import { DashboardLayout } from "./dashboard-layout";
 import { useTickets } from "@/hooks/use-tickets";
 import { useTicketActions } from "@/hooks/use-ticket-actions";
 import { useThemeStore } from "@/lib/stores/theme-store";
-import type { Theme } from "@/lib/types";
+import { Theme } from "@/enums/theme.enum";
 import { DEFAULT_THEME } from "@/lib/constants";
 import type { Ticket } from "@/app/columns";
 

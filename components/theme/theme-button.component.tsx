@@ -2,13 +2,14 @@
 
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { ThemeInfo } from "@/lib/types";
+import type { ThemeInfo } from "@/interfaces/theme.interface";
+import type { Theme } from "@/enums/theme.enum";
 
 interface ThemeButtonProps {
   theme: ThemeInfo;
   isSelected: boolean;
-  onSelect: (themeId: string) => void;
-  disabled?: boolean;
+  onSelect: (theme: Theme) => void;
+  disabled: boolean;
 }
 
 export function ThemeButton({ theme, isSelected, onSelect, disabled }: ThemeButtonProps) {

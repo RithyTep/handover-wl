@@ -1,5 +1,5 @@
 import { router } from "./server";
-import { themeRouter } from "./routers/theme";
+import { themeRouter } from "@/server/trpc/routers/theme.router";
 import { ticketsRouter } from "./routers/tickets";
 import { ticketDataRouter } from "./routers/ticketData";
 import { slackRouter } from "./routers/slack";

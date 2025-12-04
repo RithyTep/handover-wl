@@ -1,18 +1,19 @@
-import type { ThemeInfo, Theme } from "@/lib/types";
+import type { ThemeInfo } from "@/interfaces/theme.interface";
+import { Theme } from "@/enums/theme.enum";
 
 export const THEMES: ThemeInfo[] = [
   {
-    id: "default",
+    id: Theme.DEFAULT,
     name: "Default",
     description: "Clean and professional theme",
     icon: "🎨",
   },
   {
-    id: "christmas",
+    id: Theme.CHRISTMAS,
     name: "Christmas",
     description: "Festive holiday theme with snow and decorations",
     icon: "🎄",
   },
 ];
 
-export const DEFAULT_THEME: Theme = "christmas";
+export const DEFAULT_THEME: Theme = Theme.CHRISTMAS;

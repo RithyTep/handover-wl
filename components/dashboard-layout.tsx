@@ -10,7 +10,7 @@ import { QuickFillDialog } from "./quick-fill-dialog";
 import { ClearDialog } from "./clear-dialog";
 import { SendSlackDialog } from "./send-slack-dialog";
 import { cn } from "@/lib/utils";
-import type { Theme } from "@/lib/types";
+import { Theme } from "@/enums/theme.enum";
 import type { Ticket } from "@/app/columns";
 
 interface DashboardLayoutProps {
@@ -73,10 +73,10 @@ export function DashboardLayout({
       <div
         className={cn(
           "h-dvh flex flex-col overflow-hidden relative",
-          theme === "christmas" ? "christmas-bg" : "bg-background"
+          theme === Theme.CHRISTMAS ? "christmas-bg" : "bg-background"
         )}
       >
-        {theme === "christmas" && <NewYearScene />}
+        {theme === Theme.CHRISTMAS && <NewYearScene />}
         <DashboardHeader theme={theme} ticketCount={tickets.length} />
         <DashboardContent
           tickets={tickets}

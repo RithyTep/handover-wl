@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, type Ticket } from "@/app/columns";
 import { DashboardActions } from "./dashboard-actions";
-import type { Theme } from "@/lib/types";
+import { Theme } from "@/enums/theme.enum";
 
 interface DashboardContentProps {
   tickets: Ticket[];

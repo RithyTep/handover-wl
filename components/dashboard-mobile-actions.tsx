@@ -2,7 +2,7 @@
 
 import { Save, Send, Zap, Trash2, Snowflake } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { Theme } from "@/lib/types";
+import { Theme } from "@/enums/theme.enum";
 
 interface DashboardMobileActionsProps {
   theme: Theme;
@@ -69,7 +69,7 @@ export function DashboardMobileActions({
             className={cn(
               "flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl transition-all active:scale-95",
               action.className,
-              theme === "christmas" && "snow-btn"
+              theme === Theme.CHRISTMAS && "snow-btn"
             )}
           >
             <action.icon className={cn("w-5 h-5", action.iconColor)} />

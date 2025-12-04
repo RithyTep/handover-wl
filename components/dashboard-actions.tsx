@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { Theme } from "@/lib/types";
+import { Theme } from "@/enums/theme.enum";
 
 interface DashboardActionsProps {
   theme: Theme;
@@ -99,7 +99,7 @@ export function DashboardActions({
           className={cn(
             "h-9 px-4",
             action.className,
-            theme === "christmas" && "snow-btn"
+            theme === Theme.CHRISTMAS && "snow-btn"
           )}
           title={action.label}
         >
