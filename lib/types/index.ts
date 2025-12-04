@@ -104,3 +104,12 @@ export interface Feedback {
   created_at: Date;
   status: "new" | "reviewed" | "resolved" | "dismissed";
 }
+
+export type Theme = "default" | "christmas";
+
+export interface ThemeInfo {
+  id: Theme;
+  name: string;
+  description: string;
+  icon: string;
+}

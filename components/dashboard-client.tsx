@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import axios from "axios";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
+import { DEFAULT_THEME } from "@/lib/constants";
 import {
   Save,
   Send,
@@ -33,17 +34,82 @@ import { TicketsTable } from "@/components/tickets-table";
 import { createColumns, Ticket } from "@/app/columns";
 import { CommandPalette } from "@/components/command-palette";
 import { NewYearScene } from "@/components/new-year-scene";
+import { ThemeSelector } from "@/components/theme-selector";
+import { ChristmasLoading } from "@/components/christmas-loading";
 import Link from "next/link";
+import type { Theme } from "@/lib/types";
 
 interface DashboardClientProps {
-  initialTickets: Ticket[];
+  initialTickets?: Ticket[];
 }
 
-export function DashboardClient({ initialTickets }: DashboardClientProps) {
-  const [tickets, setTickets] = useState<Ticket[]>(initialTickets);
+// Get theme from localStorage or default
+const getStoredTheme = (): Theme => {
+  if (typeof window === "undefined") return DEFAULT_THEME;
+  const stored = localStorage.getItem("theme_preference");
+  return (stored === "default" || stored === "christmas") ? stored : DEFAULT_THEME;
+};
+
+export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
+  const [tickets, setTickets] = useState<Ticket[]>(initialTickets || []);
+  const [ticketsLoading, setTicketsLoading] = useState(!initialTickets);
+  const [theme, setTheme] = useState<Theme>(() => getStoredTheme());
+
+  // Fetch tickets from API on mount (client-side)
+  useEffect(() => {
+    const fetchTickets = async () => {
+      if (initialTickets && initialTickets.length > 0) {
+        // Already have initial tickets, skip fetch
+        return;
+      }
+
+      setTicketsLoading(true);
+      try {
+        const response = await axios.get("/api/tickets");
+        if (response.data.success && response.data.tickets) {
+          setTickets(response.data.tickets);
+        }
+      } catch (error) {
+        console.error("[Tickets] Error fetching tickets:", error);
+        toast.error("Failed to load tickets");
+      } finally {
+        setTicketsLoading(false);
+      }
+    };
+    fetchTickets();
+  }, [initialTickets]);
+
+  // Sync theme from database on mount (background sync)
+  useEffect(() => {
+    const syncThemeFromDB = async () => {
+      try {
+        const response = await axios.get("/api/theme");
+        if (response.data.success && response.data.theme) {
+          const dbTheme = response.data.theme as Theme;
+          // Only update if different from localStorage
+          const localTheme = getStoredTheme();
+          if (dbTheme !== localTheme) {
+            localStorage.setItem("theme_preference", dbTheme);
+            setTheme(dbTheme);
+          }
+        }
+      } catch (error) {
+        console.error("[Theme] Error syncing from DB:", error);
+        // Continue with localStorage theme
+      }
+    };
+    syncThemeFromDB();
+  }, []);
+
+  // Apply theme class to body immediately
+  useEffect(() => {
+    document.body.classList.remove("theme-christmas", "theme-default");
+    document.body.classList.add(`theme-${theme}`);
+  }, [theme]);
   const [ticketData, setTicketData] = useState<Record<string, string>>(() => {
     const data: Record<string, string> = {};
-    initialTickets.forEach((ticket: Ticket) => {
+    const ticketsToUse = initialTickets || [];
+    ticketsToUse.forEach((ticket: Ticket) => {
       data[`status-${ticket.key}`] = ticket.savedStatus;
       data[`action-${ticket.key}`] = ticket.savedAction;
     });
@@ -323,38 +389,68 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
         onSave={handleSave}
         onSendSlack={() => setSendSlackDialog(true)}
         onCopy={handleCopyForSlack}
-        onRefresh={() => window.location.reload()}
+        onRefresh={() => {
+          setTicketsLoading(true);
+          axios.get("/api/tickets").then(response => {
+            if (response.data.success && response.data.tickets) {
+              setTickets(response.data.tickets);
+            }
+          }).catch(error => {
+            console.error("[Tickets] Error refreshing:", error);
+            toast.error("Failed to refresh tickets");
+          }).finally(() => {
+            setTicketsLoading(false);
+          });
+        }}
       />
 
-      <div className="h-dvh christmas-bg flex flex-col overflow-hidden relative">
-        <NewYearScene />
+      {ticketsLoading ? (
+        <div className="flex items-center justify-center min-h-dvh bg-background">
+          <ChristmasLoading />
+        </div>
+      ) : (
+        <div className={`h-dvh flex flex-col overflow-hidden relative ${theme === "christmas" ? "christmas-bg" : "bg-background"}`}>
+          {theme === "christmas" && <NewYearScene />}
 
-        <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-white/20 bg-black/20 backdrop-blur-sm z-10">
+        <header className={`h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b z-10 ${
+          theme === "christmas"
+            ? "border-white/20 bg-black/20 backdrop-blur-sm"
+            : "border-border bg-background/95 backdrop-blur-sm"
+        }`}>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-               <h1 className="text-2xl text-white christmas-header-text flex items-center gap-2">
-                  <span className="text-2xl">🎄</span>
-                  <span className="font-script christmas-title-gradient">Handover</span>
+               <h1 className={`text-2xl flex items-center gap-2 ${
+                 theme === "christmas"
+                   ? "text-white christmas-header-text"
+                   : "text-foreground"
+               }`}>
+                  {theme === "christmas" && <span className="text-2xl">🎄</span>}
+                  <span className={theme === "christmas" ? "font-script christmas-title-gradient" : "font-semibold"}>Handover</span>
                </h1>
             </div>
-            <span className="text-xs text-white/80 font-medium bg-white/10 px-2 py-0.5 rounded-full">
+            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+              theme === "christmas"
+                ? "text-white/80 bg-white/10"
+                : "text-muted-foreground bg-muted"
+            }`}>
               {tickets.length}
             </span>
           </div>
           <div className="flex items-center gap-1">
+            <ThemeSelector currentTheme={theme} onThemeChange={setTheme} variant={theme} />
             <Link href="/feedback">
-              <Button variant="ghost" size="sm" className="text-white/70 hover:text-white hover:bg-white/10">
+              <Button variant="ghost" size="sm" className={theme === "christmas" ? "text-white/70 hover:text-white hover:bg-white/10" : ""}>
                 <MessageSquare className="w-4 h-4 mr-1.5" />
                 <span className="hidden sm:inline">Feedback</span>
               </Button>
             </Link>
             <Link href="/changelog">
-              <Button variant="ghost" size="sm" className="text-white/70 hover:text-white hover:bg-white/10">
+              <Button variant="ghost" size="sm" className={theme === "christmas" ? "text-white/70 hover:text-white hover:bg-white/10" : ""}>
                 <FileText className="w-4 h-4 mr-1.5" />
                 <span className="hidden sm:inline">Changelog</span>
               </Button>
             </Link>
-            <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-white/70 bg-white/10 border border-white/20 rounded">
+            <kbd className={`hidden sm:flex items-center gap-1 px-2 py-1 text-xs rounded ${theme === "christmas" ? "text-white/70 bg-white/10 border border-white/20" : "bg-muted border border-border"}`}>
               <Command className="w-3 h-3" />
               <span>K</span>
             </kbd>
@@ -366,13 +462,14 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
             <TicketsTable
               columns={columns}
               data={tickets}
+              theme={theme}
               actionButtons={
               <div className="hidden sm:flex items-center gap-3 pt-2">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={handleAIFillAll}
-                  className="h-9 px-4 text-red-100 bg-red-900/50 hover:bg-red-900/70 border border-red-500/30 snow-btn"
+                  className={`h-9 px-4 text-red-100 bg-red-900/50 hover:bg-red-900/70 border border-red-500/30 ${theme === "christmas" ? "snow-btn" : ""}`}
                   title="Santa Fill All Missing"
                 >
                   <Snowflake className="w-3.5 h-3.5 mr-1.5" />
@@ -382,7 +479,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => setQuickFillDialog(true)}
-                  className="h-9 px-4 text-blue-100 bg-blue-900/50 hover:bg-blue-900/70 border border-blue-500/30 snow-btn"
+                  className={`h-9 px-4 text-blue-100 bg-blue-900/50 hover:bg-blue-900/70 border border-blue-500/30 ${theme === "christmas" ? "snow-btn" : ""}`}
                   title="Quick Fill"
                 >
                   <Zap className="w-3.5 h-3.5 mr-1.5" />
@@ -392,7 +489,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => setClearDialog(true)}
-                  className="h-9 px-4 text-yellow-100 bg-yellow-900/50 hover:bg-yellow-900/70 border border-yellow-500/30 snow-btn"
+                  className={`h-9 px-4 text-yellow-100 bg-yellow-900/50 hover:bg-yellow-900/70 border border-yellow-500/30 ${theme === "christmas" ? "snow-btn" : ""}`}
                   title="Clear All"
                 >
                   <Trash2 className="w-3.5 h-3.5 mr-1.5" />
@@ -402,7 +499,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
                   variant="ghost"
                   size="sm"
                   onClick={() => window.location.reload()}
-                  className="h-9 px-4 text-purple-100 bg-purple-900/50 hover:bg-purple-900/70 border border-purple-500/30 snow-btn"
+                  className={`h-9 px-4 text-purple-100 bg-purple-900/50 hover:bg-purple-900/70 border border-purple-500/30 ${theme === "christmas" ? "snow-btn" : ""}`}
                   title="Refresh"
                 >
                   <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
@@ -412,7 +509,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
                   variant="ghost"
                   size="sm"
                   onClick={handleCopyForSlack}
-                  className="h-9 px-4 text-cyan-100 bg-cyan-900/50 hover:bg-cyan-900/70 border border-cyan-500/30 snow-btn"
+                  className={`h-9 px-4 text-cyan-100 bg-cyan-900/50 hover:bg-cyan-900/70 border border-cyan-500/30 ${theme === "christmas" ? "snow-btn" : ""}`}
                   title="Copy for Slack"
                 >
                   <Copy className="w-3.5 h-3.5 mr-1.5" />
@@ -422,7 +519,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
                   variant="outline"
                   size="sm"
                   onClick={handleSave}
-                  className="h-9 px-4 text-emerald-100 bg-emerald-900/50 hover:bg-emerald-900/70 border border-emerald-500/30 snow-btn"
+                  className={`h-9 px-4 text-emerald-100 bg-emerald-900/50 hover:bg-emerald-900/70 border border-emerald-500/30 ${theme === "christmas" ? "snow-btn" : ""}`}
                   title="Save Changes"
                 >
                   <Save className="w-3.5 h-3.5 mr-1.5" />
@@ -432,7 +529,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
                   variant="default"
                   size="sm"
                   onClick={() => setSendSlackDialog(true)}
-                  className="h-9 px-4 bg-green-600 hover:bg-green-700 text-white border-none snow-btn shadow-lg shadow-green-900/20"
+                  className={`h-9 px-4 bg-green-600 hover:bg-green-700 text-white border-none ${theme === "christmas" ? "snow-btn shadow-lg shadow-green-900/20" : "shadow-lg"}`}
                   title="Send to Slack"
                 >
                   <Send className="w-3.5 h-3.5 mr-1.5" />
@@ -463,42 +560,43 @@ export function DashboardClient({ initialTickets }: DashboardClientProps) {
             </div>
           )}
         </main>
-      </div>
 
-      <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:hidden z-50">
-        <div className="flex items-center justify-around">
-          <button
-            onClick={handleAIFillAll}
-            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-red-900/80 transition-all active:scale-95 snow-btn bg-red-900/40 border border-red-500/30"
-          >
-            <Snowflake className="w-5 h-5 text-red-200" />
-          </button>
-          <button
-            onClick={() => setQuickFillDialog(true)}
-            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-blue-900/80 transition-all active:scale-95 snow-btn bg-blue-900/40 border border-blue-500/30"
-          >
-            <Zap className="w-5 h-5 text-blue-200" />
-          </button>
-          <button
-            onClick={() => setClearDialog(true)}
-            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-yellow-900/80 transition-all active:scale-95 snow-btn bg-yellow-900/40 border border-yellow-500/30"
-          >
-            <Trash2 className="w-5 h-5 text-yellow-200" />
-          </button>
-          <button
-            onClick={handleSave}
-            className="flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-emerald-900/80 transition-all active:scale-95 snow-btn bg-emerald-900/40 border border-emerald-500/30"
-          >
-            <Save className="w-5 h-5 text-emerald-200" />
-          </button>
-          <button
-            onClick={() => setSendSlackDialog(true)}
-            className="flex flex-col items-center justify-center min-w-[52px] min-h-[44px] px-2 rounded-xl bg-green-600 text-white active:bg-green-700 transition-all active:scale-95 snow-btn shadow-lg shadow-green-900/20"
-          >
-            <Send className="w-5 h-5" />
-          </button>
+        <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:hidden z-50">
+          <div className="flex items-center justify-around">
+            <button
+              onClick={handleAIFillAll}
+              className={`flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-red-900/80 transition-all active:scale-95 ${theme === "christmas" ? "snow-btn" : ""} bg-red-900/40 border border-red-500/30`}
+            >
+              <Snowflake className="w-5 h-5 text-red-200" />
+            </button>
+            <button
+              onClick={() => setQuickFillDialog(true)}
+              className={`flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-blue-900/80 transition-all active:scale-95 ${theme === "christmas" ? "snow-btn" : ""} bg-blue-900/40 border border-blue-500/30`}
+            >
+              <Zap className="w-5 h-5 text-blue-200" />
+            </button>
+            <button
+              onClick={() => setClearDialog(true)}
+              className={`flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-yellow-900/80 transition-all active:scale-95 ${theme === "christmas" ? "snow-btn" : ""} bg-yellow-900/40 border border-yellow-500/30`}
+            >
+              <Trash2 className="w-5 h-5 text-yellow-200" />
+            </button>
+            <button
+              onClick={handleSave}
+              className={`flex flex-col items-center justify-center min-w-[48px] min-h-[44px] rounded-xl active:bg-emerald-900/80 transition-all active:scale-95 ${theme === "christmas" ? "snow-btn" : ""} bg-emerald-900/40 border border-emerald-500/30`}
+            >
+              <Save className="w-5 h-5 text-emerald-200" />
+            </button>
+            <button
+              onClick={() => setSendSlackDialog(true)}
+              className={`flex flex-col items-center justify-center min-w-[52px] min-h-[44px] px-2 rounded-xl bg-green-600 text-white active:bg-green-700 transition-all active:scale-95 ${theme === "christmas" ? "snow-btn shadow-lg shadow-green-900/20" : "shadow-lg"}`}
+            >
+              <Send className="w-5 h-5" />
+            </button>
+          </div>
         </div>
-      </div>
+        </div>
+      )}
 
       <Dialog open={quickFillDialog} onOpenChange={setQuickFillDialog}>
         <DialogContent className="sm:max-w-md">

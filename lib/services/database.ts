@@ -407,4 +407,13 @@ export const setEveningMentions = (v: string) => setSetting("evening_mentions", 
 export const getNightMentions = () => getSetting("night_mentions");
 export const setNightMentions = (v: string) => setSetting("night_mentions", v);
 
+export const getThemePreference = async (): Promise<string> => {
+  const theme = await getSetting("theme_preference");
+  return theme || "christmas"; // Default to christmas for backward compatibility
+};
+
+export const setThemePreference = async (theme: string): Promise<void> => {
+  await setSetting("theme_preference", theme);
+};
+
 export default pool;

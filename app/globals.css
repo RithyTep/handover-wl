@@ -68,12 +68,23 @@
     font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    cursor: url('/cursors/christmas-cursor.png'), auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  a, button, [role="button"], input[type="submit"], input[type="button"],
-  select, .cursor-pointer, [onclick], label[for] {
+  /* Christmas theme cursor styles */
+  body.theme-christmas {
+    cursor: url('/cursors/christmas-cursor.png'), auto;
+  }
+
+  body.theme-christmas a,
+  body.theme-christmas button,
+  body.theme-christmas [role="button"],
+  body.theme-christmas input[type="submit"],
+  body.theme-christmas input[type="button"],
+  body.theme-christmas select,
+  body.theme-christmas .cursor-pointer,
+  body.theme-christmas [onclick],
+  body.theme-christmas label[for] {
     cursor: url('/cursors/christmas-pointer.png'), pointer !important;
   }
 
