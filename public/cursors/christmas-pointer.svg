@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Christmas pointer with snowflake -->
+  <path d="M4 4L4 24L10 18L14 26L18 24L14 16L22 16L4 4Z" fill="#dc2626" stroke="#ffffff" stroke-width="1.5"/>
+  <circle cx="24" cy="8" r="6" fill="none" stroke="#ffffff" stroke-width="1.5"/>
+  <line x1="24" y1="2" x2="24" y2="14" stroke="#ffffff" stroke-width="1"/>
+  <line x1="18" y1="8" x2="30" y2="8" stroke="#ffffff" stroke-width="1"/>
+</svg>

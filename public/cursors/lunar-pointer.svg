@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Lunar/Chinese brush cursor -->
+  <path d="M4 4L4 24L10 18L14 26L18 24L14 16L22 16L4 4Z" fill="#dc2626" stroke="#fbbf24" stroke-width="1.5"/>
+  <!-- Gold accent dots -->
+  <circle cx="6" cy="6" r="1.5" fill="#fbbf24"/>
+  <circle cx="8" cy="10" r="1" fill="#fbbf24"/>
+  <circle cx="10" cy="14" r="0.8" fill="#fbbf24"/>
+</svg>
