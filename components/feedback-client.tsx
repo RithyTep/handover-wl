@@ -25,6 +25,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { trpc } from "@/components/trpc-provider";
 
 interface FeedbackItem {
   id: number;
@@ -84,29 +85,26 @@ export function FeedbackClient() {
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [feedbackList, setFeedbackList] = useState<FeedbackItem[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const fetchFeedback = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("/api/feedback");
-      const data = await response.json();
-      if (data.success) {
-        setFeedbackList(data.data || []);
-      }
-    } catch (error) {
-      console.error("Failed to fetch feedback:", error);
-    } finally {
-      setIsLoading(false);
+  const { data: feedbackData, isLoading, refetch: refetchFeedback } = trpc.feedback.getAll.useQuery(
+    undefined,
+    {
+      enabled: activeTab === "view",
     }
-  };
+  );
 
-  useEffect(() => {
-    if (activeTab === "view") {
-      fetchFeedback();
-    }
-  }, [activeTab]);
+  const createFeedbackMutation = trpc.feedback.create.useMutation({
+    onSuccess: () => {
+      setIsSubmitted(true);
+      toast.success("Thank you for your feedback!");
+      refetchFeedback();
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to submit feedback");
+    },
+  });
+
+  const feedbackList = feedbackData?.feedback || [];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,28 +117,13 @@ export function FeedbackClient() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/feedback", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          type: selectedType,
-          title: title.trim(),
-          description: description.trim(),
-        }),
+      await createFeedbackMutation.mutateAsync({
+        type: selectedType,
+        title: title.trim(),
+        description: description.trim(),
       });
-
-      const data = await response.json();
-
-      if (data.success) {
-        setIsSubmitted(true);
-        toast.success("Thank you for your feedback!");
-        // Refresh the list
-        fetchFeedback();
-      } else {
-        toast.error(data.error || "Failed to submit feedback");
-      }
     } catch (error) {
-      toast.error("Failed to submit feedback. Please try again.");
+      // Error handled by mutation
     } finally {
       setIsSubmitting(false);
     }
@@ -256,7 +239,7 @@ export function FeedbackClient() {
               <p className="text-sm text-muted-foreground">
                 {feedbackList.length} feedback submissions
               </p>
-              <Button variant="ghost" size="sm" onClick={fetchFeedback} disabled={isLoading}>
+                <Button variant="ghost" size="sm" onClick={() => refetchFeedback()} disabled={isLoading}>
                 <RefreshCw className={cn("w-4 h-4 mr-2", isLoading && "animate-spin")} />
                 Refresh
               </Button>

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
 import { Toaster } from "sonner";
+import { TRPCProvider } from "@/components/trpc-provider";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -27,8 +28,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={spaceGrotesk.className}>
-        {children}
-        <Toaster position="top-right" duration={3000} />
+        <TRPCProvider>
+          {children}
+          <Toaster position="top-right" duration={3000} />
+        </TRPCProvider>
       </body>
     </html>
   );

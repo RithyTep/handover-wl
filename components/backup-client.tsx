@@ -32,6 +32,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { trpc } from "@/components/trpc-provider";
 
 export interface BackupItem {
   id: number;
@@ -49,46 +50,39 @@ interface BackupClientProps {
 
 export function BackupClient({ initialBackups }: BackupClientProps) {
   const router = useRouter();
-  const [backups, setBackups] = useState<BackupItem[]>(initialBackups);
-  const [loading, setLoading] = useState(false);
   const [restoring, setRestoring] = useState(false);
-
   const [restoreDialog, setRestoreDialog] = useState(false);
   const [selectedBackup, setSelectedBackup] = useState<BackupItem | null>(null);
 
+  const { data: backupsData, isLoading: loading, refetch: refetchBackups } = trpc.backup.getAll.useQuery();
+
+  // Use initialBackups if query hasn't loaded yet
+  const backups = backupsData?.backups || initialBackups;
+
+  const restoreBackupMutation = trpc.backup.restore.useMutation({
+    onSuccess: () => {
+      toast.success(`Restored from backup #${selectedBackup?.id}`);
+      setRestoreDialog(false);
+      setSelectedBackup(null);
+      refetchBackups();
+      router.refresh();
+    },
+    onError: (error) => {
+      toast.error("Error restoring backup: " + error.message);
+    },
+  });
+
+
   const handleRefresh = async () => {
-    setLoading(true);
-    await fetch("/api/revalidate?tag=backups");
-    router.refresh();
-    setLoading(false);
+    await refetchBackups();
     toast.success("Backups refreshed");
   };
 
   const handleRestore = async () => {
     if (!selectedBackup) return;
-
+    setRestoring(true);
     try {
-      setRestoring(true);
-      const response = await fetch("/api/backup/restore", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ backupId: selectedBackup.id }),
-      });
-
-      const data = await response.json();
-
-      if (data.success) {
-        toast.success(`Restored from backup #${selectedBackup.id}`);
-        setRestoreDialog(false);
-        setSelectedBackup(null);
-        await fetch("/api/revalidate");
-        router.refresh();
-      } else {
-        toast.error(data.error || "Failed to restore backup");
-      }
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Error restoring backup: " + message);
+      await restoreBackupMutation.mutateAsync({ backupId: selectedBackup.id });
     } finally {
       setRestoring(false);
     }
@@ -99,8 +93,8 @@ export function BackupClient({ initialBackups }: BackupClientProps) {
     setRestoreDialog(true);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
+  const formatDate = (dateString: string | Date) => {
+    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
     return date.toLocaleString("en-US", {
       month: "short",
       day: "numeric",
@@ -110,8 +104,8 @@ export function BackupClient({ initialBackups }: BackupClientProps) {
     });
   };
 
-  const getRelativeTime = (dateString: string) => {
-    const date = new Date(dateString);
+  const getRelativeTime = (dateString: string | Date) => {
+    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
     const now = new Date();
     const diff = now.getTime() - date.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));

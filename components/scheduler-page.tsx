@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { Clock, Play, CheckCircle2, XCircle, Bell, Save, Zap, Hash, AtSign, Key, Sun, Moon } from "lucide-react";
@@ -9,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { trpc } from "@/components/trpc-provider";
 
 export function SchedulerPage() {
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
@@ -21,51 +21,14 @@ export function SchedulerPage() {
   const [eveningMentions, setEveningMentions] = useState("");
   const [nightMentions, setNightMentions] = useState("");
 
-  useEffect(() => {
-    fetchSchedulerState();
-    fetchCustomChannelId();
-    fetchShiftSettings();
-  }, []);
+  const { data: schedulerState, isLoading: schedulerLoading } = trpc.scheduler.getState.useQuery();
+  const { data: shiftSettings } = trpc.settings.getShiftTokens.useQuery();
+  const { data: customChannel } = trpc.settings.getCustomChannel.useQuery();
 
-  const fetchShiftSettings = async () => {
-    try {
-      const response = await axios.get("/api/shift-tokens");
-      if (response.data.success) {
-        const { eveningToken, nightToken, eveningMentions, nightMentions } = response.data.data;
-        setEveningToken(eveningToken);
-        setNightToken(nightToken);
-        setEveningMentions(eveningMentions);
-        setNightMentions(nightMentions);
-      }
-    } catch (error: unknown) {
-      console.error("Error fetching shift settings:", error);
-    }
-  };
-
-  const fetchSchedulerState = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get("/api/scheduler-state");
-      setScheduleEnabled(response.data.enabled);
-    } catch (error: unknown) {
-      console.error("Error fetching scheduler state:", error);
-      toast.error("Failed to load scheduler state");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleToggleSchedule = async () => {
-    const newValue = !scheduleEnabled;
-    const loadingToast = toast.loading(newValue ? "Enabling scheduler..." : "Disabling scheduler...");
-
-    try {
-      await axios.post("/api/scheduler-state", { enabled: newValue });
-      setScheduleEnabled(newValue);
-
-      toast.dismiss(loadingToast);
-
-      if (newValue) {
+  const setSchedulerStateMutation = trpc.scheduler.setState.useMutation({
+    onSuccess: (data) => {
+      setScheduleEnabled(data.enabled);
+      if (data.enabled) {
         confetti({
           particleCount: 100,
           spread: 70,
@@ -75,57 +38,85 @@ export function SchedulerPage() {
       } else {
         toast.success("Scheduler disabled");
       }
-    } catch (error: unknown) {
-      toast.dismiss(loadingToast);
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Failed to update scheduler: " + message);
-      console.error("Error updating scheduler state:", error);
-    }
-  };
+    },
+    onError: (error) => {
+      toast.error("Failed to update scheduler: " + error.message);
+    },
+  });
 
-  const fetchCustomChannelId = async () => {
+  const saveCustomChannelMutation = trpc.settings.setCustomChannel.useMutation({
+    onSuccess: () => {
+      toast.success("Custom channel ID saved successfully!");
+    },
+    onError: (error) => {
+      toast.error("Error saving channel ID: " + error.message);
+    },
+  });
+
+  const saveShiftSettingsMutation = trpc.settings.setShiftTokens.useMutation({
+    onSuccess: () => {
+      toast.success("Shift settings saved successfully!");
+    },
+    onError: (error) => {
+      toast.error("Error saving shift settings: " + error.message);
+    },
+  });
+
+  useEffect(() => {
+    if (schedulerState) {
+      setScheduleEnabled(schedulerState.enabled);
+      setLoading(false);
+    } else if (schedulerLoading === false) {
+      setLoading(false);
+    }
+  }, [schedulerState, schedulerLoading]);
+
+  useEffect(() => {
+    if (shiftSettings?.data) {
+      const { eveningToken, nightToken, eveningMentions, nightMentions } = shiftSettings.data;
+      setEveningToken(eveningToken);
+      setNightToken(nightToken);
+      setEveningMentions(eveningMentions);
+      setNightMentions(nightMentions);
+    }
+  }, [shiftSettings]);
+
+  useEffect(() => {
+    if (customChannel?.channelId) {
+      setCustomChannelId(customChannel.channelId);
+    }
+  }, [customChannel]);
+
+  const handleToggleSchedule = async () => {
+    const newValue = !scheduleEnabled;
+    const loadingToast = toast.loading(newValue ? "Enabling scheduler..." : "Disabling scheduler...");
     try {
-      const response = await axios.get("/api/custom-channel");
-      if (response.data.success && response.data.channelId) {
-        setCustomChannelId(response.data.channelId);
-      }
-    } catch (error: unknown) {
-      console.error("Error fetching custom channel ID:", error);
+      await setSchedulerStateMutation.mutateAsync({ enabled: newValue });
+    } finally {
+      toast.dismiss(loadingToast);
     }
   };
 
   const handleSaveCustomChannelId = async () => {
     const loadingToast = toast.loading("Saving custom channel ID...");
-
     try {
-      await axios.post("/api/custom-channel", { channelId: customChannelId });
-
+      await saveCustomChannelMutation.mutateAsync({ channelId: customChannelId });
+    } finally {
       toast.dismiss(loadingToast);
-      toast.success("Custom channel ID saved successfully!");
-    } catch (error: unknown) {
-      toast.dismiss(loadingToast);
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Error saving channel ID: " + message);
     }
   };
 
   const handleSaveShiftSettings = async () => {
     const loadingToast = toast.loading("Saving shift settings...");
-
     try {
-      await axios.post("/api/shift-tokens", {
+      await saveShiftSettingsMutation.mutateAsync({
         eveningToken,
         nightToken,
         eveningMentions,
-        nightMentions
+        nightMentions,
       });
-
+    } finally {
       toast.dismiss(loadingToast);
-      toast.success("Shift settings saved successfully!");
-    } catch (error: unknown) {
-      toast.dismiss(loadingToast);
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Error saving shift settings: " + message);
     }
   };
 
@@ -134,19 +125,23 @@ export function SchedulerPage() {
     const loadingToast = toast.loading("Scanning for handover messages and posting replies...");
 
     try {
-      const response = await axios.post("/api/scan-and-reply-handover");
+      const response = await fetch("/api/scan-and-reply-handover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await response.json();
 
       toast.dismiss(loadingToast);
 
-      if (response.data.replied) {
+      if (data.replied) {
         confetti({
           particleCount: 150,
           spread: 80,
           origin: { y: 0.5 },
         });
-        toast.success(`Reply posted successfully! (${response.data.ticketsCount} tickets)`);
+        toast.success(`Reply posted successfully! (${data.ticketsCount} tickets)`);
       } else {
-        toast.info(response.data.message || "No handover messages found that need replies");
+        toast.info(data.message || "No handover messages found that need replies");
       }
     } catch (error: unknown) {
       toast.dismiss(loadingToast);

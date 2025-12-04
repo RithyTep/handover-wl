@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { Clock, Play, CheckCircle2, XCircle } from "lucide-react";
@@ -13,6 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import { trpc } from "@/components/trpc-provider";
 
 interface SchedulerDialogProps {
   open: boolean;
@@ -22,38 +22,18 @@ interface SchedulerDialogProps {
 export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
   const [scheduleEnabled, setScheduleEnabled] = useState(false);
   const [triggering, setTriggering] = useState(false);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (open) {
-      fetchSchedulerState();
+  const { data: schedulerState, isLoading: loading } = trpc.scheduler.getState.useQuery(
+    undefined,
+    {
+      enabled: open,
     }
-  }, [open]);
+  );
 
-  const fetchSchedulerState = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get("/api/scheduler-state");
-      setScheduleEnabled(response.data.enabled);
-    } catch (error: unknown) {
-      console.error("Error fetching scheduler state:", error);
-      toast.error("Failed to load scheduler state");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleToggleSchedule = async () => {
-    const newValue = !scheduleEnabled;
-    const loadingToast = toast.loading(newValue ? "Enabling scheduler..." : "Disabling scheduler...");
-
-    try {
-      await axios.post("/api/scheduler-state", { enabled: newValue });
-      setScheduleEnabled(newValue);
-
-      toast.dismiss(loadingToast);
-
-      if (newValue) {
+  const setSchedulerStateMutation = trpc.scheduler.setState.useMutation({
+    onSuccess: (data) => {
+      setScheduleEnabled(data.enabled);
+      if (data.enabled) {
         confetti({
           particleCount: 100,
           spread: 70,
@@ -63,22 +43,14 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
       } else {
         toast.success("Scheduler disabled");
       }
-    } catch (error: unknown) {
-      toast.dismiss(loadingToast);
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Failed to update scheduler: " + message);
-      console.error("Error updating scheduler state:", error);
-    }
-  };
+    },
+    onError: (error) => {
+      toast.error("Failed to update scheduler: " + error.message);
+    },
+  });
 
-  const handleTestScheduler = async () => {
-    setTriggering(true);
-    const loadingToast = toast.loading("Triggering scheduler...");
-
-    try {
-      await axios.post("/api/trigger-schedule");
-
-      toast.dismiss(loadingToast);
+  const triggerScheduleMutation = trpc.scheduler.triggerSchedule.useMutation({
+    onSuccess: () => {
       confetti({
         particleCount: 200,
         spread: 100,
@@ -86,11 +58,35 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
         colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
       });
       toast.success("Scheduler triggered successfully! Check your Slack channel.");
-    } catch (error: unknown) {
-      toast.dismiss(loadingToast);
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Error triggering scheduler: " + message);
+    },
+    onError: (error) => {
+      toast.error("Error triggering scheduler: " + error.message);
+    },
+  });
+
+  useEffect(() => {
+    if (schedulerState) {
+      setScheduleEnabled(schedulerState.enabled);
+    }
+  }, [schedulerState]);
+
+  const handleToggleSchedule = async () => {
+    const newValue = !scheduleEnabled;
+    const loadingToast = toast.loading(newValue ? "Enabling scheduler..." : "Disabling scheduler...");
+    try {
+      await setSchedulerStateMutation.mutateAsync({ enabled: newValue });
     } finally {
+      toast.dismiss(loadingToast);
+    }
+  };
+
+  const handleTestScheduler = async () => {
+    setTriggering(true);
+    const loadingToast = toast.loading("Triggering scheduler...");
+    try {
+      await triggerScheduleMutation.mutateAsync();
+    } finally {
+      toast.dismiss(loadingToast);
       setTriggering(false);
     }
   };

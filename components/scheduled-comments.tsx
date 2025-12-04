@@ -24,22 +24,17 @@ import {
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Pencil, Trash2, Plus, Clock, CheckCircle2, MessageSquare, Ticket } from "lucide-react";
+import { trpc } from "@/components/trpc-provider";
+import { toast } from "sonner";
+import type { ScheduledComment as ScheduledCommentType } from "@/lib/types";
 
-interface ScheduledComment {
-  id: number;
-  comment_type: 'jira' | 'slack';
-  ticket_key?: string;
-  comment_text: string;
-  cron_schedule: string;
-  enabled: boolean;
+type ScheduledComment = Omit<ScheduledCommentType, 'created_at' | 'updated_at' | 'last_posted_at'> & {
   created_at?: string;
   updated_at?: string;
   last_posted_at?: string | null;
-}
+};
 
 export default function ScheduledComments() {
-  const [comments, setComments] = useState<ScheduledComment[]>([]);
-  const [loading, setLoading] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingComment, setEditingComment] = useState<ScheduledComment | null>(null);
 
@@ -49,21 +44,41 @@ export default function ScheduledComments() {
   const [cronSchedule, setCronSchedule] = useState("");
   const [enabled, setEnabled] = useState(true);
 
-  const fetchComments = async () => {
-    try {
-      const response = await fetch("/api/scheduled-comments");
-      const data = await response.json();
-      if (data.success) {
-        setComments(data.comments);
-      }
-    } catch (error) {
-      console.error("Error fetching scheduled comments:", error);
-    }
-  };
+  const { data: commentsData, refetch: refetchComments } = trpc.scheduledComments.getAll.useQuery();
+  const createMutation = trpc.scheduledComments.create.useMutation({
+    onSuccess: () => {
+      toast.success("Scheduled comment created");
+      refetchComments();
+      resetForm();
+    },
+    onError: (error) => {
+      toast.error("Error creating comment: " + error.message);
+    },
+  });
 
-  useEffect(() => {
-    fetchComments();
-  }, []);
+  const updateMutation = trpc.scheduledComments.update.useMutation({
+    onSuccess: () => {
+      toast.success("Scheduled comment updated");
+      refetchComments();
+      resetForm();
+    },
+    onError: (error) => {
+      toast.error("Error updating comment: " + error.message);
+    },
+  });
+
+  const deleteMutation = trpc.scheduledComments.delete.useMutation({
+    onSuccess: () => {
+      toast.success("Scheduled comment deleted");
+      refetchComments();
+    },
+    onError: (error) => {
+      toast.error("Error deleting comment: " + error.message);
+    },
+  });
+
+  const comments = commentsData?.comments || [];
+  const loading = createMutation.isPending || updateMutation.isPending || deleteMutation.isPending;
 
   const resetForm = () => {
     setCommentType('slack');
@@ -90,83 +105,51 @@ export default function ScheduledComments() {
   };
 
   const handleSave = async () => {
-    setLoading(true);
+    const finalCronSchedule = commentType === 'slack' ? '0 0 * * *' : cronSchedule;
 
-    try {
-      const finalCronSchedule = commentType === 'slack' ? '0 0 * * *' : cronSchedule;
-
-      if (editingComment) {
-        const response = await fetch("/api/scheduled-comments", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: editingComment.id,
-            comment_type: commentType,
-            ticket_key: commentType === 'jira' ? ticketKey : undefined,
-            comment_text: commentText,
-            cron_schedule: finalCronSchedule,
-            enabled,
-          }),
+    if (editingComment) {
+      try {
+        await updateMutation.mutateAsync({
+          id: editingComment.id,
+          comment_type: commentType,
+          ticket_key: commentType === 'jira' ? ticketKey : undefined,
+          comment_text: commentText,
+          cron_schedule: finalCronSchedule,
+          enabled,
         });
-
-        const data = await response.json();
-        if (data.success) {
-          await fetchComments();
-          setDialogOpen(false);
-          resetForm();
-        }
-      } else {
-        const response = await fetch("/api/scheduled-comments", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            comment_type: commentType,
-            ticket_key: commentType === 'jira' ? ticketKey : undefined,
-            comment_text: commentText,
-            cron_schedule: finalCronSchedule,
-            enabled,
-          }),
-        });
-
-        const data = await response.json();
-        if (data.success) {
-          await fetchComments();
-          setDialogOpen(false);
-          resetForm();
-        }
+        setDialogOpen(false);
+      } catch (error) {
+        // Error handled by mutation
       }
-    } catch (error) {
-      console.error("Error saving scheduled comment:", error);
-    } finally {
-      setLoading(false);
+    } else {
+      try {
+        await createMutation.mutateAsync({
+          comment_type: commentType,
+          ticket_key: commentType === 'jira' ? ticketKey : undefined,
+          comment_text: commentText,
+          cron_schedule: finalCronSchedule,
+          enabled,
+        });
+        setDialogOpen(false);
+      } catch (error) {
+        // Error handled by mutation
+      }
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Are you sure you want to delete this scheduled comment?")) {
-      return;
-    }
-
-    setLoading(true);
+    if (!confirm("Are you sure you want to delete this scheduled comment?")) return;
     try {
-      const response = await fetch(`/api/scheduled-comments?id=${id}`, {
-        method: "DELETE",
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        await fetchComments();
-      }
+      await deleteMutation.mutateAsync({ id });
     } catch (error) {
-      console.error("Error deleting scheduled comment:", error);
-    } finally {
-      setLoading(false);
+      // Error handled by mutation
     }
   };
 
-  const formatDate = (dateString?: string | null) => {
+  const formatDate = (dateString?: string | Date | null) => {
     if (!dateString) return "Never";
-    return new Date(dateString).toLocaleString("en-US", {
+    const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+    return date.toLocaleString("en-US", {
       month: "short",
       day: "numeric",
       hour: "2-digit",

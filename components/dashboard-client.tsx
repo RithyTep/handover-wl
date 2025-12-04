@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useMemo, useCallback, useEffect } from "react";
-import axios from "axios";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { DEFAULT_THEME } from "@/lib/constants";
 import {
   Save,
   Send,
@@ -36,70 +34,48 @@ import { CommandPalette } from "@/components/command-palette";
 import { NewYearScene } from "@/components/new-year-scene";
 import { ThemeSelector } from "@/components/theme-selector";
 import { ChristmasLoading } from "@/components/christmas-loading";
+import { trpc } from "@/components/trpc-provider";
+import { useThemeStore } from "@/lib/stores/theme-store";
 import Link from "next/link";
 import type { Theme } from "@/lib/types";
+import { DEFAULT_THEME } from "@/lib/constants";
 
 interface DashboardClientProps {
   initialTickets?: Ticket[];
 }
 
-// Get theme from localStorage or default
-const getStoredTheme = (): Theme => {
-  if (typeof window === "undefined") return DEFAULT_THEME;
-  const stored = localStorage.getItem("theme_preference");
-  return (stored === "default" || stored === "christmas") ? stored : DEFAULT_THEME;
-};
-
 export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
   const [tickets, setTickets] = useState<Ticket[]>(initialTickets || []);
   const [ticketsLoading, setTicketsLoading] = useState(!initialTickets);
-  const [theme, setTheme] = useState<Theme>(() => getStoredTheme());
 
-  // Fetch tickets from API on mount (client-side)
+  // Get theme from Zustand store
+  const selectedTheme = useThemeStore((state) => state.selectedTheme);
+  const theme: Theme = selectedTheme || DEFAULT_THEME;
+
+  // Fetch tickets using tRPC
+  const { data: ticketsData, isLoading: ticketsQueryLoading, refetch: refetchTickets } = trpc.tickets.getAll.useQuery(
+    undefined,
+    {
+      enabled: !initialTickets || initialTickets.length === 0,
+    }
+  );
+
   useEffect(() => {
-    const fetchTickets = async () => {
-      if (initialTickets && initialTickets.length > 0) {
-        // Already have initial tickets, skip fetch
-        return;
-      }
+    if (ticketsData?.tickets) {
+      setTickets(ticketsData.tickets);
+    }
+  }, [ticketsData]);
 
-      setTicketsLoading(true);
-      try {
-        const response = await axios.get("/api/tickets");
-        if (response.data.success && response.data.tickets) {
-          setTickets(response.data.tickets);
-        }
-      } catch (error) {
-        console.error("[Tickets] Error fetching tickets:", error);
+  useEffect(() => {
+    if (initialTickets && initialTickets.length > 0) {
+      setTicketsLoading(false);
+    } else {
+      setTicketsLoading(ticketsQueryLoading);
+      if (ticketsQueryLoading === false && !ticketsData) {
         toast.error("Failed to load tickets");
-      } finally {
-        setTicketsLoading(false);
       }
-    };
-    fetchTickets();
-  }, [initialTickets]);
-
-  // Sync theme from database on mount (background sync)
-  useEffect(() => {
-    const syncThemeFromDB = async () => {
-      try {
-        const response = await axios.get("/api/theme");
-        if (response.data.success && response.data.theme) {
-          const dbTheme = response.data.theme as Theme;
-          // Only update if different from localStorage
-          const localTheme = getStoredTheme();
-          if (dbTheme !== localTheme) {
-            localStorage.setItem("theme_preference", dbTheme);
-            setTheme(dbTheme);
-          }
-        }
-      } catch (error) {
-        console.error("[Theme] Error syncing from DB:", error);
-        // Continue with localStorage theme
-      }
-    };
-    syncThemeFromDB();
-  }, []);
+    }
+  }, [initialTickets, ticketsQueryLoading, ticketsData]);
 
   // Apply theme class to body immediately
   useEffect(() => {
@@ -180,19 +156,42 @@ export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
     toast.success("All fields have been cleared");
   };
 
+  const saveMutation = trpc.ticketData.save.useMutation({
+    onSuccess: () => {
+      celebrate();
+      toast.success("Your changes have been saved");
+    },
+    onError: (error) => {
+      const message = error.message || "Unknown error";
+      toast.error("Error saving: " + message);
+    },
+  });
+
   const handleSave = async () => {
     const loadingToast = toast.loading("Saving...");
     try {
-      await axios.post("/api/save", ticketData);
+      await saveMutation.mutateAsync(ticketData);
       toast.dismiss(loadingToast);
-      celebrate();
-      toast.success("Your changes have been saved");
-    } catch (error: unknown) {
+    } catch (error) {
       toast.dismiss(loadingToast);
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Error saving: " + message);
     }
   };
+
+  const sendSlackMutation = trpc.slack.send.useMutation({
+    onSuccess: () => {
+      confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { y: 0.5 },
+        colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
+      });
+      toast.success("Successfully sent to Slack");
+    },
+    onError: (error) => {
+      const message = error.message || "Unknown error";
+      toast.error("Error: " + message);
+    },
+  });
 
   const handleSendSlack = async () => {
     setSendSlackDialog(false);
@@ -206,30 +205,21 @@ export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
           status: ticket.status,
           assignee: ticket.assignee,
           created: ticket.created,
-          dueDate: ticket.dueDate,
+          dueDate: ticket.dueDate ?? undefined,
           wlMainTicketType: ticket.wlMainTicketType,
           wlSubTicketType: ticket.wlSubTicketType,
           customerLevel: ticket.customerLevel,
         };
       });
 
-      await axios.post("/api/send-slack", {
+      await sendSlackMutation.mutateAsync({
         ticketData,
         ticketDetails,
       });
 
       toast.dismiss(loadingToast);
-      confetti({
-        particleCount: 200,
-        spread: 100,
-        origin: { y: 0.5 },
-        colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
-      });
-      toast.success("Successfully sent to Slack");
-    } catch (error: unknown) {
+    } catch (error) {
       toast.dismiss(loadingToast);
-      const message = error instanceof Error ? error.message : "Unknown error";
-      toast.error("Error: " + message);
     }
   };
 
@@ -279,6 +269,8 @@ export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
     }
   };
 
+  const aiAutofillMutation = trpc.ai.autofill.useMutation();
+
   const handleAIFillAll = async () => {
     const missingTickets = tickets.filter((ticket) => {
       const status = ticketData[`status-${ticket.key}`];
@@ -312,8 +304,13 @@ export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
 
         const batchResults = await Promise.allSettled(
           batch.map(async (ticket) => {
-            const response = await axios.post("/api/ai-autofill", { ticket });
-            return { ticket, suggestion: response.data.suggestion };
+            const result = await aiAutofillMutation.mutateAsync({
+              ticket: {
+                ...ticket,
+                dueDate: ticket.dueDate ?? undefined,
+              }
+            });
+            return { ticket, suggestion: result.suggestion };
           })
         );
 
@@ -391,11 +388,11 @@ export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
         onCopy={handleCopyForSlack}
         onRefresh={() => {
           setTicketsLoading(true);
-          axios.get("/api/tickets").then(response => {
-            if (response.data.success && response.data.tickets) {
-              setTickets(response.data.tickets);
+          refetchTickets().then((result) => {
+            if (result.data?.tickets) {
+              setTickets(result.data.tickets);
             }
-          }).catch(error => {
+          }).catch((error) => {
             console.error("[Tickets] Error refreshing:", error);
             toast.error("Failed to refresh tickets");
           }).finally(() => {
@@ -437,7 +434,7 @@ export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
             </span>
           </div>
           <div className="flex items-center gap-1">
-            <ThemeSelector currentTheme={theme} onThemeChange={setTheme} variant={theme} />
+            <ThemeSelector variant={theme} />
             <Link href="/feedback">
               <Button variant="ghost" size="sm" className={theme === "christmas" ? "text-white/70 hover:text-white hover:bg-white/10" : ""}>
                 <MessageSquare className="w-4 h-4 mr-1.5" />
@@ -498,7 +495,19 @@ export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => window.location.reload()}
+                  onClick={() => {
+                    setTicketsLoading(true);
+                    refetchTickets().then((result) => {
+                      if (result.data?.tickets) {
+                        setTickets(result.data.tickets);
+                      }
+                    }).catch((error) => {
+                      console.error("[Tickets] Error refreshing:", error);
+                      toast.error("Failed to refresh tickets");
+                    }).finally(() => {
+                      setTicketsLoading(false);
+                    });
+                  }}
                   className={`h-9 px-4 text-purple-100 bg-purple-900/50 hover:bg-purple-900/70 border border-purple-500/30 ${theme === "christmas" ? "snow-btn" : ""}`}
                   title="Refresh"
                 >
