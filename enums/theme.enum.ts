@@ -3,4 +3,5 @@ export enum Theme {
   CHRISTMAS = "christmas",
   PIXEL = "pixel",
   LUNAR = "lunar",
+  CODING = "coding",
 }

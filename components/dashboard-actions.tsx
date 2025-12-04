@@ -11,6 +11,7 @@ import {
   Snowflake,
   Gamepad2,
   Sparkles,
+  Bug,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -147,6 +148,60 @@ export function DashboardActions({
       ];
     }
 
+    if (theme === Theme.CODING) {
+      return [
+        {
+          id: "ai-fill",
+          label: "Debug",
+          icon: Bug,
+          onClick: onAIFillAll,
+          className: "coding-btn-primary font-mono",
+        },
+        {
+          id: "quick-fill",
+          label: "Fill",
+          icon: Zap,
+          onClick: () => onQuickFill("Pending", "Will check tomorrow"),
+          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+        },
+        {
+          id: "clear",
+          label: "Clear",
+          icon: Trash2,
+          onClick: onClear,
+          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+        },
+        {
+          id: "refresh",
+          label: "Sync",
+          icon: RefreshCw,
+          onClick: onRefresh,
+          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+        },
+        {
+          id: "copy",
+          label: "Copy",
+          icon: Copy,
+          onClick: onCopy,
+          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+        },
+        {
+          id: "save",
+          label: "Save",
+          icon: Save,
+          onClick: onSave,
+          className: "text-green-400 bg-black hover:bg-green-900/30 border border-green-900 font-mono",
+        },
+        {
+          id: "send",
+          label: "Deploy",
+          icon: Send,
+          onClick: onSendSlack,
+          className: "text-black bg-green-500 hover:bg-green-400 border border-green-400 font-mono font-bold",
+        },
+      ];
+    }
+
     // Default/Christmas theme actions
     return [
       {
@@ -223,9 +278,12 @@ export function DashboardActions({
             <action.icon className="w-3.5 h-3.5 mr-1.5" />
             <span>{action.label}</span>
           </Button>
-          {/* Divider after Refresh button for Pixel theme */}
+          {/* Divider after Refresh button for Pixel/Coding theme */}
           {theme === Theme.PIXEL && action.id === "refresh" && (
             <div className="h-6 w-0.5 bg-slate-800 mx-1" />
+          )}
+          {theme === Theme.CODING && action.id === "refresh" && (
+            <div className="h-6 w-px bg-green-900 mx-1" />
           )}
         </Fragment>
       ))}

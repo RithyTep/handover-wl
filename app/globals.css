@@ -209,6 +209,67 @@
     background: rgba(251, 191, 36, 0.2);
   }
 
+  /* Coding theme styles */
+  body.theme-coding {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    background-color: #0a0a0a;
+    color: #00ff00;
+  }
+
+  /* Coding theme - ticket link color */
+  body.theme-coding a[href*="jira"],
+  body.theme-coding a[href*="atlassian"] {
+    color: #00ff00;
+    text-decoration: underline;
+  }
+
+  body.theme-coding a[href*="jira"]:hover,
+  body.theme-coding a[href*="atlassian"]:hover {
+    color: #00ff88;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.5);
+  }
+
+  /* Coding theme - table input styles */
+  body.theme-coding input[type="text"],
+  body.theme-coding input:not([type]) {
+    background-color: #0a0a0a !important;
+    border: 1px solid #00ff00 !important;
+    color: #00ff00 !important;
+    border-radius: 0 !important;
+    font-family: 'JetBrains Mono', monospace !important;
+  }
+
+  body.theme-coding input[type="text"]::placeholder,
+  body.theme-coding input:not([type])::placeholder {
+    color: #006600 !important;
+  }
+
+  body.theme-coding input[type="text"]:focus,
+  body.theme-coding input:not([type]):focus {
+    border-color: #ff0000 !important;
+    outline: none !important;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.3) !important;
+  }
+
+  /* Coding theme - custom scrollbar */
+  body.theme-coding ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  body.theme-coding ::-webkit-scrollbar-track {
+    background: #0a0a0a;
+  }
+
+  body.theme-coding ::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border: 2px solid #0a0a0a;
+  }
+
+  body.theme-coding ::-webkit-scrollbar-thumb:hover {
+    background: #00ff88;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -815,5 +876,158 @@
 
   .lunar-hongbao {
     animation: hongbao-float 4s ease-in-out infinite, hongbao-glow 3s ease-in-out infinite;
+  }
+
+  /* Coding theme utilities */
+  .coding-bg {
+    background-color: #0a0a0a;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    position: relative;
+  }
+
+  .coding-scanlines {
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 0, 0, 0.1) 0px,
+      rgba(0, 0, 0, 0.1) 1px,
+      transparent 1px,
+      transparent 2px
+    );
+    pointer-events: none;
+    z-index: 100;
+  }
+
+  .coding-card {
+    background-color: rgba(0, 255, 0, 0.03);
+    border: 1px solid #00ff00;
+    border-radius: 0;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.1), inset 0 0 20px rgba(0, 255, 0, 0.02);
+  }
+
+  .coding-badge {
+    @apply text-xs font-mono px-2 py-0.5;
+    background-color: #ff0000;
+    color: #ffffff;
+    border: none;
+    animation: error-blink 1s ease-in-out infinite;
+  }
+
+  .coding-btn-primary {
+    background-color: transparent;
+    color: #ff0000;
+    border: 1px solid #ff0000;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .coding-btn-primary:hover {
+    background-color: #ff0000;
+    color: #0a0a0a;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+  }
+
+  .coding-table-header {
+    @apply text-xs uppercase tracking-wider font-mono;
+    color: #00ff00;
+    background-color: rgba(0, 255, 0, 0.05);
+    border-bottom: 1px solid #00ff00;
+  }
+
+  .coding-table-row {
+    @apply transition-colors;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+  }
+
+  .coding-table-row:hover {
+    background-color: rgba(0, 255, 0, 0.05);
+  }
+
+  .coding-table-cell {
+    @apply py-3 px-4 font-mono text-sm;
+    color: #00ff00;
+  }
+
+  /* Error blink animation */
+  @keyframes error-blink {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+
+  /* Matrix rain animation */
+  @keyframes matrix-fall {
+    0% {
+      transform: translateY(-100%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh);
+      opacity: 0;
+    }
+  }
+
+  .coding-matrix-char {
+    position: absolute;
+    color: #00ff00;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    opacity: 0.7;
+    animation: matrix-fall linear infinite;
+    text-shadow: 0 0 5px #00ff00;
+  }
+
+  /* Glitch effect */
+  @keyframes glitch {
+    0% {
+      text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+    }
+    25% {
+      text-shadow: -2px 0 #ff0000, 2px 0 #00ffff;
+    }
+    50% {
+      text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+    }
+    75% {
+      text-shadow: -2px 0 #ff0000, 2px 0 #00ffff;
+    }
+    100% {
+      text-shadow: 2px 0 #ff0000, -2px 0 #00ffff;
+    }
+  }
+
+  .coding-glitch {
+    animation: glitch 0.3s ease-in-out infinite;
+  }
+
+  /* 404 Error style */
+  .coding-error-text {
+    color: #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Cursor blink */
+  @keyframes cursor-blink {
+    0%, 50% {
+      opacity: 1;
+    }
+    51%, 100% {
+      opacity: 0;
+    }
+  }
+
+  .coding-cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.2em;
+    background-color: #00ff00;
+    margin-left: 2px;
+    animation: cursor-blink 1s step-end infinite;
   }
 }

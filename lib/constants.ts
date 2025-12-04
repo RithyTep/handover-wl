@@ -26,6 +26,12 @@ export const THEMES: ThemeInfo[] = [
     description: "Festive Lunar New Year theme with red and gold accents",
     icon: "🧧",
   },
+  {
+    id: Theme.CODING,
+    name: "Coding",
+    description: "Hacker-style terminal theme with 404 error aesthetics",
+    icon: "💻",
+  },
 ];
 
 export const DEFAULT_THEME: Theme = Theme.CHRISTMAS;

@@ -1,6 +1,6 @@
 "use client";
 
-import { Save, Send, Zap, Trash2, Snowflake, Sparkles } from "lucide-react";
+import { Save, Send, Zap, Trash2, Snowflake, Sparkles, Bug } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Theme } from "@/enums/theme.enum";
 
@@ -62,6 +62,46 @@ export function DashboardMobileActions({
       ];
     }
 
+    if (theme === Theme.CODING) {
+      return [
+        {
+          id: "ai-fill",
+          icon: Bug,
+          onClick: onAIFillAll,
+          className: "coding-btn-primary active:opacity-80",
+          iconColor: "text-black",
+        },
+        {
+          id: "quick-fill",
+          icon: Zap,
+          onClick: onQuickFill,
+          className: "bg-black border border-green-900 active:bg-green-900/30",
+          iconColor: "text-green-400",
+        },
+        {
+          id: "clear",
+          icon: Trash2,
+          onClick: onClear,
+          className: "bg-black border border-green-900 active:bg-green-900/30",
+          iconColor: "text-green-400",
+        },
+        {
+          id: "save",
+          icon: Save,
+          onClick: onSave,
+          className: "bg-black border border-green-900 active:bg-green-900/30",
+          iconColor: "text-green-400",
+        },
+        {
+          id: "send",
+          icon: Send,
+          onClick: onSendSlack,
+          className: "bg-green-500 border border-green-400 active:bg-green-400",
+          iconColor: "text-black",
+        },
+      ];
+    }
+
     // Default/Christmas theme actions
     return [
       {
@@ -109,6 +149,8 @@ export function DashboardMobileActions({
       "fixed bottom-0 left-0 right-0 backdrop-blur-sm border-t px-2 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:hidden z-50",
       theme === Theme.LUNAR
         ? "bg-stone-900/95 border-stone-800"
+        : theme === Theme.CODING
+        ? "bg-black/95 border-green-900/50"
         : "bg-background/95 border-border"
     )}>
       <div className="flex items-center justify-around">
