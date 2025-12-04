@@ -1,24 +1,5 @@
-import { Pool, PoolClient } from "pg";
 import { Theme } from "@/enums/theme.enum";
-
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
-});
-
-type QueryFn<T> = (client: PoolClient) => Promise<T>;
-
-async function withClient<T>(fn: QueryFn<T>): Promise<T> {
-  const client = await pool.connect();
-  try {
-    return await fn(client);
-  } catch (error) {
-    console.error("[ThemeRepository]", error);
-    throw error;
-  } finally {
-    client.release();
-  }
-}
+import { withClient } from "./database.repository";
 
 export class ThemeRepository {
   async getThemePreference(): Promise<Theme> {
@@ -35,7 +16,7 @@ export class ThemeRepository {
         return value as Theme;
       }
       return Theme.CHRISTMAS;
-    });
+    }, Theme.CHRISTMAS);
   }
 
   async setThemePreference(theme: Theme): Promise<void> {
@@ -45,6 +26,6 @@ export class ThemeRepository {
          ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = CURRENT_TIMESTAMP`,
         ["theme_preference", theme]
       );
-    });
+    }, undefined);
   }
 }
