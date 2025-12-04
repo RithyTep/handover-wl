@@ -245,7 +245,7 @@ export const createColumns = ({
     cell: ({ row }) => (
       <SimpleInput
         ticketKey={`status-${row.original.key}-${renderKey}`}
-        defaultValue={row.original.savedStatus}
+        defaultValue={ticketData[`status-${row.original.key}`] ?? row.original.savedStatus}
         placeholder="Enter status..."
         onChange={(value) => updateTicketData(`status-${row.original.key}`, value)}
       />
@@ -258,7 +258,7 @@ export const createColumns = ({
     cell: ({ row }) => (
       <SimpleInput
         ticketKey={`action-${row.original.key}-${renderKey}`}
-        defaultValue={row.original.savedAction}
+        defaultValue={ticketData[`action-${row.original.key}`] ?? row.original.savedAction}
         placeholder="Enter action..."
         onChange={(value) => updateTicketData(`action-${row.original.key}`, value)}
       />

@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { trpc } from "@/components/trpc-provider";
@@ -11,6 +11,26 @@ interface UseTicketActionsProps {
 export function useTicketActions({ tickets }: UseTicketActionsProps) {
   const [ticketData, setTicketData] = useState<Record<string, string>>({});
   const [renderKey, setRenderKey] = useState(0);
+  const initializedRef = useRef(false);
+
+  // Initialize ticketData with saved values from tickets on mount
+  useEffect(() => {
+    if (tickets.length > 0 && !initializedRef.current) {
+      const initialData: Record<string, string> = {};
+      tickets.forEach((ticket) => {
+        if (ticket.savedStatus && ticket.savedStatus !== "--") {
+          initialData[`status-${ticket.key}`] = ticket.savedStatus;
+        }
+        if (ticket.savedAction && ticket.savedAction !== "--") {
+          initialData[`action-${ticket.key}`] = ticket.savedAction;
+        }
+      });
+      if (Object.keys(initialData).length > 0) {
+        setTicketData(initialData);
+      }
+      initializedRef.current = true;
+    }
+  }, [tickets]);
 
   const saveMutation = trpc.ticketData.save.useMutation({
     onSuccess: () => {
