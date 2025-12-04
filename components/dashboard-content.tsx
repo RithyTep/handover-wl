@@ -43,7 +43,7 @@ export function DashboardContent({
   );
 
   return (
-    <main className="flex-1 overflow-hidden px-4 sm:px-6 py-4 sm:py-4 pb-20 sm:pb-4">
+    <main className={`flex-1 overflow-hidden px-4 sm:px-6 py-9 sm:py-4 pb-20 sm:pb-4 ${theme === Theme.PIXEL ? "pb-12" : ""}`}>
       <TicketsTable
         columns={columns}
         data={tickets}

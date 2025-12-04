@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { ChristmasLoading } from "@/components/christmas-loading";
@@ -19,7 +19,13 @@ interface DashboardClientProps {
 export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
   const { tickets, isLoading, refetch } = useTickets({ initialTickets });
   const selectedTheme = useThemeStore((state) => state.selectedTheme);
+  const loadFromLocalStorage = useThemeStore((state) => state.loadFromLocalStorage);
   const theme: Theme = selectedTheme ?? DEFAULT_THEME;
+
+  // Load theme from localStorage on mount
+  useEffect(() => {
+    loadFromLocalStorage();
+  }, [loadFromLocalStorage]);
 
   const {
     ticketData,

@@ -14,6 +14,12 @@ export const THEMES: ThemeInfo[] = [
     description: "Festive holiday theme with snow and decorations",
     icon: "🎄",
   },
+  {
+    id: Theme.PIXEL,
+    name: "Pixel",
+    description: "Retro pixel-art inspired theme with sharp edges",
+    icon: "🎮",
+  },
 ];
 
 export const DEFAULT_THEME: Theme = Theme.CHRISTMAS;

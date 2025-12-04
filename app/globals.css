@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Gochi+Hand&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -88,6 +89,67 @@
     cursor: url('/cursors/christmas-pointer.png'), pointer !important;
   }
 
+  /* Pixel theme styles */
+  body.theme-pixel {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: #020617;
+    color: #e2e8f0;
+    background-image: radial-gradient(#1e293b 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+
+  /* Pixel theme - ticket link color */
+  body.theme-pixel a[href*="jira"],
+  body.theme-pixel a[href*="atlassian"] {
+    color: #818cf8;
+  }
+
+  body.theme-pixel a[href*="jira"]:hover,
+  body.theme-pixel a[href*="atlassian"]:hover {
+    color: #a5b4fc;
+  }
+
+  /* Pixel theme - table input styles */
+  body.theme-pixel input[type="text"],
+  body.theme-pixel input:not([type]) {
+    background-color: #020617 !important;
+    border: 2px solid #334155 !important;
+    color: #cbd5e1 !important;
+    border-radius: 0 !important;
+  }
+
+  body.theme-pixel input[type="text"]::placeholder,
+  body.theme-pixel input:not([type])::placeholder {
+    color: #475569 !important;
+  }
+
+  body.theme-pixel input[type="text"]:focus,
+  body.theme-pixel input:not([type]):focus {
+    border-color: #6366f1 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    ring: none !important;
+  }
+
+  /* Pixel theme - custom scrollbar */
+  body.theme-pixel ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  body.theme-pixel ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+
+  body.theme-pixel ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border: 2px solid #0f172a;
+  }
+
+  body.theme-pixel ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -114,6 +176,70 @@
 }
 
 @layer utilities {
+  /* Pixel theme utilities */
+  .pixel-bg {
+    background-color: #020617;
+    background-image: radial-gradient(#1e293b 1px, transparent 1px);
+    background-size: 24px 24px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .pixel-shadow {
+    box-shadow: 4px 4px 0px 0px rgba(30, 41, 59, 1);
+  }
+
+  .pixel-shadow-sm {
+    box-shadow: 2px 2px 0px 0px rgba(30, 41, 59, 1);
+  }
+
+  .pixel-shadow-accent {
+    box-shadow: 4px 4px 0px 0px #4f46e5;
+  }
+
+  .pixel-border {
+    border-width: 2px;
+    border-style: solid;
+  }
+
+  .pixel-btn {
+    @apply px-4 py-2 border-2 font-medium transition-all;
+    box-shadow: 4px 4px 0px 0px rgba(30, 41, 59, 1);
+  }
+
+  .pixel-btn:hover {
+    @apply translate-x-0.5 translate-y-0.5;
+    box-shadow: 2px 2px 0px 0px rgba(30, 41, 59, 1);
+  }
+
+  .pixel-btn:active {
+    @apply translate-x-1 translate-y-1;
+    box-shadow: none;
+  }
+
+  .pixel-input {
+    @apply w-full bg-slate-950 border-2 border-slate-700 p-2 text-xs text-slate-300 placeholder-slate-600;
+  }
+
+  .pixel-input:focus {
+    @apply border-indigo-500 outline-none;
+  }
+
+  .pixel-table-header {
+    @apply bg-slate-950 text-slate-400 text-xs uppercase tracking-wider;
+  }
+
+  .pixel-table-row {
+    @apply hover:bg-slate-800/50 transition-colors;
+  }
+
+  .pixel-table-cell {
+    @apply p-4 border-r-2 border-slate-800;
+  }
+
+  .pixel-avatar {
+    @apply w-6 h-6 rounded-none border flex items-center justify-center text-[10px] font-bold;
+  }
+
   .christmas-bg {
     background: linear-gradient(to bottom, #20202c 0%, #515175 100%);
     position: relative;

@@ -9,6 +9,7 @@ import { CommandPalette } from "@/components/command-palette";
 import { QuickFillDialog } from "./quick-fill-dialog";
 import { ClearDialog } from "./clear-dialog";
 import { SendSlackDialog } from "./send-slack-dialog";
+import { PixelStatusBar } from "@/components/pixel-status-bar";
 import { cn } from "@/lib/utils";
 import { Theme } from "@/enums/theme.enum";
 import type { Ticket } from "@/interfaces/ticket.interface";
@@ -55,7 +56,7 @@ export function DashboardLayout({
   onSendSlackOpenChange,
 }: DashboardLayoutProps) {
   useEffect(() => {
-    document.body.classList.remove("theme-christmas", "theme-default");
+    document.body.classList.remove("theme-christmas", "theme-default", "theme-pixel");
     document.body.classList.add(`theme-${theme}`);
   }, [theme]);
 
@@ -73,10 +74,15 @@ export function DashboardLayout({
       <div
         className={cn(
           "h-dvh flex flex-col overflow-hidden relative",
-          theme === Theme.CHRISTMAS ? "christmas-bg" : "bg-background"
+          theme === Theme.CHRISTMAS
+            ? "christmas-bg"
+            : theme === Theme.PIXEL
+            ? "pixel-bg p-6"
+            : "bg-background"
         )}
       >
         {theme === Theme.CHRISTMAS && <NewYearScene />}
+        {theme === Theme.PIXEL && <PixelStatusBar />}
         <DashboardHeader theme={theme} ticketCount={tickets.length} />
         <DashboardContent
           tickets={tickets}

@@ -209,7 +209,13 @@ export function TicketsTable<TData, TValue>({
           variant="ghost"
           size="sm"
           onClick={toggleDetails}
-          className={`h-9 px-3 border ${theme === "christmas" ? "text-white/80 hover:text-white hover:bg-white/10 border-white/20" : "text-foreground hover:bg-muted border-border"}`}
+          className={`h-9 px-3 border ${
+            theme === Theme.CHRISTMAS
+              ? "text-white/80 hover:text-white hover:bg-white/10 border-white/20"
+              : theme === Theme.PIXEL
+              ? "bg-slate-900 border-2 border-slate-700 hover:border-indigo-500 hover:text-indigo-400 pixel-shadow"
+              : "text-foreground hover:bg-muted border-border"
+          }`}
           title={showDetails ? "Hide Details" : "Show Details"}
         >
           {showDetails ? <ChevronDown className="w-4 h-4 mr-1.5" /> : <ChevronRight className="w-4 h-4 mr-1.5" />}
@@ -309,17 +315,39 @@ export function TicketsTable<TData, TValue>({
         </div>
       </div>
 
-      <div className="border border-white/20 rounded-md overflow-hidden hidden sm:flex sm:flex-col shadow-xl">
+      <div className={`overflow-hidden hidden sm:flex sm:flex-col ${
+        theme === Theme.PIXEL
+          ? "border-2 border-slate-700 bg-slate-900/50 backdrop-blur-sm pixel-shadow"
+          : "border border-white/20 rounded-md shadow-xl"
+      }`}>
         <div className="overflow-auto">
           <Table className="min-w-full md:min-w-[1400px]">
-            <TableHeader className={`sticky top-0 z-10 backdrop-blur-md ${theme === Theme.CHRISTMAS ? "bg-black/40" : "bg-background"}`}>
+            <TableHeader className={`sticky top-0 z-10 ${
+              theme === Theme.CHRISTMAS
+                ? "bg-black/40 backdrop-blur-md"
+                : theme === Theme.PIXEL
+                ? "bg-slate-950"
+                : "bg-background backdrop-blur-md"
+            }`}>
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className={`border-b hover:bg-transparent ${theme === Theme.CHRISTMAS ? "border-white/10" : "border-border"}`}>
+                <TableRow key={headerGroup.id} className={`hover:bg-transparent ${
+                  theme === Theme.CHRISTMAS
+                    ? "border-b border-white/10"
+                    : theme === Theme.PIXEL
+                    ? "border-b-2 border-slate-700"
+                    : "border-b border-border"
+                }`}>
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead
                         key={header.id}
-                        className={`h-10 px-3 text-xs font-bold uppercase tracking-wide border-r last:border-r-0 ${theme === Theme.CHRISTMAS ? "text-white/90 border-white/10" : "text-foreground border-border"}`}
+                        className={`h-10 px-3 text-xs font-bold uppercase tracking-wide ${
+                          theme === Theme.CHRISTMAS
+                            ? "text-white/90 border-r border-white/10 last:border-r-0"
+                            : theme === Theme.PIXEL
+                            ? "text-slate-400 border-r-2 border-slate-800 last:border-r-0"
+                            : "text-foreground border-r border-border last:border-r-0"
+                        }`}
                         style={{
                           width: header.getSize() !== 150 ? header.getSize() : undefined,
                         }}
@@ -336,7 +364,7 @@ export function TicketsTable<TData, TValue>({
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody>
+            <TableBody className={theme === Theme.PIXEL ? "text-sm divide-y-2 divide-slate-800" : ""}>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => {
                   let rowClass = "";
@@ -350,12 +378,24 @@ export function TicketsTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className={`border-b transition-colors duration-150 ${theme === Theme.CHRISTMAS ? `border-white/10 ${rowClass} hover:brightness-110` : "border-border hover:bg-muted/50"}`}
+                    className={`transition-colors duration-150 ${
+                      theme === Theme.CHRISTMAS
+                        ? `border-b border-white/10 ${rowClass} hover:brightness-110`
+                        : theme === Theme.PIXEL
+                        ? "hover:bg-slate-800/50"
+                        : "border-b border-border hover:bg-muted/50"
+                    }`}
                   >
                     {row.getVisibleCells().map((cell, cellIndex) => (
                       <TableCell
                         key={cell.id}
-                        className={`px-3 py-2 border-r last:border-r-0 ${theme === Theme.CHRISTMAS ? `border-white/10 ${cellIndex === 0 ? 'candy-cane-border' : ''}` : "border-border"}`}
+                        className={`px-3 py-2 ${
+                          theme === Theme.CHRISTMAS
+                            ? `border-r border-white/10 last:border-r-0 ${cellIndex === 0 ? 'candy-cane-border' : ''}`
+                            : theme === Theme.PIXEL
+                            ? "border-r-2 border-slate-800 last:border-r-0"
+                            : "border-r border-border last:border-r-0"
+                        }`}
                         style={{
                           width: cell.column.getSize() !== 150 ? cell.column.getSize() : undefined,
                         }}

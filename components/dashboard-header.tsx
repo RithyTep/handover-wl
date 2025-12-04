@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, FileText, Command } from "lucide-react";
+import { MessageSquare, FileText, Command, Gamepad2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "@/components/theme/theme-selector.component";
 import Link from "next/link";
@@ -19,6 +19,8 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
         "h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b z-10",
         theme === Theme.CHRISTMAS
           ? "border-white/20 bg-black/20 backdrop-blur-sm"
+          : theme === Theme.PIXEL
+          ? "border-b-2 border-slate-800 bg-transparent pb-6"
           : "border-border bg-background/95 backdrop-blur-sm"
       )}
     >
@@ -29,14 +31,19 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
               "text-2xl flex items-center gap-2",
               theme === Theme.CHRISTMAS
                 ? "text-white christmas-header-text"
+                : theme === Theme.PIXEL
+                ? "text-white tracking-tight"
                 : "text-foreground"
             )}
           >
             {theme === Theme.CHRISTMAS && <span className="text-2xl">🎄</span>}
+            {theme === Theme.PIXEL && <Gamepad2 className="w-8 h-8 text-indigo-400" />}
             <span
               className={cn(
                 theme === Theme.CHRISTMAS
                   ? "font-script christmas-title-gradient"
+                  : theme === Theme.PIXEL
+                  ? "font-bold"
                   : "font-semibold"
               )}
             >
@@ -46,10 +53,12 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
         </div>
         <span
           className={cn(
-            "text-xs font-medium px-2 py-0.5 rounded-full",
+            "text-xs font-bold px-2 py-0.5",
             theme === Theme.CHRISTMAS
-              ? "text-white/80 bg-white/10"
-              : "text-muted-foreground bg-muted"
+              ? "text-white/80 bg-white/10 rounded-full"
+              : theme === Theme.PIXEL
+              ? "bg-indigo-500 text-black pixel-shadow-sm border-2 border-black/20"
+              : "text-muted-foreground bg-muted rounded-full"
           )}
         >
           {ticketCount}
@@ -62,8 +71,11 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
             variant="ghost"
             size="sm"
             className={cn(
-              theme === Theme.CHRISTMAS &&
-                "text-white/70 hover:text-white hover:bg-white/10"
+              theme === Theme.CHRISTMAS
+                ? "text-white/70 hover:text-white hover:bg-white/10"
+                : theme === Theme.PIXEL
+                ? "text-slate-300 hover:text-indigo-400 transition-colors"
+                : ""
             )}
           >
             <MessageSquare className="w-4 h-4 mr-1.5" />
@@ -75,8 +87,11 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
             variant="ghost"
             size="sm"
             className={cn(
-              theme === Theme.CHRISTMAS &&
-                "text-white/70 hover:text-white hover:bg-white/10"
+              theme === Theme.CHRISTMAS
+                ? "text-white/70 hover:text-white hover:bg-white/10"
+                : theme === Theme.PIXEL
+                ? "text-slate-300 hover:text-indigo-400 transition-colors"
+                : ""
             )}
           >
             <FileText className="w-4 h-4 mr-1.5" />
@@ -85,10 +100,12 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
         </Link>
         <kbd
           className={cn(
-            "hidden sm:flex items-center gap-1 px-2 py-1 text-xs rounded",
+            "hidden sm:flex items-center gap-1 px-2 py-1 text-xs",
             theme === Theme.CHRISTMAS
-              ? "text-white/70 bg-white/10 border border-white/20"
-              : "bg-muted border border-border"
+              ? "text-white/70 bg-white/10 border border-white/20 rounded"
+              : theme === Theme.PIXEL
+              ? "text-slate-500 border-2 border-slate-800 bg-slate-900"
+              : "bg-muted border border-border rounded"
           )}
         >
           <Command className="w-3 h-3" />

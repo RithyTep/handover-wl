@@ -24,8 +24,6 @@ export function useTheme() {
   const initializeFromServer = useThemeStore((state) => state.initializeFromServer);
   const loadFromLocalStorage = useThemeStore((state) => state.loadFromLocalStorage);
   const hasInitializedRef = useRef(false);
-  const lastLocalChangeRef = useRef<Theme | null>(null);
-  const lastLocalChangeTimeRef = useRef<number>(0);
 
   useEffect(() => {
     loadFromLocalStorage();
@@ -41,25 +39,17 @@ export function useTheme() {
     if (!serverThemeData?.theme) return;
 
     const serverTheme = serverThemeData.theme;
-    const timeSinceLocalChange = Date.now() - lastLocalChangeTimeRef.current;
     const currentSelectedTheme = useThemeStore.getState().selectedTheme;
 
+    // Only use server theme if no local theme is set
     if (!hasInitializedRef.current) {
       if (currentSelectedTheme === null) {
         setTheme(serverTheme);
-        hasInitializedRef.current = true;
-      } else if (currentSelectedTheme !== serverTheme) {
-        setTheme(serverTheme);
-        hasInitializedRef.current = true;
-      } else {
-        hasInitializedRef.current = true;
       }
-      return;
+      // If localStorage already has a theme, keep it (don't override with server)
+      hasInitializedRef.current = true;
     }
-
-    if (currentSelectedTheme !== serverTheme && timeSinceLocalChange > 5000) {
-      setTheme(serverTheme);
-    }
+    // Removed: automatic sync from server that was overwriting local preferences
   }, [serverThemeData?.theme, setTheme]);
 
   const themeList: ThemeInfo[] = themes ?? [];
@@ -73,14 +63,10 @@ export function useTheme() {
 
   const handleThemeSelect = (theme: Theme) => {
     if (theme === selectedTheme) return;
-    lastLocalChangeRef.current = theme;
-    lastLocalChangeTimeRef.current = Date.now();
     setTheme(theme);
   };
 
   const handleSaveToServer = async (theme: Theme): Promise<void> => {
-    lastLocalChangeRef.current = null;
-    lastLocalChangeTimeRef.current = 0;
     await setSelectedThemeMutation.mutateAsync({ theme });
   };
 
