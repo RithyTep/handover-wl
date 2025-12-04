@@ -86,3 +86,68 @@ export async function postComment(
     return false;
   }
 }
+
+export interface JiraComment {
+  author: {
+    displayName: string;
+    accountId: string;
+  };
+  body: {
+    content?: Array<{
+      content?: Array<{
+        text?: string;
+      }>;
+    }>;
+  };
+  created: string;
+}
+
+function extractTextFromBody(body: JiraComment["body"]): string {
+  if (!body?.content) return "";
+  return body.content
+    .flatMap((block) => block.content?.map((item) => item.text) || [])
+    .filter(Boolean)
+    .join(" ");
+}
+
+export async function fetchTicketComments(
+  issueKey: string
+): Promise<Array<{ author: string; text: string; created: string }>> {
+  try {
+    const response = await axios.get(
+      `${JIRA_URL}/rest/api/3/issue/${issueKey}/comment`,
+      { headers: createHeaders() }
+    );
+
+    const comments: JiraComment[] = response.data.comments || [];
+
+    return comments.map((comment) => ({
+      author: comment.author.displayName,
+      text: extractTextFromBody(comment.body),
+      created: comment.created,
+    }));
+  } catch {
+    return [];
+  }
+}
+
+export function getLatestWLTCComment(
+  comments: Array<{ author: string; text: string; created: string }>
+): { author: string; text: string } | null {
+  // Filter comments from WL_TC users (not bots like "Ticket Summary Analyst")
+  const wlTcComments = comments.filter((c) => {
+    const authorLower = c.author.toLowerCase();
+    return (
+      authorLower.includes("_wl_") ||
+      authorLower.includes("wl_tc") ||
+      authorLower.includes("wl_am") ||
+      authorLower.includes("wl_po")
+    );
+  });
+
+  if (wlTcComments.length === 0) return null;
+
+  // Return the latest one (comments are usually sorted by date)
+  const latest = wlTcComments[wlTcComments.length - 1];
+  return { author: latest.author, text: latest.text };
+}

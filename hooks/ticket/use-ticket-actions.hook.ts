@@ -27,6 +27,8 @@ export function useTicketActions({ tickets }: UseTicketActionsProps) {
       });
       if (Object.keys(initialData).length > 0) {
         setTicketData(initialData);
+        // Force columns recreation to pick up initial values
+        setRenderKey((prev) => prev + 1);
       }
       initializedRef.current = true;
     }
