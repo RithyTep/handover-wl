@@ -66,25 +66,25 @@ export function ThemedLoader({ theme, size = "md", className }: ThemedLoaderProp
     );
   }
 
-  // Default theme - Simple spinner
+  // Default theme - Professional bank style spinner
   return (
     <div className={cn("default-loader", sizeClasses[size], className)}>
-      <svg viewBox="0 0 24 24" fill="none" className="animate-spin">
+      <svg viewBox="0 0 24 24" fill="none" className="animate-spin" style={{ animationDuration: '1s' }}>
         <circle
           cx="12"
           cy="12"
           r="10"
-          stroke="currentColor"
-          strokeWidth="3"
-          strokeLinecap="round"
-          className="text-muted opacity-25"
+          stroke="#e2e8f0"
+          strokeWidth="2.5"
         />
-        <path
-          d="M12 2a10 10 0 0 1 10 10"
-          stroke="currentColor"
-          strokeWidth="3"
+        <circle
+          cx="12"
+          cy="12"
+          r="10"
+          stroke="#2563eb"
+          strokeWidth="2.5"
           strokeLinecap="round"
-          className="text-foreground"
+          strokeDasharray="45 63"
         />
       </svg>
     </div>

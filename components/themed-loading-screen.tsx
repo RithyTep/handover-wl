@@ -502,29 +502,77 @@ export function ThemedLoadingScreen({ className = "", theme: themeProp }: Themed
     );
   }
 
-  // Default theme - Simple clean spinner
+  // Default theme - Professional bank style
   return (
-    <div className={cn("flex items-center justify-center min-h-screen w-full", className)}>
-      <div className="text-center">
-        <svg className="w-12 h-12 mx-auto animate-spin" viewBox="0 0 24 24" fill="none">
-          <circle
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            className="text-muted opacity-25"
-          />
-          <path
-            d="M12 2a10 10 0 0 1 10 10"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-            className="text-foreground"
-          />
-        </svg>
-        <p className="mt-4 text-muted-foreground text-sm">Loading...</p>
+    <div className={cn("relative flex items-center justify-center min-h-screen w-full overflow-hidden", className)}>
+      {/* Clean professional background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-blue-50/30" />
+
+      {/* Subtle grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.02]"
+        style={{
+          backgroundImage: `
+            linear-gradient(to right, #1e3a5f 1px, transparent 1px),
+            linear-gradient(to bottom, #1e3a5f 1px, transparent 1px)
+          `,
+          backgroundSize: '48px 48px'
+        }}
+      />
+
+      {/* Soft accent glows */}
+      <div className="absolute -top-40 -right-40 w-[400px] h-[400px] bg-blue-600/[0.03] rounded-full blur-[100px]" />
+      <div className="absolute -bottom-40 -left-40 w-[300px] h-[300px] bg-indigo-600/[0.02] rounded-full blur-[80px]" />
+
+      {/* Main content */}
+      <div className="relative z-10 text-center">
+        {/* Logo mark */}
+        <div className="relative mb-8">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-600/20">
+            <span className="text-white font-bold text-2xl">H</span>
+          </div>
+        </div>
+
+        {/* Professional loading spinner */}
+        <div className="relative mb-6">
+          <svg className="w-10 h-10 mx-auto" viewBox="0 0 40 40">
+            {/* Background circle */}
+            <circle
+              cx="20"
+              cy="20"
+              r="16"
+              fill="none"
+              stroke="#e2e8f0"
+              strokeWidth="3"
+            />
+            {/* Animated arc */}
+            <circle
+              cx="20"
+              cy="20"
+              r="16"
+              fill="none"
+              stroke="#2563eb"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeDasharray="75 100"
+              className="animate-spin origin-center"
+              style={{ animationDuration: '1s' }}
+            />
+          </svg>
+        </div>
+
+        {/* Loading text */}
+        <div className="space-y-1">
+          <p className="text-slate-700 text-sm font-medium">Loading</p>
+          <p className="text-slate-400 text-xs">Please wait a moment...</p>
+        </div>
+
+        {/* Progress dots */}
+        <div className="flex items-center justify-center gap-1.5 mt-6">
+          <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" style={{ animationDelay: '0s' }} />
+          <div className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
+          <div className="w-1.5 h-1.5 rounded-full bg-blue-300 animate-pulse" style={{ animationDelay: '0.4s' }} />
+        </div>
       </div>
     </div>
   );
