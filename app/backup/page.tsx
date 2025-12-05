@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import { cacheLife, cacheTag } from "next/cache";
-import { RefreshCw } from "lucide-react";
 import { BackupClient } from "@/components/backup-client";
 import { getBackups, transformBackupToItem } from "@/lib/services";
 import { CACHE, BACKUP } from "@/lib/config";
@@ -22,17 +21,6 @@ async function getCachedBackups(): Promise<BackupItem[]> {
   }
 }
 
-function BackupLoading() {
-  return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-center">
-        <RefreshCw className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
-        <p className="text-muted-foreground">Loading backups...</p>
-      </div>
-    </div>
-  );
-}
-
 async function BackupContent() {
   const backups = await getCachedBackups();
   return <BackupClient initialBackups={backups} />;
@@ -40,7 +28,7 @@ async function BackupContent() {
 
 export default function BackupPage() {
   return (
-    <Suspense fallback={<BackupLoading />}>
+    <Suspense fallback={null}>
       <BackupContent />
     </Suspense>
   );

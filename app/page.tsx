@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { unstable_cache } from "next/cache";
 import { DashboardClient } from "@/components/dashboard-client";
-import { ThemedLoadingScreen } from "@/components/themed-loading-screen";
 import { getThemePreference, initDatabase, loadTicketData } from "@/lib/services/database";
 import { getTicketsWithSavedData } from "@/lib/services/jira";
 import { Theme } from "@/enums/theme.enum";
@@ -40,10 +39,10 @@ async function DashboardWithData() {
   return <DashboardClient initialTheme={initialTheme} initialTickets={initialTickets} />;
 }
 
-// Page component with Suspense boundary for async data
+// Page component with minimal Suspense boundary for prerendering
 export default function Dashboard() {
   return (
-    <Suspense fallback={<ThemedLoadingScreen />}>
+    <Suspense fallback={null}>
       <DashboardWithData />
     </Suspense>
   );
