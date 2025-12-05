@@ -67,20 +67,13 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <h1 className="text-2xl flex items-center gap-2 text-white tracking-tight">
-              <img src="/icons/pixel/gamepad.svg" alt="" className="w-8 h-8" />
+              <img src="/icons/pixel/gamepad.svg" alt="" className="w-7 h-7 opacity-80" />
               <span className="font-bold">Handover</span>
             </h1>
           </div>
-          <span className="text-xs font-bold px-2 py-0.5 bg-indigo-500 text-black pixel-shadow-sm border-2 border-black/20 flex items-center gap-1">
-            <img src="/icons/pixel/star.svg" alt="" className="w-3 h-3" />
+          <span className="text-xs font-bold px-2 py-0.5 bg-indigo-500 text-black pixel-shadow-sm border-2 border-black/20">
             {ticketCount}
           </span>
-          {/* Pixel decorations */}
-          <div className="hidden sm:flex items-center gap-2 ml-2">
-            <img src="/icons/pixel/heart.svg" alt="" className="w-4 h-4 animate-pulse" />
-            <img src="/icons/pixel/coin.svg" alt="" className="w-4 h-4 animate-spin-slow" />
-            <img src="/icons/pixel/gem.svg" alt="" className="w-4 h-4" />
-          </div>
         </div>
         <div className="flex items-center gap-1">
           <ThemeSelector variant={theme} />
@@ -120,22 +113,15 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
             <h1 className="text-2xl flex items-center gap-2 text-stone-200">
-              <img src="/icons/lunar/lantern.svg" alt="" className="w-7 h-9 lunar-swing" />
+              <img src="/icons/lunar/lantern.svg" alt="" className="w-6 h-8 opacity-80" />
               <span className="font-semibold bg-gradient-to-r from-red-400 to-amber-400 bg-clip-text text-transparent">
                 Handover
               </span>
             </h1>
           </div>
-          <span className="text-xs font-bold px-2 py-0.5 lunar-badge flex items-center gap-1">
-            <img src="/icons/lunar/coin.svg" alt="" className="w-3 h-3" />
+          <span className="text-xs font-bold px-2 py-0.5 lunar-badge">
             {ticketCount}
           </span>
-          {/* Lunar decorations */}
-          <div className="hidden sm:flex items-center gap-2 ml-2">
-            <img src="/icons/lunar/plum-blossom.svg" alt="" className="w-4 h-4 animate-pulse" />
-            <img src="/icons/lunar/gold-ingot.svg" alt="" className="w-5 h-4" />
-            <img src="/icons/lunar/red-envelope.svg" alt="" className="w-4 h-4 animate-bounce" style={{ animationDuration: '2s' }} />
-          </div>
         </div>
         <div className="flex items-center gap-1">
           <ThemeSelector variant={theme} />
@@ -174,22 +160,14 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
       <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-white/20 bg-black/20 backdrop-blur-sm z-10">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <h1 className="text-2xl flex items-center gap-2 text-white christmas-header-text">
-              <img src="/icons/christmas/tree.svg" alt="" className="w-8 h-8 animate-pulse" />
-              <span className="font-script christmas-title-gradient">Handover</span>
+            <h1 className="text-2xl flex items-center gap-2 text-white">
+              <img src="/icons/christmas/tree.svg" alt="" className="w-7 h-7 opacity-80" />
+              <span className="font-semibold christmas-title-gradient">Handover</span>
             </h1>
           </div>
-          <span className="text-xs font-bold px-2 py-0.5 text-white/80 bg-white/10 rounded-full flex items-center gap-1">
-            <img src="/icons/christmas/star.svg" alt="" className="w-3 h-3" />
+          <span className="text-xs font-bold px-2 py-0.5 text-white/80 bg-white/10 rounded-full">
             {ticketCount}
           </span>
-          {/* Christmas decorations */}
-          <div className="hidden sm:flex items-center gap-2 ml-2">
-            <img src="/icons/christmas/snowflake.svg" alt="" className="w-4 h-4 animate-spin-slow" />
-            <img src="/icons/christmas/ornament.svg" alt="" className="w-4 h-4 animate-bounce" style={{ animationDelay: '0.2s' }} />
-            <img src="/icons/christmas/candy-cane.svg" alt="" className="w-4 h-4" />
-            <img src="/icons/christmas/bell.svg" alt="" className="w-4 h-4 animate-bounce" style={{ animationDelay: '0.4s' }} />
-          </div>
         </div>
         <div className="flex items-center gap-1">
           <ThemeSelector variant={theme} />

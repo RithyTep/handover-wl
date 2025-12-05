@@ -2,18 +2,12 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 
-// Floating Christmas decorations configuration
+// Subtle floating snowflakes only - elegant and minimal
 const floatingDecorations = [
-  { icon: "snowflake", left: "5%", delay: "0s", duration: "8s" },
-  { icon: "ornament", left: "15%", delay: "1.5s", duration: "9s" },
-  { icon: "star", left: "25%", delay: "3s", duration: "7s" },
-  { icon: "bell", left: "35%", delay: "0.8s", duration: "10s" },
-  { icon: "candy-cane", left: "45%", delay: "2.2s", duration: "8s" },
-  { icon: "holly", left: "55%", delay: "4s", duration: "9s" },
-  { icon: "gingerbread", left: "65%", delay: "1.2s", duration: "7s" },
-  { icon: "stocking", left: "75%", delay: "2.8s", duration: "10s" },
-  { icon: "wreath", left: "85%", delay: "3.5s", duration: "8s" },
-  { icon: "gift", left: "92%", delay: "1s", duration: "9s" },
+  { icon: "snowflake", left: "10%", delay: "0s", duration: "12s" },
+  { icon: "snowflake", left: "30%", delay: "4s", duration: "15s" },
+  { icon: "snowflake", left: "60%", delay: "2s", duration: "14s" },
+  { icon: "snowflake", left: "85%", delay: "6s", duration: "13s" },
 ];
 
 export function NewYearScene() {
@@ -140,14 +134,14 @@ export function NewYearScene() {
     <>
       <div className="winter-wrapper pointer-events-none" ref={winterWrapperRef} />
 
-      {/* Floating Christmas SVG decorations */}
+      {/* Subtle floating snowflakes */}
       <div className="fixed inset-0 pointer-events-none z-5 overflow-hidden">
         {floatingDecorations.map((deco, index) => (
           <img
             key={index}
             src={`/icons/christmas/${deco.icon}.svg`}
             alt=""
-            className="absolute top-0 christmas-fall w-8 h-8 opacity-60"
+            className="absolute top-0 christmas-fall w-5 h-5 opacity-20"
             style={{
               left: deco.left,
               animationDelay: deco.delay,
@@ -155,32 +149,6 @@ export function NewYearScene() {
             }}
           />
         ))}
-
-        {/* Corner decorations */}
-        <div className="absolute top-4 left-4 opacity-40">
-          <img src="/icons/christmas/tree.svg" alt="" className="w-12 h-12 animate-pulse" />
-        </div>
-        <div className="absolute top-4 right-4 opacity-40">
-          <img src="/icons/christmas/star.svg" alt="" className="w-10 h-10 animate-bounce" style={{ animationDuration: '2s' }} />
-        </div>
-
-        {/* Santa and Reindeer flying across (hidden on mobile) */}
-        <div className="absolute top-16 left-0 opacity-30 hidden lg:block">
-          <div className="flex items-center gap-2 christmas-orbit" style={{ animationDuration: '30s' }}>
-            <img src="/icons/christmas/reindeer.svg" alt="" className="w-10 h-10" />
-            <img src="/icons/christmas/sleigh.svg" alt="" className="w-14 h-10" />
-            <img src="/icons/christmas/santa.svg" alt="" className="w-10 h-10" />
-          </div>
-        </div>
-
-        {/* Bottom decorations */}
-        <div className="absolute bottom-24 left-8 opacity-30 hidden sm:block">
-          <div className="flex items-center gap-3">
-            <img src="/icons/christmas/gift.svg" alt="" className="w-8 h-8" />
-            <img src="/icons/christmas/gift.svg" alt="" className="w-6 h-6" />
-            <img src="/icons/christmas/gift.svg" alt="" className="w-10 h-10" />
-          </div>
-        </div>
       </div>
 
       <div className="ground fixed bottom-0 left-0 right-0 z-10 pointer-events-none" />
@@ -226,31 +194,20 @@ export function NewYearScene() {
                         ✕
                     </button>
                     <div className="flex items-center gap-2 mb-4">
-                      <img src="/icons/christmas/santa.svg" alt="" className="w-8 h-8" />
-                      <p className="mail-title text-xl font-bold text-red-800">Ho ho ho!</p>
+                      <img src="/icons/christmas/star.svg" alt="" className="w-6 h-6 opacity-70" />
+                      <p className="mail-title text-xl font-semibold text-red-800">Season's Greetings</p>
                     </div>
-                    <p className="mb-4 text-gray-800 leading-relaxed">{mailContent.text}</p>
+                    <p className="mb-4 text-gray-700 leading-relaxed">{mailContent.text}</p>
                     <div className="mt-6 space-y-4">
                         <img
                           src="/aba.jpg"
                           alt="QR Code"
-                          className="w-32 sm:w-48 mx-auto object-contain border-2 border-red-300 shadow-lg rounded-lg bg-white p-1 sm:p-2"
+                          className="w-32 sm:w-40 mx-auto object-contain border border-red-200 shadow-md rounded-lg bg-white p-1 sm:p-2"
                         />
-                        <div className="text-right flex items-end justify-end gap-2">
-                          <div>
-                            <div className="text-gray-600">{mailContent.sign}</div>
-                            <div className="text-red-700 text-xl font-script">Santa Thy</div>
-                          </div>
-                          <img src="/icons/christmas/tree.svg" alt="" className="w-10 h-10" />
+                        <div className="text-right">
+                          <div className="text-gray-500 text-sm">{mailContent.sign}</div>
+                          <div className="text-red-700 text-lg font-medium">Santa Thy</div>
                         </div>
-                    </div>
-                    {/* Decoration at bottom of mail */}
-                    <div className="flex items-center justify-center gap-3 mt-4 pt-4 border-t border-red-200">
-                      <img src="/icons/christmas/candy-cane.svg" alt="" className="w-5 h-5" />
-                      <img src="/icons/christmas/ornament.svg" alt="" className="w-5 h-5" />
-                      <img src="/icons/christmas/bell.svg" alt="" className="w-5 h-5" />
-                      <img src="/icons/christmas/holly.svg" alt="" className="w-5 h-5" />
-                      <img src="/icons/christmas/gift.svg" alt="" className="w-5 h-5" />
                     </div>
                 </div>
             </div>
