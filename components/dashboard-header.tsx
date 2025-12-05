@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, FileText, Command, Gamepad2, Flower2, Terminal } from "lucide-react";
+import { MessageSquare, FileText, Command, Gamepad2, Flower2, TerminalSquare, Palette, Bug, GitBranch } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "@/components/theme/theme-selector.component";
 import Link from "next/link";
@@ -13,6 +13,47 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
+  // Coding theme - IDE style header
+  if (theme === Theme.CODING) {
+    return (
+      <header className="flex items-center justify-between px-6 py-3 border-b border-zinc-800 bg-[#09090b]/90 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 group cursor-pointer">
+            {/* Terminal Icon */}
+            <div className="w-8 h-8 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:border-indigo-500/50 transition-colors">
+              <TerminalSquare className="w-5 h-5 text-indigo-500" />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-sm font-semibold tracking-tight text-zinc-100">
+                Dev<span className="text-indigo-500">Handover</span>
+                <span className="text-indigo-500 animate-pulse">_</span>
+              </span>
+            </div>
+          </div>
+          <span className="bg-zinc-900 text-zinc-400 text-[10px] px-2 py-0.5 rounded border border-zinc-700 font-medium font-mono">
+            v2024.1.0
+          </span>
+        </div>
+
+        <div className="flex items-center gap-6">
+          <ThemeSelector variant={theme} />
+          <Link href="/feedback" className="flex items-center gap-2 text-xs text-zinc-500 hover:text-indigo-400 transition-colors font-mono">
+            <Bug className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Issues</span>
+          </Link>
+          <Link href="/changelog" className="flex items-center gap-2 text-xs text-zinc-500 hover:text-indigo-400 transition-colors font-mono">
+            <GitBranch className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Branches</span>
+          </Link>
+          <div className="hidden sm:flex items-center justify-center w-6 h-6 rounded border border-zinc-800 text-[10px] text-zinc-500 font-bold bg-zinc-900">
+            ⌘
+          </div>
+        </div>
+      </header>
+    );
+  }
+
+  // Default themes header
   return (
     <header
       className={cn(
@@ -23,8 +64,6 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
           ? "border-b-2 border-slate-800 bg-transparent pb-6"
           : theme === Theme.LUNAR
           ? "border-stone-800/50 bg-stone-900/30 backdrop-blur-sm"
-          : theme === Theme.CODING
-          ? "border-green-900/30 bg-black/80 backdrop-blur-sm"
           : "border-border bg-background/95 backdrop-blur-sm"
       )}
     >
@@ -39,15 +78,12 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
                 ? "text-white tracking-tight"
                 : theme === Theme.LUNAR
                 ? "text-stone-200"
-                : theme === Theme.CODING
-                ? "text-green-500/80 font-mono"
                 : "text-foreground"
             )}
           >
             {theme === Theme.CHRISTMAS && <span className="text-2xl">🎄</span>}
             {theme === Theme.PIXEL && <Gamepad2 className="w-8 h-8 text-indigo-400" />}
             {theme === Theme.LUNAR && <Flower2 className="w-7 h-7 text-red-500" />}
-            {theme === Theme.CODING && <Terminal className="w-7 h-7 text-green-600" />}
             <span
               className={cn(
                 theme === Theme.CHRISTMAS
@@ -56,8 +92,6 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
                   ? "font-bold"
                   : theme === Theme.LUNAR
                   ? "font-semibold bg-gradient-to-r from-red-400 to-amber-400 bg-clip-text text-transparent"
-                  : theme === Theme.CODING
-                  ? "font-bold coding-glitch"
                   : "font-semibold"
               )}
             >
@@ -74,8 +108,6 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
               ? "bg-indigo-500 text-black pixel-shadow-sm border-2 border-black/20"
               : theme === Theme.LUNAR
               ? "lunar-badge"
-              : theme === Theme.CODING
-              ? "coding-badge"
               : "text-muted-foreground bg-muted rounded-full"
           )}
         >
@@ -95,8 +127,6 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
                 ? "text-slate-300 hover:text-indigo-400 transition-colors"
                 : theme === Theme.LUNAR
                 ? "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors"
-                : theme === Theme.CODING
-                ? "text-green-600/70 hover:text-green-500 hover:bg-green-900/10 font-mono transition-colors"
                 : ""
             )}
           >
@@ -115,8 +145,6 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
                 ? "text-slate-300 hover:text-indigo-400 transition-colors"
                 : theme === Theme.LUNAR
                 ? "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors"
-                : theme === Theme.CODING
-                ? "text-green-600/70 hover:text-green-500 hover:bg-green-900/10 font-mono transition-colors"
                 : ""
             )}
           >
@@ -133,8 +161,6 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
               ? "text-slate-500 border-2 border-slate-800 bg-slate-900"
               : theme === Theme.LUNAR
               ? "text-stone-500 bg-stone-900/50 border border-stone-800 rounded"
-              : theme === Theme.CODING
-              ? "text-green-600 bg-black border border-green-900/50 rounded font-mono"
               : "bg-muted border border-border rounded"
           )}
         >

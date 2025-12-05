@@ -12,6 +12,7 @@ import { QuickFillDialog } from "./quick-fill-dialog";
 import { ClearDialog } from "./clear-dialog";
 import { SendSlackDialog } from "./send-slack-dialog";
 import { PixelStatusBar } from "@/components/pixel-status-bar";
+import { CodingFooter } from "@/components/coding-footer";
 import { cn } from "@/lib/utils";
 import { Theme } from "@/enums/theme.enum";
 import type { Ticket } from "@/interfaces/ticket.interface";
@@ -114,6 +115,7 @@ export function DashboardLayout({
           onSave={onSave}
           onSendSlack={() => onSendSlackOpenChange(true)}
         />
+        {theme === Theme.CODING && <CodingFooter />}
       </div>
       <QuickFillDialog
         open={quickFillOpen}
