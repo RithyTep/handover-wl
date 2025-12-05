@@ -44,7 +44,7 @@ export function ThemeSelector({ variant }: ThemeSelectorProps) {
             ? "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors"
             : variant === Theme.CODING
             ? "text-zinc-500 hover:text-indigo-400 transition-colors"
-            : "text-slate-600 hover:text-blue-600 hover:bg-blue-50"
+            : "text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-colors"
         )}
         title="Change Theme"
       >

@@ -200,27 +200,27 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
     );
   }
 
-  // Default theme header - Professional bank style
+  // Default theme header - Dark mode
   return (
-    <header className="h-14 sm:h-16 flex-shrink-0 flex items-center justify-between px-4 sm:px-8 border-b border-slate-200 bg-white shadow-sm z-10">
+    <header className="h-14 sm:h-16 flex-shrink-0 flex items-center justify-between px-4 sm:px-8 border-b border-slate-700 bg-slate-900/90 backdrop-blur-sm z-10">
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           {/* Professional logo mark */}
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-md">
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
             <span className="text-white font-bold text-lg">H</span>
           </div>
           <div className="flex flex-col">
-            <h1 className="text-xl font-semibold text-slate-800 tracking-tight">
+            <h1 className="text-xl font-semibold text-slate-100 tracking-tight">
               Handover
             </h1>
-            <span className="text-[10px] text-slate-400 font-medium -mt-0.5 hidden sm:block">
+            <span className="text-[10px] text-slate-500 font-medium -mt-0.5 hidden sm:block">
               Task Management
             </span>
           </div>
         </div>
         <div className="hidden sm:flex items-center gap-2">
-          <span className="h-5 w-px bg-slate-200" />
-          <span className="text-xs font-semibold px-2.5 py-1 text-blue-700 bg-blue-50 rounded-md border border-blue-100">
+          <span className="h-5 w-px bg-slate-700" />
+          <span className="text-xs font-semibold px-2.5 py-1 text-blue-400 bg-blue-500/10 rounded-md border border-blue-500/20">
             {ticketCount} tickets
           </span>
         </div>
@@ -228,18 +228,18 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
       <div className="flex items-center gap-2">
         <ThemeSelector variant={theme} />
         <Link href="/feedback">
-          <Button variant="ghost" size="sm" className="text-slate-600 hover:text-blue-600 hover:bg-blue-50">
+          <Button variant="ghost" size="sm" className="text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-colors">
             <MessageSquare className="w-4 h-4 mr-1.5" />
             <span className="hidden sm:inline">Feedback</span>
           </Button>
         </Link>
         <Link href="/changelog">
-          <Button variant="ghost" size="sm" className="text-slate-600 hover:text-blue-600 hover:bg-blue-50">
+          <Button variant="ghost" size="sm" className="text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-colors">
             <FileText className="w-4 h-4 mr-1.5" />
             <span className="hidden sm:inline">Changelog</span>
           </Button>
         </Link>
-        <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded-md font-medium">
+        <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-slate-500 bg-slate-800 border border-slate-700 rounded-md font-medium">
           <Command className="w-3 h-3" />
           <span>K</span>
         </kbd>
