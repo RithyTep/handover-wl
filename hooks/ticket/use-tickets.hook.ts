@@ -6,8 +6,10 @@ interface UseTicketsOptions {
 }
 
 export function useTickets({ initialTickets }: UseTicketsOptions = {}) {
-  const { data, isLoading, refetch } = trpc.tickets.getAll.useQuery(undefined, {
-    enabled: !initialTickets || initialTickets.length === 0,
+  const hasInitialData = initialTickets && initialTickets.length > 0;
+
+  const { data, isLoading: queryLoading, refetch } = trpc.tickets.getAll.useQuery(undefined, {
+    enabled: !hasInitialData,
     staleTime: 30000,
     gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -15,6 +17,8 @@ export function useTickets({ initialTickets }: UseTicketsOptions = {}) {
   });
 
   const tickets: Ticket[] = data?.tickets || initialTickets || [];
+  // Don't show loading if we have initial data from SSR
+  const isLoading = hasInitialData ? false : queryLoading;
 
   return {
     tickets,

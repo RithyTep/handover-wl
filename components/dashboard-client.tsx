@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect } from "react";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { ChristmasLoading } from "@/components/christmas-loading";
 import { DashboardLayout } from "./dashboard-layout";
 import { useTickets } from "@/hooks/ticket/use-tickets.hook";
 import { useTicketActions } from "@/hooks/ticket/use-ticket-actions.hook";
@@ -14,18 +13,27 @@ import type { Ticket } from "@/interfaces/ticket.interface";
 
 interface DashboardClientProps {
   initialTickets?: Ticket[];
+  initialTheme?: Theme;
 }
 
-export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
-  const { tickets, isLoading, refetch } = useTickets({ initialTickets });
+export function DashboardClient({ initialTickets, initialTheme }: DashboardClientProps = {}) {
+  const { tickets, refetch } = useTickets({ initialTickets });
   const selectedTheme = useThemeStore((state) => state.selectedTheme);
+  const setTheme = useThemeStore((state) => state.setTheme);
   const loadFromLocalStorage = useThemeStore((state) => state.loadFromLocalStorage);
-  const theme: Theme = selectedTheme ?? DEFAULT_THEME;
 
-  // Load theme from localStorage on mount
+  // Use SSR theme immediately, then allow client-side updates
+  const theme: Theme = selectedTheme ?? initialTheme ?? DEFAULT_THEME;
+
+  // Initialize theme store with SSR value, then check localStorage for overrides
   useEffect(() => {
+    // First set the SSR theme if store is empty
+    if (initialTheme && !selectedTheme) {
+      setTheme(initialTheme);
+    }
+    // Then check localStorage for any user overrides
     loadFromLocalStorage();
-  }, [loadFromLocalStorage]);
+  }, [initialTheme, selectedTheme, setTheme, loadFromLocalStorage]);
 
   const {
     ticketData,
@@ -55,14 +63,6 @@ export function DashboardClient({ initialTickets }: DashboardClientProps = {}) {
     handleClearAction();
     setClearOpen(false);
   }, [handleClearAction]);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-dvh bg-background">
-        <ChristmasLoading />
-      </div>
-    );
-  }
 
   return (
     <DashboardLayout
