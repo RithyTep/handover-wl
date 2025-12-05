@@ -55,9 +55,20 @@ const codingIcons = [
   { icon: "function", delay: "0.6s", left: "92%", opacity: "0.5" },
 ];
 
+// Read theme directly from localStorage for immediate access
+function getStoredTheme(): Theme | null {
+  if (typeof window === "undefined") return null;
+  const stored = localStorage.getItem("theme_preference");
+  if (stored === Theme.DEFAULT || stored === Theme.CHRISTMAS || stored === Theme.PIXEL || stored === Theme.LUNAR || stored === Theme.CODING) {
+    return stored as Theme;
+  }
+  return null;
+}
+
 export function ThemedLoadingScreen({ className = "", theme: themeProp }: ThemedLoadingScreenProps) {
   const selectedTheme = useThemeStore((state) => state.selectedTheme);
-  const theme: Theme = themeProp ?? selectedTheme ?? DEFAULT_THEME;
+  // Priority: prop > store > localStorage > default
+  const theme: Theme = themeProp ?? selectedTheme ?? getStoredTheme() ?? DEFAULT_THEME;
 
   // Christmas theme - Elegant winter style
   if (theme === Theme.CHRISTMAS) {
