@@ -38,7 +38,13 @@ export function ThemeSelector({ variant }: ThemeSelectorProps) {
         className={cn(
           variant === Theme.CHRISTMAS
             ? "text-white/70 hover:text-white hover:bg-white/10"
-            : "text-foreground hover:bg-muted"
+            : variant === Theme.PIXEL
+            ? "text-slate-300 hover:text-indigo-400 transition-colors"
+            : variant === Theme.LUNAR
+            ? "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors"
+            : variant === Theme.CODING
+            ? "text-zinc-500 hover:text-indigo-400 transition-colors"
+            : "text-slate-600 hover:text-blue-600 hover:bg-blue-50"
         )}
         title="Change Theme"
       >

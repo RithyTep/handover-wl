@@ -415,6 +415,128 @@
     color: #71717a;
   }
 
+  /* Default theme styles - Professional bank style */
+  body.theme-default {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #f8fafc;
+    color: #1e293b;
+  }
+
+  /* Default theme - ticket link color */
+  body.theme-default a[href*="jira"],
+  body.theme-default a[href*="atlassian"] {
+    color: #2563eb !important;
+    font-weight: 500;
+  }
+
+  body.theme-default a[href*="jira"]:hover,
+  body.theme-default a[href*="atlassian"]:hover {
+    color: #1d4ed8 !important;
+    text-decoration: underline;
+  }
+
+  /* Default theme - table text overrides */
+  body.theme-default table {
+    border-collapse: collapse;
+  }
+
+  body.theme-default thead {
+    background-color: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  body.theme-default th {
+    font-size: 11px;
+    font-weight: 600;
+    color: #475569 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  body.theme-default th button {
+    color: #475569 !important;
+  }
+
+  body.theme-default th button:hover {
+    color: #1e293b !important;
+  }
+
+  body.theme-default tbody tr {
+    border-bottom: 1px solid #e2e8f0;
+    transition: background-color 0.15s;
+  }
+
+  body.theme-default tbody tr:hover {
+    background-color: #f8fafc;
+  }
+
+  body.theme-default td {
+    color: #334155 !important;
+  }
+
+  body.theme-default td div {
+    color: #334155 !important;
+  }
+
+  body.theme-default td span {
+    color: #334155 !important;
+  }
+
+  /* Default theme - table container */
+  body.theme-default .border-white\/20 {
+    border-color: #e2e8f0 !important;
+  }
+
+  /* Default theme - table input styles */
+  body.theme-default input[type="text"],
+  body.theme-default input:not([type]) {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1e293b !important;
+    border-radius: 6px !important;
+  }
+
+  body.theme-default input[type="text"]::placeholder,
+  body.theme-default input:not([type])::placeholder {
+    color: #94a3b8 !important;
+  }
+
+  body.theme-default input[type="text"]:focus,
+  body.theme-default input:not([type]):focus {
+    border-color: #3b82f6 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+  }
+
+  /* Default theme - Gift icon color fix */
+  body.theme-default .text-white\/40 {
+    color: #94a3b8 !important;
+  }
+
+  /* Default theme - row number styling */
+  body.theme-default .text-white\/70 {
+    color: #64748b !important;
+  }
+
+  /* Default theme - custom scrollbar */
+  body.theme-default ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  body.theme-default ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+  }
+
+  body.theme-default ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  body.theme-default ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
