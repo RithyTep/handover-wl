@@ -325,14 +325,14 @@ export function DashboardActions({
     );
   }
 
-  // Default theme actions - Professional bank style
+  // Default theme actions - Dark mode
   return (
     <div className="hidden sm:flex items-center gap-2 pt-2">
       <Button
         variant="ghost"
         size="sm"
         onClick={onAIFillAll}
-        className="h-9 px-4 text-slate-700 hover:text-blue-700 hover:bg-blue-50 font-medium"
+        className="h-9 px-4 text-slate-300 hover:text-blue-400 hover:bg-slate-800 font-medium"
       >
         <Zap className="w-3.5 h-3.5 mr-1.5" />
         <span>AI Fill</span>
@@ -341,7 +341,7 @@ export function DashboardActions({
         variant="ghost"
         size="sm"
         onClick={() => onQuickFill("Pending", "Will check tomorrow")}
-        className="h-9 px-4 text-slate-700 hover:text-blue-700 hover:bg-blue-50 font-medium"
+        className="h-9 px-4 text-slate-300 hover:text-blue-400 hover:bg-slate-800 font-medium"
       >
         <Zap className="w-3.5 h-3.5 mr-1.5" />
         <span>Quick Fill</span>
@@ -350,7 +350,7 @@ export function DashboardActions({
         variant="ghost"
         size="sm"
         onClick={onClear}
-        className="h-9 px-4 text-slate-700 hover:text-red-600 hover:bg-red-50 font-medium"
+        className="h-9 px-4 text-slate-300 hover:text-red-400 hover:bg-red-900/30 font-medium"
       >
         <Trash2 className="w-3.5 h-3.5 mr-1.5" />
         <span>Clear</span>
@@ -359,17 +359,17 @@ export function DashboardActions({
         variant="ghost"
         size="sm"
         onClick={onRefresh}
-        className="h-9 px-4 text-slate-700 hover:text-blue-700 hover:bg-blue-50 font-medium"
+        className="h-9 px-4 text-slate-300 hover:text-blue-400 hover:bg-slate-800 font-medium"
       >
         <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
         <span>Refresh</span>
       </Button>
-      <span className="h-6 w-px bg-slate-200 mx-1" />
+      <span className="h-6 w-px bg-slate-700 mx-1" />
       <Button
         variant="ghost"
         size="sm"
         onClick={onCopy}
-        className="h-9 px-4 text-slate-700 hover:text-blue-700 hover:bg-blue-50 font-medium"
+        className="h-9 px-4 text-slate-300 hover:text-blue-400 hover:bg-slate-800 font-medium"
       >
         <Copy className="w-3.5 h-3.5 mr-1.5" />
         <span>Copy</span>
@@ -378,7 +378,7 @@ export function DashboardActions({
         variant="outline"
         size="sm"
         onClick={onSave}
-        className="h-9 px-4 text-slate-700 border-slate-300 hover:border-blue-500 hover:text-blue-700 hover:bg-blue-50 font-medium"
+        className="h-9 px-4 text-slate-300 border-slate-700 hover:border-blue-500 hover:text-blue-400 hover:bg-slate-800 font-medium"
       >
         <Save className="w-3.5 h-3.5 mr-1.5" />
         <span>Save</span>

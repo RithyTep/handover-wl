@@ -143,35 +143,35 @@ export function DashboardMobileActions({
       ];
     }
 
-    // Default theme - Professional bank style
+    // Default theme - Dark mode
     return [
       {
         id: "ai-fill",
         icon: Zap,
         onClick: onAIFillAll,
-        className: "bg-blue-50 border border-blue-200 active:bg-blue-100",
-        iconColor: "text-blue-600",
+        className: "bg-blue-500/20 border border-blue-500/30 active:bg-blue-500/30",
+        iconColor: "text-blue-400",
       },
       {
         id: "quick-fill",
         icon: Sparkles,
         onClick: onQuickFill,
-        className: "bg-slate-50 border border-slate-200 active:bg-slate-100",
-        iconColor: "text-slate-600",
+        className: "bg-slate-800 border border-slate-700 active:bg-slate-700",
+        iconColor: "text-slate-300",
       },
       {
         id: "clear",
         icon: Trash2,
         onClick: onClear,
-        className: "bg-slate-50 border border-slate-200 active:bg-red-50",
-        iconColor: "text-slate-600",
+        className: "bg-slate-800 border border-slate-700 active:bg-red-900/30",
+        iconColor: "text-slate-300",
       },
       {
         id: "save",
         icon: Save,
         onClick: onSave,
-        className: "bg-slate-50 border border-slate-200 active:bg-slate-100",
-        iconColor: "text-slate-600",
+        className: "bg-slate-800 border border-slate-700 active:bg-slate-700",
+        iconColor: "text-slate-300",
       },
       {
         id: "send",
@@ -194,7 +194,7 @@ export function DashboardMobileActions({
         ? "bg-black/95 border-green-900/30"
         : theme === Theme.CHRISTMAS
         ? "bg-background/95 border-border"
-        : "bg-white/95 border-slate-200 shadow-lg"
+        : "bg-slate-900/95 border-slate-700"
     )}>
       <div className="flex items-center justify-around">
         {actions.map((action) => (
