@@ -11,18 +11,11 @@ interface ThemedLoadingScreenProps {
   theme?: Theme;
 }
 
-// Christmas floating decorations
+// Christmas floating decorations - minimal and elegant
 const christmasDecorations = [
-  { icon: "snowflake", delay: "0s", duration: "6s", left: "10%", size: "w-8 h-8" },
-  { icon: "ornament", delay: "1s", duration: "7s", left: "25%", size: "w-10 h-10" },
-  { icon: "star", delay: "0.5s", duration: "5s", left: "40%", size: "w-6 h-6" },
-  { icon: "bell", delay: "2s", duration: "8s", left: "55%", size: "w-8 h-8" },
-  { icon: "candy-cane", delay: "1.5s", duration: "6s", left: "70%", size: "w-7 h-7" },
-  { icon: "holly", delay: "0.8s", duration: "7s", left: "85%", size: "w-9 h-9" },
-  { icon: "gift", delay: "2.5s", duration: "9s", left: "15%", size: "w-10 h-10" },
-  { icon: "gingerbread", delay: "1.2s", duration: "6s", left: "60%", size: "w-8 h-8" },
-  { icon: "stocking", delay: "3s", duration: "7s", left: "80%", size: "w-7 h-7" },
-  { icon: "wreath", delay: "0.3s", duration: "8s", left: "35%", size: "w-9 h-9" },
+  { icon: "snowflake", delay: "0s", duration: "12s", left: "15%", size: "w-5 h-5" },
+  { icon: "snowflake", delay: "4s", duration: "14s", left: "45%", size: "w-4 h-4" },
+  { icon: "snowflake", delay: "2s", duration: "13s", left: "75%", size: "w-5 h-5" },
 ];
 
 // Pixel floating elements
@@ -66,23 +59,23 @@ export function ThemedLoadingScreen({ className = "", theme: themeProp }: Themed
   const selectedTheme = useThemeStore((state) => state.selectedTheme);
   const theme: Theme = themeProp ?? selectedTheme ?? DEFAULT_THEME;
 
-  // Christmas theme - Winter wonderland with floating decorations
+  // Christmas theme - Elegant winter style
   if (theme === Theme.CHRISTMAS) {
     return (
       <div className={cn("relative flex items-center justify-center min-h-screen w-full overflow-hidden", className)}>
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-red-950 via-green-950 to-red-950" />
+        {/* Background gradient - darker, more sophisticated */}
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-emerald-950/50 to-slate-900" />
 
-        {/* Snowfall effect background */}
-        <div className="absolute inset-0 christmas-snowfall opacity-30" />
+        {/* Subtle snowfall effect */}
+        <div className="absolute inset-0 christmas-snowfall opacity-20" />
 
-        {/* Floating decorations */}
+        {/* Minimal floating snowflakes */}
         {christmasDecorations.map((deco, index) => (
           <img
             key={index}
             src={`/icons/christmas/${deco.icon}.svg`}
             alt=""
-            className={cn("absolute top-0 christmas-fall", deco.size)}
+            className={cn("absolute top-0 christmas-fall opacity-20", deco.size)}
             style={{
               left: deco.left,
               animationDelay: deco.delay,
@@ -93,49 +86,53 @@ export function ThemedLoadingScreen({ className = "", theme: themeProp }: Themed
 
         {/* Main content */}
         <div className="relative z-10 text-center">
-          {/* Tree with glow effect */}
-          <div className="relative">
-            <div className="absolute inset-0 blur-xl bg-green-500/30 rounded-full scale-150" />
+          {/* Elegant tree icon */}
+          <div className="relative mb-8">
+            <div className="absolute inset-0 blur-2xl bg-emerald-500/20 rounded-full scale-125" />
             <img
               src="/icons/christmas/tree.svg"
               alt="Christmas Tree"
-              className="relative w-32 h-32 object-contain mx-auto animate-pulse"
+              className="relative w-20 h-20 object-contain mx-auto opacity-80"
             />
           </div>
 
-          {/* Rotating decorations around tree */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative w-48 h-48 christmas-orbit">
-              <img src="/icons/christmas/santa.svg" alt="" className="absolute w-10 h-10 -top-2 left-1/2 -translate-x-1/2" />
-              <img src="/icons/christmas/reindeer.svg" alt="" className="absolute w-10 h-10 top-1/2 -right-2 -translate-y-1/2" />
-              <img src="/icons/christmas/sleigh.svg" alt="" className="absolute w-12 h-8 -bottom-2 left-1/2 -translate-x-1/2" />
-              <img src="/icons/christmas/gift.svg" alt="" className="absolute w-10 h-10 top-1/2 -left-2 -translate-y-1/2" />
-            </div>
+          {/* Clean loading spinner */}
+          <div className="relative mb-6">
+            <svg className="w-10 h-10 mx-auto" viewBox="0 0 40 40">
+              <circle
+                cx="20"
+                cy="20"
+                r="16"
+                fill="none"
+                stroke="rgba(255,255,255,0.1)"
+                strokeWidth="3"
+              />
+              <circle
+                cx="20"
+                cy="20"
+                r="16"
+                fill="none"
+                stroke="#10b981"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeDasharray="75 100"
+                className="animate-spin origin-center"
+                style={{ animationDuration: '1s' }}
+              />
+            </svg>
           </div>
 
-          {/* Loading indicator */}
-          <div className="mt-8">
-            <img
-              src="/icons/christmas/loading.svg"
-              alt="Loading..."
-              className="w-12 h-12 object-contain mx-auto animate-spin-slow"
-            />
+          {/* Simple loading text */}
+          <div className="space-y-1">
+            <p className="text-white/80 text-sm font-medium">Loading</p>
+            <p className="text-white/40 text-xs">Preparing your dashboard...</p>
           </div>
 
-          {/* Text with icons */}
-          <div className="mt-4 flex items-center justify-center gap-2">
-            <img src="/icons/christmas/star.svg" alt="" className="w-4 h-4 animate-pulse" />
-            <p className="text-white/80 text-sm">Loading festive dashboard...</p>
-            <img src="/icons/christmas/star.svg" alt="" className="w-4 h-4 animate-pulse" />
-          </div>
-
-          {/* Bottom decorations */}
-          <div className="flex items-center justify-center gap-4 mt-6">
-            <img src="/icons/christmas/candy-cane.svg" alt="" className="w-6 h-6 animate-bounce" style={{ animationDelay: "0s" }} />
-            <img src="/icons/christmas/ornament.svg" alt="" className="w-6 h-6 animate-bounce" style={{ animationDelay: "0.2s" }} />
-            <img src="/icons/christmas/bell.svg" alt="" className="w-6 h-6 animate-bounce" style={{ animationDelay: "0.4s" }} />
-            <img src="/icons/christmas/holly.svg" alt="" className="w-6 h-6 animate-bounce" style={{ animationDelay: "0.6s" }} />
-            <img src="/icons/christmas/gingerbread.svg" alt="" className="w-6 h-6 animate-bounce" style={{ animationDelay: "0.8s" }} />
+          {/* Subtle progress dots */}
+          <div className="flex items-center justify-center gap-1.5 mt-6">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" style={{ animationDelay: '0s' }} />
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" style={{ animationDelay: '0.2s' }} />
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-300 animate-pulse" style={{ animationDelay: '0.4s' }} />
           </div>
         </div>
       </div>
