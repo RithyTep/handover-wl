@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Key head -->
+  <rect x="4" y="4" width="4" height="4" fill="#fbbf24"/>
+  <rect x="8" y="4" width="4" height="4" fill="#fbbf24"/>
+  <rect x="12" y="4" width="4" height="4" fill="#fbbf24"/>
+  <rect x="4" y="8" width="4" height="4" fill="#fbbf24"/>
+  <rect x="8" y="8" width="4" height="4" fill="#fef3c7"/>
+  <rect x="12" y="8" width="4" height="4" fill="#fbbf24"/>
+  <rect x="4" y="12" width="4" height="4" fill="#fbbf24"/>
+  <rect x="8" y="12" width="4" height="4" fill="#fbbf24"/>
+  <rect x="12" y="12" width="4" height="4" fill="#f59e0b"/>
+  <!-- Key shaft -->
+  <rect x="16" y="8" width="4" height="4" fill="#f59e0b"/>
+  <rect x="20" y="8" width="4" height="4" fill="#f59e0b"/>
+  <rect x="24" y="8" width="4" height="4" fill="#d97706"/>
+  <!-- Key teeth -->
+  <rect x="20" y="12" width="4" height="4" fill="#f59e0b"/>
+  <rect x="24" y="12" width="4" height="4" fill="#d97706"/>
+  <rect x="28" y="8" width="4" height="4" fill="#d97706"/>
+  <rect x="28" y="12" width="4" height="4" fill="#b45309"/>
+</svg>

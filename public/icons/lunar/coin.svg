@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Ancient Chinese coin -->
+  <circle cx="32" cy="32" r="28" fill="#d97706"/>
+  <circle cx="32" cy="32" r="24" fill="#fbbf24"/>
+  <!-- Square hole -->
+  <rect x="24" y="24" width="16" height="16" fill="#78350f"/>
+  <rect x="26" y="26" width="12" height="12" fill="#92400e"/>
+  <!-- Characters -->
+  <text x="32" y="20" font-size="8" fill="#78350f" text-anchor="middle">通</text>
+  <text x="32" y="52" font-size="8" fill="#78350f" text-anchor="middle">寶</text>
+  <text x="16" y="36" font-size="8" fill="#78350f" text-anchor="middle">開</text>
+  <text x="48" y="36" font-size="8" fill="#78350f" text-anchor="middle">元</text>
+  <!-- Rim detail -->
+  <circle cx="32" cy="32" r="28" fill="none" stroke="#b45309" stroke-width="2"/>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Left leaf -->
+  <path d="M8 32 Q16 24 24 32 Q32 24 32 16 Q24 24 16 16 Q8 24 8 32" fill="#166534"/>
+  <!-- Right leaf -->
+  <path d="M56 32 Q48 24 40 32 Q32 24 32 16 Q40 24 48 16 Q56 24 56 32" fill="#166534"/>
+  <!-- Bottom leaf -->
+  <path d="M32 56 Q24 48 32 40 Q24 32 16 32 Q24 40 16 48 Q24 56 32 56" fill="#166534"/>
+  <!-- Berries -->
+  <circle cx="28" cy="28" r="6" fill="#dc2626"/>
+  <circle cx="36" cy="28" r="6" fill="#dc2626"/>
+  <circle cx="32" cy="36" r="6" fill="#dc2626"/>
+  <!-- Berry shines -->
+  <circle cx="26" cy="26" r="2" fill="#fff" opacity="0.5"/>
+  <circle cx="34" cy="26" r="2" fill="#fff" opacity="0.5"/>
+  <circle cx="30" cy="34" r="2" fill="#fff" opacity="0.5"/>
+</svg>

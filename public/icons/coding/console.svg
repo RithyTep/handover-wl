@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Console window -->
+  <rect x="4" y="8" width="56" height="48" rx="4" fill="#18181b"/>
+  <!-- Title bar -->
+  <rect x="4" y="8" width="56" height="12" rx="4" fill="#27272a"/>
+  <rect x="4" y="16" width="56" height="4" fill="#27272a"/>
+  <!-- Window buttons -->
+  <circle cx="14" cy="14" r="3" fill="#ef4444"/>
+  <circle cx="24" cy="14" r="3" fill="#fbbf24"/>
+  <circle cx="34" cy="14" r="3" fill="#22c55e"/>
+  <!-- Console output -->
+  <text x="10" y="32" font-family="monospace" font-size="6" fill="#22c55e">$ git status</text>
+  <text x="10" y="40" font-family="monospace" font-size="6" fill="#a1a1aa">On branch main</text>
+  <text x="10" y="48" font-family="monospace" font-size="6" fill="#22c55e">nothing to commit</text>
+</svg>

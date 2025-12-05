@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <style>
+    .block { animation: pulse 1s ease-in-out infinite; }
+    .block:nth-child(1) { animation-delay: 0s; }
+    .block:nth-child(2) { animation-delay: 0.1s; }
+    .block:nth-child(3) { animation-delay: 0.2s; }
+    .block:nth-child(4) { animation-delay: 0.3s; }
+    @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  </style>
+  <rect class="block" x="8" y="24" width="12" height="16" fill="#6366f1"/>
+  <rect class="block" x="22" y="24" width="12" height="16" fill="#a855f7"/>
+  <rect class="block" x="36" y="24" width="12" height="16" fill="#ec4899"/>
+  <rect class="block" x="50" y="24" width="12" height="16" fill="#6366f1"/>
+</svg>

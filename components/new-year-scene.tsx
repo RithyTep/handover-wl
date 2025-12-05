@@ -2,6 +2,20 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 
+// Floating Christmas decorations configuration
+const floatingDecorations = [
+  { icon: "snowflake", left: "5%", delay: "0s", duration: "8s" },
+  { icon: "ornament", left: "15%", delay: "1.5s", duration: "9s" },
+  { icon: "star", left: "25%", delay: "3s", duration: "7s" },
+  { icon: "bell", left: "35%", delay: "0.8s", duration: "10s" },
+  { icon: "candy-cane", left: "45%", delay: "2.2s", duration: "8s" },
+  { icon: "holly", left: "55%", delay: "4s", duration: "9s" },
+  { icon: "gingerbread", left: "65%", delay: "1.2s", duration: "7s" },
+  { icon: "stocking", left: "75%", delay: "2.8s", duration: "10s" },
+  { icon: "wreath", left: "85%", delay: "3.5s", duration: "8s" },
+  { icon: "gift", left: "92%", delay: "1s", duration: "9s" },
+];
+
 export function NewYearScene() {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [showMail, setShowMail] = useState(false);
@@ -99,12 +113,12 @@ export function NewYearScene() {
 
   const handleOpenMail = () => {
     const greetings = [
-        "Merry Christmas and a Happy New Year! May your days be filled with joy, laughter, and the warmth of loved ones. Don’t forget to leave me some cookies and milk—Santa needs his fuel for all that gift delivering! Stay jolly and bright!",
-        "Greetings from the North Pole! I’ve checked my list twice, and you’re on the “Nice” list (of course!). May your Christmas sparkle like Rudolph’s nose and your New Year be as magical as a sleigh ride under the stars. Wishing you stockings full of surprises and hearts full of happiness.",
-        "The elves and I are wrapping up the year with one wish for you: a holiday season filled with love, laughter, and lots of snowflakes! Remember, the magic of Christmas isn’t just in the presents, but in the smiles we share. Wishing you a New Year as wonderful as a fresh batch of cookies!",
-        "Ready your sleigh, dear friend—it’s time to dash into a holiday season filled with wonder and adventure! May your Christmas be merry, your New Year be bright, and your heart be full of magic. Remember, wherever you go, the spirit of the season follows.",
-        "Happy Christmas and a joyful New Year to you! Let this season remind you of all the good in the world—the laughter of children, the kindness of strangers, and the hope in every heart. And don’t forget, the greatest gifts aren’t under the tree—they’re the memories we make together.",
-        "Jingle bells, jingle bells, you’re on my way! The reindeer and I are gearing up for a magical night, and I’ve got some goodies with your name on them. May your Christmas be sweet as candy canes and your New Year full of sparkle. Don’t forget to save me a cookie or two!"
+        "Merry Christmas and a Happy New Year! May your days be filled with joy, laughter, and the warmth of loved ones. Don't forget to leave me some cookies and milk—Santa needs his fuel for all that gift delivering! Stay jolly and bright!",
+        "Greetings from the North Pole! I've checked my list twice, and you're on the 'Nice' list (of course!). May your Christmas sparkle like Rudolph's nose and your New Year be as magical as a sleigh ride under the stars. Wishing you stockings full of surprises and hearts full of happiness.",
+        "The elves and I are wrapping up the year with one wish for you: a holiday season filled with love, laughter, and lots of snowflakes! Remember, the magic of Christmas isn't just in the presents, but in the smiles we share. Wishing you a New Year as wonderful as a fresh batch of cookies!",
+        "Ready your sleigh, dear friend—it's time to dash into a holiday season filled with wonder and adventure! May your Christmas be merry, your New Year be bright, and your heart be full of magic. Remember, wherever you go, the spirit of the season follows.",
+        "Happy Christmas and a joyful New Year to you! Let this season remind you of all the good in the world—the laughter of children, the kindness of strangers, and the hope in every heart. And don't forget, the greatest gifts aren't under the tree—they're the memories we make together.",
+        "Jingle bells, jingle bells, you're on my way! The reindeer and I are gearing up for a magical night, and I've got some goodies with your name on them. May your Christmas be sweet as candy canes and your New Year full of sparkle. Don't forget to save me a cookie or two!"
     ];
     const signs = [
         "With love,",
@@ -125,6 +139,49 @@ export function NewYearScene() {
   return (
     <>
       <div className="winter-wrapper pointer-events-none" ref={winterWrapperRef} />
+
+      {/* Floating Christmas SVG decorations */}
+      <div className="fixed inset-0 pointer-events-none z-5 overflow-hidden">
+        {floatingDecorations.map((deco, index) => (
+          <img
+            key={index}
+            src={`/icons/christmas/${deco.icon}.svg`}
+            alt=""
+            className="absolute top-0 christmas-fall w-8 h-8 opacity-60"
+            style={{
+              left: deco.left,
+              animationDelay: deco.delay,
+              animationDuration: deco.duration,
+            }}
+          />
+        ))}
+
+        {/* Corner decorations */}
+        <div className="absolute top-4 left-4 opacity-40">
+          <img src="/icons/christmas/tree.svg" alt="" className="w-12 h-12 animate-pulse" />
+        </div>
+        <div className="absolute top-4 right-4 opacity-40">
+          <img src="/icons/christmas/star.svg" alt="" className="w-10 h-10 animate-bounce" style={{ animationDuration: '2s' }} />
+        </div>
+
+        {/* Santa and Reindeer flying across (hidden on mobile) */}
+        <div className="absolute top-16 left-0 opacity-30 hidden lg:block">
+          <div className="flex items-center gap-2 christmas-orbit" style={{ animationDuration: '30s' }}>
+            <img src="/icons/christmas/reindeer.svg" alt="" className="w-10 h-10" />
+            <img src="/icons/christmas/sleigh.svg" alt="" className="w-14 h-10" />
+            <img src="/icons/christmas/santa.svg" alt="" className="w-10 h-10" />
+          </div>
+        </div>
+
+        {/* Bottom decorations */}
+        <div className="absolute bottom-24 left-8 opacity-30 hidden sm:block">
+          <div className="flex items-center gap-3">
+            <img src="/icons/christmas/gift.svg" alt="" className="w-8 h-8" />
+            <img src="/icons/christmas/gift.svg" alt="" className="w-6 h-6" />
+            <img src="/icons/christmas/gift.svg" alt="" className="w-10 h-10" />
+          </div>
+        </div>
+      </div>
 
       <div className="ground fixed bottom-0 left-0 right-0 z-10 pointer-events-none" />
 
@@ -168,7 +225,10 @@ export function NewYearScene() {
                     >
                         ✕
                     </button>
-                    <p className="mail-title text-xl font-bold mb-4 text-red-800">Ho ho ho!</p>
+                    <div className="flex items-center gap-2 mb-4">
+                      <img src="/icons/christmas/santa.svg" alt="" className="w-8 h-8" />
+                      <p className="mail-title text-xl font-bold text-red-800">Ho ho ho!</p>
+                    </div>
                     <p className="mb-4 text-gray-800 leading-relaxed">{mailContent.text}</p>
                     <div className="mt-6 space-y-4">
                         <img
@@ -176,10 +236,21 @@ export function NewYearScene() {
                           alt="QR Code"
                           className="w-32 sm:w-48 mx-auto object-contain border-2 border-red-300 shadow-lg rounded-lg bg-white p-1 sm:p-2"
                         />
-                        <div className="text-right">
-                          <div className="text-gray-600">{mailContent.sign}</div>
-                          <div className="text-red-700 text-xl"><span className="font-script">Santa Thy</span> 🎅</div>
+                        <div className="text-right flex items-end justify-end gap-2">
+                          <div>
+                            <div className="text-gray-600">{mailContent.sign}</div>
+                            <div className="text-red-700 text-xl font-script">Santa Thy</div>
+                          </div>
+                          <img src="/icons/christmas/tree.svg" alt="" className="w-10 h-10" />
                         </div>
+                    </div>
+                    {/* Decoration at bottom of mail */}
+                    <div className="flex items-center justify-center gap-3 mt-4 pt-4 border-t border-red-200">
+                      <img src="/icons/christmas/candy-cane.svg" alt="" className="w-5 h-5" />
+                      <img src="/icons/christmas/ornament.svg" alt="" className="w-5 h-5" />
+                      <img src="/icons/christmas/bell.svg" alt="" className="w-5 h-5" />
+                      <img src="/icons/christmas/holly.svg" alt="" className="w-5 h-5" />
+                      <img src="/icons/christmas/gift.svg" alt="" className="w-5 h-5" />
                     </div>
                 </div>
             </div>

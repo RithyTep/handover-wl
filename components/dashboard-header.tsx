@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, FileText, Command, Gamepad2, Flower2, TerminalSquare, Palette, Bug, GitBranch } from "lucide-react";
+import { MessageSquare, FileText, Command } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeSelector } from "@/components/theme/theme-selector.component";
 import Link from "next/link";
@@ -13,15 +13,15 @@ interface DashboardHeaderProps {
 }
 
 export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
-  // Coding theme - IDE style header
+  // Coding theme - IDE style header with SVG icons
   if (theme === Theme.CODING) {
     return (
       <header className="flex items-center justify-between px-6 py-3 border-b border-zinc-800 bg-[#09090b]/90 backdrop-blur-sm z-10">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3 group cursor-pointer">
-            {/* Terminal Icon */}
+            {/* Terminal Icon - SVG */}
             <div className="w-8 h-8 rounded bg-zinc-900 border border-zinc-800 flex items-center justify-center group-hover:border-indigo-500/50 transition-colors">
-              <TerminalSquare className="w-5 h-5 text-indigo-500" />
+              <img src="/icons/coding/terminal.svg" alt="" className="w-5 h-5" />
             </div>
             <div className="flex flex-col">
               <span className="text-sm font-semibold tracking-tight text-zinc-100">
@@ -30,140 +30,226 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
               </span>
             </div>
           </div>
-          <span className="bg-zinc-900 text-zinc-400 text-[10px] px-2 py-0.5 rounded border border-zinc-700 font-medium font-mono">
+          <span className="bg-zinc-900 text-zinc-400 text-[10px] px-2 py-0.5 rounded border border-zinc-700 font-medium font-mono flex items-center gap-1">
+            <img src="/icons/coding/git-branch.svg" alt="" className="w-3 h-3" />
             v2024.1.0
           </span>
+          {/* Git status indicator */}
+          <div className="hidden sm:flex items-center gap-2">
+            <img src="/icons/coding/commit.svg" alt="" className="w-4 h-4 opacity-50" />
+            <img src="/icons/coding/database.svg" alt="" className="w-4 h-4 opacity-50" />
+            <img src="/icons/coding/server.svg" alt="" className="w-4 h-4 opacity-50" />
+          </div>
         </div>
 
         <div className="flex items-center gap-6">
           <ThemeSelector variant={theme} />
           <Link href="/feedback" className="flex items-center gap-2 text-xs text-zinc-500 hover:text-indigo-400 transition-colors font-mono">
-            <Bug className="w-3.5 h-3.5" />
+            <img src="/icons/coding/bug.svg" alt="" className="w-4 h-4" />
             <span className="hidden sm:inline">Issues</span>
           </Link>
           <Link href="/changelog" className="flex items-center gap-2 text-xs text-zinc-500 hover:text-indigo-400 transition-colors font-mono">
-            <GitBranch className="w-3.5 h-3.5" />
+            <img src="/icons/coding/merge.svg" alt="" className="w-4 h-4" />
             <span className="hidden sm:inline">Branches</span>
           </Link>
           <div className="hidden sm:flex items-center justify-center w-6 h-6 rounded border border-zinc-800 text-[10px] text-zinc-500 font-bold bg-zinc-900">
-            ⌘
+            <img src="/icons/coding/keyboard.svg" alt="" className="w-4 h-4 opacity-50" />
           </div>
         </div>
       </header>
     );
   }
 
-  // Default themes header
+  // Pixel theme header with SVG icons
+  if (theme === Theme.PIXEL) {
+    return (
+      <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b-2 border-slate-800 bg-transparent pb-6 z-10">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl flex items-center gap-2 text-white tracking-tight">
+              <img src="/icons/pixel/gamepad.svg" alt="" className="w-8 h-8" />
+              <span className="font-bold">Handover</span>
+            </h1>
+          </div>
+          <span className="text-xs font-bold px-2 py-0.5 bg-indigo-500 text-black pixel-shadow-sm border-2 border-black/20 flex items-center gap-1">
+            <img src="/icons/pixel/star.svg" alt="" className="w-3 h-3" />
+            {ticketCount}
+          </span>
+          {/* Pixel decorations */}
+          <div className="hidden sm:flex items-center gap-2 ml-2">
+            <img src="/icons/pixel/heart.svg" alt="" className="w-4 h-4 animate-pulse" />
+            <img src="/icons/pixel/coin.svg" alt="" className="w-4 h-4 animate-spin-slow" />
+            <img src="/icons/pixel/gem.svg" alt="" className="w-4 h-4" />
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <ThemeSelector variant={theme} />
+          <Link href="/feedback">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-slate-300 hover:text-indigo-400 transition-colors flex items-center gap-1"
+            >
+              <img src="/icons/pixel/ghost.svg" alt="" className="w-4 h-4" />
+              <span className="hidden sm:inline">Feedback</span>
+            </Button>
+          </Link>
+          <Link href="/changelog">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-slate-300 hover:text-indigo-400 transition-colors flex items-center gap-1"
+            >
+              <img src="/icons/pixel/flag.svg" alt="" className="w-4 h-4" />
+              <span className="hidden sm:inline">Changelog</span>
+            </Button>
+          </Link>
+          <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-slate-500 border-2 border-slate-800 bg-slate-900">
+            <img src="/icons/pixel/key.svg" alt="" className="w-3 h-3" />
+            <span>K</span>
+          </kbd>
+        </div>
+      </header>
+    );
+  }
+
+  // Lunar theme header with SVG icons
+  if (theme === Theme.LUNAR) {
+    return (
+      <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-stone-800/50 bg-stone-900/30 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl flex items-center gap-2 text-stone-200">
+              <img src="/icons/lunar/lantern.svg" alt="" className="w-7 h-9 lunar-swing" />
+              <span className="font-semibold bg-gradient-to-r from-red-400 to-amber-400 bg-clip-text text-transparent">
+                Handover
+              </span>
+            </h1>
+          </div>
+          <span className="text-xs font-bold px-2 py-0.5 lunar-badge flex items-center gap-1">
+            <img src="/icons/lunar/coin.svg" alt="" className="w-3 h-3" />
+            {ticketCount}
+          </span>
+          {/* Lunar decorations */}
+          <div className="hidden sm:flex items-center gap-2 ml-2">
+            <img src="/icons/lunar/plum-blossom.svg" alt="" className="w-4 h-4 animate-pulse" />
+            <img src="/icons/lunar/gold-ingot.svg" alt="" className="w-5 h-4" />
+            <img src="/icons/lunar/red-envelope.svg" alt="" className="w-4 h-4 animate-bounce" style={{ animationDuration: '2s' }} />
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <ThemeSelector variant={theme} />
+          <Link href="/feedback">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors flex items-center gap-1"
+            >
+              <img src="/icons/lunar/fan.svg" alt="" className="w-4 h-4" />
+              <span className="hidden sm:inline">Feedback</span>
+            </Button>
+          </Link>
+          <Link href="/changelog">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors flex items-center gap-1"
+            >
+              <img src="/icons/lunar/drum.svg" alt="" className="w-4 h-4" />
+              <span className="hidden sm:inline">Changelog</span>
+            </Button>
+          </Link>
+          <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-stone-500 bg-stone-900/50 border border-stone-800 rounded">
+            <img src="/icons/lunar/knot.svg" alt="" className="w-3 h-4" />
+            <span>K</span>
+          </kbd>
+        </div>
+      </header>
+    );
+  }
+
+  // Christmas theme header with SVG icons
+  if (theme === Theme.CHRISTMAS) {
+    return (
+      <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-white/20 bg-black/20 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl flex items-center gap-2 text-white christmas-header-text">
+              <img src="/icons/christmas/tree.svg" alt="" className="w-8 h-8 animate-pulse" />
+              <span className="font-script christmas-title-gradient">Handover</span>
+            </h1>
+          </div>
+          <span className="text-xs font-bold px-2 py-0.5 text-white/80 bg-white/10 rounded-full flex items-center gap-1">
+            <img src="/icons/christmas/star.svg" alt="" className="w-3 h-3" />
+            {ticketCount}
+          </span>
+          {/* Christmas decorations */}
+          <div className="hidden sm:flex items-center gap-2 ml-2">
+            <img src="/icons/christmas/snowflake.svg" alt="" className="w-4 h-4 animate-spin-slow" />
+            <img src="/icons/christmas/ornament.svg" alt="" className="w-4 h-4 animate-bounce" style={{ animationDelay: '0.2s' }} />
+            <img src="/icons/christmas/candy-cane.svg" alt="" className="w-4 h-4" />
+            <img src="/icons/christmas/bell.svg" alt="" className="w-4 h-4 animate-bounce" style={{ animationDelay: '0.4s' }} />
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          <ThemeSelector variant={theme} />
+          <Link href="/feedback">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white/70 hover:text-white hover:bg-white/10 flex items-center gap-1"
+            >
+              <img src="/icons/christmas/gift.svg" alt="" className="w-4 h-4" />
+              <span className="hidden sm:inline">Feedback</span>
+            </Button>
+          </Link>
+          <Link href="/changelog">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-white/70 hover:text-white hover:bg-white/10 flex items-center gap-1"
+            >
+              <img src="/icons/christmas/holly.svg" alt="" className="w-4 h-4" />
+              <span className="hidden sm:inline">Changelog</span>
+            </Button>
+          </Link>
+          <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-white/70 bg-white/10 border border-white/20 rounded">
+            <img src="/icons/christmas/gingerbread.svg" alt="" className="w-3 h-3" />
+            <span>K</span>
+          </kbd>
+        </div>
+      </header>
+    );
+  }
+
+  // Default theme header
   return (
-    <header
-      className={cn(
-        "h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b z-10",
-        theme === Theme.CHRISTMAS
-          ? "border-white/20 bg-black/20 backdrop-blur-sm"
-          : theme === Theme.PIXEL
-          ? "border-b-2 border-slate-800 bg-transparent pb-6"
-          : theme === Theme.LUNAR
-          ? "border-stone-800/50 bg-stone-900/30 backdrop-blur-sm"
-          : "border-border bg-background/95 backdrop-blur-sm"
-      )}
-    >
+    <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-border bg-background/95 backdrop-blur-sm z-10">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <h1
-            className={cn(
-              "text-2xl flex items-center gap-2",
-              theme === Theme.CHRISTMAS
-                ? "text-white christmas-header-text"
-                : theme === Theme.PIXEL
-                ? "text-white tracking-tight"
-                : theme === Theme.LUNAR
-                ? "text-stone-200"
-                : "text-foreground"
-            )}
-          >
-            {theme === Theme.CHRISTMAS && <span className="text-2xl">🎄</span>}
-            {theme === Theme.PIXEL && <Gamepad2 className="w-8 h-8 text-indigo-400" />}
-            {theme === Theme.LUNAR && <Flower2 className="w-7 h-7 text-red-500" />}
-            <span
-              className={cn(
-                theme === Theme.CHRISTMAS
-                  ? "font-script christmas-title-gradient"
-                  : theme === Theme.PIXEL
-                  ? "font-bold"
-                  : theme === Theme.LUNAR
-                  ? "font-semibold bg-gradient-to-r from-red-400 to-amber-400 bg-clip-text text-transparent"
-                  : "font-semibold"
-              )}
-            >
-              Handover
-            </span>
+          <h1 className="text-2xl flex items-center gap-2 text-foreground">
+            <span className="font-semibold">Handover</span>
           </h1>
         </div>
-        <span
-          className={cn(
-            "text-xs font-bold px-2 py-0.5",
-            theme === Theme.CHRISTMAS
-              ? "text-white/80 bg-white/10 rounded-full"
-              : theme === Theme.PIXEL
-              ? "bg-indigo-500 text-black pixel-shadow-sm border-2 border-black/20"
-              : theme === Theme.LUNAR
-              ? "lunar-badge"
-              : "text-muted-foreground bg-muted rounded-full"
-          )}
-        >
+        <span className="text-xs font-bold px-2 py-0.5 text-muted-foreground bg-muted rounded-full">
           {ticketCount}
         </span>
       </div>
       <div className="flex items-center gap-1">
         <ThemeSelector variant={theme} />
         <Link href="/feedback">
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              theme === Theme.CHRISTMAS
-                ? "text-white/70 hover:text-white hover:bg-white/10"
-                : theme === Theme.PIXEL
-                ? "text-slate-300 hover:text-indigo-400 transition-colors"
-                : theme === Theme.LUNAR
-                ? "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors"
-                : ""
-            )}
-          >
+          <Button variant="ghost" size="sm">
             <MessageSquare className="w-4 h-4 mr-1.5" />
             <span className="hidden sm:inline">Feedback</span>
           </Button>
         </Link>
         <Link href="/changelog">
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              theme === Theme.CHRISTMAS
-                ? "text-white/70 hover:text-white hover:bg-white/10"
-                : theme === Theme.PIXEL
-                ? "text-slate-300 hover:text-indigo-400 transition-colors"
-                : theme === Theme.LUNAR
-                ? "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors"
-                : ""
-            )}
-          >
+          <Button variant="ghost" size="sm">
             <FileText className="w-4 h-4 mr-1.5" />
             <span className="hidden sm:inline">Changelog</span>
           </Button>
         </Link>
-        <kbd
-          className={cn(
-            "hidden sm:flex items-center gap-1 px-2 py-1 text-xs",
-            theme === Theme.CHRISTMAS
-              ? "text-white/70 bg-white/10 border border-white/20 rounded"
-              : theme === Theme.PIXEL
-              ? "text-slate-500 border-2 border-slate-800 bg-slate-900"
-              : theme === Theme.LUNAR
-              ? "text-stone-500 bg-stone-900/50 border border-stone-800 rounded"
-              : "bg-muted border border-border rounded"
-          )}
-        >
+        <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs bg-muted border border-border rounded">
           <Command className="w-3 h-3" />
           <span>K</span>
         </kbd>

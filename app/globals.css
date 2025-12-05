@@ -92,7 +92,7 @@
 
   /* Pixel theme cursor styles */
   body.theme-pixel {
-    cursor: url('/cursors/pixel-pointer.svg'), auto;
+    cursor: url('/cursors/pixel-cursor.svg'), auto;
   }
 
   body.theme-pixel a,
@@ -170,7 +170,7 @@
 
   /* Lunar theme cursor styles */
   body.theme-lunar {
-    cursor: url('/cursors/lunar-pointer.svg'), auto;
+    cursor: url('/cursors/lunar-cursor.svg'), auto;
   }
 
   body.theme-lunar a,
@@ -245,7 +245,7 @@
 
   /* Coding theme cursor styles */
   body.theme-coding {
-    cursor: url('/cursors/coding-pointer.svg'), auto;
+    cursor: url('/cursors/coding-cursor.svg'), auto;
   }
 
   body.theme-coding a,
@@ -441,6 +441,16 @@
 }
 
 @layer utilities {
+  /* Animation utilities */
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
   /* Pixel theme utilities */
   .pixel-bg {
     background-color: #020617;
@@ -1454,5 +1464,377 @@
 
   .default-btn:active {
     transform: translateY(0);
+  }
+
+  /* ========== EXTENSIVE THEMED LOADING SCREEN ANIMATIONS ========== */
+
+  /* ----- CHRISTMAS THEME ANIMATIONS ----- */
+
+  /* Christmas falling decorations */
+  @keyframes christmas-fall {
+    0% {
+      transform: translateY(-100px) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .christmas-fall {
+    animation: christmas-fall 6s ease-in-out infinite;
+  }
+
+  /* Christmas orbit animation */
+  @keyframes christmas-orbit {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .christmas-orbit {
+    animation: christmas-orbit 15s linear infinite;
+  }
+
+  /* Christmas snowfall background */
+  .christmas-snowfall {
+    background-image:
+      radial-gradient(2px 2px at 20px 30px, white, transparent),
+      radial-gradient(2px 2px at 40px 70px, white, transparent),
+      radial-gradient(1px 1px at 90px 40px, white, transparent),
+      radial-gradient(2px 2px at 130px 80px, white, transparent),
+      radial-gradient(1px 1px at 160px 120px, white, transparent);
+    background-size: 200px 200px;
+    animation: snowfall 10s linear infinite;
+  }
+
+  @keyframes snowfall {
+    from {
+      background-position: 0 0;
+    }
+    to {
+      background-position: 0 200px;
+    }
+  }
+
+  /* ----- PIXEL THEME ANIMATIONS ----- */
+
+  /* Pixel grid background */
+  .pixel-grid {
+    background-image:
+      linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+    background-size: 8px 8px;
+  }
+
+  /* Pixel float animations */
+  @keyframes pixel-float-1 {
+    0%, 100% {
+      transform: translateY(0) translateX(0);
+    }
+    25% {
+      transform: translateY(10px) translateX(5px);
+    }
+    50% {
+      transform: translateY(20px) translateX(-5px);
+    }
+    75% {
+      transform: translateY(10px) translateX(5px);
+    }
+  }
+
+  @keyframes pixel-float-2 {
+    0%, 100% {
+      transform: translateY(5px) translateX(-5px);
+    }
+    25% {
+      transform: translateY(15px) translateX(5px);
+    }
+    50% {
+      transform: translateY(25px) translateX(-5px);
+    }
+    75% {
+      transform: translateY(15px) translateX(5px);
+    }
+  }
+
+  @keyframes pixel-float-3 {
+    0%, 100% {
+      transform: translateY(10px) translateX(5px);
+    }
+    25% {
+      transform: translateY(20px) translateX(-5px);
+    }
+    50% {
+      transform: translateY(30px) translateX(5px);
+    }
+    75% {
+      transform: translateY(20px) translateX(-5px);
+    }
+  }
+
+  .pixel-float-1 {
+    animation: pixel-float-1 4s ease-in-out infinite;
+  }
+
+  .pixel-float-2 {
+    animation: pixel-float-2 5s ease-in-out infinite;
+  }
+
+  .pixel-float-3 {
+    animation: pixel-float-3 6s ease-in-out infinite;
+  }
+
+  /* Pixel orbit animation */
+  @keyframes pixel-orbit {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .pixel-orbit {
+    animation: pixel-orbit 8s linear infinite;
+  }
+
+  /* Pixel bounce animation */
+  .pixel-bounce {
+    animation: pixel-bounce 1s ease-in-out infinite;
+  }
+
+  /* Pixel text shadow */
+  .pixel-text-shadow {
+    text-shadow:
+      4px 4px 0 rgba(99, 102, 241, 0.5),
+      -2px -2px 0 rgba(236, 72, 153, 0.5);
+  }
+
+  /* Pixel blink animation */
+  @keyframes pixel-blink {
+    0%, 49% {
+      opacity: 1;
+    }
+    50%, 100% {
+      opacity: 0;
+    }
+  }
+
+  .pixel-blink {
+    animation: pixel-blink 1s step-end infinite;
+  }
+
+  /* Pixel pop animation */
+  @keyframes pixel-pop {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.2);
+    }
+  }
+
+  .pixel-pop {
+    animation: pixel-pop 0.5s ease-in-out infinite;
+  }
+
+  /* Pixel border style */
+  .pixel-border {
+    image-rendering: pixelated;
+    border-style: solid;
+  }
+
+  /* ----- LUNAR THEME ANIMATIONS ----- */
+
+  /* Lunar pattern background */
+  .lunar-pattern {
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(251, 191, 36, 0.1) 2px, transparent 2px),
+      radial-gradient(circle at 75% 75%, rgba(220, 38, 38, 0.1) 2px, transparent 2px);
+    background-size: 50px 50px;
+  }
+
+  /* Lunar float animation */
+  @keyframes lunar-float {
+    0%, 100% {
+      transform: translateY(0) rotate(-3deg);
+    }
+    50% {
+      transform: translateY(-20px) rotate(3deg);
+    }
+  }
+
+  .lunar-float {
+    animation: lunar-float 5s ease-in-out infinite;
+  }
+
+  /* Lunar firework animation */
+  @keyframes lunar-firework {
+    0% {
+      transform: scale(0);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+
+  .lunar-firework {
+    animation: lunar-firework 3s ease-out infinite;
+  }
+
+  /* Lunar dragon animation */
+  @keyframes lunar-dragon {
+    0%, 100% {
+      transform: translateX(0) scaleX(1);
+    }
+    25% {
+      transform: translateX(10px) scaleX(1);
+    }
+    50% {
+      transform: translateX(0) scaleX(1);
+    }
+    75% {
+      transform: translateX(-10px) scaleX(1);
+    }
+  }
+
+  .lunar-dragon {
+    animation: lunar-dragon 4s ease-in-out infinite;
+  }
+
+  /* Lunar lantern swing animation */
+  @keyframes lunar-swing {
+    0%, 100% {
+      transform: rotate(-5deg);
+    }
+    50% {
+      transform: rotate(5deg);
+    }
+  }
+
+  .lunar-swing {
+    transform-origin: top center;
+    animation: lunar-swing 3s ease-in-out infinite;
+  }
+
+  /* Lunar koi swim animation */
+  @keyframes lunar-swim {
+    0%, 100% {
+      transform: translateX(0) scaleX(1);
+    }
+    25% {
+      transform: translateX(10px) scaleX(1);
+    }
+    50% {
+      transform: translateX(20px) scaleX(-1);
+    }
+    75% {
+      transform: translateX(10px) scaleX(-1);
+    }
+  }
+
+  .lunar-swim {
+    animation: lunar-swim 4s ease-in-out infinite;
+  }
+
+  /* Lunar fan animation */
+  @keyframes lunar-fan {
+    0%, 100% {
+      transform: rotate(-10deg);
+    }
+    50% {
+      transform: rotate(10deg);
+    }
+  }
+
+  .lunar-fan {
+    animation: lunar-fan 2s ease-in-out infinite;
+  }
+
+  /* ----- CODING THEME ANIMATIONS ----- */
+
+  /* Coding grid background */
+  .coding-grid {
+    background-image:
+      linear-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Coding float animation */
+  @keyframes coding-float {
+    0%, 100% {
+      transform: translateY(0);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translateY(-30px);
+      opacity: 0.6;
+    }
+  }
+
+  .coding-float {
+    animation: coding-float 8s ease-in-out infinite;
+  }
+
+  /* Coding terminal cursor blink */
+  @keyframes terminal-cursor {
+    0%, 50% {
+      opacity: 1;
+    }
+    51%, 100% {
+      opacity: 0;
+    }
+  }
+
+  .terminal-cursor {
+    animation: terminal-cursor 1s step-end infinite;
+  }
+
+  /* Coding load bar animation */
+  @keyframes coding-progress {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .coding-load-bar {
+    animation: coding-progress 2s ease-in-out infinite;
+  }
+
+  /* Coding typing animation */
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  .typing-effect {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typing 2s steps(20, end);
   }
 }

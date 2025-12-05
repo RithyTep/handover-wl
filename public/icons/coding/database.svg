@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Database cylinders -->
+  <ellipse cx="32" cy="12" rx="24" ry="8" fill="#6366f1"/>
+  <rect x="8" y="12" width="48" height="40" fill="#4f46e5"/>
+  <ellipse cx="32" cy="52" rx="24" ry="8" fill="#4338ca"/>
+  <!-- Middle rings -->
+  <ellipse cx="32" cy="24" rx="24" ry="6" fill="none" stroke="#818cf8" stroke-width="2"/>
+  <ellipse cx="32" cy="38" rx="24" ry="6" fill="none" stroke="#818cf8" stroke-width="2"/>
+  <!-- Highlight -->
+  <ellipse cx="32" cy="12" rx="20" ry="5" fill="#a5b4fc" opacity="0.3"/>
+  <!-- Data lines -->
+  <rect x="16" y="16" width="12" height="2" fill="#c7d2fe" opacity="0.5"/>
+  <rect x="32" y="16" width="16" height="2" fill="#c7d2fe" opacity="0.5"/>
+  <rect x="16" y="28" width="20" height="2" fill="#c7d2fe" opacity="0.5"/>
+  <rect x="40" y="28" width="8" height="2" fill="#c7d2fe" opacity="0.5"/>
+  <rect x="16" y="42" width="8" height="2" fill="#c7d2fe" opacity="0.5"/>
+  <rect x="28" y="42" width="16" height="2" fill="#c7d2fe" opacity="0.5"/>
+</svg>

@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Server rack -->
+  <rect x="8" y="4" width="48" height="18" rx="2" fill="#27272a"/>
+  <rect x="8" y="24" width="48" height="18" rx="2" fill="#27272a"/>
+  <rect x="8" y="44" width="48" height="18" rx="2" fill="#27272a"/>
+  <!-- LED indicators -->
+  <circle cx="16" cy="13" r="3" fill="#22c55e"/>
+  <circle cx="26" cy="13" r="3" fill="#22c55e"/>
+  <circle cx="16" cy="33" r="3" fill="#22c55e"/>
+  <circle cx="26" cy="33" r="3" fill="#fbbf24"/>
+  <circle cx="16" cy="53" r="3" fill="#22c55e"/>
+  <circle cx="26" cy="53" r="3" fill="#22c55e"/>
+  <!-- Drive bays -->
+  <rect x="36" y="9" width="16" height="8" rx="1" fill="#18181b"/>
+  <rect x="36" y="29" width="16" height="8" rx="1" fill="#18181b"/>
+  <rect x="36" y="49" width="16" height="8" rx="1" fill="#18181b"/>
+  <!-- Ventilation -->
+  <rect x="38" y="11" width="12" height="1" fill="#3f3f46"/>
+  <rect x="38" y="13" width="12" height="1" fill="#3f3f46"/>
+  <rect x="38" y="15" width="12" height="1" fill="#3f3f46"/>
+  <rect x="38" y="31" width="12" height="1" fill="#3f3f46"/>
+  <rect x="38" y="33" width="12" height="1" fill="#3f3f46"/>
+  <rect x="38" y="35" width="12" height="1" fill="#3f3f46"/>
+  <rect x="38" y="51" width="12" height="1" fill="#3f3f46"/>
+  <rect x="38" y="53" width="12" height="1" fill="#3f3f46"/>
+  <rect x="38" y="55" width="12" height="1" fill="#3f3f46"/>
+</svg>

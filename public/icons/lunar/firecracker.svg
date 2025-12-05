@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Firecracker body -->
+  <rect x="20" y="12" width="24" height="44" rx="4" fill="#dc2626"/>
+  <!-- Gold bands -->
+  <rect x="18" y="16" width="28" height="6" fill="#fbbf24"/>
+  <rect x="18" y="46" width="28" height="6" fill="#fbbf24"/>
+  <!-- Center decoration -->
+  <rect x="18" y="28" width="28" height="12" fill="#fbbf24"/>
+  <text x="32" y="38" font-size="10" fill="#dc2626" text-anchor="middle" font-weight="bold">福</text>
+  <!-- Fuse -->
+  <path d="M32 12 Q28 6 32 2 Q36 6 32 8" stroke="#1f2937" stroke-width="2" fill="none"/>
+  <!-- Sparks -->
+  <circle cx="32" cy="2" r="3" fill="#fbbf24"/>
+  <circle cx="28" cy="4" r="2" fill="#f59e0b"/>
+  <circle cx="36" cy="4" r="2" fill="#f59e0b"/>
+</svg>

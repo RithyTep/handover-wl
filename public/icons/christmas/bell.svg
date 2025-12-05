@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Ribbon -->
+  <path d="M24 8 Q32 16 40 8" stroke="#dc2626" stroke-width="4" fill="none"/>
+  <!-- Bell body -->
+  <path d="M16 44 Q16 20 32 16 Q48 20 48 44 L16 44" fill="#fbbf24"/>
+  <!-- Bell rim -->
+  <ellipse cx="32" cy="46" rx="18" ry="6" fill="#f59e0b"/>
+  <!-- Clapper -->
+  <circle cx="32" cy="52" r="4" fill="#92400e"/>
+  <!-- Shine -->
+  <ellipse cx="24" cy="32" rx="4" ry="8" fill="#fff" opacity="0.3"/>
+  <!-- Top -->
+  <ellipse cx="32" cy="16" rx="4" ry="2" fill="#f59e0b"/>
+</svg>

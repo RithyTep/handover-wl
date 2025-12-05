@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Envelope body -->
+  <rect x="8" y="8" width="48" height="52" rx="4" fill="#dc2626"/>
+  <!-- Flap -->
+  <path d="M8 8 L32 24 L56 8" fill="#b91c1c"/>
+  <!-- Gold seal -->
+  <circle cx="32" cy="36" r="12" fill="#fbbf24"/>
+  <circle cx="32" cy="36" r="8" fill="#f59e0b"/>
+  <text x="32" y="40" font-size="10" fill="#dc2626" text-anchor="middle" font-weight="bold">福</text>
+  <!-- Decorative lines -->
+  <rect x="12" y="50" width="40" height="2" fill="#fbbf24" opacity="0.5"/>
+  <rect x="16" y="54" width="32" height="2" fill="#fbbf24" opacity="0.3"/>
+</svg>
