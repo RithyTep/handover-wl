@@ -218,7 +218,7 @@ export function TicketsTable<TData, TValue>({
               ? "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg"
               : theme === Theme.CODING
               ? "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/30 font-mono"
-              : "text-foreground hover:bg-muted border-border"
+              : "text-slate-300 hover:bg-slate-800 border-slate-700"
           }`}
           title={showDetails ? "Hide Details" : "Show Details"}
         >
@@ -252,7 +252,7 @@ export function TicketsTable<TData, TValue>({
                       ? "border-stone-800/50 lunar-card"
                       : theme === Theme.CODING
                       ? "border-green-900/30 coding-card"
-                      : "border-border"
+                      : "border-slate-700 bg-slate-900/50"
                   } ${cardClass}`}
                 >
                   <div className={`flex items-center justify-between px-4 py-3 border-b ${
@@ -262,7 +262,7 @@ export function TicketsTable<TData, TValue>({
                       ? "border-stone-800/50 bg-stone-900/30"
                       : theme === Theme.CODING
                       ? "border-green-900/30 bg-black/50"
-                      : "border-border bg-card"
+                      : "border-slate-700 bg-slate-800/50"
                   }`}>
                     <div className="flex items-center gap-2.5">
                       <span className={`text-[11px] font-medium tabular-nums ${
@@ -272,7 +272,7 @@ export function TicketsTable<TData, TValue>({
                           ? "text-stone-500"
                           : theme === Theme.CODING
                           ? "text-green-600/70 font-mono"
-                          : "text-muted-foreground"
+                          : "text-slate-500"
                       }`}>
                         {index + 1}
                       </span>
@@ -287,7 +287,7 @@ export function TicketsTable<TData, TValue>({
                             ? "text-amber-400 hover:text-amber-300"
                             : theme === Theme.CODING
                             ? "text-green-500/80 hover:text-green-400 font-mono"
-                            : "text-foreground hover:text-primary"
+                            : "text-blue-400 hover:text-blue-300"
                         }`}
                       >
                         {ticket.key}
@@ -305,7 +305,7 @@ export function TicketsTable<TData, TValue>({
                               ? "ring-stone-700"
                               : theme === Theme.CODING
                               ? "ring-green-900/50"
-                              : "ring-border"
+                              : "ring-slate-600"
                           }`}
                         />
                       ) : (
@@ -316,7 +316,7 @@ export function TicketsTable<TData, TValue>({
                             ? "bg-stone-800 text-stone-400"
                             : theme === Theme.CODING
                             ? "bg-green-900/30 text-green-500/80 font-mono"
-                            : "bg-muted text-muted-foreground"
+                            : "bg-slate-700 text-slate-400"
                         }`}>
                           {ticket.assignee === "Unassigned" ? "?" : ticket.assignee.charAt(0).toUpperCase()}
                         </div>
@@ -331,7 +331,7 @@ export function TicketsTable<TData, TValue>({
                       ? "bg-transparent"
                       : theme === Theme.CODING
                       ? "bg-transparent"
-                      : "bg-card"
+                      : "bg-transparent"
                   }`}>
                     <p className={`text-[13px] leading-relaxed line-clamp-2 ${
                       theme === Theme.CHRISTMAS
@@ -340,7 +340,7 @@ export function TicketsTable<TData, TValue>({
                         ? "text-stone-300"
                         : theme === Theme.CODING
                         ? "text-green-400/80"
-                        : "text-foreground"
+                        : "text-slate-200"
                     }`}>{ticket.summary}</p>
 
                     <div className="space-y-3">
@@ -352,7 +352,7 @@ export function TicketsTable<TData, TValue>({
                             ? "text-stone-500"
                             : theme === Theme.CODING
                             ? "text-green-600/70 font-mono"
-                            : "text-muted-foreground"
+                            : "text-slate-500"
                         }`}>Status</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedStatus")
@@ -373,7 +373,7 @@ export function TicketsTable<TData, TValue>({
                             ? "text-stone-500"
                             : theme === Theme.CODING
                             ? "text-green-600/70 font-mono"
-                            : "text-muted-foreground"
+                            : "text-slate-500"
                         }`}>Action</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedAction")

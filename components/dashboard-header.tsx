@@ -206,9 +206,6 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
       <div className="flex items-center gap-6">
         <div className="flex items-center gap-3">
           {/* Professional logo mark */}
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
-            <span className="text-white font-bold text-lg">H</span>
-          </div>
           <div className="flex flex-col">
             <h1 className="text-xl font-semibold text-slate-100 tracking-tight">
               Handover
