@@ -34,4 +34,4 @@ export const THEMES: ThemeInfo[] = [
   },
 ];
 
-export const DEFAULT_THEME: Theme = Theme.CHRISTMAS;
+export const DEFAULT_THEME: Theme = Theme.DEFAULT;
