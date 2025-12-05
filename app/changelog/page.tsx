@@ -18,11 +18,12 @@ const changelog: ChangelogEntry[] = [
   {
     version: "3.6.0",
     date: "2024-12-05",
-    title: "Custom SVG Icons & Theme Enhancement",
+    title: "Custom SVG Icons, tRPC & Theme Enhancement",
     changes: [
       { type: "feature", description: "Added 64+ custom SVG icons across all 4 themes (Christmas, Pixel, Lunar, Coding)" },
       { type: "feature", description: "New themed loading screens with animated decorations" },
       { type: "feature", description: "Floating animated icons in scene backgrounds" },
+      { type: "feature", description: "Migrated to tRPC for type-safe API calls" },
       { type: "improvement", description: "Enhanced dashboard header with theme-specific icons" },
       { type: "improvement", description: "Updated action buttons with custom themed icons" },
       { type: "improvement", description: "Added custom themed cursors for Pixel, Lunar, and Coding themes" },
