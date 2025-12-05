@@ -200,34 +200,46 @@ export function DashboardHeader({ theme, ticketCount }: DashboardHeaderProps) {
     );
   }
 
-  // Default theme header
+  // Default theme header - Professional bank style
   return (
-    <header className="h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-border bg-background/95 backdrop-blur-sm z-10">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl flex items-center gap-2 text-foreground">
-            <span className="font-semibold">Handover</span>
-          </h1>
+    <header className="h-14 sm:h-16 flex-shrink-0 flex items-center justify-between px-4 sm:px-8 border-b border-slate-200 bg-white shadow-sm z-10">
+      <div className="flex items-center gap-6">
+        <div className="flex items-center gap-3">
+          {/* Professional logo mark */}
+          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-md">
+            <span className="text-white font-bold text-lg">H</span>
+          </div>
+          <div className="flex flex-col">
+            <h1 className="text-xl font-semibold text-slate-800 tracking-tight">
+              Handover
+            </h1>
+            <span className="text-[10px] text-slate-400 font-medium -mt-0.5 hidden sm:block">
+              Task Management
+            </span>
+          </div>
         </div>
-        <span className="text-xs font-bold px-2 py-0.5 text-muted-foreground bg-muted rounded-full">
-          {ticketCount}
-        </span>
+        <div className="hidden sm:flex items-center gap-2">
+          <span className="h-5 w-px bg-slate-200" />
+          <span className="text-xs font-semibold px-2.5 py-1 text-blue-700 bg-blue-50 rounded-md border border-blue-100">
+            {ticketCount} tickets
+          </span>
+        </div>
       </div>
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         <ThemeSelector variant={theme} />
         <Link href="/feedback">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" className="text-slate-600 hover:text-blue-600 hover:bg-blue-50">
             <MessageSquare className="w-4 h-4 mr-1.5" />
             <span className="hidden sm:inline">Feedback</span>
           </Button>
         </Link>
         <Link href="/changelog">
-          <Button variant="ghost" size="sm">
+          <Button variant="ghost" size="sm" className="text-slate-600 hover:text-blue-600 hover:bg-blue-50">
             <FileText className="w-4 h-4 mr-1.5" />
             <span className="hidden sm:inline">Changelog</span>
           </Button>
         </Link>
-        <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs bg-muted border border-border rounded">
+        <kbd className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded-md font-medium">
           <Command className="w-3 h-3" />
           <span>K</span>
         </kbd>

@@ -102,41 +102,82 @@ export function DashboardMobileActions({
       ];
     }
 
-    // Default/Christmas theme actions
+    // Christmas theme actions
+    if (theme === Theme.CHRISTMAS) {
+      return [
+        {
+          id: "ai-fill",
+          icon: Snowflake,
+          onClick: onAIFillAll,
+          className: "bg-red-900/40 border border-red-500/30 active:bg-red-900/80",
+          iconColor: "text-red-200",
+        },
+        {
+          id: "quick-fill",
+          icon: Zap,
+          onClick: onQuickFill,
+          className: "bg-blue-900/40 border border-blue-500/30 active:bg-blue-900/80",
+          iconColor: "text-blue-200",
+        },
+        {
+          id: "clear",
+          icon: Trash2,
+          onClick: onClear,
+          className: "bg-yellow-900/40 border border-yellow-500/30 active:bg-yellow-900/80",
+          iconColor: "text-yellow-200",
+        },
+        {
+          id: "save",
+          icon: Save,
+          onClick: onSave,
+          className: "bg-emerald-900/40 border border-emerald-500/30 active:bg-emerald-900/80",
+          iconColor: "text-emerald-200",
+        },
+        {
+          id: "send",
+          icon: Send,
+          onClick: onSendSlack,
+          className: "bg-green-600 active:bg-green-700 text-white shadow-lg shadow-green-900/20",
+          iconColor: "text-white",
+        },
+      ];
+    }
+
+    // Default theme - Professional bank style
     return [
       {
         id: "ai-fill",
-        icon: Snowflake,
+        icon: Zap,
         onClick: onAIFillAll,
-        className: "bg-red-900/40 border border-red-500/30 active:bg-red-900/80",
-        iconColor: "text-red-200",
+        className: "bg-blue-50 border border-blue-200 active:bg-blue-100",
+        iconColor: "text-blue-600",
       },
       {
         id: "quick-fill",
-        icon: Zap,
+        icon: Sparkles,
         onClick: onQuickFill,
-        className: "bg-blue-900/40 border border-blue-500/30 active:bg-blue-900/80",
-        iconColor: "text-blue-200",
+        className: "bg-slate-50 border border-slate-200 active:bg-slate-100",
+        iconColor: "text-slate-600",
       },
       {
         id: "clear",
         icon: Trash2,
         onClick: onClear,
-        className: "bg-yellow-900/40 border border-yellow-500/30 active:bg-yellow-900/80",
-        iconColor: "text-yellow-200",
+        className: "bg-slate-50 border border-slate-200 active:bg-red-50",
+        iconColor: "text-slate-600",
       },
       {
         id: "save",
         icon: Save,
         onClick: onSave,
-        className: "bg-emerald-900/40 border border-emerald-500/30 active:bg-emerald-900/80",
-        iconColor: "text-emerald-200",
+        className: "bg-slate-50 border border-slate-200 active:bg-slate-100",
+        iconColor: "text-slate-600",
       },
       {
         id: "send",
         icon: Send,
         onClick: onSendSlack,
-        className: "bg-green-600 active:bg-green-700 text-white shadow-lg shadow-green-900/20",
+        className: "bg-blue-600 active:bg-blue-700 shadow-md",
         iconColor: "text-white",
       },
     ];
@@ -151,7 +192,9 @@ export function DashboardMobileActions({
         ? "bg-stone-900/95 border-stone-800"
         : theme === Theme.CODING
         ? "bg-black/95 border-green-900/30"
-        : "bg-background/95 border-border"
+        : theme === Theme.CHRISTMAS
+        ? "bg-background/95 border-border"
+        : "bg-white/95 border-slate-200 shadow-lg"
     )}>
       <div className="flex items-center justify-around">
         {actions.map((action) => (

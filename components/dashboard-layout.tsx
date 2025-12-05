@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { NewYearScene } from "@/components/new-year-scene";
 import { LunarScene } from "@/components/lunar-scene";
 import { CodingScene } from "@/components/coding-scene";
+import { ProfessionalScene } from "@/components/professional-scene";
 import { DashboardHeader } from "./dashboard-header";
 import { DashboardContent } from "./dashboard-content";
 import { DashboardMobileActions } from "./dashboard-mobile-actions";
@@ -88,6 +89,7 @@ export function DashboardLayout({
             : "bg-background"
         )}
       >
+        {theme === Theme.DEFAULT && <ProfessionalScene />}
         {theme === Theme.CHRISTMAS && <NewYearScene />}
         {theme === Theme.PIXEL && <PixelStatusBar />}
         {theme === Theme.LUNAR && <LunarScene />}
