@@ -252,7 +252,7 @@ export function TicketsTable<TData, TValue>({
                       ? "border-stone-800/50 lunar-card"
                       : theme === Theme.CODING
                       ? "border-green-900/30 coding-card"
-                      : "border-slate-700 bg-slate-900/50"
+                      : "border-slate-700 bg-slate-900"
                   } ${cardClass}`}
                 >
                   <div className={`flex items-center justify-between px-4 py-3 border-b ${
@@ -262,18 +262,21 @@ export function TicketsTable<TData, TValue>({
                       ? "border-stone-800/50 bg-stone-900/30"
                       : theme === Theme.CODING
                       ? "border-green-900/30 bg-black/50"
-                      : "border-slate-700 bg-slate-800/50"
+                      : "border-slate-600 bg-slate-800/90"
                   }`}>
                     <div className="flex items-center gap-2.5">
-                      <span className={`text-[11px] font-medium tabular-nums ${
-                        theme === Theme.CHRISTMAS
-                          ? "text-white/80"
-                          : theme === Theme.LUNAR
-                          ? "text-stone-500"
-                          : theme === Theme.CODING
-                          ? "text-green-600/70 font-mono"
-                          : "text-slate-500"
-                      }`}>
+                      <span
+                        className={`text-[11px] font-medium tabular-nums ${
+                          theme === Theme.CHRISTMAS
+                            ? "text-white/80"
+                            : theme === Theme.LUNAR
+                            ? "text-stone-500"
+                            : theme === Theme.CODING
+                            ? "text-green-600/70 font-mono"
+                            : ""
+                        }`}
+                        style={theme === Theme.DEFAULT ? { color: 'rgba(255,255,255,0.7)' } : undefined}
+                      >
                         {index + 1}
                       </span>
                       <a
@@ -287,8 +290,9 @@ export function TicketsTable<TData, TValue>({
                             ? "text-amber-400 hover:text-amber-300"
                             : theme === Theme.CODING
                             ? "text-green-500/80 hover:text-green-400 font-mono"
-                            : "text-blue-400 hover:text-blue-300"
+                            : ""
                         }`}
+                        style={theme === Theme.DEFAULT ? { color: '#38bdf8' } : undefined}
                       >
                         {ticket.key}
                       </a>
@@ -309,15 +313,18 @@ export function TicketsTable<TData, TValue>({
                           }`}
                         />
                       ) : (
-                        <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium ${
-                          theme === Theme.CHRISTMAS
-                            ? "bg-white/20 text-white"
-                            : theme === Theme.LUNAR
-                            ? "bg-stone-800 text-stone-400"
-                            : theme === Theme.CODING
-                            ? "bg-green-900/30 text-green-500/80 font-mono"
-                            : "bg-slate-700 text-slate-400"
-                        }`}>
+                        <div
+                          className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium ${
+                            theme === Theme.CHRISTMAS
+                              ? "bg-white/20 text-white"
+                              : theme === Theme.LUNAR
+                              ? "bg-stone-800 text-stone-400"
+                              : theme === Theme.CODING
+                              ? "bg-green-900/30 text-green-500/80 font-mono"
+                              : "bg-slate-500"
+                          }`}
+                          style={theme === Theme.DEFAULT ? { color: '#ffffff' } : undefined}
+                        >
                           {ticket.assignee === "Unassigned" ? "?" : ticket.assignee.charAt(0).toUpperCase()}
                         </div>
                       )}
@@ -333,27 +340,33 @@ export function TicketsTable<TData, TValue>({
                       ? "bg-transparent"
                       : "bg-transparent"
                   }`}>
-                    <p className={`text-[13px] leading-relaxed line-clamp-2 ${
-                      theme === Theme.CHRISTMAS
-                        ? "text-white/90"
-                        : theme === Theme.LUNAR
-                        ? "text-stone-300"
-                        : theme === Theme.CODING
-                        ? "text-green-400/80"
-                        : "text-slate-200"
-                    }`}>{ticket.summary}</p>
+                    <p
+                      className={`text-[13px] leading-relaxed line-clamp-2 ${
+                        theme === Theme.CHRISTMAS
+                          ? "text-white/90"
+                          : theme === Theme.LUNAR
+                          ? "text-stone-300"
+                          : theme === Theme.CODING
+                          ? "text-green-400/80"
+                          : ""
+                      }`}
+                      style={theme === Theme.DEFAULT ? { color: 'rgba(255,255,255,0.9)' } : undefined}
+                    >{ticket.summary}</p>
 
                     <div className="space-y-3">
                       <div>
-                        <label className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${
-                          theme === Theme.CHRISTMAS
-                            ? "text-white/70"
-                            : theme === Theme.LUNAR
-                            ? "text-stone-500"
-                            : theme === Theme.CODING
-                            ? "text-green-600/70 font-mono"
-                            : "text-slate-500"
-                        }`}>Status</label>
+                        <label
+                          className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${
+                            theme === Theme.CHRISTMAS
+                              ? "text-white/70"
+                              : theme === Theme.LUNAR
+                              ? "text-stone-500"
+                              : theme === Theme.CODING
+                              ? "text-green-600/70 font-mono"
+                              : ""
+                          }`}
+                          style={theme === Theme.DEFAULT ? { color: 'rgba(255,255,255,0.6)' } : undefined}
+                        >Status</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedStatus")
                           .map((cell) => (
@@ -366,15 +379,18 @@ export function TicketsTable<TData, TValue>({
                           ))}
                       </div>
                       <div>
-                        <label className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${
-                          theme === Theme.CHRISTMAS
-                            ? "text-white/70"
-                            : theme === Theme.LUNAR
-                            ? "text-stone-500"
-                            : theme === Theme.CODING
-                            ? "text-green-600/70 font-mono"
-                            : "text-slate-500"
-                        }`}>Action</label>
+                        <label
+                          className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${
+                            theme === Theme.CHRISTMAS
+                              ? "text-white/70"
+                              : theme === Theme.LUNAR
+                              ? "text-stone-500"
+                              : theme === Theme.CODING
+                              ? "text-green-600/70 font-mono"
+                              : ""
+                          }`}
+                          style={theme === Theme.DEFAULT ? { color: 'rgba(255,255,255,0.6)' } : undefined}
+                        >Action</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedAction")
                           .map((cell) => (

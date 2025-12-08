@@ -508,6 +508,62 @@
     box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
   }
 
+  /* Default theme - mobile card styles */
+  body.theme-default main p {
+    color: #f1f5f9 !important;
+  }
+
+  body.theme-default main span {
+    color: #e2e8f0 !important;
+  }
+
+  body.theme-default main a {
+    color: #60a5fa !important;
+  }
+
+  body.theme-default main a:hover {
+    color: #93c5fd !important;
+  }
+
+  /* Default theme - mobile card header */
+  body.theme-default main label {
+    color: #94a3b8 !important;
+  }
+
+  /* Default theme - mobile card div text */
+  body.theme-default main div {
+    color: #e2e8f0;
+  }
+
+  /* Default theme - force mobile card content visibility */
+  body.theme-default .space-y-4 > div {
+    color: #f1f5f9 !important;
+  }
+
+  body.theme-default .space-y-4 span {
+    color: #cbd5e1 !important;
+  }
+
+  body.theme-default .space-y-4 a {
+    color: #60a5fa !important;
+  }
+
+  body.theme-default .space-y-4 p {
+    color: #f1f5f9 !important;
+  }
+
+  body.theme-default .rounded-lg span {
+    color: #cbd5e1 !important;
+  }
+
+  body.theme-default .rounded-lg a {
+    color: #60a5fa !important;
+  }
+
+  body.theme-default .rounded-lg p {
+    color: #f1f5f9 !important;
+  }
+
   /* Default theme - custom scrollbar */
   body.theme-default ::-webkit-scrollbar {
     width: 8px;
