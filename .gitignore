@@ -42,3 +42,5 @@ Thumbs.db
 *.pem
 
 test_persistence.txt
+
+/lib/generated/prisma

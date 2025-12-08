@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import { unstable_cache } from "next/cache"
+import { connection } from "next/server"
 import { DashboardClient } from "@/components/dashboard-client"
 import {
 	getThemePreference,
@@ -10,20 +10,13 @@ import { getTicketsWithSavedData } from "@/lib/services/jira"
 import { isValidTheme, type Theme } from "@/lib/types"
 import { DEFAULT_THEME } from "@/lib/constants"
 
-const getCachedTheme = unstable_cache(
-	async () => {
-		await initDatabase()
-		return getThemePreference()
-	},
-	["theme-preference"],
-	{ revalidate: 300 }
-)
-
 async function DashboardWithData() {
+	// Opt into dynamic rendering - required for database access
+	await connection()
 	await initDatabase()
 
 	const [themePreference, savedData] = await Promise.all([
-		getCachedTheme(),
+		getThemePreference(),
 		loadTicketData(),
 	])
 
