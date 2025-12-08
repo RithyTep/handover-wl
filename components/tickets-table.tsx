@@ -24,9 +24,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { TicketPreview } from "@/components/ticket-preview"
-import type { Ticket } from "@/interfaces/ticket.interface"
+import { Theme } from "@/enums"
+import type { Ticket } from "@/lib/types"
 import { TicketFiltersComponent, TicketFilters } from "@/components/ticket-filters"
-import { Theme } from "@/enums/theme.enum"
 
 interface TicketsTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -210,13 +210,13 @@ export function TicketsTable<TData, TValue>({
           size="sm"
           onClick={toggleDetails}
           className={`h-9 px-3 border ${
-            theme === Theme.CHRISTMAS
+            theme === "christmas"
               ? "text-white/80 hover:text-white hover:bg-white/10 border-white/20"
-              : theme === Theme.PIXEL
+              : theme === "pixel"
               ? "bg-slate-900 border-2 border-slate-700 hover:border-indigo-500 hover:text-indigo-400 pixel-shadow"
-              : theme === Theme.LUNAR
+              : theme === "lunar"
               ? "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg"
-              : theme === Theme.CODING
+              : theme === "coding"
               ? "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/30 font-mono"
               : "text-slate-300 hover:bg-slate-800 border-slate-700"
           }`}
@@ -246,36 +246,37 @@ export function TicketsTable<TData, TValue>({
                 <div
                   key={row.id}
                   className={`border rounded-lg overflow-hidden shadow-sm ${
-                    theme === Theme.CHRISTMAS
+                    theme === "christmas"
                       ? "border-white/20"
-                      : theme === Theme.LUNAR
+                      : theme === "lunar"
                       ? "border-stone-800/50 lunar-card"
-                      : theme === Theme.CODING
+                      : theme === "coding"
                       ? "border-green-900/30 coding-card"
-                      : "border-slate-700 bg-slate-900"
+                      : "border-slate-700 bg-slate-900 default-mobile-card"
                   } ${cardClass}`}
                 >
                   <div className={`flex items-center justify-between px-4 py-3 border-b ${
-                    theme === Theme.CHRISTMAS
+                    theme === "christmas"
                       ? "border-white/20 bg-black/10"
-                      : theme === Theme.LUNAR
+                      : theme === "lunar"
                       ? "border-stone-800/50 bg-stone-900/30"
-                      : theme === Theme.CODING
+                      : theme === "coding"
                       ? "border-green-900/30 bg-black/50"
                       : "border-slate-600 bg-slate-800/90"
                   }`}>
                     <div className="flex items-center gap-2.5">
                       <span
                         className={`text-[11px] font-medium tabular-nums ${
-                          theme === Theme.CHRISTMAS
+                          theme === "christmas"
                             ? "text-white/80"
-                            : theme === Theme.LUNAR
+                            : theme === "lunar"
                             ? "text-stone-500"
-                            : theme === Theme.CODING
+                            : theme === "coding"
                             ? "text-green-600/70 font-mono"
-                            : ""
+                            : theme === "default"
+                            ? "text-slate-300"
+                            : "text-slate-400"
                         }`}
-                        style={theme === Theme.DEFAULT ? { color: 'rgba(255,255,255,0.7)' } : undefined}
                       >
                         {index + 1}
                       </span>
@@ -284,15 +285,16 @@ export function TicketsTable<TData, TValue>({
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`text-sm font-semibold transition-colors ${
-                          theme === Theme.CHRISTMAS
+                          theme === "christmas"
                             ? "text-white hover:text-white/80"
-                            : theme === Theme.LUNAR
+                            : theme === "lunar"
                             ? "text-amber-400 hover:text-amber-300"
-                            : theme === Theme.CODING
+                            : theme === "coding"
                             ? "text-green-500/80 hover:text-green-400 font-mono"
-                            : ""
+                            : theme === "default"
+                            ? "text-sky-400 hover:text-sky-300"
+                            : "text-blue-400 hover:text-blue-300"
                         }`}
-                        style={theme === Theme.DEFAULT ? { color: '#38bdf8' } : undefined}
                       >
                         {ticket.key}
                       </a>
@@ -303,11 +305,11 @@ export function TicketsTable<TData, TValue>({
                           src={ticket.assigneeAvatar}
                           alt={ticket.assignee}
                           className={`w-5 h-5 rounded-full ring-1 ${
-                            theme === Theme.CHRISTMAS
+                            theme === "christmas"
                               ? "ring-white/30"
-                              : theme === Theme.LUNAR
+                              : theme === "lunar"
                               ? "ring-stone-700"
-                              : theme === Theme.CODING
+                              : theme === "coding"
                               ? "ring-green-900/50"
                               : "ring-slate-600"
                           }`}
@@ -315,15 +317,16 @@ export function TicketsTable<TData, TValue>({
                       ) : (
                         <div
                           className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] font-medium ${
-                            theme === Theme.CHRISTMAS
+                            theme === "christmas"
                               ? "bg-white/20 text-white"
-                              : theme === Theme.LUNAR
+                              : theme === "lunar"
                               ? "bg-stone-800 text-stone-400"
-                              : theme === Theme.CODING
+                              : theme === "coding"
                               ? "bg-green-900/30 text-green-500/80 font-mono"
-                              : "bg-slate-500"
+                              : theme === "default"
+                              ? "bg-slate-600 text-white"
+                              : "bg-slate-500 text-white"
                           }`}
-                          style={theme === Theme.DEFAULT ? { color: '#ffffff' } : undefined}
                         >
                           {ticket.assignee === "Unassigned" ? "?" : ticket.assignee.charAt(0).toUpperCase()}
                         </div>
@@ -332,40 +335,42 @@ export function TicketsTable<TData, TValue>({
                   </div>
 
                   <div className={`p-4 space-y-4 ${
-                    theme === Theme.CHRISTMAS
+                    theme === "christmas"
                       ? ""
-                      : theme === Theme.LUNAR
+                      : theme === "lunar"
                       ? "bg-transparent"
-                      : theme === Theme.CODING
+                      : theme === "coding"
                       ? "bg-transparent"
                       : "bg-transparent"
                   }`}>
                     <p
                       className={`text-[13px] leading-relaxed line-clamp-2 ${
-                        theme === Theme.CHRISTMAS
+                        theme === "christmas"
                           ? "text-white/90"
-                          : theme === Theme.LUNAR
+                          : theme === "lunar"
                           ? "text-stone-300"
-                          : theme === Theme.CODING
+                          : theme === "coding"
                           ? "text-green-400/80"
-                          : ""
+                          : theme === "default"
+                          ? "text-slate-100"
+                          : "text-slate-200"
                       }`}
-                      style={theme === Theme.DEFAULT ? { color: 'rgba(255,255,255,0.9)' } : undefined}
                     >{ticket.summary}</p>
 
                     <div className="space-y-3">
                       <div>
                         <label
                           className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${
-                            theme === Theme.CHRISTMAS
+                            theme === "christmas"
                               ? "text-white/70"
-                              : theme === Theme.LUNAR
+                              : theme === "lunar"
                               ? "text-stone-500"
-                              : theme === Theme.CODING
+                              : theme === "coding"
                               ? "text-green-600/70 font-mono"
-                              : ""
+                              : theme === "default"
+                              ? "text-slate-400"
+                              : "text-slate-500"
                           }`}
-                          style={theme === Theme.DEFAULT ? { color: 'rgba(255,255,255,0.6)' } : undefined}
                         >Status</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedStatus")
@@ -381,15 +386,16 @@ export function TicketsTable<TData, TValue>({
                       <div>
                         <label
                           className={`text-[10px] font-medium uppercase tracking-wider mb-1.5 block ${
-                            theme === Theme.CHRISTMAS
+                            theme === "christmas"
                               ? "text-white/70"
-                              : theme === Theme.LUNAR
+                              : theme === "lunar"
                               ? "text-stone-500"
-                              : theme === Theme.CODING
+                              : theme === "coding"
                               ? "text-green-600/70 font-mono"
-                              : ""
+                              : theme === "default"
+                              ? "text-slate-400"
+                              : "text-slate-500"
                           }`}
-                          style={theme === Theme.DEFAULT ? { color: 'rgba(255,255,255,0.6)' } : undefined}
                         >Action</label>
                         {row.getVisibleCells()
                           .filter((cell) => cell.column.id === "savedAction")
@@ -416,36 +422,36 @@ export function TicketsTable<TData, TValue>({
       </div>
 
       <div className={`overflow-hidden hidden sm:flex sm:flex-col ${
-        theme === Theme.PIXEL
+        theme === "pixel"
           ? "border-2 border-slate-700 bg-slate-900/50 backdrop-blur-sm pixel-shadow"
-          : theme === Theme.LUNAR
+          : theme === "lunar"
           ? "lunar-card border border-stone-800/50 shadow-xl"
-          : theme === Theme.CODING
+          : theme === "coding"
           ? "coding-card border border-green-900/30 shadow-xl shadow-green-900/20"
           : "border border-white/20 rounded-md shadow-xl"
       }`}>
         <div className="overflow-auto">
           <Table className="min-w-full md:min-w-[1400px]">
             <TableHeader className={`sticky top-0 z-10 ${
-              theme === Theme.CHRISTMAS
+              theme === "christmas"
                 ? "bg-black/40 backdrop-blur-md"
-                : theme === Theme.PIXEL
+                : theme === "pixel"
                 ? "bg-slate-950"
-                : theme === Theme.LUNAR
+                : theme === "lunar"
                 ? "lunar-table-header backdrop-blur-md"
-                : theme === Theme.CODING
+                : theme === "coding"
                 ? "coding-table-header backdrop-blur-md"
                 : "bg-background backdrop-blur-md"
             }`}>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id} className={`hover:bg-transparent ${
-                  theme === Theme.CHRISTMAS
+                  theme === "christmas"
                     ? "border-b border-white/10"
-                    : theme === Theme.PIXEL
+                    : theme === "pixel"
                     ? "border-b-2 border-slate-700"
-                    : theme === Theme.LUNAR
+                    : theme === "lunar"
                     ? "border-b border-stone-800/50"
-                    : theme === Theme.CODING
+                    : theme === "coding"
                     ? "border-b border-green-900/30"
                     : "border-b border-border"
                 }`}>
@@ -454,13 +460,13 @@ export function TicketsTable<TData, TValue>({
                       <TableHead
                         key={header.id}
                         className={`h-10 px-3 text-xs font-bold uppercase tracking-wide ${
-                          theme === Theme.CHRISTMAS
+                          theme === "christmas"
                             ? "text-white/90 border-r border-white/10 last:border-r-0"
-                            : theme === Theme.PIXEL
+                            : theme === "pixel"
                             ? "text-slate-400 border-r-2 border-slate-800 last:border-r-0"
-                            : theme === Theme.LUNAR
+                            : theme === "lunar"
                             ? "text-stone-500 border-r border-stone-800/30 last:border-r-0"
-                            : theme === Theme.CODING
+                            : theme === "coding"
                             ? "text-green-500/70 border-r border-green-900/30 last:border-r-0 font-mono"
                             : "text-foreground border-r border-border last:border-r-0"
                         }`}
@@ -481,18 +487,18 @@ export function TicketsTable<TData, TValue>({
               ))}
             </TableHeader>
             <TableBody className={
-              theme === Theme.PIXEL
+              theme === "pixel"
                 ? "text-sm divide-y-2 divide-slate-800"
-                : theme === Theme.LUNAR
+                : theme === "lunar"
                 ? "text-sm"
-                : theme === Theme.CODING
+                : theme === "coding"
                 ? "text-sm font-mono"
                 : ""
             }>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row, index) => {
                   let rowClass = "";
-                  if (theme === Theme.CHRISTMAS) {
+                  if (theme === "christmas") {
                     if (index % 3 === 0) rowClass = "christmas-row-gold";
                     else if (index % 3 === 1) rowClass = "christmas-row-red";
                     else rowClass = "christmas-row-green";
@@ -503,13 +509,13 @@ export function TicketsTable<TData, TValue>({
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     className={`transition-colors duration-150 ${
-                      theme === Theme.CHRISTMAS
+                      theme === "christmas"
                         ? `border-b border-white/10 ${rowClass} hover:brightness-110`
-                        : theme === Theme.PIXEL
+                        : theme === "pixel"
                         ? "hover:bg-slate-800/50"
-                        : theme === Theme.LUNAR
+                        : theme === "lunar"
                         ? "lunar-table-row"
-                        : theme === Theme.CODING
+                        : theme === "coding"
                         ? "coding-table-row"
                         : "border-b border-border hover:bg-muted/50"
                     }`}
@@ -518,13 +524,13 @@ export function TicketsTable<TData, TValue>({
                       <TableCell
                         key={cell.id}
                         className={`px-3 py-2 ${
-                          theme === Theme.CHRISTMAS
+                          theme === "christmas"
                             ? `border-r border-white/10 last:border-r-0 ${cellIndex === 0 ? 'candy-cane-border' : ''}`
-                            : theme === Theme.PIXEL
+                            : theme === "pixel"
                             ? "border-r-2 border-slate-800 last:border-r-0"
-                            : theme === Theme.LUNAR
+                            : theme === "lunar"
                             ? "lunar-table-cell border-r border-stone-800/30 last:border-r-0 text-stone-300"
-                            : theme === Theme.CODING
+                            : theme === "coding"
                             ? "coding-table-cell border-r border-green-900/30 last:border-r-0 text-green-400/70"
                             : "border-r border-border last:border-r-0"
                         }`}

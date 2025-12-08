@@ -1,153 +1,203 @@
-import axios from "axios";
-import { JQL_QUERY, JIRA_FIELDS, JIRA } from "@/lib/config";
-import type { Ticket, JiraIssue, TicketData } from "@/lib/types";
+import axios from "axios"
+import { getJiraConfig } from "@/lib/env"
+import { logger } from "@/lib/logger"
+import { JQL_QUERY, JIRA_FIELDS, JIRA, TIMEOUTS } from "@/lib/config"
+import type { Ticket, JiraIssue, JiraComment, TicketData } from "@/lib/types"
 
-const { JIRA_URL, JIRA_EMAIL, JIRA_API_TOKEN } = process.env;
+const log = logger.jira
 
-const getAuthHeader = (): string =>
-  Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString("base64");
-
-const createHeaders = () => ({
-  Authorization: `Basic ${getAuthHeader()}`,
-  Accept: "application/json",
-  "Content-Type": "application/json",
-});
-
-export async function fetchTickets(
-  jql: string = JQL_QUERY,
-  maxResults: number = JIRA.MAX_RESULTS
-): Promise<JiraIssue[]> {
-  const response = await axios.post(
-    `${JIRA_URL}/rest/api/3/search/jql`,
-    { jql, maxResults, fields: JIRA_FIELDS },
-    { headers: createHeaders() }
-  );
-  return response.data.issues;
+function getConfig() {
+	return getJiraConfig()
 }
 
-type CustomField = { value?: string } | undefined;
+function getAuthHeader(): string {
+	const { email, apiToken } = getConfig()
+	return Buffer.from(`${email}:${apiToken}`).toString("base64")
+}
+
+function createHeaders() {
+	return {
+		Authorization: `Basic ${getAuthHeader()}`,
+		Accept: "application/json",
+		"Content-Type": "application/json",
+	}
+}
+
+export async function fetchTickets(
+	jql: string = JQL_QUERY,
+	maxResults: number = JIRA.MAX_RESULTS
+): Promise<JiraIssue[]> {
+	const { baseUrl } = getConfig()
+	const timer = log.time("Fetch tickets from Jira")
+
+	try {
+		const response = await axios.post(
+			`${baseUrl}/rest/api/3/search/jql`,
+			{ jql, maxResults, fields: JIRA_FIELDS },
+			{ headers: createHeaders(), timeout: TIMEOUTS.JIRA }
+		)
+
+		timer.end("Tickets fetched", { count: response.data.issues?.length || 0 })
+		return response.data.issues
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to fetch tickets from Jira", { error: message })
+		throw error
+	}
+}
+
+type CustomField = { value?: string } | undefined
 
 export function transformIssue(
-  issue: JiraIssue,
-  savedData?: TicketData
+	issue: JiraIssue,
+	savedData?: TicketData
 ): Ticket {
-  const mainTicketType = issue.fields[JIRA.FIELDS.WL_MAIN_TICKET_TYPE] as CustomField;
-  const subTicketType = issue.fields[JIRA.FIELDS.WL_SUB_TICKET_TYPE] as CustomField;
-  const customerLevel = issue.fields[JIRA.FIELDS.CUSTOMER_LEVEL] as string | undefined;
+	const { baseUrl } = getConfig()
+	const mainTicketType = issue.fields[
+		JIRA.FIELDS.WL_MAIN_TICKET_TYPE
+	] as CustomField
+	const subTicketType = issue.fields[
+		JIRA.FIELDS.WL_SUB_TICKET_TYPE
+	] as CustomField
+	const customerLevel = issue.fields[JIRA.FIELDS.CUSTOMER_LEVEL] as
+		| string
+		| undefined
 
-  return {
-    key: issue.key,
-    summary: issue.fields.summary,
-    status: issue.fields.status.name,
-    assignee: issue.fields.assignee?.displayName || "Unassigned",
-    assigneeAvatar: issue.fields.assignee?.avatarUrls?.["48x48"] || null,
-    created: issue.fields.created,
-    dueDate: issue.fields.duedate || null,
-    issueType: issue.fields.issuetype?.name || "None",
-    wlMainTicketType: mainTicketType?.value || "None",
-    wlSubTicketType: subTicketType?.value || "None",
-    customerLevel: customerLevel || "None",
-    jiraUrl: `${JIRA_URL}/browse/${issue.key}`,
-    savedStatus: savedData?.status || "--",
-    savedAction: savedData?.action || "--",
-  };
+	return {
+		key: issue.key,
+		summary: issue.fields.summary,
+		status: issue.fields.status.name,
+		assignee: issue.fields.assignee?.displayName || "Unassigned",
+		assigneeAvatar: issue.fields.assignee?.avatarUrls?.["48x48"] || null,
+		created: issue.fields.created,
+		dueDate: issue.fields.duedate || null,
+		issueType: issue.fields.issuetype?.name || "None",
+		wlMainTicketType: mainTicketType?.value || "None",
+		wlSubTicketType: subTicketType?.value || "None",
+		customerLevel: customerLevel || "None",
+		jiraUrl: `${baseUrl}/browse/${issue.key}`,
+		savedStatus: savedData?.status || "--",
+		savedAction: savedData?.action || "--",
+	}
 }
 
 export async function getTicketsWithSavedData(
-  savedData: Record<string, TicketData>
+	savedData: Record<string, TicketData>
 ): Promise<Ticket[]> {
-  const issues = await fetchTickets();
-  return issues.map((issue) => transformIssue(issue, savedData[issue.key]));
+	const issues = await fetchTickets()
+	return issues.map((issue) => transformIssue(issue, savedData[issue.key]))
 }
 
 export async function postComment(
-  issueKey: string,
-  comment: string
+	issueKey: string,
+	comment: string
 ): Promise<boolean> {
-  try {
-    await axios.post(
-      `${JIRA_URL}/rest/api/3/issue/${issueKey}/comment`,
-      {
-        body: {
-          type: "doc",
-          version: 1,
-          content: [
-            {
-              type: "paragraph",
-              content: [{ type: "text", text: comment }],
-            },
-          ],
-        },
-      },
-      { headers: createHeaders() }
-    );
-    return true;
-  } catch {
-    return false;
-  }
-}
+	const { baseUrl } = getConfig()
+	log.info("Posting comment to Jira", { issueKey })
 
-export interface JiraComment {
-  author: {
-    displayName: string;
-    accountId: string;
-  };
-  body: {
-    content?: Array<{
-      content?: Array<{
-        text?: string;
-      }>;
-    }>;
-  };
-  created: string;
+	try {
+		await axios.post(
+			`${baseUrl}/rest/api/3/issue/${issueKey}/comment`,
+			{
+				body: {
+					type: "doc",
+					version: 1,
+					content: [
+						{
+							type: "paragraph",
+							content: [{ type: "text", text: comment }],
+						},
+					],
+				},
+			},
+			{ headers: createHeaders(), timeout: TIMEOUTS.JIRA }
+		)
+
+		log.info("Comment posted successfully", { issueKey })
+		return true
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to post comment to Jira", { issueKey, error: message })
+		return false
+	}
 }
 
 function extractTextFromBody(body: JiraComment["body"]): string {
-  if (!body?.content) return "";
-  return body.content
-    .flatMap((block) => block.content?.map((item) => item.text) || [])
-    .filter(Boolean)
-    .join(" ");
+	if (!body?.content) return ""
+	return body.content
+		.flatMap((block) => block.content?.map((item) => item.text) || [])
+		.filter(Boolean)
+		.join(" ")
 }
 
 export async function fetchTicketComments(
-  issueKey: string
+	issueKey: string
 ): Promise<Array<{ author: string; text: string; created: string }>> {
-  try {
-    const response = await axios.get(
-      `${JIRA_URL}/rest/api/3/issue/${issueKey}/comment`,
-      { headers: createHeaders() }
-    );
+	const { baseUrl } = getConfig()
 
-    const comments: JiraComment[] = response.data.comments || [];
+	try {
+		const response = await axios.get(
+			`${baseUrl}/rest/api/3/issue/${issueKey}/comment`,
+			{ headers: createHeaders(), timeout: TIMEOUTS.JIRA }
+		)
 
-    return comments.map((comment) => ({
-      author: comment.author.displayName,
-      text: extractTextFromBody(comment.body),
-      created: comment.created,
-    }));
-  } catch {
-    return [];
-  }
+		const comments: JiraComment[] = response.data.comments || []
+
+		return comments.map((comment) => ({
+			author: comment.author.displayName,
+			text: extractTextFromBody(comment.body),
+			created: comment.created,
+		}))
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to fetch comments", { issueKey, error: message })
+		return []
+	}
 }
 
 export function getLatestWLTCComment(
-  comments: Array<{ author: string; text: string; created: string }>
+	comments: Array<{ author: string; text: string; created: string }>
 ): { author: string; text: string } | null {
-  // Filter comments from WL_TC users (not bots like "Ticket Summary Analyst")
-  const wlTcComments = comments.filter((c) => {
-    const authorLower = c.author.toLowerCase();
-    return (
-      authorLower.includes("_wl_") ||
-      authorLower.includes("wl_tc") ||
-      authorLower.includes("wl_am") ||
-      authorLower.includes("wl_po")
-    );
-  });
+	const wlTcComments = comments.filter((c) => {
+		const authorLower = c.author.toLowerCase()
+		return (
+			authorLower.includes("_wl_") ||
+			authorLower.includes("wl_tc") ||
+			authorLower.includes("wl_am") ||
+			authorLower.includes("wl_po")
+		)
+	})
 
-  if (wlTcComments.length === 0) return null;
+	if (wlTcComments.length === 0) return null
 
-  // Return the latest one (comments are usually sorted by date)
-  const latest = wlTcComments[wlTcComments.length - 1];
-  return { author: latest.author, text: latest.text };
+	const latest = wlTcComments[wlTcComments.length - 1]
+	return { author: latest.author, text: latest.text }
+}
+
+export async function checkHealth(): Promise<{
+	healthy: boolean
+	latency: number
+	error?: string
+}> {
+	const { baseUrl } = getConfig()
+	const start = Date.now()
+
+	try {
+		await axios.get(`${baseUrl}/rest/api/3/myself`, {
+			headers: createHeaders(),
+			timeout: 5000,
+		})
+
+		return {
+			healthy: true,
+			latency: Date.now() - start,
+		}
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		return {
+			healthy: false,
+			latency: Date.now() - start,
+			error: message,
+		}
+	}
 }

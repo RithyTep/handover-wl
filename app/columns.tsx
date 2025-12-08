@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import type { Ticket } from "@/interfaces/ticket.interface";
+import type { Ticket } from "@/lib/types"
 
 interface ColumnsProps {
   ticketData: Record<string, string>;

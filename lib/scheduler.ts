@@ -1,3 +1,11 @@
+/**
+ * Scheduler Service
+ * Implements Twelve-Factor App methodology:
+ * - Factor VI: Processes (stateless execution model)
+ * - Factor VIII: Concurrency (scale out via process model)
+ * - Factor IX: Disposability (fast startup, graceful shutdown)
+ */
+
 import * as cron from "node-cron";
 import axios from "axios";
 import {
@@ -9,26 +17,45 @@ import {
   createBackup,
   cleanupOldBackups,
 } from "@/lib/services";
+import { getAppConfig } from "@/lib/env";
+import { logger } from "@/lib/logger";
 import { BACKUP, TIMEZONE, TIMEOUTS } from "@/lib/config";
 
-const APP_URL = process.env.APP_URL || "http://localhost:3000";
-const SCHEDULE_ENABLED = process.env.SCHEDULE_ENABLED === "true";
+const log = logger.scheduler;
+
+/**
+ * Get app configuration from environment
+ */
+const getConfig = () => getAppConfig();
 
 let scheduledTasks: cron.ScheduledTask[] = [];
 
+/**
+ * Convert HH:MM time to cron expression
+ */
 function timeToCron(time: string): string {
   const [hour, minute] = time.split(":");
   return `${minute} ${hour} * * *`;
 }
 
-export async function initScheduler() {
-  if (!SCHEDULE_ENABLED) {
-    console.log("[Scheduler] Disabled. Set SCHEDULE_ENABLED=true to enable.");
+/**
+ * Initialize the scheduler
+ * Sets up cron jobs for:
+ * - Evening and night shift handovers
+ * - Scheduled comment checker
+ * - Hourly automatic backups
+ */
+export async function initScheduler(): Promise<void> {
+  const config = getConfig();
+
+  if (!config.schedulerEnabled) {
+    log.info("Scheduler disabled. Set SCHEDULE_ENABLED=true to enable.");
     return;
   }
 
-  console.log("[Scheduler] Initializing...");
+  log.info("Initializing scheduler...");
 
+  // Stop existing tasks (Factor IX: Disposability)
   scheduledTasks.forEach((task) => task.stop());
   scheduledTasks = [];
 
@@ -36,6 +63,7 @@ export async function initScheduler() {
   const cron1 = timeToCron(time1);
   const cron2 = timeToCron(time2);
 
+  // Evening shift task
   const task1 = cron.schedule(
     cron1,
     async () => {
@@ -46,6 +74,7 @@ export async function initScheduler() {
     { timezone: TIMEZONE.NAME }
   );
 
+  // Night shift task
   const task2 = cron.schedule(
     cron2,
     async () => {
@@ -56,6 +85,7 @@ export async function initScheduler() {
     { timezone: TIMEZONE.NAME }
   );
 
+  // Scheduled comment checker (runs every minute)
   const commentTask = cron.schedule(
     "* * * * *",
     async () => {
@@ -66,19 +96,20 @@ export async function initScheduler() {
     { timezone: TIMEZONE.NAME }
   );
 
+  // Hourly backup task
   const backupTask = cron.schedule(
     "0 * * * *",
     async () => {
-      console.log("[Scheduler] Running hourly backup...");
+      log.info("Running hourly backup...");
       try {
         const backup = await createBackup("auto", "Hourly automatic backup");
         if (backup) {
-          console.log(`[Scheduler] Backup #${backup.id} created`);
+          log.info("Backup created", { backupId: backup.id });
           await cleanupOldBackups(BACKUP.MAX_COUNT);
         }
       } catch (error: unknown) {
         const message = error instanceof Error ? error.message : "Unknown error";
-        console.error("[Scheduler] Backup failed:", message);
+        log.error("Backup failed", { error: message });
       }
     },
     { timezone: TIMEZONE.NAME }
@@ -86,40 +117,55 @@ export async function initScheduler() {
 
   scheduledTasks.push(task1, task2, commentTask, backupTask);
 
-  console.log(`[Scheduler] Tasks initialized:`);
-  console.log(`  - ${time1} ${TIMEZONE.OFFSET} (evening shift)`);
-  console.log(`  - ${time2} ${TIMEZONE.OFFSET} (night shift)`);
-  console.log(`  - Comment checker (every minute)`);
-  console.log(`  - Hourly backup`);
+  log.info("Scheduler initialized", {
+    eveningShift: `${time1} ${TIMEZONE.OFFSET}`,
+    nightShift: `${time2} ${TIMEZONE.OFFSET}`,
+    commentChecker: "every minute",
+    backup: "hourly",
+  });
 }
 
-async function sendScheduledSlackMessage(timeLabel: string, shift: "evening" | "night") {
+/**
+ * Send scheduled Slack message for a shift
+ */
+async function sendScheduledSlackMessage(
+  timeLabel: string,
+  shift: "evening" | "night"
+): Promise<void> {
+  const config = getConfig();
+
   try {
-    const token = shift === "evening" ? await getEveningUserToken() : await getNightUserToken();
+    const token =
+      shift === "evening" ? await getEveningUserToken() : await getNightUserToken();
 
     if (!token) {
-      console.log(`[Scheduler] Skipping ${shift} shift - no token configured`);
+      log.info("Skipping shift - no token configured", { shift });
       return;
     }
 
-    console.log(`[Scheduler] Triggering ${shift} shift (${timeLabel})`);
+    log.info("Triggering shift", { shift, timeLabel });
 
     const response = await axios.post(
-      `${APP_URL}/api/scheduled-slack`,
+      `${config.url}/api/scheduled-slack`,
       { shift },
       { headers: { "Content-Type": "application/json" }, timeout: TIMEOUTS.SLACK }
     );
 
-    console.log(`[Scheduler] ${shift} shift completed:`, response.data.success);
+    log.info("Shift completed", { shift, success: response.data.success });
 
     await checkAndReplyToHandoverMessages();
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    console.error(`[Scheduler] ${shift} shift failed:`, message);
+    log.error("Shift failed", { shift, error: message });
   }
 }
 
-async function checkAndReplyToHandoverMessages() {
+/**
+ * Check and reply to handover messages
+ */
+async function checkAndReplyToHandoverMessages(): Promise<void> {
+  const config = getConfig();
+
   try {
     const scheduledComments = await getEnabledScheduledComments();
     const slackComments = scheduledComments.filter((c) => c.comment_type === "slack");
@@ -127,25 +173,35 @@ async function checkAndReplyToHandoverMessages() {
     if (slackComments.length === 0) return;
 
     const response = await axios.post(
-      `${APP_URL}/api/scan-and-reply-handover`,
+      `${config.url}/api/scan-and-reply-handover`,
       {},
       { headers: { "Content-Type": "application/json" }, timeout: TIMEOUTS.SLACK }
     );
 
-    console.log(`[Scheduler] Scan and reply:`, response.data.replied);
+    log.info("Handover scan completed", { replied: response.data.replied });
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("[Scheduler] Handover check failed:", message);
+    log.error("Handover check failed", { error: message });
   }
 }
 
-export function stopScheduler() {
-  console.log("[Scheduler] Stopping all tasks...");
+/**
+ * Stop all scheduled tasks
+ * Implements Factor IX: Disposability (graceful shutdown)
+ */
+export function stopScheduler(): void {
+  log.info("Stopping all scheduled tasks...");
   scheduledTasks.forEach((task) => task.stop());
   scheduledTasks = [];
+  log.info("Scheduler stopped");
 }
 
-async function checkAndPostScheduledComments() {
+/**
+ * Check and post scheduled Jira comments
+ */
+async function checkAndPostScheduledComments(): Promise<void> {
+  const config = getConfig();
+
   try {
     const scheduledComments = await getEnabledScheduledComments();
     const jiraComments = scheduledComments.filter((c) => c.comment_type === "jira");
@@ -156,13 +212,20 @@ async function checkAndPostScheduledComments() {
 
     for (const comment of jiraComments) {
       try {
-        const shouldRun = shouldRunCronNow(comment.cron_schedule, comment.last_posted_at, now);
+        const shouldRun = shouldRunCronNow(
+          comment.cron_schedule,
+          comment.last_posted_at,
+          now
+        );
 
         if (shouldRun) {
-          console.log(`[Scheduler] Posting comment ${comment.id} to ${comment.ticket_key}`);
+          log.info("Posting scheduled comment", {
+            commentId: comment.id,
+            ticketKey: comment.ticket_key,
+          });
 
           await axios.post(
-            `${APP_URL}/api/post-jira-comment`,
+            `${config.url}/api/post-jira-comment`,
             {
               ticket_key: comment.ticket_key,
               comment_text: comment.comment_text,
@@ -171,19 +234,25 @@ async function checkAndPostScheduledComments() {
             { headers: { "Content-Type": "application/json" }, timeout: TIMEOUTS.JIRA }
           );
 
-          console.log(`[Scheduler] Comment ${comment.id} posted`);
+          log.info("Scheduled comment posted", { commentId: comment.id });
         }
       } catch (error: unknown) {
         const errMsg = error instanceof Error ? error.message : "Unknown error";
-        console.error(`[Scheduler] Comment ${comment.id} failed:`, errMsg);
+        log.error("Failed to post comment", {
+          commentId: comment.id,
+          error: errMsg,
+        });
       }
     }
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
-    console.error("[Scheduler] Comment check failed:", message);
+    log.error("Comment check failed", { error: message });
   }
 }
 
+/**
+ * Determine if a cron job should run now
+ */
 function shouldRunCronNow(
   cronSchedule: string,
   lastPostedAt: Date | null | undefined,
@@ -197,6 +266,7 @@ function shouldRunCronNow(
     const lastPosted = new Date(lastPostedAt);
     const timeDiff = now.getTime() - lastPosted.getTime();
 
+    // Prevent running more than once per minute
     if (timeDiff < 60000) return false;
 
     return isCronMatchingNow(cronSchedule, now);
@@ -205,6 +275,9 @@ function shouldRunCronNow(
   }
 }
 
+/**
+ * Check if current time matches cron expression
+ */
 function isCronMatchingNow(cronSchedule: string, now: Date): boolean {
   try {
     const parts = cronSchedule.trim().split(/\s+/);
@@ -220,37 +293,48 @@ function isCronMatchingNow(cronSchedule: string, now: Date): boolean {
       { part: dayOfWeek, value: now.getDay(), min: 0, max: 6 },
     ];
 
-    return checks.every(({ part, value, min, max }) =>
-      part === "*" ? true : matchesCronPart(part, value, min, max)
+    return checks.every(({ part, value }) =>
+      part === "*" ? true : matchesCronPart(part, value)
     );
   } catch {
     return false;
   }
 }
 
-function matchesCronPart(cronPart: string, currentValue: number, min: number, max: number): boolean {
+/**
+ * Match a single cron part against a value
+ */
+function matchesCronPart(cronPart: string, currentValue: number): boolean {
   if (cronPart === "*") return true;
 
+  // Handle step values (e.g., */5)
   if (cronPart.includes("/")) {
     const [range, step] = cronPart.split("/");
     const stepNum = parseInt(step);
     if (range === "*") return currentValue % stepNum === 0;
   }
 
+  // Handle ranges (e.g., 1-5)
   if (cronPart.includes("-")) {
     const [start, end] = cronPart.split("-").map(Number);
     return currentValue >= start && currentValue <= end;
   }
 
+  // Handle lists (e.g., 1,3,5)
   if (cronPart.includes(",")) {
     return cronPart.split(",").map(Number).includes(currentValue);
   }
 
+  // Direct value match
   return parseInt(cronPart) === currentValue;
 }
 
-export async function triggerScheduledTask() {
-  console.log("[Scheduler] Manual trigger for both shifts...");
+/**
+ * Manually trigger scheduled tasks
+ * Used for testing or manual execution
+ */
+export async function triggerScheduledTask(): Promise<void> {
+  log.info("Manual trigger for both shifts");
   await sendScheduledSlackMessage("Manual - Evening", "evening");
   await sendScheduledSlackMessage("Manual - Night", "night");
 }

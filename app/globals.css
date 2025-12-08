@@ -564,6 +564,7 @@
     color: #f1f5f9 !important;
   }
 
+
   /* Default theme - custom scrollbar */
   body.theme-default ::-webkit-scrollbar {
     width: 8px;
@@ -2005,4 +2006,63 @@
     white-space: nowrap;
     animation: typing 2s steps(20, end);
   }
+}
+
+/* ========== DEFAULT THEME MOBILE CARD OVERRIDES ========== */
+/* These must be outside @layer for highest specificity */
+
+.default-mobile-card,
+.default-mobile-card * {
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.default-mobile-card span {
+  color: #cbd5e1 !important;
+  -webkit-text-fill-color: #cbd5e1 !important;
+}
+
+.default-mobile-card a,
+.default-mobile-card a:link,
+.default-mobile-card a:visited {
+  color: #38bdf8 !important;
+  -webkit-text-fill-color: #38bdf8 !important;
+}
+
+.default-mobile-card p {
+  color: #f1f5f9 !important;
+  -webkit-text-fill-color: #f1f5f9 !important;
+}
+
+.default-mobile-card label {
+  color: #94a3b8 !important;
+  -webkit-text-fill-color: #94a3b8 !important;
+}
+
+.default-mobile-card input {
+  color: #e2e8f0 !important;
+  -webkit-text-fill-color: #e2e8f0 !important;
+  background-color: #1e293b !important;
+}
+
+.default-mobile-card .text-\[11px\],
+.default-mobile-card .text-\[10px\],
+.default-mobile-card .text-\[13px\],
+.default-mobile-card .text-\[9px\] {
+  color: #cbd5e1 !important;
+  -webkit-text-fill-color: #cbd5e1 !important;
+}
+
+/* Force visibility on all default theme mobile card text */
+body.theme-default .default-mobile-card span,
+body.theme-default .default-mobile-card p,
+body.theme-default .default-mobile-card a,
+body.theme-default .default-mobile-card label,
+body.theme-default .default-mobile-card div {
+  color: inherit !important;
+  -webkit-text-fill-color: inherit !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 }

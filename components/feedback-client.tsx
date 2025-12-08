@@ -25,24 +25,16 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/components/trpc-provider";
-import { FeedbackType } from "@/enums/feedback.enum";
-
-interface FeedbackItem {
-  id: number;
-  type: FeedbackType;
-  title: string;
-  description: string;
-  created_at: string;
-  status: string;
-}
+import { trpc } from "@/components/trpc-provider"
+import { FeedbackType } from "@/enums"
+import type { IFeedbackItem } from "@/interfaces"
 
 interface FeedbackTypeOption {
-  id: FeedbackType;
-  label: string;
-  description: string;
-  icon: React.ElementType;
-  color: string;
+  id: FeedbackType
+  label: string
+  description: string
+  icon: React.ElementType
+  color: string
 }
 
 const feedbackTypes: FeedbackTypeOption[] = [
@@ -74,7 +66,7 @@ const feedbackTypes: FeedbackTypeOption[] = [
     icon: Sparkles,
     color: "text-purple-500 bg-purple-500/10 border-purple-500/20",
   },
-];
+]
 
 export function FeedbackClient() {
   const router = useRouter();

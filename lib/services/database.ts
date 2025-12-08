@@ -1,26 +1,62 @@
-import { Pool, PoolClient } from "pg";
-import { SCHEDULER, BACKUP } from "@/lib/config";
-import type { TicketData, ScheduledComment, Backup, BackupItem } from "@/lib/types";
+/**
+ * Database Service
+ * Implements Twelve-Factor App methodology:
+ * - Factor IV: Backing Services (treat database as attached resource)
+ * - Factor VI: Processes (stateless processes, store data in backing service)
+ * - Factor IX: Disposability (fast startup, graceful shutdown)
+ */
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+import { Pool, PoolClient } from "pg";
+import { getDatabaseConfig } from "@/lib/env";
+import { logger } from "@/lib/logger";
+import { SCHEDULER, BACKUP } from "@/lib/config";
+import type {
+  TicketData,
+  ScheduledComment,
+  Backup,
+  BackupItem,
+} from "@/lib/types";
+
+const log = logger.db;
+
+/**
+ * Database connection pool
+ * Configured via environment variables for portability across deployments
+ */
+const pool = new Pool(getDatabaseConfig());
+
+// Handle pool errors gracefully (Factor IX: Disposability)
+pool.on("error", (err) => {
+  log.error("Unexpected database pool error", { error: err.message });
+});
+
+pool.on("connect", () => {
+  log.debug("New database connection established");
 });
 
 type QueryFn<T> = (client: PoolClient) => Promise<T>;
 
+/**
+ * Execute a database operation with proper connection management
+ * Handles connection acquisition, execution, and release
+ */
 async function withClient<T>(fn: QueryFn<T>, fallback: T): Promise<T> {
   const client = await pool.connect();
   try {
     return await fn(client);
   } catch (error) {
-    console.error("[DB]", error);
+    const message = error instanceof Error ? error.message : "Unknown error";
+    log.error("Database query failed", { error: message });
     return fallback;
   } finally {
     client.release();
   }
 }
 
+/**
+ * Execute database operations within a transaction
+ * Ensures atomicity for multi-statement operations
+ */
 async function withTransaction<T>(fn: QueryFn<T>): Promise<T> {
   const client = await pool.connect();
   try {
@@ -30,13 +66,21 @@ async function withTransaction<T>(fn: QueryFn<T>): Promise<T> {
     return result;
   } catch (error) {
     await client.query("ROLLBACK");
+    const message = error instanceof Error ? error.message : "Unknown error";
+    log.error("Transaction rolled back", { error: message });
     throw error;
   } finally {
     client.release();
   }
 }
 
+/**
+ * Initialize database schema
+ * Creates tables if they don't exist (idempotent operation)
+ */
 export async function initDatabase(): Promise<void> {
+  log.info("Initializing database schema...");
+
   await withClient(async (client) => {
     await client.query(`
       CREATE TABLE IF NOT EXISTS ticket_data (
@@ -105,21 +149,30 @@ export async function initDatabase(): Promise<void> {
       )
     `);
 
-    await client.query(`
+    await client.query(
+      `
       INSERT INTO app_settings (key, value, updated_at)
       VALUES
         ('trigger_time_1', $1, CURRENT_TIMESTAMP),
         ('trigger_time_2', $2, CURRENT_TIMESTAMP)
       ON CONFLICT (key) DO NOTHING
-    `, [SCHEDULER.DEFAULT_TIME_1, SCHEDULER.DEFAULT_TIME_2]);
+    `,
+      [SCHEDULER.DEFAULT_TIME_1, SCHEDULER.DEFAULT_TIME_2]
+    );
 
-    console.log("[DB] Tables initialized");
+    log.info("Database schema initialized successfully");
   }, undefined);
 }
 
+/**
+ * Save ticket data to database
+ */
 export async function saveTicketData(
   tickets: Record<string, { status: string; action: string }>
 ): Promise<void> {
+  const ticketCount = Object.keys(tickets).length;
+  log.info("Saving ticket data", { count: ticketCount });
+
   await withTransaction(async (client) => {
     for (const [ticketKey, data] of Object.entries(tickets)) {
       await client.query(
@@ -130,13 +183,18 @@ export async function saveTicketData(
         [ticketKey, data.status, data.action]
       );
     }
-    console.log("[DB] Saved", Object.keys(tickets).length, "tickets");
+    log.info("Ticket data saved", { count: ticketCount });
   });
 }
 
+/**
+ * Load all ticket data from database
+ */
 export async function loadTicketData(): Promise<Record<string, TicketData>> {
   return withClient(async (client) => {
-    const result = await client.query("SELECT ticket_key, status, action, updated_at FROM ticket_data");
+    const result = await client.query(
+      "SELECT ticket_key, status, action, updated_at FROM ticket_data"
+    );
     const data: Record<string, TicketData> = {};
     for (const row of result.rows) {
       data[row.ticket_key] = {
@@ -145,19 +203,28 @@ export async function loadTicketData(): Promise<Record<string, TicketData>> {
         updated_at: row.updated_at?.toISOString(),
       };
     }
-    console.log("[DB] Loaded", result.rows.length, "tickets");
+    log.info("Ticket data loaded", { count: result.rows.length });
     return data;
   }, {});
 }
 
+/**
+ * Get scheduler enabled status
+ */
 export async function getSchedulerEnabled(): Promise<boolean> {
   return withClient(async (client) => {
-    const result = await client.query("SELECT value FROM app_settings WHERE key = 'scheduler_enabled'");
+    const result = await client.query(
+      "SELECT value FROM app_settings WHERE key = 'scheduler_enabled'"
+    );
     return result.rows.length === 0 ? true : result.rows[0].value === "true";
   }, true);
 }
 
+/**
+ * Set scheduler enabled status
+ */
 export async function setSchedulerEnabled(enabled: boolean): Promise<void> {
+  log.info("Updating scheduler status", { enabled });
   await withClient(async (client) => {
     await client.query(
       `INSERT INTO app_settings (key, value, updated_at)
@@ -168,20 +235,35 @@ export async function setSchedulerEnabled(enabled: boolean): Promise<void> {
   }, undefined);
 }
 
+/**
+ * Get all scheduled comments
+ */
 export async function getScheduledComments(): Promise<ScheduledComment[]> {
   return withClient(async (client) => {
-    const result = await client.query("SELECT * FROM scheduled_comments ORDER BY created_at DESC");
+    const result = await client.query(
+      "SELECT * FROM scheduled_comments ORDER BY created_at DESC"
+    );
     return result.rows;
   }, []);
 }
 
-export async function getEnabledScheduledComments(): Promise<ScheduledComment[]> {
+/**
+ * Get enabled scheduled comments only
+ */
+export async function getEnabledScheduledComments(): Promise<
+  ScheduledComment[]
+> {
   return withClient(async (client) => {
-    const result = await client.query("SELECT * FROM scheduled_comments WHERE enabled = true ORDER BY created_at DESC");
+    const result = await client.query(
+      "SELECT * FROM scheduled_comments WHERE enabled = true ORDER BY created_at DESC"
+    );
     return result.rows;
   }, []);
 }
 
+/**
+ * Create a new scheduled comment
+ */
 export async function createScheduledComment(
   commentType: "jira" | "slack",
   commentText: string,
@@ -189,6 +271,7 @@ export async function createScheduledComment(
   enabled: boolean = true,
   ticketKey?: string
 ): Promise<ScheduledComment | null> {
+  log.info("Creating scheduled comment", { commentType, ticketKey });
   return withClient(async (client) => {
     const result = await client.query(
       `INSERT INTO scheduled_comments (comment_type, ticket_key, comment_text, cron_schedule, enabled)
@@ -199,6 +282,9 @@ export async function createScheduledComment(
   }, null);
 }
 
+/**
+ * Update an existing scheduled comment
+ */
 export async function updateScheduledComment(
   id: number,
   commentType: "jira" | "slack",
@@ -207,6 +293,7 @@ export async function updateScheduledComment(
   enabled: boolean,
   ticketKey?: string
 ): Promise<ScheduledComment | null> {
+  log.info("Updating scheduled comment", { id, commentType });
   return withClient(async (client) => {
     const result = await client.query(
       `UPDATE scheduled_comments
@@ -218,13 +305,23 @@ export async function updateScheduledComment(
   }, null);
 }
 
+/**
+ * Delete a scheduled comment
+ */
 export async function deleteScheduledComment(id: number): Promise<boolean> {
+  log.info("Deleting scheduled comment", { id });
   return withClient(async (client) => {
-    const result = await client.query("DELETE FROM scheduled_comments WHERE id = $1", [id]);
+    const result = await client.query(
+      "DELETE FROM scheduled_comments WHERE id = $1",
+      [id]
+    );
     return (result.rowCount ?? 0) > 0;
   }, false);
 }
 
+/**
+ * Update the last posted timestamp for a comment
+ */
 export async function updateCommentLastPosted(id: number): Promise<void> {
   await withClient(async (client) => {
     await client.query(
@@ -234,12 +331,21 @@ export async function updateCommentLastPosted(id: number): Promise<void> {
   }, undefined);
 }
 
-export async function getTriggerTimes(): Promise<{ time1: string; time2: string }> {
+/**
+ * Get trigger times for scheduled tasks
+ */
+export async function getTriggerTimes(): Promise<{
+  time1: string;
+  time2: string;
+}> {
   return withClient(async (client) => {
     const result = await client.query(
       "SELECT key, value FROM app_settings WHERE key IN ('trigger_time_1', 'trigger_time_2')"
     );
-    const times = { time1: SCHEDULER.DEFAULT_TIME_1, time2: SCHEDULER.DEFAULT_TIME_2 };
+    const times = {
+      time1: SCHEDULER.DEFAULT_TIME_1,
+      time2: SCHEDULER.DEFAULT_TIME_2,
+    };
     for (const row of result.rows) {
       if (row.key === "trigger_time_1") times.time1 = row.value;
       if (row.key === "trigger_time_2") times.time2 = row.value;
@@ -248,7 +354,14 @@ export async function getTriggerTimes(): Promise<{ time1: string; time2: string 
   }, { time1: SCHEDULER.DEFAULT_TIME_1, time2: SCHEDULER.DEFAULT_TIME_2 });
 }
 
-export async function setTriggerTimes(time1: string, time2: string): Promise<void> {
+/**
+ * Set trigger times for scheduled tasks
+ */
+export async function setTriggerTimes(
+  time1: string,
+  time2: string
+): Promise<void> {
+  log.info("Updating trigger times", { time1, time2 });
   await withTransaction(async (client) => {
     await client.query(
       `INSERT INTO app_settings (key, value, updated_at) VALUES ('trigger_time_1', $1, CURRENT_TIMESTAMP)
@@ -263,13 +376,22 @@ export async function setTriggerTimes(time1: string, time2: string): Promise<voi
   });
 }
 
+/**
+ * Get a setting value by key
+ */
 export async function getSetting(key: string): Promise<string | null> {
   return withClient(async (client) => {
-    const result = await client.query("SELECT value FROM app_settings WHERE key = $1", [key]);
+    const result = await client.query(
+      "SELECT value FROM app_settings WHERE key = $1",
+      [key]
+    );
     return result.rows[0]?.value || null;
   }, null);
 }
 
+/**
+ * Set a setting value
+ */
 export async function setSetting(key: string, value: string): Promise<void> {
   await withClient(async (client) => {
     await client.query(
@@ -280,32 +402,53 @@ export async function setSetting(key: string, value: string): Promise<void> {
   }, undefined);
 }
 
-export async function getBackups(limit: number = BACKUP.FETCH_LIMIT): Promise<Backup[]> {
+/**
+ * Get all backups
+ */
+export async function getBackups(
+  limit: number = BACKUP.FETCH_LIMIT
+): Promise<Backup[]> {
   return withClient(async (client) => {
-    const result = await client.query("SELECT * FROM backups ORDER BY created_at DESC LIMIT $1", [limit]);
+    const result = await client.query(
+      "SELECT * FROM backups ORDER BY created_at DESC LIMIT $1",
+      [limit]
+    );
     return result.rows;
   }, []);
 }
 
+/**
+ * Get a backup by ID
+ */
 export async function getBackupById(id: number): Promise<Backup | null> {
   return withClient(async (client) => {
-    const result = await client.query("SELECT * FROM backups WHERE id = $1", [id]);
+    const result = await client.query("SELECT * FROM backups WHERE id = $1", [
+      id,
+    ]);
     return result.rows[0] || null;
   }, null);
 }
 
+/**
+ * Create a new backup
+ */
 export async function createBackup(
   backupType: "auto" | "manual" = "auto",
   description?: string
 ): Promise<Backup | null> {
+  log.info("Creating backup", { type: backupType });
   return withClient(async (client) => {
-    const ticketData = await client.query("SELECT ticket_key, status, action FROM ticket_data");
+    const ticketData = await client.query(
+      "SELECT ticket_key, status, action FROM ticket_data"
+    );
     const tickets: Record<string, { status: string; action: string }> = {};
     for (const row of ticketData.rows) {
       tickets[row.ticket_key] = { status: row.status, action: row.action };
     }
 
-    const settingsData = await client.query("SELECT key, value FROM app_settings");
+    const settingsData = await client.query(
+      "SELECT key, value FROM app_settings"
+    );
     const settings: Record<string, string> = {};
     for (const row of settingsData.rows) {
       settings[row.key] = row.value;
@@ -316,17 +459,30 @@ export async function createBackup(
     const result = await client.query(
       `INSERT INTO backups (backup_type, ticket_data, app_settings, scheduled_comments, description)
        VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [backupType, JSON.stringify(tickets), JSON.stringify(settings), JSON.stringify(commentsData.rows), description]
+      [
+        backupType,
+        JSON.stringify(tickets),
+        JSON.stringify(settings),
+        JSON.stringify(commentsData.rows),
+        description,
+      ]
     );
 
-    console.log("[DB] Backup created:", result.rows[0].id);
+    log.info("Backup created", { id: result.rows[0].id });
     return result.rows[0];
   }, null);
 }
 
+/**
+ * Restore from a backup
+ */
 export async function restoreFromBackup(backupId: number): Promise<boolean> {
+  log.info("Restoring from backup", { backupId });
   const backup = await getBackupById(backupId);
-  if (!backup) return false;
+  if (!backup) {
+    log.error("Backup not found", { backupId });
+    return false;
+  }
 
   return withTransaction(async (client) => {
     if (backup.ticket_data) {
@@ -355,65 +511,131 @@ export async function restoreFromBackup(backupId: number): Promise<boolean> {
         await client.query(
           `INSERT INTO scheduled_comments (comment_type, ticket_key, comment_text, cron_schedule, enabled)
            VALUES ($1, $2, $3, $4, $5)`,
-          [comment.comment_type, comment.ticket_key, comment.comment_text, comment.cron_schedule, comment.enabled]
+          [
+            comment.comment_type,
+            comment.ticket_key,
+            comment.comment_text,
+            comment.cron_schedule,
+            comment.enabled,
+          ]
         );
       }
     }
 
-    console.log("[DB] Restored from backup:", backupId);
+    log.info("Backup restored successfully", { backupId });
     return true;
   });
 }
 
-export async function cleanupOldBackups(keepCount: number = BACKUP.MAX_COUNT): Promise<number> {
+/**
+ * Cleanup old backups, keeping only the most recent ones
+ */
+export async function cleanupOldBackups(
+  keepCount: number = BACKUP.MAX_COUNT
+): Promise<number> {
   return withClient(async (client) => {
     const result = await client.query(
       `DELETE FROM backups WHERE id NOT IN (SELECT id FROM backups ORDER BY created_at DESC LIMIT $1)`,
       [keepCount]
     );
     const deleted = result.rowCount ?? 0;
-    if (deleted > 0) console.log("[DB] Cleaned up", deleted, "old backups");
+    if (deleted > 0) {
+      log.info("Old backups cleaned up", { deleted, kept: keepCount });
+    }
     return deleted;
   }, 0);
 }
 
+/**
+ * Transform backup to display item format
+ */
 export async function transformBackupToItem(backup: Backup): Promise<BackupItem> {
   return {
     id: backup.id,
     backup_type: backup.backup_type,
-    created_at: backup.created_at instanceof Date ? backup.created_at.toISOString() : String(backup.created_at),
+    created_at:
+      backup.created_at instanceof Date
+        ? backup.created_at.toISOString()
+        : String(backup.created_at),
     description: backup.description,
     ticket_count: backup.ticket_data ? Object.keys(backup.ticket_data).length : 0,
-    settings_count: backup.app_settings ? Object.keys(backup.app_settings).length : 0,
-    comments_count: backup.scheduled_comments ? backup.scheduled_comments.length : 0,
+    settings_count: backup.app_settings
+      ? Object.keys(backup.app_settings).length
+      : 0,
+    comments_count: backup.scheduled_comments
+      ? backup.scheduled_comments.length
+      : 0,
   };
 }
 
+// Convenience exports for settings
 export const getCustomChannelId = () => getSetting("custom_channel_id");
-export const setCustomChannelId = (v: string) => setSetting("custom_channel_id", v);
+export const setCustomChannelId = (v: string) =>
+  setSetting("custom_channel_id", v);
 
 export const getMemberMentions = () => getSetting("member_mentions");
 export const setMemberMentions = (v: string) => setSetting("member_mentions", v);
 
 export const getEveningUserToken = () => getSetting("evening_user_token");
-export const setEveningUserToken = (v: string) => setSetting("evening_user_token", v);
+export const setEveningUserToken = (v: string) =>
+  setSetting("evening_user_token", v);
 
 export const getNightUserToken = () => getSetting("night_user_token");
-export const setNightUserToken = (v: string) => setSetting("night_user_token", v);
+export const setNightUserToken = (v: string) =>
+  setSetting("night_user_token", v);
 
 export const getEveningMentions = () => getSetting("evening_mentions");
-export const setEveningMentions = (v: string) => setSetting("evening_mentions", v);
+export const setEveningMentions = (v: string) =>
+  setSetting("evening_mentions", v);
 
 export const getNightMentions = () => getSetting("night_mentions");
 export const setNightMentions = (v: string) => setSetting("night_mentions", v);
 
 export const getThemePreference = async (): Promise<string> => {
   const theme = await getSetting("theme_preference");
-  return theme || "christmas"; // Default to christmas for backward compatibility
+  return theme || "christmas";
 };
 
 export const setThemePreference = async (theme: string): Promise<void> => {
   await setSetting("theme_preference", theme);
 };
+
+/**
+ * Check database connection health
+ * Used for health check endpoints (Factor IX: Disposability)
+ */
+export async function checkHealth(): Promise<{
+  healthy: boolean;
+  latency: number;
+  error?: string;
+}> {
+  const start = Date.now();
+  try {
+    const client = await pool.connect();
+    await client.query("SELECT 1");
+    client.release();
+    return {
+      healthy: true,
+      latency: Date.now() - start,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    return {
+      healthy: false,
+      latency: Date.now() - start,
+      error: message,
+    };
+  }
+}
+
+/**
+ * Graceful shutdown of database connections
+ * Implements Factor IX: Disposability
+ */
+export async function shutdown(): Promise<void> {
+  log.info("Shutting down database connections...");
+  await pool.end();
+  log.info("Database connections closed");
+}
 
 export default pool;

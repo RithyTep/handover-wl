@@ -1,11 +1,10 @@
-"use client";
+"use client"
 
-import { useMemo } from "react";
-import { TicketsTable } from "@/components/tickets-table";
-import { createColumns } from "@/app/columns";
-import type { Ticket } from "@/interfaces/ticket.interface";
-import { DashboardActions } from "./dashboard-actions";
-import { Theme } from "@/enums/theme.enum";
+import { useMemo } from "react"
+import { TicketsTable } from "@/components/tickets-table"
+import { createColumns } from "@/app/columns"
+import type { Ticket, Theme } from "@/lib/types"
+import { DashboardActions } from "./dashboard-actions"
 
 interface DashboardContentProps {
   tickets: Ticket[];
@@ -43,7 +42,7 @@ export function DashboardContent({
   );
 
   return (
-    <main className={`flex-1 overflow-hidden px-4 sm:px-6 py-9 sm:py-4 pb-20 sm:pb-4 relative z-10 ${theme === Theme.PIXEL ? "pb-12" : ""}`}>
+    <main className={`flex-1 overflow-hidden px-4 sm:px-6 py-9 sm:py-4 pb-20 sm:pb-4 relative z-10 ${theme === "pixel" ? "pb-12" : ""}`}>
       <TicketsTable
         columns={columns}
         data={tickets}
