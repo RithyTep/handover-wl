@@ -2,6 +2,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+
+/* Supercell Magic Font - Clash of Clans official font */
+@font-face {
+  font-family: 'Supercell Magic';
+  src: url('https://supercell.com/assets/fonts/supercell-magic/supercell-magic-webfont.woff2') format('woff2'),
+       url('https://supercell.com/assets/fonts/supercell-magic/supercell-magic-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 
 @tailwind base;
 @tailwind components;
@@ -2066,3 +2077,634 @@ body.theme-default .default-mobile-card div {
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+/* ========== CLASH OF CLANS THEME ========== */
+
+/* Clash theme base styles */
+body.theme-clash {
+  font-family: 'Bungee', 'Supercell Magic', 'Poppins', sans-serif !important;
+  cursor: url('/cursors/clash-cursor.svg') 4 4, auto;
+  background-color: #5d9633 !important;
+  background-image: url('/assets/clash/background.png') !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  color: #fff !important;
+}
+
+/* Clash cursor for interactive elements */
+body.theme-clash a,
+body.theme-clash button,
+body.theme-clash [role="button"],
+body.theme-clash input[type="submit"],
+body.theme-clash input[type="button"],
+body.theme-clash select,
+body.theme-clash .cursor-pointer,
+body.theme-clash [onclick],
+body.theme-clash label[for] {
+  cursor: url('/cursors/clash-pointer.svg') 8 2, pointer !important;
+}
+
+/* Clash theme link colors */
+body.theme-clash a[href*="jira"],
+body.theme-clash a[href*="atlassian"] {
+  color: #fbcc14 !important;
+  text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+body.theme-clash a[href*="jira"]:hover,
+body.theme-clash a[href*="atlassian"]:hover {
+  color: #ffe66d !important;
+  text-decoration: underline;
+  text-shadow: 0 0 10px rgba(251, 204, 20, 0.5), 1px 1px 0 #000;
+}
+
+/* Clash theme input styles */
+body.theme-clash input[type="text"],
+body.theme-clash input:not([type]),
+body.theme-clash textarea {
+  background: linear-gradient(180deg, #2a1f16 0%, #3f2e21 100%) !important;
+  border: 3px solid #5a4a3a !important;
+  border-top-color: #2a1a10 !important;
+  border-left-color: #2a1a10 !important;
+  border-right-color: #7a6a5a !important;
+  border-bottom-color: #7a6a5a !important;
+  color: #fff !important;
+  border-radius: 6px !important;
+  font-family: 'Bungee', 'Poppins', sans-serif !important;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 2px 0 #1a0a00 !important;
+  padding: 8px 12px !important;
+}
+
+body.theme-clash input[type="text"]::placeholder,
+body.theme-clash input:not([type])::placeholder,
+body.theme-clash textarea::placeholder {
+  color: #8a7a6a !important;
+  text-transform: uppercase;
+}
+
+body.theme-clash input[type="text"]:focus,
+body.theme-clash input:not([type]):focus,
+body.theme-clash textarea:focus {
+  border-color: #fbcc14 !important;
+  outline: none !important;
+  box-shadow: inset 0 3px 6px rgba(0,0,0,0.6), 0 0 10px rgba(251, 204, 20, 0.4) !important;
+}
+
+/* Clash theme scrollbar */
+body.theme-clash ::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+body.theme-clash ::-webkit-scrollbar-track {
+  background: linear-gradient(90deg, #2a1f16 0%, #3f2e21 50%, #2a1f16 100%);
+  border: 2px solid #5a4a3a;
+  border-radius: 7px;
+}
+
+body.theme-clash ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #ffd700 0%, #daa520 50%, #b8860b 100%);
+  border: 2px solid #8b6914;
+  border-radius: 7px;
+  box-shadow: inset 0 2px 0 rgba(255,255,255,0.3);
+}
+
+body.theme-clash ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #ffe44d 0%, #ffd700 50%, #daa520 100%);
+}
+
+/* Clash theme table styles */
+body.theme-clash table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+body.theme-clash thead {
+  background: linear-gradient(180deg, #4a3a2a 0%, #3f2e21 100%);
+}
+
+body.theme-clash th {
+  color: #fbcc14 !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em;
+  text-shadow: 2px 2px 0 #000;
+  border-bottom: 3px solid #6a5a4a !important;
+}
+
+body.theme-clash tbody tr {
+  border-bottom: 2px solid rgba(90, 74, 58, 0.5);
+  transition: all 0.2s ease;
+}
+
+body.theme-clash tbody tr:hover {
+  background: rgba(0, 0, 0, 0.3) !important;
+  transform: scale(1.01);
+}
+
+body.theme-clash td {
+  color: #fff !important;
+  font-weight: 500;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* Clash theme card/header styles */
+body.theme-clash header,
+body.theme-clash .header {
+  background: linear-gradient(180deg, #4a3a2a 0%, #3f2e21 100%) !important;
+  border-bottom: 4px solid #6a5a4a !important;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* Clash theme text styles */
+body.theme-clash h1,
+body.theme-clash h2,
+body.theme-clash h3,
+body.theme-clash h4,
+body.theme-clash h5,
+body.theme-clash h6 {
+  color: #fbcc14 !important;
+  text-shadow: 2px 2px 0 #582e00, 3px 3px 0 rgba(0,0,0,0.5);
+  font-family: 'Bungee', 'Supercell Magic', sans-serif !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+body.theme-clash p,
+body.theme-clash span,
+body.theme-clash div {
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+body.theme-clash label {
+  color: #daa520 !important;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+}
+
+/* Utilities */
+@layer utilities {
+  .clash-bg {
+    background-color: #5d9633 !important;
+    background-image: url('/assets/clash/background.png') !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+    background-position: center !important;
+    font-family: 'Bungee', 'Supercell Magic', 'Poppins', sans-serif !important;
+    color: #fff !important;
+  }
+
+  .clash-card {
+    background: linear-gradient(180deg, rgba(74, 58, 42, 0.95) 0%, rgba(63, 46, 33, 0.98) 100%);
+    border: 4px solid #6a5a4a;
+    border-top-color: #8a7a6a;
+    border-left-color: #8a7a6a;
+    border-right-color: #4a3a2a;
+    border-bottom-color: #4a3a2a;
+    border-radius: 12px;
+    box-shadow:
+      0 6px 12px rgba(0,0,0,0.6),
+      inset 0 1px 0 rgba(255,255,255,0.1),
+      inset 0 -1px 0 rgba(0,0,0,0.2);
+    backdrop-filter: blur(4px);
+  }
+
+  /* ===== CLASH OF CLANS BUTTON STYLES ===== */
+
+  /* Primary Gold/Orange Button - Attack style */
+  .clash-btn-primary {
+    position: relative;
+    background: linear-gradient(180deg, #ffd54f 0%, #f7a614 30%, #e08a0c 70%, #c67608 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Bungee', 'Supercell Magic', sans-serif;
+    letter-spacing: 0.05em;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 20px;
+    text-shadow:
+      -1px -1px 0 #8f3202,
+      1px -1px 0 #8f3202,
+      -1px 1px 0 #8f3202,
+      1px 1px 0 #8f3202,
+      0 2px 0 #6a2401;
+    box-shadow:
+      0 0 0 2px #fff1d8,
+      0 0 0 4px #bb460a,
+      0 6px 0 0 #8f3202,
+      0 8px 0 0 #6a1800,
+      0 10px 15px rgba(0,0,0,0.4);
+    transition: all 0.1s ease-in-out;
+    margin-bottom: 10px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .clash-btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 10%;
+    width: 80%;
+    height: 40%;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .clash-btn-primary:hover {
+    transform: translateY(3px);
+    box-shadow:
+      0 0 0 2px #fff1d8,
+      0 0 0 4px #bb460a,
+      0 3px 0 0 #8f3202,
+      0 5px 0 0 #6a1800,
+      0 7px 10px rgba(0,0,0,0.4);
+  }
+
+  .clash-btn-primary:active {
+    transform: translateY(6px);
+    box-shadow:
+      0 0 0 2px #fff1d8,
+      0 0 0 4px #bb460a,
+      0 0px 0 0 #8f3202,
+      0 2px 0 0 #6a1800,
+      0 4px 8px rgba(0,0,0,0.4);
+  }
+
+  /* Secondary Green Button - Build/Defense style */
+  .clash-btn-green {
+    position: relative;
+    background: linear-gradient(180deg, #7ed321 0%, #5cb512 30%, #4a9a0a 70%, #3a7a08 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Bungee', 'Supercell Magic', sans-serif;
+    letter-spacing: 0.05em;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 20px;
+    text-shadow:
+      -1px -1px 0 #2a5a04,
+      1px -1px 0 #2a5a04,
+      -1px 1px 0 #2a5a04,
+      1px 1px 0 #2a5a04,
+      0 2px 0 #1a4002;
+    box-shadow:
+      0 0 0 2px #d0f0a0,
+      0 0 0 4px #3a6a08,
+      0 6px 0 0 #2a5004,
+      0 8px 0 0 #1a3802,
+      0 10px 15px rgba(0,0,0,0.4);
+    transition: all 0.1s ease-in-out;
+    margin-bottom: 10px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .clash-btn-green::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 10%;
+    width: 80%;
+    height: 40%;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .clash-btn-green:hover {
+    transform: translateY(3px);
+    box-shadow:
+      0 0 0 2px #d0f0a0,
+      0 0 0 4px #3a6a08,
+      0 3px 0 0 #2a5004,
+      0 5px 0 0 #1a3802,
+      0 7px 10px rgba(0,0,0,0.4);
+  }
+
+  .clash-btn-green:active {
+    transform: translateY(6px);
+    box-shadow:
+      0 0 0 2px #d0f0a0,
+      0 0 0 4px #3a6a08,
+      0 0px 0 0 #2a5004,
+      0 2px 0 0 #1a3802,
+      0 4px 8px rgba(0,0,0,0.4);
+  }
+
+  /* Red Button - Destroy/Clear style */
+  .clash-btn-red {
+    position: relative;
+    background: linear-gradient(180deg, #ff6b6b 0%, #e53935 30%, #c62828 70%, #a01a1a 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Bungee', 'Supercell Magic', sans-serif;
+    letter-spacing: 0.05em;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 20px;
+    text-shadow:
+      -1px -1px 0 #6a0a0a,
+      1px -1px 0 #6a0a0a,
+      -1px 1px 0 #6a0a0a,
+      1px 1px 0 #6a0a0a,
+      0 2px 0 #4a0606;
+    box-shadow:
+      0 0 0 2px #ffa0a0,
+      0 0 0 4px #8a1a1a,
+      0 6px 0 0 #6a0a0a,
+      0 8px 0 0 #4a0606,
+      0 10px 15px rgba(0,0,0,0.4);
+    transition: all 0.1s ease-in-out;
+    margin-bottom: 10px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .clash-btn-red::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 10%;
+    width: 80%;
+    height: 40%;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .clash-btn-red:hover {
+    transform: translateY(3px);
+    box-shadow:
+      0 0 0 2px #ffa0a0,
+      0 0 0 4px #8a1a1a,
+      0 3px 0 0 #6a0a0a,
+      0 5px 0 0 #4a0606,
+      0 7px 10px rgba(0,0,0,0.4);
+  }
+
+  .clash-btn-red:active {
+    transform: translateY(6px);
+    box-shadow:
+      0 0 0 2px #ffa0a0,
+      0 0 0 4px #8a1a1a,
+      0 0px 0 0 #6a0a0a,
+      0 2px 0 0 #4a0606,
+      0 4px 8px rgba(0,0,0,0.4);
+  }
+
+  /* Blue Button - Info/Scout style */
+  .clash-btn-blue {
+    position: relative;
+    background: linear-gradient(180deg, #64b5f6 0%, #42a5f5 30%, #1e88e5 70%, #1565c0 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Bungee', 'Supercell Magic', sans-serif;
+    letter-spacing: 0.05em;
+    border-radius: 8px;
+    border: none;
+    padding: 10px 20px;
+    text-shadow:
+      -1px -1px 0 #0a4a8a,
+      1px -1px 0 #0a4a8a,
+      -1px 1px 0 #0a4a8a,
+      1px 1px 0 #0a4a8a,
+      0 2px 0 #063a6a;
+    box-shadow:
+      0 0 0 2px #a0d0ff,
+      0 0 0 4px #1a5a9a,
+      0 6px 0 0 #0a4a8a,
+      0 8px 0 0 #063a6a,
+      0 10px 15px rgba(0,0,0,0.4);
+    transition: all 0.1s ease-in-out;
+    margin-bottom: 10px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .clash-btn-blue::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 10%;
+    width: 80%;
+    height: 40%;
+    border-radius: 50%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .clash-btn-blue:hover {
+    transform: translateY(3px);
+    box-shadow:
+      0 0 0 2px #a0d0ff,
+      0 0 0 4px #1a5a9a,
+      0 3px 0 0 #0a4a8a,
+      0 5px 0 0 #063a6a,
+      0 7px 10px rgba(0,0,0,0.4);
+  }
+
+  .clash-btn-blue:active {
+    transform: translateY(6px);
+    box-shadow:
+      0 0 0 2px #a0d0ff,
+      0 0 0 4px #1a5a9a,
+      0 0px 0 0 #0a4a8a,
+      0 2px 0 0 #063a6a,
+      0 4px 8px rgba(0,0,0,0.4);
+  }
+
+  /* Secondary outline button - Wood style */
+  .clash-btn-wood {
+    position: relative;
+    background: linear-gradient(180deg, #5a4a3a 0%, #4a3a2a 30%, #3f2e21 70%, #2a1f16 100%);
+    color: #daa520;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Bungee', 'Supercell Magic', sans-serif;
+    letter-spacing: 0.05em;
+    border-radius: 8px;
+    border: 3px solid #6a5a4a;
+    padding: 8px 18px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,0.1),
+      inset 0 -2px 0 rgba(0,0,0,0.3),
+      0 4px 0 0 #1a0f0a,
+      0 6px 10px rgba(0,0,0,0.4);
+    transition: all 0.1s ease-in-out;
+    margin-bottom: 6px;
+  }
+
+  .clash-btn-wood:hover {
+    transform: translateY(2px);
+    border-color: #fbcc14;
+    color: #fbcc14;
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,0.1),
+      inset 0 -2px 0 rgba(0,0,0,0.3),
+      0 2px 0 0 #1a0f0a,
+      0 4px 8px rgba(0,0,0,0.4),
+      0 0 10px rgba(251, 204, 20, 0.3);
+  }
+
+  .clash-btn-wood:active {
+    transform: translateY(4px);
+    box-shadow:
+      inset 0 2px 0 rgba(255,255,255,0.1),
+      inset 0 -2px 0 rgba(0,0,0,0.3),
+      0 0px 0 0 #1a0f0a,
+      0 2px 6px rgba(0,0,0,0.4);
+  }
+
+  /* ===== CLASH TABLE STYLES ===== */
+  .clash-table-header {
+    background: linear-gradient(180deg, #4a3a2a 0%, #3f2e21 100%);
+    color: #fbcc14;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: 'Bungee', sans-serif;
+    letter-spacing: 0.1em;
+    text-shadow: 2px 2px 0 #000;
+    border-bottom: 3px solid #6a5a4a;
+  }
+
+  .clash-table-row {
+    border-bottom: 2px solid rgba(106, 90, 74, 0.4);
+    transition: all 0.2s ease;
+  }
+
+  .clash-table-row:hover {
+    background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.25) 50%, transparent 100%);
+    transform: scale(1.005);
+  }
+
+  /* ===== CLASH BADGE STYLES ===== */
+  .clash-badge {
+    background: linear-gradient(180deg, #ffd700 0%, #daa520 100%);
+    color: #4a3419;
+    border: 2px solid #8b6914;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'Bungee', sans-serif;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    box-shadow:
+      0 2px 0 #6a4a0a,
+      inset 0 1px 0 rgba(255,255,255,0.4);
+    text-shadow: none;
+  }
+
+  /* Elixir badge (purple) */
+  .clash-badge-elixir {
+    background: linear-gradient(180deg, #da70d6 0%, #9932cc 100%);
+    color: #fff;
+    border-color: #6a0a8a;
+    box-shadow:
+      0 2px 0 #4a0a6a,
+      inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  /* Gem badge (green) */
+  .clash-badge-gem {
+    background: linear-gradient(180deg, #50c878 0%, #228b22 100%);
+    color: #fff;
+    border-color: #0a5a0a;
+    box-shadow:
+      0 2px 0 #0a4a0a,
+      inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+
+  /* ===== CLASH LOADING ANIMATION ===== */
+  @keyframes clash-bounce {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-10px) scale(1.1);
+    }
+  }
+
+  @keyframes clash-glow {
+    0%, 100% {
+      box-shadow: 0 0 10px rgba(251, 204, 20, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 25px rgba(251, 204, 20, 0.8);
+    }
+  }
+
+  .clash-bounce {
+    animation: clash-bounce 0.6s ease-in-out infinite;
+  }
+
+  .clash-glow {
+    animation: clash-glow 2s ease-in-out infinite;
+  }
+
+  /* ===== CLASH RESOURCE COUNTER ===== */
+  .clash-resource {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(180deg, #3f2e21 0%, #2a1f16 100%);
+    border: 2px solid #5a4a3a;
+    border-radius: 20px;
+    padding: 4px 12px 4px 4px;
+    font-family: 'Bungee', sans-serif;
+    font-size: 14px;
+    color: #fff;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  }
+
+  .clash-resource-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* ===== CLASH TITLE TEXT ===== */
+  .clash-title {
+    color: #fbcc14;
+    font-family: 'Bungee', 'Supercell Magic', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-shadow:
+      -2px -2px 0 #582e00,
+      2px -2px 0 #582e00,
+      -2px 2px 0 #582e00,
+      2px 2px 0 #582e00,
+      0 4px 0 #3a1a00,
+      0 5px 10px rgba(0,0,0,0.5);
+  }
+
+  .clash-title-sm {
+    color: #daa520;
+    font-family: 'Bungee', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    text-shadow: 1px 1px 0 #000;
+  }
+}
+

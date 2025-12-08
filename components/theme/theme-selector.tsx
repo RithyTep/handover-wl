@@ -24,6 +24,7 @@ const THEME_BUTTON_STYLES: Record<Theme, string> = {
 	[Theme.PIXEL]: "text-slate-300 hover:text-indigo-400 transition-colors",
 	[Theme.LUNAR]: "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors",
 	[Theme.CODING]: "text-zinc-500 hover:text-indigo-400 transition-colors",
+	[Theme.CLASH]: "text-[#ccc] hover:text-[#fbcc14] transition-colors",
 	[Theme.DEFAULT]: "text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-colors",
 }
 
@@ -86,12 +87,9 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 							/>
 
 							<div className="mt-6 p-4 bg-muted rounded-lg">
-								<h4 className="font-semibold mb-2">About Themes</h4>
+								<h4 className="font-semibold mb-2">About Rithy</h4>
 								<p className="text-sm text-muted-foreground">
-									Themes control the overall look and feel of your portfolio. Each theme
-									has a unique layout, typography, and color scheme. You can switch
-									themes at any time without losing your content. Changes are applied
-									immediately to your public portfolio.
+                  ABA 003 791 262
 								</p>
 							</div>
 

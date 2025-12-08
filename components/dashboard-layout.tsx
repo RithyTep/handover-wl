@@ -53,6 +53,7 @@ const THEME_SCENES: Record<Theme, React.ComponentType | null> = {
 	pixel: PixelStatusBar,
 	lunar: LunarScene,
 	coding: CodingScene,
+	clash: null,
 }
 
 // ============================================================================
@@ -88,7 +89,8 @@ export const DashboardLayout = ({
 			"theme-default",
 			"theme-pixel",
 			"theme-lunar",
-			"theme-coding"
+			"theme-coding",
+			"theme-clash"
 		)
 		document.body.classList.add(`theme-${theme}`)
 	}, [theme])

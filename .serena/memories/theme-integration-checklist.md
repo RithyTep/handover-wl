@@ -300,19 +300,19 @@ export function YourDecoration() {
 
 ## Verification Checklist
 
-- [ ] Theme appears in theme selector dropdown
-- [ ] Theme persists after page refresh (localStorage)
-- [ ] Body background and colors apply correctly
-- [ ] Header styling (icon, title, badge, buttons)
-- [ ] Action buttons have correct theme styling
-- [ ] Table styling (header, rows, cells)
-- [ ] Mobile view styling
-- [ ] Input fields have theme colors
-- [ ] Links have theme colors
-- [ ] Scrollbar has theme styling
-- [ ] Scene/decorations render (if applicable)
-- [ ] No TypeScript errors (`npx tsc --noEmit`)
-- [ ] No console errors in browser
+- [x] Theme appears in theme selector dropdown
+- [x] Theme persists after page refresh (localStorage)
+- [x] Body background and colors apply correctly
+- [x] Header styling (icon, title, badge, buttons)
+- [x] Action buttons have correct theme styling
+- [x] Table styling (header, rows, cells)
+- [x] Mobile view styling
+- [x] Input fields have theme colors
+- [x] Links have theme colors
+- [x] Scrollbar has theme styling
+- [x] Scene/decorations render (if applicable)
+- [x] No TypeScript errors (`npx tsc --noEmit`)
+- [x] No console errors in browser
 
 ---
 
@@ -332,3 +332,5 @@ export function YourDecoration() {
 | `components/tickets-table.tsx` | Table styling |
 | `components/your-theme-scene.tsx` | (New) Background effects |
 | `components/your-decoration.tsx` | (New) Floating decoration |
+| `public/assets/clash/background.png` | (New) Clash theme background |
+| `lib/theme/theme-config.ts` | Add Clash theme config |

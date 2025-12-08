@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
+  <defs>
+    <linearGradient id="gemGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#50c878"/>
+      <stop offset="30%" style="stop-color:#98fb98"/>
+      <stop offset="70%" style="stop-color:#2e8b57"/>
+      <stop offset="100%" style="stop-color:#006400"/>
+    </linearGradient>
+  </defs>
+  <!-- Gem top facet -->
+  <path d="M12 2L6 8H18L12 2Z" fill="#98fb98" stroke="#228b22" stroke-width="0.5"/>
+  <!-- Gem body -->
+  <path d="M6 8L12 22L18 8H6Z" fill="url(#gemGreen)" stroke="#006400" stroke-width="0.5"/>
+  <!-- Left facet -->
+  <path d="M6 8L12 22L12 8H6Z" fill="#2e8b57"/>
+  <!-- Right facet highlight -->
+  <path d="M12 8L18 8L12 22Z" fill="#50c878"/>
+  <!-- Top shine -->
+  <path d="M9 5L12 2L15 5L12 7L9 5Z" fill="#b0ffb0"/>
+  <!-- Sparkle -->
+  <circle cx="10" cy="6" r="0.8" fill="white"/>
+</svg>

@@ -1,6 +1,7 @@
 import { Suspense } from "react"
 import { connection } from "next/server"
 import { DashboardClient } from "@/components/dashboard-client"
+import Loading from "./loading"
 import {
 	getThemePreference,
 	initDatabase,
@@ -33,7 +34,7 @@ async function DashboardWithData() {
 
 export default function Dashboard() {
 	return (
-		<Suspense fallback={null}>
+		<Suspense fallback={<Loading />}>
 			<DashboardWithData />
 		</Suspense>
 	)

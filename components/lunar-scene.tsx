@@ -34,36 +34,6 @@ export function LunarScene() {
           className="lunar-glow lunar-glow-rose absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px]"
         />
 
-        {/* Subtle floating blossoms */}
-        {floatingDecorations.map((item, index) => (
-          <img
-            key={index}
-            src={`/icons/lunar/${item.icon}.svg`}
-            alt=""
-            className={`absolute lunar-float opacity-15 ${item.size}`}
-            style={{
-              left: item.left,
-              top: item.top,
-              animationDelay: item.delay,
-            }}
-          />
-        ))}
-
-        {/* Subtle fireworks */}
-        {fireworks.map((fw, index) => (
-          <img
-            key={`firework-${index}`}
-            src="/icons/lunar/firework.svg"
-            alt=""
-            className={`absolute lunar-firework opacity-30 ${fw.size}`}
-            style={{
-              left: fw.left,
-              top: fw.top,
-              animationDelay: fw.delay,
-            }}
-          />
-        ))}
-
         {/* Single elegant lantern */}
         <div className="absolute top-4 right-4 hidden sm:block">
           <img src="/icons/lunar/lantern.svg" alt="" className="w-6 h-10 lunar-swing opacity-30" />

@@ -32,6 +32,12 @@ export const THEMES: ThemeInfo[] = [
 		description: "Hacker-style terminal theme with 404 error aesthetics",
 		icon: "💻",
 	},
+	{
+		id: Theme.CLASH,
+		name: "Clash",
+		description: "Build your village and prepare for battle",
+		icon: "⚔️",
+	},
 ]
 
-export const DEFAULT_THEME = Theme.DEFAULT
+export const DEFAULT_THEME = Theme.CLASH

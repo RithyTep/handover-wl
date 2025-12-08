@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <linearGradient id="gauntletGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700"/>
+      <stop offset="30%" style="stop-color:#ffec8b"/>
+      <stop offset="70%" style="stop-color:#ffd700"/>
+      <stop offset="100%" style="stop-color:#b8860b"/>
+    </linearGradient>
+    <linearGradient id="gauntletDark" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#daa520"/>
+      <stop offset="100%" style="stop-color:#8b6914"/>
+    </linearGradient>
+  </defs>
+  <!-- Pointing hand/gauntlet -->
+  <!-- Index finger pointing -->
+  <path d="M8 2L10 2L12 12L8 12Z" fill="url(#gauntletGold)" stroke="#8b6914" stroke-width="1"/>
+  <!-- Palm -->
+  <path d="M6 12L18 12L20 24L4 24Z" fill="url(#gauntletGold)" stroke="#8b6914" stroke-width="1"/>
+  <!-- Finger segments -->
+  <line x1="8" y1="4" x2="10" y2="4" stroke="#daa520" stroke-width="0.8"/>
+  <line x1="8" y1="7" x2="10" y2="7" stroke="#daa520" stroke-width="0.8"/>
+  <!-- Knuckle details -->
+  <ellipse cx="8" cy="15" rx="2" ry="1.5" fill="url(#gauntletDark)"/>
+  <ellipse cx="12" cy="15" rx="2" ry="1.5" fill="url(#gauntletDark)"/>
+  <ellipse cx="16" cy="15" rx="2" ry="1.5" fill="url(#gauntletDark)"/>
+  <!-- Wrist armor -->
+  <rect x="4" y="24" width="16" height="4" rx="1" fill="url(#gauntletGold)" stroke="#8b6914" stroke-width="1"/>
+  <!-- Gem on wrist -->
+  <circle cx="12" cy="26" r="1.5" fill="#50c878" stroke="#228b22" stroke-width="0.5"/>
+  <!-- Highlight -->
+  <path d="M9 3L9 10" stroke="#ffffe0" stroke-width="1" stroke-linecap="round" opacity="0.5"/>
+</svg>

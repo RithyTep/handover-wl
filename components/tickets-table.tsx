@@ -218,6 +218,8 @@ export function TicketsTable<TData, TValue>({
               ? "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg"
               : theme === "coding"
               ? "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/30 font-mono"
+              : theme === "clash"
+              ? "text-[#fbcc14] bg-[#3f2e21] hover:bg-black/20 border-2 border-[#9c9c9c] clash-btn-primary"
               : "text-slate-300 hover:bg-slate-800 border-slate-700"
           }`}
           title={showDetails ? "Hide Details" : "Show Details"}
@@ -252,6 +254,8 @@ export function TicketsTable<TData, TValue>({
                       ? "border-stone-800/50 lunar-card"
                       : theme === "coding"
                       ? "border-green-900/30 coding-card"
+                      : theme === "clash"
+                      ? "clash-card"
                       : "border-slate-700 bg-slate-900 default-mobile-card"
                   } ${cardClass}`}
                 >
@@ -262,6 +266,8 @@ export function TicketsTable<TData, TValue>({
                       ? "border-stone-800/50 bg-stone-900/30"
                       : theme === "coding"
                       ? "border-green-900/30 bg-black/50"
+                      : theme === "clash"
+                      ? "clash-table-header"
                       : "border-slate-600 bg-slate-800/90"
                   }`}>
                     <div className="flex items-center gap-2.5">
@@ -273,6 +279,8 @@ export function TicketsTable<TData, TValue>({
                             ? "text-stone-500"
                             : theme === "coding"
                             ? "text-green-600/70 font-mono"
+                            : theme === "clash"
+                            ? "text-[#fbcc14]"
                             : theme === "default"
                             ? "text-slate-300"
                             : "text-slate-400"
@@ -291,6 +299,8 @@ export function TicketsTable<TData, TValue>({
                             ? "text-amber-400 hover:text-amber-300"
                             : theme === "coding"
                             ? "text-green-500/80 hover:text-green-400 font-mono"
+                            : theme === "clash"
+                            ? "text-white hover:text-[#fbcc14]"
                             : theme === "default"
                             ? "text-sky-400 hover:text-sky-300"
                             : "text-blue-400 hover:text-blue-300"
@@ -311,6 +321,8 @@ export function TicketsTable<TData, TValue>({
                               ? "ring-stone-700"
                               : theme === "coding"
                               ? "ring-green-900/50"
+                              : theme === "clash"
+                              ? "ring-[#fbcc14]"
                               : "ring-slate-600"
                           }`}
                         />
@@ -323,6 +335,8 @@ export function TicketsTable<TData, TValue>({
                               ? "bg-stone-800 text-stone-400"
                               : theme === "coding"
                               ? "bg-green-900/30 text-green-500/80 font-mono"
+                              : theme === "clash"
+                              ? "bg-black/30 text-[#fbcc14] font-bold"
                               : theme === "default"
                               ? "bg-slate-600 text-white"
                               : "bg-slate-500 text-white"
@@ -351,6 +365,8 @@ export function TicketsTable<TData, TValue>({
                           ? "text-stone-300"
                           : theme === "coding"
                           ? "text-green-400/80"
+                          : theme === "clash"
+                          ? "text-white/90"
                           : theme === "default"
                           ? "text-slate-100"
                           : "text-slate-200"
@@ -367,6 +383,8 @@ export function TicketsTable<TData, TValue>({
                               ? "text-stone-500"
                               : theme === "coding"
                               ? "text-green-600/70 font-mono"
+                              : theme === "clash"
+                              ? "text-[#fbcc14]"
                               : theme === "default"
                               ? "text-slate-400"
                               : "text-slate-500"
@@ -392,6 +410,8 @@ export function TicketsTable<TData, TValue>({
                               ? "text-stone-500"
                               : theme === "coding"
                               ? "text-green-600/70 font-mono"
+                              : theme === "clash"
+                              ? "text-[#fbcc14]"
                               : theme === "default"
                               ? "text-slate-400"
                               : "text-slate-500"
@@ -428,6 +448,8 @@ export function TicketsTable<TData, TValue>({
           ? "lunar-card border border-stone-800/50 shadow-xl"
           : theme === "coding"
           ? "coding-card border border-green-900/30 shadow-xl shadow-green-900/20"
+          : theme === "clash"
+          ? "clash-card"
           : "border border-white/20 rounded-md shadow-xl"
       }`}>
         <div className="overflow-auto">
@@ -441,6 +463,8 @@ export function TicketsTable<TData, TValue>({
                 ? "lunar-table-header backdrop-blur-md"
                 : theme === "coding"
                 ? "coding-table-header backdrop-blur-md"
+                : theme === "clash"
+                ? "clash-table-header"
                 : "bg-background backdrop-blur-md"
             }`}>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -453,6 +477,8 @@ export function TicketsTable<TData, TValue>({
                     ? "border-b border-stone-800/50"
                     : theme === "coding"
                     ? "border-b border-green-900/30"
+                    : theme === "clash"
+                    ? "border-b border-[#9c9c9c]"
                     : "border-b border-border"
                 }`}>
                   {headerGroup.headers.map((header) => {
@@ -468,6 +494,8 @@ export function TicketsTable<TData, TValue>({
                             ? "text-stone-500 border-r border-stone-800/30 last:border-r-0"
                             : theme === "coding"
                             ? "text-green-500/70 border-r border-green-900/30 last:border-r-0 font-mono"
+                            : theme === "clash"
+                            ? "text-[#fbcc14] border-r border-[#9c9c9c] last:border-r-0"
                             : "text-foreground border-r border-border last:border-r-0"
                         }`}
                         style={{
@@ -517,6 +545,8 @@ export function TicketsTable<TData, TValue>({
                         ? "lunar-table-row"
                         : theme === "coding"
                         ? "coding-table-row"
+                        : theme === "clash"
+                        ? "clash-table-row"
                         : "border-b border-border hover:bg-muted/50"
                     }`}
                   >
@@ -532,6 +562,8 @@ export function TicketsTable<TData, TValue>({
                             ? "lunar-table-cell border-r border-stone-800/30 last:border-r-0 text-stone-300"
                             : theme === "coding"
                             ? "coding-table-cell border-r border-green-900/30 last:border-r-0 text-green-400/70"
+                            : theme === "clash"
+                            ? "text-white border-r border-[#9c9c9c] last:border-r-0 font-medium dropshadow-sm"
                             : "border-r border-border last:border-r-0"
                         }`}
                         style={{
