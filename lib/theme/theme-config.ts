@@ -616,14 +616,14 @@ const clashThemeConfig: ThemeConfig = {
 		aiFill: {
 			id: "ai-fill",
 			label: "Raid",
-			svgIcon: "/icons/clash/sword.svg",
+			svgIcon: "/icons/clash/attack-btn.svg",
 			className: "h-10 px-5 clash-btn-primary",
 			iconClassName: "w-5 h-5",
 		},
 		quickFill: {
 			id: "quick-fill",
 			label: "Train",
-			svgIcon: "/icons/clash/barbarian.svg",
+			svgIcon: "/icons/clash/army-btn.svg",
 			className: "h-10 px-5 clash-btn-primary",
 			iconClassName: "w-5 h-5",
 		},
@@ -637,7 +637,7 @@ const clashThemeConfig: ThemeConfig = {
 		refresh: {
 			id: "refresh",
 			label: "Scout",
-			svgIcon: "/icons/clash/trophy.svg",
+			svgIcon: "/icons/clash/clan-btn.svg",
 			className: "h-10 px-5 clash-btn-primary",
 			iconClassName: "w-5 h-5",
 		},
@@ -651,14 +651,14 @@ const clashThemeConfig: ThemeConfig = {
 		save: {
 			id: "save",
 			label: "Build",
-			svgIcon: "/icons/clash/shield.svg",
+			svgIcon: "/icons/clash/shop-btn.svg",
 			className: "h-10 px-5 clash-btn-primary",
 			iconClassName: "w-5 h-5",
 		},
 		send: {
 			id: "send",
 			label: "Attack!",
-			svgIcon: "/icons/clash/sword.svg",
+			svgIcon: "/icons/clash/attack-btn.svg",
 			className: "h-10 px-6 clash-btn-primary",
 			iconClassName: "w-5 h-5",
 		},
@@ -888,8 +888,8 @@ export const getHeaderNavItems = (theme: Theme): HeaderNavItem[] => {
 	}
 	if (theme === "clash") {
 		return [
-			{ href: "/feedback", label: "War Log", svgIcon: "/icons/clash/shield.svg" },
-			{ href: "/changelog", label: "News", svgIcon: "/icons/clash/trophy.svg" },
+			{ href: "/feedback", label: "War Log", svgIcon: "/icons/clash/attack-btn.svg" },
+			{ href: "/changelog", label: "News", svgIcon: "/icons/clash/clan-btn.svg" },
 		]
 	}
 	return [
