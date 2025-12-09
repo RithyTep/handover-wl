@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "@/server/trpc/server"
+import { router, publicProcedure, protectedMutation } from "@/server/trpc/server"
 import { ScheduledCommentService } from "@/server/services/scheduled-comment.service"
 import {
 	scheduledCommentCreateSchema,
@@ -14,7 +14,7 @@ export const scheduledCommentsRouter = router({
 		return { success: true, comments }
 	}),
 
-	create: publicProcedure
+	create: protectedMutation
 		.input(scheduledCommentCreateSchema)
 		.mutation(async ({ input }) => {
 			const comment = await scheduledCommentService.create(
@@ -27,7 +27,7 @@ export const scheduledCommentsRouter = router({
 			return { success: true, comment }
 		}),
 
-	update: publicProcedure
+	update: protectedMutation
 		.input(scheduledCommentUpdateSchema)
 		.mutation(async ({ input }) => {
 			const { id, ...updateData } = input
@@ -42,7 +42,7 @@ export const scheduledCommentsRouter = router({
 			return { success: true, comment }
 		}),
 
-	delete: publicProcedure
+	delete: protectedMutation
 		.input(scheduledCommentDeleteSchema)
 		.mutation(async ({ input }) => {
 			await scheduledCommentService.delete(input.id)

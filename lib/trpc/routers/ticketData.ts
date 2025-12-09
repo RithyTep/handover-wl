@@ -1,11 +1,11 @@
 import { z } from "zod";
-import { router, publicProcedure } from "@/server/trpc/server";
+import { router, protectedMutation } from "@/server/trpc/server";
 import { TicketService } from "@/server/services/ticket.service";
 
 const ticketService = new TicketService();
 
 export const ticketDataRouter = router({
-  save: publicProcedure
+  save: protectedMutation
     .input(z.record(z.string(), z.string()))
     .mutation(async ({ input }) => {
       const formattedData: Record<string, { status: string; action: string }> = {};

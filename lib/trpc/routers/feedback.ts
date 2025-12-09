@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "@/server/trpc/server"
+import { router, publicProcedure, protectedMutation } from "@/server/trpc/server"
 import { FeedbackService } from "@/server/services/feedback.service"
 import { feedbackCreateSchema } from "@/schemas/feedback.schema"
 
@@ -10,7 +10,7 @@ export const feedbackRouter = router({
 		return { success: true, feedback }
 	}),
 
-	create: publicProcedure
+	create: protectedMutation
 		.input(feedbackCreateSchema)
 		.mutation(async ({ input }) => {
 			const feedback = await feedbackService.create(

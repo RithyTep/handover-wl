@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "@/server/trpc/server";
+import { router, publicProcedure, protectedMutation } from "@/server/trpc/server";
 import { SettingsService } from "@/server/services/settings.service";
 import { schedulerStateSchema, triggerTimesSchema } from "@/schemas/settings.schema";
 import { triggerScheduledTask } from "@/lib/scheduler";
@@ -11,7 +11,7 @@ export const schedulerRouter = router({
     return { enabled };
   }),
 
-  setState: publicProcedure
+  setState: protectedMutation
     .input(schedulerStateSchema)
     .mutation(async ({ input }) => {
       await settingsService.setSchedulerEnabled(input.enabled);
@@ -23,14 +23,14 @@ export const schedulerRouter = router({
     return times;
   }),
 
-  setTriggerTimes: publicProcedure
+  setTriggerTimes: protectedMutation
     .input(triggerTimesSchema)
     .mutation(async ({ input }) => {
       await settingsService.setTriggerTimes(input.time1, input.time2);
       return { success: true };
     }),
 
-  triggerSchedule: publicProcedure.mutation(async () => {
+  triggerSchedule: protectedMutation.mutation(async () => {
     await triggerScheduledTask();
     return { success: true };
   }),

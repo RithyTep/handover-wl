@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, publicProcedure } from "@/server/trpc/server";
+import { router, protectedMutation } from "@/server/trpc/server";
 import fs from "fs";
 import path from "path";
 
@@ -9,7 +9,7 @@ const JIRA_URL = process.env.JIRA_URL;
 const STORAGE_FILE = path.join(process.cwd(), "ticket_data.json");
 
 export const slackRouter = router({
-  send: publicProcedure
+  send: protectedMutation
     .input(
       z.object({
         ticketData: z.record(z.string(), z.string()),
@@ -71,7 +71,7 @@ export const slackRouter = router({
       return { success: true, message_ts: postResult.ts };
     }),
 
-  postThread: publicProcedure
+  postThread: protectedMutation
     .input(
       z.object({
         channelId: z.string(),

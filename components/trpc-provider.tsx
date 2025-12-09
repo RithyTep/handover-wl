@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink } from "@trpc/client";
+import { httpBatchLink, TRPCClientError } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 import type { AppRouter } from "@/lib/trpc/root";
+import { generateChallengeHeaders, initChallengeSession } from "@/lib/security/client/challenge-manager";
 
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -15,7 +16,42 @@ function getBaseUrl() {
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
+// List of mutation procedure names that require challenge
+const PROTECTED_MUTATIONS = [
+  "ticketData.save",
+  "slack.send",
+  "slack.postThread",
+  "ai.autofill",
+  "backup.create",
+  "backup.restore",
+  "feedback.create",
+  "settings.set",
+  "scheduler.update",
+  "scheduledComments.create",
+  "scheduledComments.update",
+  "scheduledComments.delete",
+  "theme.setSelected",
+];
+
+// Check if a procedure path is a protected mutation
+function isProtectedMutation(path: string): boolean {
+  return PROTECTED_MUTATIONS.some((m) => path.includes(m));
+}
+
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Initialize challenge session on mount
+  useEffect(() => {
+    initChallengeSession()
+      .then(() => setIsInitialized(true))
+      .catch((err) => {
+        console.error("[Challenge] Failed to initialize:", err);
+        // Still allow the app to work, mutations will fail with proper error
+        setIsInitialized(true);
+      });
+  }, []);
+
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -38,6 +74,22 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
           url: `${getBaseUrl()}/api/trpc`,
           transformer: superjson,
           maxURLLength: 2083,
+          async headers(opts) {
+            // Check if this is a mutation that needs challenge
+            const op = opts.opList[0];
+            if (op && op.type === "mutation" && isProtectedMutation(op.path)) {
+              try {
+                // Generate challenge headers with the request input
+                const challengeHeaders = await generateChallengeHeaders(op.input);
+                return challengeHeaders;
+              } catch (err) {
+                console.error("[Challenge] Failed to generate headers:", err);
+                // Return empty headers, server will reject with proper error
+                return {};
+              }
+            }
+            return {};
+          },
         }),
       ],
     })

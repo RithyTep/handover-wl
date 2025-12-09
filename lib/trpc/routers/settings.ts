@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "@/server/trpc/server";
+import { router, publicProcedure, protectedMutation } from "@/server/trpc/server";
 import { SettingsService } from "@/server/services/settings.service";
 import { customChannelSchema, memberMentionsSchema, shiftTokensSchema } from "@/schemas/settings.schema";
 
@@ -10,7 +10,7 @@ export const settingsRouter = router({
     return { success: true, channelId };
   }),
 
-  setCustomChannel: publicProcedure
+  setCustomChannel: protectedMutation
     .input(customChannelSchema)
     .mutation(async ({ input }) => {
       await settingsService.setCustomChannelId(input.channel_id);
@@ -34,7 +34,7 @@ export const settingsRouter = router({
     };
   }),
 
-  setShiftTokens: publicProcedure
+  setShiftTokens: protectedMutation
     .input(shiftTokensSchema)
     .mutation(async ({ input }) => {
       if (input.evening_user_token) {
@@ -57,7 +57,7 @@ export const settingsRouter = router({
     return { success: true, mentions: mentions || "" };
   }),
 
-  setMemberMentions: publicProcedure
+  setMemberMentions: protectedMutation
     .input(memberMentionsSchema)
     .mutation(async ({ input }) => {
       await settingsService.setMemberMentions(input.mentions);

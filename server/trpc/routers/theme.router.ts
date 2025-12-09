@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "@/server/trpc/server"
+import { router, publicProcedure, protectedMutation } from "@/server/trpc/server"
 import { ThemeService } from "@/server/services/theme.service"
 import { themeSchema } from "@/lib/types"
 
@@ -14,7 +14,7 @@ export const themeRouter = router({
 		return { theme }
 	}),
 
-	setSelected: publicProcedure.input(themeSchema).mutation(async ({ input }) => {
+	setSelected: protectedMutation.input(themeSchema).mutation(async ({ input }) => {
 		await themeService.setSelectedTheme(input)
 		return { success: true, theme: input }
 	}),
