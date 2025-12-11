@@ -2796,6 +2796,7 @@ body.theme-clash label {
     font-family: 'Kantumruy Pro', 'Press Start 2P', monospace;
   }
 
+
   /* ===== ANGKOR PIXEL CARD ===== */
   .angkor-pixel-card {
     background: #1a2f26;
@@ -3032,6 +3033,11 @@ body.theme-clash label {
       2px 2px 0 #3a2a1a,
       0 4px 0 #1a0a00;
     image-rendering: pixelated;
+  }
+
+  .family-pixel {
+    font-family: 'Press Start 2P', monospace !important;
+    font-size: 14px !important;
   }
 
   /* ===== ANGKOR PIXEL ANIMATIONS ===== */

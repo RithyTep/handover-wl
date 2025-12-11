@@ -187,7 +187,7 @@ const StandardHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 						{config.logo.titleGradient ? (
 							<span className={config.logo.titleGradient}>Handover</span>
 						) : (
-							<span>Handover</span>
+							<span className="family-pixel">Handover</span>
 						)}
 					</h1>
 				</div>
