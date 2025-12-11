@@ -1,6 +1,3 @@
-"use client"
-
-import { useEffect, useState } from "react"
 import Image from "next/image"
 
 interface Cloud {
@@ -12,49 +9,22 @@ interface Cloud {
 	scale: number
 }
 
-interface Monster {
-	id: number
-	type: "goblin" | "mushroom" | "skeleton" | "flying-eye"
-	position: "left" | "right"
-}
+// Pre-defined cloud configurations (deterministic, no random generation)
+const CLOUDS: Cloud[] = [
+	{ id: 0, src: "/assets/angkor-pixel/pixel-art/cloud-1.png", top: 8, delay: 0, duration: 70, scale: 0.5 },
+	{ id: 1, src: "/assets/angkor-pixel/pixel-art/cloud-2.png", top: 18, delay: 15, duration: 85, scale: 0.4 },
+	{ id: 2, src: "/assets/angkor-pixel/pixel-art/cloud-sun.png", top: 5, delay: 8, duration: 90, scale: 0.6 },
+	{ id: 3, src: "/assets/angkor-pixel/pixel-art/cloud-3.png", top: 25, delay: 22, duration: 75, scale: 0.35 },
+	{ id: 4, src: "/assets/angkor-pixel/pixel-art/cloud-1.png", top: 32, delay: 5, duration: 80, scale: 0.45 },
+]
 
 export function AngkorPixelScene() {
-	const [clouds, setClouds] = useState<Cloud[]>([])
-	const [monsters, setMonsters] = useState<Monster[]>([])
-
-	useEffect(() => {
-		// Generate random clouds
-		const cloudSources = [
-			"/assets/angkor-pixel/pixel-art/cloud-1.png",
-			"/assets/angkor-pixel/pixel-art/cloud-2.png",
-			"/assets/angkor-pixel/pixel-art/cloud-3.png",
-			"/assets/angkor-pixel/pixel-art/cloud-sun.png",
-		]
-
-		const generatedClouds: Cloud[] = Array.from({ length: 5 }, (_, i) => ({
-			id: i,
-			src: cloudSources[Math.floor(Math.random() * cloudSources.length)],
-			top: Math.random() * 30 + 5,
-			delay: Math.random() * 30,
-			duration: 60 + Math.random() * 40,
-			scale: 0.3 + Math.random() * 0.4,
-		}))
-		setClouds(generatedClouds)
-
-		// Generate monsters
-		const monsterTypes: Monster["type"][] = ["goblin", "mushroom", "skeleton", "flying-eye"]
-		const generatedMonsters: Monster[] = [
-			{ id: 1, type: monsterTypes[Math.floor(Math.random() * monsterTypes.length)], position: "left" },
-			{ id: 2, type: monsterTypes[Math.floor(Math.random() * monsterTypes.length)], position: "right" },
-		]
-		setMonsters(generatedMonsters)
-	}, [])
 
 	return (
 		<>
 			{/* Floating clouds */}
 			<div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-				{clouds.map((cloud) => (
+				{CLOUDS.map((cloud) => (
 					<div
 						key={cloud.id}
 						className="absolute"
@@ -69,11 +39,12 @@ export function AngkorPixelScene() {
 					>
 						<Image
 							src={cloud.src}
-							alt="Cloud"
+							alt=""
 							width={400}
 							height={200}
 							className="object-contain"
 							style={{ imageRendering: "pixelated" }}
+							priority
 						/>
 					</div>
 				))}

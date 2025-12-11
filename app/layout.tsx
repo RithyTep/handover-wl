@@ -27,6 +27,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        {/* Preload background image to prevent flash on load */}
+        <link
+          rel="preload"
+          href="/assets/angkor-pixel/background.png"
+          as="image"
+          type="image/png"
+          fetchPriority="high"
+        />
+      </head>
       <body className={spaceGrotesk.className}>
         <TRPCProvider>
           {children}
