@@ -3,6 +3,8 @@
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kantumruy+Pro:wght@400;500;600;700&display=swap");
 
 /* Supercell Magic Font - Clash of Clans official font */
 @font-face {
@@ -2708,3 +2710,434 @@ body.theme-clash label {
   }
 }
 
+
+/* ========================================
+   ANGKOR PIXEL THEME
+   Cambodian pixel art theme with Angkor temples
+   ======================================== */
+
+@layer base {
+  body.theme-angkor_pixel {
+    font-family: 'Kantumruy Pro', 'Press Start 2P', monospace;
+    background-color: #2d4a3e;
+    background-image: url('/assets/angkor-pixel/background.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: #f5e6d3;
+    cursor: url('/assets/angkor-pixel/cursors/cursor-default.png') 16 16, auto;
+  }
+
+  body.theme-angkor_pixel * {
+    cursor: url('/assets/angkor-pixel/cursors/cursor-default.png') 16 16, auto;
+  }
+
+  body.theme-angkor_pixel a,
+  body.theme-angkor_pixel button,
+  body.theme-angkor_pixel [role="button"],
+  body.theme-angkor_pixel input[type="submit"],
+  body.theme-angkor_pixel [class*="cursor-pointer"] {
+    cursor: url('/assets/angkor-pixel/cursors/cursor-pointer.png') 16 16, pointer !important;
+  }
+
+  body.theme-angkor_pixel a[href*="jira"],
+  body.theme-angkor_pixel a[href*="atlassian"] {
+    color: #d4af37;
+  }
+
+  body.theme-angkor_pixel a[href*="jira"]:hover,
+  body.theme-angkor_pixel a[href*="atlassian"]:hover {
+    color: #ffd700;
+  }
+
+  body.theme-angkor_pixel input[type="text"],
+  body.theme-angkor_pixel input:not([type]) {
+    background-color: rgba(45, 74, 62, 0.8) !important;
+    border: 2px solid #8b7355 !important;
+    color: #f5e6d3 !important;
+    font-family: 'Kantumruy Pro', monospace !important;
+    image-rendering: pixelated;
+  }
+
+  body.theme-angkor_pixel input:focus {
+    border-color: #d4af37 !important;
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.3) !important;
+  }
+
+  body.theme-angkor_pixel ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  body.theme-angkor_pixel ::-webkit-scrollbar-track {
+    background: #1a2f26;
+    border: 2px solid #3d5a4a;
+  }
+
+  body.theme-angkor_pixel ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #8b7355 0%, #6b5344 100%);
+    border: 2px solid #4a3a2a;
+    image-rendering: pixelated;
+  }
+
+  body.theme-angkor_pixel ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #a08060 0%, #7b6354 100%);
+  }
+}
+
+@layer utilities {
+  /* ===== ANGKOR PIXEL BACKGROUND ===== */
+  .angkor-pixel-bg {
+    background-image: url('/assets/angkor-pixel/background.png');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    image-rendering: pixelated;
+    font-family: 'Kantumruy Pro', 'Press Start 2P', monospace;
+  }
+
+  /* ===== ANGKOR PIXEL CARD ===== */
+  .angkor-pixel-card {
+    background: #1a2f26;
+    border: 4px solid #8b7355;
+    border-radius: 0;
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.4),
+      0 4px 0 #4a3a2a,
+      0 8px 30px rgba(0, 0, 0, 0.7);
+    image-rendering: pixelated;
+    font-family: 'Press Start 2P', monospace;
+  }
+
+  /* ===== ANGKOR PIXEL HEADER ===== */
+  .angkor-pixel-header {
+    background: #3a2a1a !important;
+    border-bottom: 4px solid #8b7355 !important;
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.1),
+      0 4px 0 #2a1a0a,
+      0 8px 20px rgba(0, 0, 0, 0.5) !important;
+    image-rendering: pixelated;
+  }
+
+  .angkor-pixel-header nav,
+  .angkor-pixel-header div {
+    background: transparent !important;
+  }
+
+  /* ===== ANGKOR PIXEL BUTTONS ===== */
+  .angkor-btn {
+    position: relative;
+    background-image: url('/assets/angkor-pixel/buttons/btn-hexagon-gold.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    color: #3a2a1a;
+    font-family: 'Kantumruy Pro', 'Press Start 2P', monospace;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 14px 24px;
+    border: none;
+    cursor: pointer;
+    image-rendering: pixelated;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: transform 0.1s, filter 0.1s;
+  }
+
+  .angkor-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+  }
+
+  .angkor-btn:active {
+    transform: scale(0.95);
+    filter: brightness(0.9);
+  }
+
+  .angkor-btn-primary {
+    background-image: url('/assets/angkor-pixel/buttons/btn-wide-gold.png');
+    background-size: 100% 100%;
+    padding: 16px 32px;
+  }
+
+  .angkor-btn-secondary {
+    background-image: url('/assets/angkor-pixel/buttons/btn-arrow-right.png');
+    background-size: 100% 100%;
+  }
+
+  .angkor-btn-square {
+    background-image: url('/assets/angkor-pixel/buttons/btn-sq-home.png');
+    background-size: 100% 100%;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .angkor-btn-round {
+    background-image: url('/assets/angkor-pixel/buttons/btn-rd-gear.png');
+    background-size: 100% 100%;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .angkor-btn-star {
+    background-image: url('/assets/angkor-pixel/buttons/btn-star.png');
+    background-size: contain;
+    background-position: center;
+  }
+
+  .angkor-btn-check {
+    background-image: url('/assets/angkor-pixel/buttons/btn-check-gold.png');
+    background-size: contain;
+    background-position: center;
+  }
+
+  .angkor-btn-cancel {
+    background-image: url('/assets/angkor-pixel/buttons/btn-x-brown.png');
+    background-size: contain;
+    background-position: center;
+  }
+
+  /* ===== ANGKOR PIXEL TABLE ===== */
+  .angkor-pixel-table {
+    background: #1a2f26 !important;
+    border: 4px solid #8b7355 !important;
+    image-rendering: pixelated;
+    box-shadow:
+      inset 0 0 30px rgba(0, 0, 0, 0.5),
+      0 4px 0 #4a3a2a,
+      0 8px 20px rgba(0, 0, 0, 0.5);
+    font-family: 'Press Start 2P', 'Kantumruy Pro', monospace;
+  }
+
+  .angkor-pixel-table table,
+  .angkor-pixel-table tbody {
+    background: #1a2f26 !important;
+  }
+
+  .angkor-pixel-table-header,
+  .angkor-pixel-table thead,
+  .angkor-pixel-table thead tr,
+  .angkor-pixel-table thead th,
+  .angkor-pixel-table thead th *,
+  .angkor-pixel-table thead th button,
+  .angkor-pixel-table thead th span {
+    background: #3a2a1a !important;
+    color: #ffd700 !important;
+    font-family: 'Press Start 2P', 'Kantumruy Pro', monospace;
+    font-weight: 500 !important;
+    font-size: 8px !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-shadow: 2px 2px 0 #000;
+  }
+
+  .angkor-pixel-table-row,
+  .angkor-pixel-table tbody tr {
+    background: #243d32 !important;
+    border-bottom: 2px solid #3d5a4a;
+    transition: background-color 0.2s;
+    color: #f5e6d3;
+    font-family: 'Kantumruy Pro', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+
+  .angkor-pixel-table-row:nth-child(even),
+  .angkor-pixel-table tbody tr:nth-child(even) {
+    background: #1e3329 !important;
+  }
+
+  .angkor-pixel-table-row:hover,
+  .angkor-pixel-table tbody tr:hover {
+    background: #3d5a4a !important;
+  }
+
+  .angkor-pixel-table-cell,
+  .angkor-pixel-table td {
+    background: inherit !important;
+    color: #f5e6d3 !important;
+    text-shadow: 1px 1px 0 #000;
+    font-family: 'Kantumruy Pro', monospace;
+    font-size: 12px;
+  }
+
+  .angkor-pixel-table-cell-muted {
+    color: #8fbfa8 !important;
+    font-size: 10px;
+  }
+
+  /* ===== ANGKOR PIXEL PROGRESS BAR ===== */
+  .angkor-progress {
+    position: relative;
+    height: 32px;
+    background-image: url('/assets/angkor-pixel/buttons/progress-bar-1.png');
+    background-size: 100% 100%;
+    image-rendering: pixelated;
+    overflow: hidden;
+  }
+
+  .angkor-progress-fill {
+    height: 100%;
+    background: linear-gradient(180deg, #d4af37 0%, #b8960f 50%, #8b7355 100%);
+    transition: width 0.3s ease;
+    box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.3);
+  }
+
+  /* ===== ANGKOR PIXEL BADGE ===== */
+  .angkor-badge {
+    background: linear-gradient(180deg, #d4af37 0%, #b8960f 100%);
+    color: #3a2a1a;
+    font-family: 'Kantumruy Pro', monospace;
+    font-weight: 700;
+    font-size: 10px;
+    padding: 4px 8px;
+    border: 2px solid #8b7355;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    image-rendering: pixelated;
+  }
+
+  .angkor-badge-stone {
+    background: linear-gradient(180deg, #8b8b8b 0%, #5a5a5a 100%);
+    color: #f5f5f5;
+    border-color: #3a3a3a;
+  }
+
+  .angkor-badge-jade {
+    background: linear-gradient(180deg, #50c878 0%, #2e8b57 100%);
+    color: #fff;
+    border-color: #1a5a3a;
+  }
+
+  /* ===== ANGKOR PIXEL TITLE ===== */
+  .angkor-title {
+    color: #ffd700;
+    font-family: 'Kantumruy Pro', 'Press Start 2P', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-shadow:
+      -2px -2px 0 #3a2a1a,
+      2px -2px 0 #3a2a1a,
+      -2px 2px 0 #3a2a1a,
+      2px 2px 0 #3a2a1a,
+      0 4px 0 #1a0a00;
+    image-rendering: pixelated;
+  }
+
+  /* ===== ANGKOR PIXEL ANIMATIONS ===== */
+  @keyframes angkor-float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes angkor-cloud-drift {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100vw);
+    }
+  }
+
+  @keyframes angkor-sprite-walk {
+    0% { background-position: 0 0; }
+    100% { background-position: -100% 0; }
+  }
+
+  .angkor-float {
+    animation: angkor-float 3s ease-in-out infinite;
+  }
+
+  .angkor-cloud {
+    animation: angkor-cloud-drift 60s linear infinite;
+  }
+
+  /* ===== ANGKOR MONSTER SPRITES ===== */
+  .angkor-monster-goblin {
+    width: 150px;
+    height: 150px;
+    background-image: url('/assets/angkor-pixel/monsters/goblin.png');
+    background-size: 1000% 100%;
+    image-rendering: pixelated;
+    animation: angkor-sprite-walk 1s steps(10) infinite;
+  }
+
+  .angkor-monster-mushroom {
+    width: 150px;
+    height: 150px;
+    background-image: url('/assets/angkor-pixel/monsters/mushroom.png');
+    background-size: 1000% 100%;
+    image-rendering: pixelated;
+    animation: angkor-sprite-walk 1s steps(10) infinite;
+  }
+
+  .angkor-monster-skeleton {
+    width: 150px;
+    height: 150px;
+    background-image: url('/assets/angkor-pixel/monsters/skeleton.png');
+    background-size: 1000% 100%;
+    image-rendering: pixelated;
+    animation: angkor-sprite-walk 1s steps(10) infinite;
+  }
+
+  .angkor-monster-flying-eye {
+    width: 150px;
+    height: 150px;
+    background-image: url('/assets/angkor-pixel/monsters/flying-eye.png');
+    background-size: 1000% 100%;
+    image-rendering: pixelated;
+    animation: angkor-sprite-walk 0.8s steps(10) infinite, angkor-float 2s ease-in-out infinite;
+  }
+
+  /* ===== ANGKOR PIXEL DECORATIONS ===== */
+  .angkor-temple-icon {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(180deg, #8b8b8b 0%, #5a5a5a 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 100%, 0% 100%, 0% 25%);
+    image-rendering: pixelated;
+  }
+
+  /* ===== ANGKOR ICON BUTTONS ===== */
+  .angkor-icon-btn {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, #d4af37 0%, #8b7355 100%);
+    border: 3px solid #5a4a3a;
+    border-radius: 8px;
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      0 3px 0 #3a2a1a;
+    transition: all 0.1s;
+    image-rendering: pixelated;
+  }
+
+  .angkor-icon-btn:hover {
+    background: linear-gradient(180deg, #ffd700 0%, #a08060 100%);
+    transform: translateY(-2px);
+  }
+
+  .angkor-icon-btn:active {
+    transform: translateY(2px);
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.3),
+      0 1px 0 #3a2a1a;
+  }
+}

@@ -25,6 +25,7 @@ const THEME_BUTTON_STYLES: Record<Theme, string> = {
 	[Theme.LUNAR]: "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors",
 	[Theme.CODING]: "text-zinc-500 hover:text-indigo-400 transition-colors",
 	[Theme.CLASH]: "text-[#ccc] hover:text-[#fbcc14] transition-colors",
+	[Theme.ANGKOR_PIXEL]: "text-[#f5e6d3] hover:text-[#ffd700] hover:bg-[#3d5a4a]/50 transition-colors",
 	[Theme.DEFAULT]: "text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-colors",
 }
 

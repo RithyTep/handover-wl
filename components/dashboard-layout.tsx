@@ -5,6 +5,7 @@ import { NewYearScene } from "@/components/new-year-scene"
 import { LunarScene } from "@/components/lunar-scene"
 import { CodingScene } from "@/components/coding-scene"
 import { ProfessionalScene } from "@/components/professional-scene"
+import { AngkorPixelScene } from "@/components/angkor-pixel-scene"
 import { DashboardHeader } from "./dashboard-header"
 import { DashboardContent } from "./dashboard-content"
 import { DashboardMobileActions } from "./dashboard-mobile-actions"
@@ -54,6 +55,7 @@ const THEME_SCENES: Record<Theme, React.ComponentType | null> = {
 	lunar: LunarScene,
 	coding: CodingScene,
 	clash: null,
+	angkor_pixel: AngkorPixelScene,
 }
 
 // ============================================================================
@@ -90,7 +92,8 @@ export const DashboardLayout = ({
 			"theme-pixel",
 			"theme-lunar",
 			"theme-coding",
-			"theme-clash"
+			"theme-clash",
+			"theme-angkor_pixel"
 		)
 		document.body.classList.add(`theme-${theme}`)
 	}, [theme])

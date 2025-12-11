@@ -38,6 +38,12 @@ export const THEMES: ThemeInfo[] = [
 		description: "Build your village and prepare for battle",
 		icon: "⚔️",
 	},
+	{
+		id: Theme.ANGKOR_PIXEL,
+		name: "Angkor Pixel",
+		description: "Cambodian pixel art theme with Angkor temples",
+		icon: "🏯",
+	},
 ]
 
 export const DEFAULT_THEME = Theme.CLASH

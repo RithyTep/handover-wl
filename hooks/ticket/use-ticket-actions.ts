@@ -225,7 +225,7 @@ export const useTicketActions = ({ tickets }: UseTicketActionsProps): UseTicketA
 	}, [tickets, ticketData, aiAutofillMutation])
 
 	const handleCopyForSlack = useCallback(async () => {
-		const JIRA_URL = process.env.NEXT_PUBLIC_JIRA_URL
+		const JIRA_URL = process.env.NEXT_PUBLIC_JIRA_URL || process.env.JIRA_URL || "https://olympian.atlassian.net"
 		if (!JIRA_URL) {
 			toast.error("JIRA_URL not configured")
 			return

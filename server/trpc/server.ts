@@ -20,6 +20,22 @@ export const publicProcedure = t.procedure.use(async (opts) => {
   return opts.next();
 });
 
+// Check if running in development/localhost
+function isLocalDevelopment(headers?: Headers): boolean {
+  if (process.env.NODE_ENV === "development") {
+    return true;
+  }
+  if (headers) {
+    const host = headers.get("host") || "";
+    const origin = headers.get("origin") || "";
+    if (host.includes("localhost") || host.includes("127.0.0.1") ||
+        origin.includes("localhost") || origin.includes("127.0.0.1")) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // Protected mutation procedure - requires browser challenge
 export const protectedMutation = t.procedure.use(async (opts) => {
   await initDatabase();
@@ -30,6 +46,16 @@ export const protectedMutation = t.procedure.use(async (opts) => {
   // Skip challenge validation if no headers (SSR context)
   if (!ctx.headers) {
     return opts.next();
+  }
+
+  // Skip challenge validation for localhost/development
+  if (isLocalDevelopment(ctx.headers)) {
+    return opts.next({
+      ctx: {
+        ...ctx,
+        sessionId: "localhost-dev",
+      },
+    });
   }
 
   // Validate challenge

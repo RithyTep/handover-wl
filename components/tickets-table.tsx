@@ -220,6 +220,8 @@ export function TicketsTable<TData, TValue>({
               ? "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/30 font-mono"
               : theme === "clash"
               ? "text-[#fbcc14] bg-[#3f2e21] hover:bg-black/20 border-2 border-[#9c9c9c] clash-btn-primary"
+              : theme === "angkor_pixel"
+              ? "text-[#ffd700] bg-[#3a2a1a] hover:bg-[#4b3a2a] border-4 border-[#8b7355] angkor-pixel-btn"
               : "text-slate-300 hover:bg-slate-800 border-slate-700"
           }`}
           title={showDetails ? "Hide Details" : "Show Details"}
@@ -450,6 +452,8 @@ export function TicketsTable<TData, TValue>({
           ? "coding-card border border-green-900/30 shadow-xl shadow-green-900/20"
           : theme === "clash"
           ? "clash-card"
+          : theme === "angkor_pixel"
+          ? "angkor-pixel-table bg-[#1a2f26] border-4 border-[#8b7355]"
           : "border border-white/20 rounded-md shadow-xl"
       }`}>
         <div className="overflow-auto">
@@ -465,6 +469,8 @@ export function TicketsTable<TData, TValue>({
                 ? "coding-table-header backdrop-blur-md"
                 : theme === "clash"
                 ? "clash-table-header"
+                : theme === "angkor_pixel"
+                ? "bg-[#3a2a1a]"
                 : "bg-background backdrop-blur-md"
             }`}>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -479,6 +485,8 @@ export function TicketsTable<TData, TValue>({
                     ? "border-b border-green-900/30"
                     : theme === "clash"
                     ? "border-b border-[#9c9c9c]"
+                    : theme === "angkor_pixel"
+                    ? "border-b-4 border-[#8b7355]"
                     : "border-b border-border"
                 }`}>
                   {headerGroup.headers.map((header) => {
@@ -496,6 +504,8 @@ export function TicketsTable<TData, TValue>({
                             ? "text-green-500/70 border-r border-green-900/30 last:border-r-0 font-mono"
                             : theme === "clash"
                             ? "text-[#fbcc14] border-r border-[#9c9c9c] last:border-r-0"
+                            : theme === "angkor_pixel"
+                            ? "text-[#ffd700] border-r border-[#8b7355] last:border-r-0 bg-[#3a2a1a]"
                             : "text-foreground border-r border-border last:border-r-0"
                         }`}
                         style={{
@@ -521,6 +531,8 @@ export function TicketsTable<TData, TValue>({
                 ? "text-sm"
                 : theme === "coding"
                 ? "text-sm font-mono"
+                : theme === "angkor_pixel"
+                ? "text-sm bg-[#1a2f26]"
                 : ""
             }>
               {table.getRowModel().rows?.length ? (
@@ -547,6 +559,8 @@ export function TicketsTable<TData, TValue>({
                         ? "coding-table-row"
                         : theme === "clash"
                         ? "clash-table-row"
+                        : theme === "angkor_pixel"
+                        ? `border-b-2 border-[#3d5a4a] hover:bg-[#3d5a4a] ${index % 2 === 0 ? 'bg-[#243d32]' : 'bg-[#1e3329]'}`
                         : "border-b border-border hover:bg-muted/50"
                     }`}
                   >
@@ -564,6 +578,8 @@ export function TicketsTable<TData, TValue>({
                             ? "coding-table-cell border-r border-green-900/30 last:border-r-0 text-green-400/70"
                             : theme === "clash"
                             ? "text-white border-r border-[#9c9c9c] last:border-r-0 font-medium dropshadow-sm"
+                            : theme === "angkor_pixel"
+                            ? "text-[#f5e6d3] border-r border-[#3d5a4a] last:border-r-0 font-medium"
                             : "border-r border-border last:border-r-0"
                         }`}
                         style={{
