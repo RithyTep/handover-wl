@@ -258,6 +258,8 @@ export function TicketsTable<TData, TValue>({
                       ? "border-green-900/30 coding-card"
                       : theme === "clash"
                       ? "clash-card"
+                      : theme === "angkor_pixel"
+                      ? "angkor-pixel-mobile-card"
                       : "border-slate-700 bg-slate-900 default-mobile-card"
                   } ${cardClass}`}
                 >
@@ -270,6 +272,8 @@ export function TicketsTable<TData, TValue>({
                       ? "border-green-900/30 bg-black/50"
                       : theme === "clash"
                       ? "clash-table-header"
+                      : theme === "angkor_pixel"
+                      ? "border-[#8b7355] bg-[#3a2a1a]"
                       : "border-slate-600 bg-slate-800/90"
                   }`}>
                     <div className="flex items-center gap-2.5">
@@ -283,6 +287,8 @@ export function TicketsTable<TData, TValue>({
                             ? "text-green-600/70 font-mono"
                             : theme === "clash"
                             ? "text-[#fbcc14]"
+                            : theme === "angkor_pixel"
+                            ? "text-[#d4af37]"
                             : theme === "default"
                             ? "text-slate-300"
                             : "text-slate-400"
@@ -303,6 +309,8 @@ export function TicketsTable<TData, TValue>({
                             ? "text-green-500/80 hover:text-green-400 font-mono"
                             : theme === "clash"
                             ? "text-white hover:text-[#fbcc14]"
+                            : theme === "angkor_pixel"
+                            ? "text-[#ffd700] hover:text-[#fff0a0]"
                             : theme === "default"
                             ? "text-sky-400 hover:text-sky-300"
                             : "text-blue-400 hover:text-blue-300"
@@ -325,6 +333,8 @@ export function TicketsTable<TData, TValue>({
                               ? "ring-green-900/50"
                               : theme === "clash"
                               ? "ring-[#fbcc14]"
+                              : theme === "angkor_pixel"
+                              ? "ring-[#8b7355]"
                               : "ring-slate-600"
                           }`}
                         />
@@ -339,6 +349,8 @@ export function TicketsTable<TData, TValue>({
                               ? "bg-green-900/30 text-green-500/80 font-mono"
                               : theme === "clash"
                               ? "bg-black/30 text-[#fbcc14] font-bold"
+                              : theme === "angkor_pixel"
+                              ? "bg-[#3a2a1a] text-[#ffd700] font-bold"
                               : theme === "default"
                               ? "bg-slate-600 text-white"
                               : "bg-slate-500 text-white"
@@ -369,6 +381,8 @@ export function TicketsTable<TData, TValue>({
                           ? "text-green-400/80"
                           : theme === "clash"
                           ? "text-white/90"
+                          : theme === "angkor_pixel"
+                          ? "text-[#f5e6d3]"
                           : theme === "default"
                           ? "text-slate-100"
                           : "text-slate-200"
@@ -387,6 +401,8 @@ export function TicketsTable<TData, TValue>({
                               ? "text-green-600/70 font-mono"
                               : theme === "clash"
                               ? "text-[#fbcc14]"
+                              : theme === "angkor_pixel"
+                              ? "text-[#d4af37]"
                               : theme === "default"
                               ? "text-slate-400"
                               : "text-slate-500"

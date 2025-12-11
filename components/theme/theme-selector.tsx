@@ -1,7 +1,7 @@
 "use client"
 
-import { useState, useCallback } from "react"
-import { Palette } from "lucide-react"
+import { useState, useCallback, useEffect } from "react"
+import { Palette, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
 	Dialog,
@@ -10,8 +10,14 @@ import {
 	DialogTitle,
 	DialogDescription,
 } from "@/components/ui/dialog"
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select"
 import { useTheme } from "@/hooks/theme/use-theme"
-import { ThemeList } from "./theme-list"
 import { cn } from "@/lib/utils"
 import { Theme } from "@/enums"
 
@@ -34,18 +40,33 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 	const { themes, selectedTheme, isLoading, handleThemeSelect, handleSaveToServer, isSaving } =
 		useTheme()
 
+	// Pending theme - only applied when saving
+	const [pendingTheme, setPendingTheme] = useState<Theme>(selectedTheme as Theme)
+	const [hasChanges, setHasChanges] = useState(false)
+
+	// Sync pending theme when selected theme changes or dialog opens
+	useEffect(() => {
+		setPendingTheme(selectedTheme as Theme)
+		setHasChanges(false)
+	}, [selectedTheme, isOpen])
+
 	const handleOpen = useCallback(() => {
 		setIsOpen(true)
 	}, [])
 
-	const handleClose = useCallback(() => {
-		setIsOpen(false)
-	}, [])
+	const handlePendingChange = useCallback((value: string) => {
+		setPendingTheme(value as Theme)
+		setHasChanges(value !== selectedTheme)
+	}, [selectedTheme])
 
 	const handleSave = useCallback(async () => {
-		await handleSaveToServer(selectedTheme)
+		if (pendingTheme !== selectedTheme) {
+			handleThemeSelect(pendingTheme)
+		}
+		await handleSaveToServer(pendingTheme)
+		setHasChanges(false)
 		setIsOpen(false)
-	}, [handleSaveToServer, selectedTheme])
+	}, [handleSaveToServer, handleThemeSelect, pendingTheme, selectedTheme])
 
 	const buttonClassName = THEME_BUTTON_STYLES[variant] ?? THEME_BUTTON_STYLES.default
 
@@ -64,11 +85,11 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 			</Button>
 
 			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent className="sm:max-w-2xl">
+				<DialogContent className="sm:max-w-md">
 					<DialogHeader>
-						<DialogTitle>Theme</DialogTitle>
+						<DialogTitle>Select Theme</DialogTitle>
 						<DialogDescription>
-							Choose the theme that best represents your style and brand.
+							Choose a theme. Click save to apply changes.
 						</DialogDescription>
 					</DialogHeader>
 
@@ -79,32 +100,67 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 							</div>
 						</div>
 					) : (
-						<>
-							<ThemeList
-								themes={themes}
-								selectedTheme={selectedTheme}
-								onSelect={handleThemeSelect}
-								disabled={isSaving}
-							/>
+						<div className="space-y-6 py-4">
+							{/* Theme Dropdown */}
+							<Select value={pendingTheme} onValueChange={handlePendingChange} disabled={isSaving}>
+								<SelectTrigger
+									className="w-full border"
+									style={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#f3f4f6' }}
+									aria-label="Select theme"
+								>
+									<SelectValue placeholder="Select theme" />
+								</SelectTrigger>
+								<SelectContent
+									className="border"
+									style={{ backgroundColor: '#1f2937', borderColor: '#374151' }}
+								>
+									{themes.map((theme) => (
+										<SelectItem
+											key={theme.id}
+											value={theme.id}
+											className="cursor-pointer"
+											style={{ color: '#f3f4f6' }}
+										>
+											{theme.name}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 
-							<div className="mt-6 p-4 bg-muted rounded-lg">
+							{/* Change indicator */}
+							{hasChanges && (
+								<p className="text-sm text-amber-500">
+									Theme changed to "{themes.find(t => t.id === pendingTheme)?.name}". Click save to apply.
+								</p>
+							)}
+
+							{/* About section */}
+							<div className="p-4 bg-muted rounded-lg">
 								<h4 className="font-semibold mb-2">About Rithy</h4>
 								<p className="text-sm text-muted-foreground">
-                  ABA 003 791 262
+									ABA 003 791 262
 								</p>
 							</div>
 
-							<div className="mt-4 flex justify-end">
+							{/* Save button */}
+							<div className="flex justify-end gap-2">
+								<Button
+									variant="outline"
+									onClick={() => setIsOpen(false)}
+									disabled={isSaving}
+								>
+									Cancel
+								</Button>
 								<Button
 									onClick={handleSave}
 									disabled={isSaving}
-									variant="outline"
 									aria-busy={isSaving}
 								>
-									{isSaving ? "Saving..." : "Save Preference to Server"}
+									<Save className="w-4 h-4 mr-2" />
+									{isSaving ? "Saving..." : "Save Preference"}
 								</Button>
 							</div>
-						</>
+						</div>
 					)}
 				</DialogContent>
 			</Dialog>

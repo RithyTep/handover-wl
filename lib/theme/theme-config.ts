@@ -51,7 +51,8 @@ export interface ThemeActionButton {
 
 export interface ThemeMobileAction {
 	id: string
-	icon: LucideIcon
+	icon?: LucideIcon
+	svgIcon?: string
 	className: string
 	iconColor: string
 }
@@ -821,7 +822,7 @@ const angkorPixelThemeConfig: ThemeConfig = {
 		container:
 			"h-14 sm:h-16 flex-shrink-0 flex items-center justify-between px-4 sm:px-8 bg-[#3a2a1a] border-b-4 border-[#8b7355] shadow-lg z-10",
 		logo: {
-			title: "flex gap-1 text-xl angkor-title tracking-tight",
+			title: "flex gap-1 text-xl angkor-title tracking-tight family-pixel",
 			subtitle: "text-[10px] text-[#d4af37] font-medium -mt-0.5 hidden sm:block uppercase tracking-wider",
 			svgIcon: "/assets/angkor-pixel/pixel-art/face-brown-spiky.png",
 		},
@@ -835,7 +836,7 @@ const angkorPixelThemeConfig: ThemeConfig = {
 	layout: {
 		body: "theme-angkor_pixel",
 		background: "angkor-pixel-bg",
-		mobileBar: "angkor-pixel-header",
+		mobileBar: "angkor-pixel-mobile-bar",
 	},
 	table: {
 		container: "angkor-pixel-card angkor-pixel-table overflow-hidden",
@@ -900,33 +901,33 @@ const angkorPixelThemeConfig: ThemeConfig = {
 	mobileActions: {
 		aiFill: {
 			id: "ai-fill",
-			icon: Sparkles,
-			className: "angkor-icon-btn !mb-0",
-			iconColor: "text-[#3a2a1a]",
+			svgIcon: "/assets/angkor-pixel/buttons/btn-sq-home.png",
+			className: "angkor-mobile-btn",
+			iconColor: "",
 		},
 		quickFill: {
 			id: "quick-fill",
-			icon: Zap,
-			className: "angkor-icon-btn !mb-0",
-			iconColor: "text-[#3a2a1a]",
+			svgIcon: "/assets/angkor-pixel/buttons/btn-sq-tools.png",
+			className: "angkor-mobile-btn",
+			iconColor: "",
 		},
 		clear: {
 			id: "clear",
-			icon: Trash2,
-			className: "angkor-icon-btn !mb-0",
-			iconColor: "text-[#3a2a1a]",
+			svgIcon: "/assets/angkor-pixel/buttons/btn-x-brown.png",
+			className: "angkor-mobile-btn",
+			iconColor: "",
 		},
 		save: {
 			id: "save",
-			icon: Save,
-			className: "angkor-icon-btn !mb-0",
-			iconColor: "text-[#3a2a1a]",
+			svgIcon: "/assets/angkor-pixel/buttons/btn-check-gold.png",
+			className: "angkor-mobile-btn",
+			iconColor: "",
 		},
 		send: {
 			id: "send",
-			icon: Send,
-			className: "angkor-icon-btn !mb-0",
-			iconColor: "text-[#3a2a1a]",
+			svgIcon: "/assets/angkor-pixel/buttons/btn-star.png",
+			className: "angkor-mobile-btn angkor-mobile-btn-primary",
+			iconColor: "",
 		},
 	},
 }

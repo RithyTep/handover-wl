@@ -3140,4 +3140,63 @@ body.theme-clash label {
       inset 0 2px 0 rgba(255, 255, 255, 0.3),
       0 1px 0 #3a2a1a;
   }
+
+  /* ===== ANGKOR PIXEL MOBILE CARD ===== */
+  .angkor-pixel-mobile-card {
+    background: #1a2f26 !important;
+    border: 4px solid #8b7355 !important;
+    border-radius: 0 !important;
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.1),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.4),
+      0 4px 0 #4a3a2a,
+      0 8px 20px rgba(0, 0, 0, 0.5);
+    image-rendering: pixelated;
+    overflow: hidden;
+  }
+
+  .angkor-pixel-mobile-card .p-4 {
+    background: #243d32;
+  }
+
+  /* ===== ANGKOR PIXEL MOBILE BAR ===== */
+  .angkor-pixel-mobile-bar {
+    background: linear-gradient(180deg, #3a2a1a 0%, #2a1a0a 100%) !important;
+    border-top: 4px solid #8b7355 !important;
+    box-shadow:
+      inset 0 2px 0 rgba(255, 255, 255, 0.1),
+      0 -4px 20px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  /* ===== ANGKOR PIXEL MOBILE BUTTONS ===== */
+  .angkor-mobile-btn {
+    width: 52px !important;
+    height: 52px !important;
+    min-width: 52px !important;
+    min-height: 52px !important;
+    padding: 4px !important;
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    transition: transform 0.1s, filter 0.1s !important;
+    image-rendering: pixelated;
+  }
+
+  .angkor-mobile-btn:hover {
+    transform: scale(1.1) !important;
+    filter: brightness(1.2);
+  }
+
+  .angkor-mobile-btn:active {
+    transform: scale(0.9) !important;
+    filter: brightness(0.9);
+  }
+
+  .angkor-mobile-btn-primary {
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+  }
+
+  .angkor-mobile-btn-primary:hover {
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8)) brightness(1.2) !important;
+  }
 }

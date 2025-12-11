@@ -13,6 +13,8 @@ const nextConfig = {
         hostname: '**',
       },
     ],
+    // Cache images for 1 year (pixel art assets don't change often)
+    minimumCacheTTL: 31536000,
   },
 };
 

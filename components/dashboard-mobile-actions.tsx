@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { getMobileActionsConfig, getLayoutConfig } from "@/lib/theme"
 import type { Theme } from "@/lib/types"
@@ -65,10 +66,23 @@ export const DashboardMobileActions = ({
 							aria-label={config.id.replace("-", " ")}
 							tabIndex={0}
 						>
-							<IconComponent
-								className={cn("w-5 h-5", config.iconColor)}
-								aria-hidden="true"
-							/>
+							{config.svgIcon ? (
+								<Image
+									src={config.svgIcon}
+									alt=""
+									width={40}
+									height={40}
+									className="object-contain"
+									style={{ imageRendering: "pixelated" }}
+									unoptimized
+									priority
+								/>
+							) : IconComponent ? (
+								<IconComponent
+									className={cn("w-5 h-5", config.iconColor)}
+									aria-hidden="true"
+								/>
+							) : null}
 						</button>
 					)
 				})}
