@@ -42,27 +42,37 @@ export function QuickFillDialog({
         </DialogHeader>
         <div className="space-y-4 mt-4">
           <div>
-            <label className="text-sm font-semibold mb-2 block text-muted-foreground uppercase tracking-wide">
+            <label
+              htmlFor="quick-fill-status"
+              className="text-sm font-semibold mb-2 block text-muted-foreground uppercase tracking-wide"
+            >
               Status
             </label>
             <Input
+              id="quick-fill-status"
               type="text"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
               placeholder="Enter status..."
               className="h-11 sm:h-10 text-base sm:text-sm"
+              aria-describedby="quick-fill-description"
             />
           </div>
           <div>
-            <label className="text-sm font-semibold mb-2 block text-muted-foreground uppercase tracking-wide">
+            <label
+              htmlFor="quick-fill-action"
+              className="text-sm font-semibold mb-2 block text-muted-foreground uppercase tracking-wide"
+            >
               Action
             </label>
             <Input
+              id="quick-fill-action"
               type="text"
               value={action}
               onChange={(e) => setAction(e.target.value)}
               placeholder="Enter action..."
               className="h-11 sm:h-10 text-base sm:text-sm"
+              aria-describedby="quick-fill-description"
             />
           </div>
         </div>

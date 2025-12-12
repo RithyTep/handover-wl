@@ -44,7 +44,7 @@ function isProtectedMutation(path: string): boolean {
 }
 
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [_isInitialized, setIsInitialized] = useState(false);
 
   useEffect(() => {
     initChallengeSession()

@@ -1,7 +1,6 @@
 "use client";
 
 import { Edit, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface TicketCardProps {
   ticket: {
@@ -21,7 +20,10 @@ export function TicketCard({ ticket, ticketData, onEdit }: TicketCardProps) {
   const actionValue = ticketData[`action-${ticket.key}`] || "--";
 
   return (
-    <div className="bg-card border border-border rounded-2xl p-6 hover:border-primary/50 transition-all duration-200 hover:shadow-glow-sm group">
+    <article
+      className="bg-card border border-border rounded-2xl p-6 hover:border-primary/50 transition-all duration-200 hover:shadow-glow-sm group"
+      aria-label={`Ticket ${ticket.key}: ${ticket.summary}`}
+    >
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <a
@@ -55,9 +57,10 @@ export function TicketCard({ ticket, ticketData, onEdit }: TicketCardProps) {
               flex items-center justify-between group/btn
               ${statusValue === "--" ? "text-muted-foreground italic" : "text-foreground"}
             `}
+            aria-label={`Edit status for ${ticket.key}, current value: ${statusValue}`}
           >
             <span className="text-sm">{statusValue}</span>
-            <Edit className="w-4 h-4 opacity-50 group-hover/btn:opacity-100 transition-opacity" />
+            <Edit className="w-4 h-4 opacity-50 group-hover/btn:opacity-100 transition-opacity" aria-hidden="true" />
           </button>
         </div>
 
@@ -73,12 +76,13 @@ export function TicketCard({ ticket, ticketData, onEdit }: TicketCardProps) {
               flex items-center justify-between group/btn
               ${actionValue === "--" ? "text-muted-foreground italic" : "text-foreground"}
             `}
+            aria-label={`Edit action for ${ticket.key}, current value: ${actionValue}`}
           >
             <span className="text-sm">{actionValue}</span>
-            <Edit className="w-4 h-4 opacity-50 group-hover/btn:opacity-100 transition-opacity" />
+            <Edit className="w-4 h-4 opacity-50 group-hover/btn:opacity-100 transition-opacity" aria-hidden="true" />
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

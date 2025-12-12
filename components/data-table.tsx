@@ -34,32 +34,34 @@ export function DataTable({ tickets, ticketData, onUpdate }: DataTableProps) {
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
           className="max-w-sm"
+          aria-label="Search tickets by key or summary"
+          role="searchbox"
         />
-        <div className="text-sm text-muted-foreground">
+        <div className="text-sm text-muted-foreground" aria-live="polite">
           {filteredTickets.length} ticket(s) total
         </div>
       </div>
 
-      <div className="rounded-xl border border-border overflow-hidden">
-        <table className="w-full">
+      <div className="rounded-xl border border-border overflow-hidden" role="region" aria-label="Tickets table">
+        <table className="w-full" aria-describedby="tickets-count">
           <thead className="bg-muted/50 border-b border-border">
             <tr>
-              <th className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              <th scope="col" className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 #
               </th>
-              <th className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              <th scope="col" className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Ticket
               </th>
-              <th className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              <th scope="col" className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Summary
               </th>
-              <th className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              <th scope="col" className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Jira Status
               </th>
-              <th className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              <th scope="col" className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Status
               </th>
-              <th className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              <th scope="col" className="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 Action
               </th>
             </tr>
@@ -104,6 +106,7 @@ export function DataTable({ tickets, ticketData, onUpdate }: DataTableProps) {
                         onChange={(e) => onUpdate(`status-${ticket.key}`, e.target.value || "--")}
                         placeholder="Enter status..."
                         className="w-full"
+                        aria-label={`Status for ticket ${ticket.key}`}
                       />
                     </td>
                     <td className="p-4">
@@ -112,6 +115,7 @@ export function DataTable({ tickets, ticketData, onUpdate }: DataTableProps) {
                         onChange={(e) => onUpdate(`action-${ticket.key}`, e.target.value || "--")}
                         placeholder="Enter action..."
                         className="w-full"
+                        aria-label={`Action for ticket ${ticket.key}`}
                       />
                     </td>
                   </tr>

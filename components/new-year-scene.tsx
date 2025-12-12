@@ -23,7 +23,7 @@ const floatingDecorations = [
 ];
 
 export function NewYearScene() {
-  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+  const [_timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
   const [showMail, setShowMail] = useState(false);
   const [mailContent, setMailContent] = useState({ text: "", sign: "" });
   const winterWrapperRef = useRef<HTMLDivElement>(null);

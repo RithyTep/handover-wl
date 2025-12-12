@@ -11,7 +11,6 @@ import {
 import type {
 	ChallengeTokenPayload,
 	ChallengeResponse,
-	ChallengeHeaders,
 	ChallengeValidationResult,
 } from "./types"
 import { validatePoWSolution, generateChallenge, hashRequestBody } from "./pow"

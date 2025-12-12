@@ -47,7 +47,7 @@ export function TicketsTable<TData, TValue>({
 	const [previewAnchor, setPreviewAnchor] = React.useState<HTMLElement | null>(
 		null
 	)
-	const [activeFilters, setActiveFilters] = React.useState<TicketFilters>({})
+	const [activeFilters, _setActiveFilters] = React.useState<TicketFilters>({})
 
 	const [showDetails, setShowDetails] = React.useState(false)
 	const [columnVisibility, setColumnVisibility] =

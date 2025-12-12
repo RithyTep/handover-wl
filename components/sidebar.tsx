@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ClipboardList, Settings, Clock, History, ChevronLeft, ChevronRight } from "lucide-react";
+import { ClipboardList, ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SidebarProps {
@@ -28,6 +28,8 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
         "fixed left-0 top-0 h-dvh bg-background border-r border-border flex flex-col transition-all duration-180 ease-out z-40",
         collapsed ? "w-14" : "w-56"
       )}
+      aria-label="Main navigation"
+      role="navigation"
     >
       <div className={cn(
         "h-[52px] border-b border-border flex items-center",
@@ -62,6 +64,8 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
               )}
               title={collapsed ? item.label : undefined}
+              aria-label={item.label}
+              aria-current={isActive ? "page" : undefined}
             >
               <Icon className="w-4 h-4 flex-shrink-0" />
               {!collapsed && <span>{item.label}</span>}
@@ -78,6 +82,8 @@ export function Sidebar({ activeTab = "tickets", onTabChange, onCollapsedChange 
             collapsed ? "px-2 py-2 justify-center" : "px-3 py-2 space-x-3"
           )}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-expanded={!collapsed}
         >
           {collapsed ? (
             <ChevronRight className="w-4 h-4" />
