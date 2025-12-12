@@ -1,39 +1,33 @@
-/**
- * Challenge service - generates and validates browser challenges
- */
-
-import { SignJWT, jwtVerify, type JWTPayload } from "jose";
+import { SignJWT, jwtVerify, type JWTPayload } from "jose"
 import {
-  POW_DIFFICULTY,
-  CHALLENGE_TOKEN_EXPIRY_MS,
-  POW_SOLUTION_VALIDITY_MS,
-  HEADERS,
-  ERRORS,
-  JWT_SECRET_ENV,
-  INTERNAL_SECRET_ENV,
-} from "./constants";
+	POW_DIFFICULTY,
+	CHALLENGE_TOKEN_EXPIRY_MS,
+	POW_SOLUTION_VALIDITY_MS,
+	HEADERS,
+	ERRORS,
+	JWT_SECRET_ENV,
+	INTERNAL_SECRET_ENV,
+} from "./constants"
 import type {
-  ChallengeTokenPayload,
-  ChallengeResponse,
-  ChallengeHeaders,
-  ChallengeValidationResult,
-} from "./types";
-import { validatePoWSolution, generateChallenge, hashRequestBody } from "./pow";
-import { validateFingerprint, hashFingerprint, isValidFingerprintFormat } from "./fingerprint";
-import { consumeNonce } from "./nonce";
+	ChallengeTokenPayload,
+	ChallengeResponse,
+	ChallengeHeaders,
+	ChallengeValidationResult,
+} from "./types"
+import { validatePoWSolution, generateChallenge, hashRequestBody } from "./pow"
+import { validateFingerprint, hashFingerprint, isValidFingerprintFormat } from "./fingerprint"
+import { consumeNonce } from "./nonce"
+import { logger } from "@/lib/logger"
 
-// Get JWT secret from environment
+const log = logger.security
+
 function getJwtSecret(): Uint8Array {
-  const secret = process.env[JWT_SECRET_ENV];
-  if (!secret) {
-    // Fallback to a generated secret (will change on restart)
-    // In production, this should be set in environment
-    console.warn(
-      `[Security] ${JWT_SECRET_ENV} not set. Using fallback secret. Set this in production!`
-    );
-    return new TextEncoder().encode("fallback-secret-change-in-production-" + Date.now());
-  }
-  return new TextEncoder().encode(secret);
+	const secret = process.env[JWT_SECRET_ENV]
+	if (!secret) {
+		log.warn("JWT secret not configured", { env: JWT_SECRET_ENV })
+		return new TextEncoder().encode("fallback-secret-change-in-production-" + Date.now())
+	}
+	return new TextEncoder().encode(secret)
 }
 
 // Get internal API secret

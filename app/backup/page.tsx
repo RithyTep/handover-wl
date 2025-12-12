@@ -3,7 +3,10 @@ import { cacheLife, cacheTag } from "next/cache";
 import { BackupClient } from "@/components/backup-client";
 import { getBackups, transformBackupToItem } from "@/lib/services";
 import { CACHE, BACKUP } from "@/lib/config";
+import { logger } from "@/lib/logger";
 import type { BackupItem } from "@/lib/types";
+
+const log = logger.database;
 
 async function getCachedBackups(): Promise<BackupItem[]> {
   "use cache";
@@ -13,10 +16,11 @@ async function getCachedBackups(): Promise<BackupItem[]> {
   try {
     const backups = await getBackups(BACKUP.FETCH_LIMIT);
     const items = await Promise.all(backups.map(transformBackupToItem));
-    console.log("[Cache] Backups:", items.length);
+    log.debug("Cache backups fetched", { count: items.length });
     return items;
-  } catch (error: any) {
-    console.error("[Cache] Error:", error.message);
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    log.error("Cache error", { error: message });
     return [];
   }
 }

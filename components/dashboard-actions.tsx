@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { getActionsConfig } from "@/lib/theme"
@@ -30,7 +31,7 @@ interface SvgIconProps {
 // ============================================================================
 
 const SvgIcon = ({ src, className }: SvgIconProps) => (
-	<img src={src} alt="" className={cn("w-4 h-4", className)} aria-hidden="true" />
+	<Image src={src} alt="" width={16} height={16} className={cn("w-4 h-4", className)} aria-hidden="true" />
 )
 
 // ============================================================================

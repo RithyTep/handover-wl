@@ -1,20 +1,7 @@
 "use client";
 
+import Image from "next/image";
 import { LunarHongbao } from "./lunar-hongbao";
-
-// Minimal elegant floating decorations
-const floatingDecorations = [
-  { icon: "plum-blossom", left: "8%", top: "25%", delay: "0s", size: "w-6 h-6" },
-  { icon: "plum-blossom", left: "45%", top: "15%", delay: "2s", size: "w-5 h-5" },
-  { icon: "plum-blossom", left: "78%", top: "35%", delay: "4s", size: "w-6 h-6" },
-  { icon: "plum-blossom", left: "92%", top: "60%", delay: "1s", size: "w-5 h-5" },
-];
-
-// Subtle fireworks - fewer and smaller
-const fireworks = [
-  { left: "15%", top: "8%", delay: "0s", size: "w-10 h-10" },
-  { left: "75%", top: "5%", delay: "2.5s", size: "w-8 h-8" },
-];
 
 export function LunarScene() {
   return (
@@ -36,7 +23,13 @@ export function LunarScene() {
 
         {/* Single elegant lantern */}
         <div className="absolute top-4 right-4 hidden sm:block">
-          <img src="/icons/lunar/lantern.svg" alt="" className="w-6 h-10 lunar-swing opacity-30" />
+          <Image
+            src="/icons/lunar/lantern.svg"
+            alt=""
+            width={24}
+            height={40}
+            className="w-6 h-10 lunar-swing opacity-30"
+          />
         </div>
       </div>
 

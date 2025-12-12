@@ -170,17 +170,16 @@ export function createLogger(service: string) {
   };
 }
 
-/**
- * Pre-configured loggers for common services
- */
 export const logger = {
-  app: createLogger("App"),
-  db: createLogger("Database"),
-  jira: createLogger("Jira"),
-  slack: createLogger("Slack"),
-  scheduler: createLogger("Scheduler"),
-  api: createLogger("API"),
-  auth: createLogger("Auth"),
-};
+	app: createLogger("App"),
+	db: createLogger("Database"),
+	database: createLogger("Database"),
+	jira: createLogger("Jira"),
+	slack: createLogger("Slack"),
+	scheduler: createLogger("Scheduler"),
+	api: createLogger("API"),
+	auth: createLogger("Auth"),
+	security: createLogger("Security"),
+}
 
 export type Logger = ReturnType<typeof createLogger>;

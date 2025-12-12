@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ThemeSelector } from "@/components/theme/theme-selector"
@@ -27,14 +28,14 @@ interface SvgIconProps {
 // ============================================================================
 
 const SvgIcon = ({ src, className, alt = "" }: SvgIconProps) => (
-	<img src={src} alt={alt} className={cn("w-4 h-4", className)} aria-hidden="true" />
+	<Image src={src} alt={alt} width={16} height={16} className={cn("w-4 h-4", className)} aria-hidden="true" />
 )
 
 // ============================================================================
 // Coding Theme Header (Special Layout)
 // ============================================================================
 
-const CodingHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
+const CodingHeader = ({ theme, ticketCount: _ticketCount }: DashboardHeaderProps) => {
 	const config = getHeaderConfig(theme)
 	const navItems = getHeaderNavItems(theme)
 	const kbdConfig = getKbdIcon(theme)
@@ -126,7 +127,7 @@ const ClashHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 				</div>
 				{/* Badge with gold coin */}
 				<div className="flex items-center gap-1.5 clash-badge">
-					<img src="/icons/clash/gold-coin.svg" alt="" className="w-4 h-4" />
+					<Image src="/icons/clash/gold-coin.svg" alt="" width={16} height={16} className="w-4 h-4" />
 					<span>{ticketCount}</span>
 				</div>
 			</div>

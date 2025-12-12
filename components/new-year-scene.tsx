@@ -1,6 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
+import Image from "next/image";
+
+// ============================================================================
+// Constants
+// ============================================================================
+
+const SNOWFLAKE_COUNTS = {
+  small: 30,
+  medium: 15,
+  large: 10,
+} as const;
+
+const TIMER_INTERVAL_MS = 1000;
+const FIREWORK_INTERVAL_MS = 4000;
+const CANDY_CLEANUP_DELAY_MS = 1200;
+const CANDY_COUNT = 8;
+const CANDY_COLORS = ["#ADD8E6", "#B2F2BB", "#FFFACD", "#FFB6C1"];
 
 // Subtle floating snowflakes only - elegant and minimal
 const floatingDecorations = [
@@ -38,7 +55,7 @@ export function NewYearScene() {
       }
     };
 
-    const timer = setInterval(calculateTime, 1000);
+    const timer = setInterval(calculateTime, TIMER_INTERVAL_MS);
     calculateTime();
     return () => clearInterval(timer);
   }, []);
@@ -60,9 +77,9 @@ export function NewYearScene() {
       wrapper.appendChild(fragment);
     };
 
-    createSnowflakes(30, "_sm");
-    createSnowflakes(15, "_md");
-    createSnowflakes(10, "_lg");
+    createSnowflakes(SNOWFLAKE_COUNTS.small, "_sm");
+    createSnowflakes(SNOWFLAKE_COUNTS.medium, "_md");
+    createSnowflakes(SNOWFLAKE_COUNTS.large, "_lg");
 
     return () => {
       if (wrapper) wrapper.innerHTML = '';
@@ -70,18 +87,16 @@ export function NewYearScene() {
   }, []);
 
   const startFireworks = useCallback((x: number, y: number) => {
-    const candyCount = 8;
-    const colors = ["#ADD8E6", "#B2F2BB", "#FFFACD", "#FFB6C1"];
     const fragment = document.createDocumentFragment();
 
-    for (let i = 0; i < candyCount; i++) {
+    for (let i = 0; i < CANDY_COUNT; i++) {
       const candy = document.createElement("div");
       candy.className = "candy";
-      candy.style.background = colors[i % colors.length];
+      candy.style.background = CANDY_COLORS[i % CANDY_COLORS.length];
       const size = Math.random() * 8 + 8;
       candy.style.width = `${size}px`;
       candy.style.height = `${size}px`;
-      const angle = (i / candyCount) * 2 * Math.PI;
+      const angle = (i / CANDY_COUNT) * 2 * Math.PI;
       const distance = Math.random() * 60 + 30;
       candy.style.setProperty("--x", Math.cos(angle) * distance + "px");
       candy.style.setProperty("--y", Math.sin(angle) * distance + "px");
@@ -93,7 +108,7 @@ export function NewYearScene() {
     document.body.appendChild(fragment);
     setTimeout(() => {
       document.querySelectorAll('.candy').forEach(c => c.remove());
-    }, 1200);
+    }, CANDY_CLEANUP_DELAY_MS);
   }, []);
 
   useEffect(() => {
@@ -101,7 +116,7 @@ export function NewYearScene() {
       const x = Math.random() * window.innerWidth;
       const y = Math.random() * (window.innerHeight * 0.5);
       startFireworks(x, y);
-    }, 4000);
+    }, FIREWORK_INTERVAL_MS);
     return () => clearInterval(interval);
   }, [startFireworks]);
 
@@ -137,10 +152,12 @@ export function NewYearScene() {
       {/* Subtle floating snowflakes */}
       <div className="fixed inset-0 pointer-events-none z-5 overflow-hidden">
         {floatingDecorations.map((deco, index) => (
-          <img
+          <Image
             key={index}
             src={`/icons/christmas/${deco.icon}.svg`}
             alt=""
+            width={20}
+            height={20}
             className="absolute top-0 christmas-fall w-5 h-5 opacity-20"
             style={{
               left: deco.left,
@@ -194,14 +211,16 @@ export function NewYearScene() {
                         ✕
                     </button>
                     <div className="flex items-center gap-2 mb-4">
-                      <img src="/icons/christmas/star.svg" alt="" className="w-6 h-6 opacity-70" />
+                      <Image src="/icons/christmas/star.svg" alt="" width={24} height={24} className="w-6 h-6 opacity-70" />
                       <p className="mail-title text-xl font-semibold text-red-800">Season's Greetings</p>
                     </div>
                     <p className="mb-4 text-gray-700 leading-relaxed">{mailContent.text}</p>
                     <div className="mt-6 space-y-4">
-                        <img
+                        <Image
                           src="/aba.jpg"
                           alt="QR Code"
+                          width={160}
+                          height={160}
                           className="w-32 sm:w-40 mx-auto object-contain border border-red-200 shadow-md rounded-lg bg-white p-1 sm:p-2"
                         />
                         <div className="text-right">

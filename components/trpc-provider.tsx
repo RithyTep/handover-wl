@@ -2,11 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink, TRPCClientError } from "@trpc/client";
+import { httpBatchLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 import type { AppRouter } from "@/lib/trpc/root";
 import { generateChallengeHeaders, initChallengeSession } from "@/lib/security/client/challenge-manager";
+
+// Client-side logger for security-related events
+const clientLogger = {
+  error: (message: string, context?: Record<string, unknown>) => {
+    if (process.env.NODE_ENV === "development") {
+      console.error(`[Security] ${message}`, context ?? "");
+    }
+  },
+};
 
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -45,7 +54,7 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
     initChallengeSession()
       .then(() => setIsInitialized(true))
       .catch((err) => {
-        console.error("[Challenge] Failed to initialize:", err);
+        clientLogger.error("Challenge failed to initialize", { error: err });
         // Still allow the app to work, mutations will fail with proper error
         setIsInitialized(true);
       });
@@ -82,7 +91,7 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
                 const challengeHeaders = await generateChallengeHeaders(op.input);
                 return challengeHeaders;
               } catch (err) {
-                console.error("[Challenge] Failed to generate headers:", err);
+                clientLogger.error("Challenge failed to generate headers", { error: err });
                 // Return empty headers, server will reject with proper error
                 return {};
               }
