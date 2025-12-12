@@ -20,6 +20,12 @@ export const publicProcedure = t.procedure.use(async (opts) => {
   return opts.next();
 });
 
+// Public mutation - no challenge required (for mutations that don't need protection)
+export const publicMutation = t.procedure.use(async (opts) => {
+  await initDatabase();
+  return opts.next();
+});
+
 // Check if running in development/localhost
 function isLocalDevelopment(headers?: Headers): boolean {
   if (process.env.NODE_ENV === "development") {

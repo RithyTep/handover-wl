@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { router, protectedMutation } from "@/server/trpc/server";
+import { router, publicMutation } from "@/server/trpc/server";
 import OpenAI from "openai";
 import {
   fetchTicketComments,
@@ -51,7 +51,7 @@ Rules for generating action:
 Return JSON with "status" and "action" fields (max 20 words each).`;
 
 export const aiRouter = router({
-  autofill: protectedMutation
+  autofill: publicMutation
     .input(
       z.object({
         ticket: ticketSchema,
