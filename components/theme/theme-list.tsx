@@ -4,20 +4,12 @@ import { ThemeButton } from "./theme-button"
 import { Theme } from "@/enums"
 import type { IThemeInfo } from "@/interfaces"
 
-// ============================================================================
-// Types
-// ============================================================================
-
 interface ThemeListProps {
 	themes: IThemeInfo[]
 	selectedTheme: Theme
 	onSelect: (theme: Theme) => void
 	disabled: boolean
 }
-
-// ============================================================================
-// Main Component
-// ============================================================================
 
 export const ThemeList = ({ themes, selectedTheme, onSelect, disabled }: ThemeListProps) => {
 	return (

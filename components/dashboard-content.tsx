@@ -37,7 +37,6 @@ export function DashboardContent({
 }: DashboardContentProps) {
   const columns = useMemo(
     () => createColumns({ ticketData, updateTicketData, renderKey }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- ticketData excluded to prevent input re-mount on every keystroke
     [updateTicketData, renderKey]
   );
 

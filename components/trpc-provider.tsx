@@ -2,21 +2,28 @@
 
 import { useState, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { httpBatchLink, TRPCClientError } from "@trpc/client";
+import { httpBatchLink } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 import type { AppRouter } from "@/lib/trpc/root";
 import { generateChallengeHeaders, initChallengeSession } from "@/lib/security/client/challenge-manager";
 
+const clientLogger = {
+  error: (message: string, context?: Record<string, unknown>) => {
+    if (process.env.NODE_ENV === "development") {
+      console.error(`[Security] ${message}`, context ?? "");
+    }
+  },
+};
+
 export const trpc = createTRPCReact<AppRouter>();
 
 function getBaseUrl() {
-  if (typeof window !== "undefined") return ""; // browser should use relative url
+  if (typeof window !== "undefined") return "";
   if (process.env.NEXT_PUBLIC_VERCEL_URL) return `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
   return `http://localhost:${process.env.PORT ?? 3000}`;
 }
 
-// List of mutation procedure names that require challenge
 const PROTECTED_MUTATIONS = [
   "ticketData.save",
   "slack.send",
@@ -32,7 +39,6 @@ const PROTECTED_MUTATIONS = [
   "theme.setSelected",
 ];
 
-// Check if a procedure path is a protected mutation
 function isProtectedMutation(path: string): boolean {
   return PROTECTED_MUTATIONS.some((m) => path.includes(m));
 }
@@ -40,13 +46,11 @@ function isProtectedMutation(path: string): boolean {
 export function TRPCProvider({ children }: { children: React.ReactNode }) {
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Initialize challenge session on mount
   useEffect(() => {
     initChallengeSession()
       .then(() => setIsInitialized(true))
       .catch((err) => {
-        console.error("[Challenge] Failed to initialize:", err);
-        // Still allow the app to work, mutations will fail with proper error
+        clientLogger.error("Challenge failed to initialize", { error: err });
         setIsInitialized(true);
       });
   }, []);
@@ -74,16 +78,13 @@ export function TRPCProvider({ children }: { children: React.ReactNode }) {
           transformer: superjson,
           maxURLLength: 2083,
           async headers(opts) {
-            // Check if this is a mutation that needs challenge
             const op = opts.opList[0];
             if (op && op.type === "mutation" && isProtectedMutation(op.path)) {
               try {
-                // Generate challenge headers with the request input
                 const challengeHeaders = await generateChallengeHeaders(op.input);
                 return challengeHeaders;
               } catch (err) {
-                console.error("[Challenge] Failed to generate headers:", err);
-                // Return empty headers, server will reject with proper error
+                clientLogger.error("Challenge failed to generate headers", { error: err });
                 return {};
               }
             }

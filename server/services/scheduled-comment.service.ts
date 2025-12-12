@@ -1,7 +1,23 @@
 import { CommentType } from "@/enums"
-import { ScheduledCommentRepository } from "@/server/repository/scheduled-comment.repository"
+import {
+	ScheduledCommentRepository,
+	type InsertCommentOptions,
+	type UpdateCommentOptions,
+} from "@/server/repository/scheduled-comment.repository"
 import type { ScheduledComment } from "@/lib/types"
 import type { IScheduledCommentItem } from "@/interfaces"
+
+export interface CreateCommentOptions {
+	commentType: CommentType
+	commentText: string
+	cronSchedule: string
+	enabled: boolean
+	ticketKey?: string
+}
+
+export interface UpdateCommentServiceOptions extends CreateCommentOptions {
+	id: number
+}
 
 export class ScheduledCommentService {
 	private repository: ScheduledCommentRepository
@@ -27,38 +43,27 @@ export class ScheduledCommentService {
 		return this.repository.findById(id)
 	}
 
-	async create(
-		commentType: CommentType,
-		commentText: string,
-		cronSchedule: string,
-		enabled: boolean,
-		ticketKey?: string
-	): Promise<ScheduledComment> {
-		return this.repository.insert(
-			commentType,
-			commentText,
-			cronSchedule,
-			enabled,
-			ticketKey ?? null
-		)
+	async create(options: CreateCommentOptions): Promise<ScheduledComment> {
+		const insertOptions: InsertCommentOptions = {
+			commentType: options.commentType,
+			commentText: options.commentText,
+			cronSchedule: options.cronSchedule,
+			enabled: options.enabled,
+			ticketKey: options.ticketKey ?? null,
+		}
+		return this.repository.insert(insertOptions)
 	}
 
-	async update(
-		id: number,
-		commentType: CommentType,
-		commentText: string,
-		cronSchedule: string,
-		enabled: boolean,
-		ticketKey?: string
-	): Promise<ScheduledComment | null> {
-		return this.repository.update(
-			id,
-			commentType,
-			commentText,
-			cronSchedule,
-			enabled,
-			ticketKey ?? null
-		)
+	async update(options: UpdateCommentServiceOptions): Promise<ScheduledComment | null> {
+		const updateOptions: UpdateCommentOptions = {
+			id: options.id,
+			commentType: options.commentType,
+			commentText: options.commentText,
+			cronSchedule: options.cronSchedule,
+			enabled: options.enabled,
+			ticketKey: options.ticketKey ?? null,
+		}
+		return this.repository.update(updateOptions)
 	}
 
 	async delete(id: number): Promise<boolean> {

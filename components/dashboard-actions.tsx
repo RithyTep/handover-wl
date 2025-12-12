@@ -1,13 +1,10 @@
 "use client"
 
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { getActionsConfig } from "@/lib/theme"
 import type { Theme } from "@/lib/types"
-
-// ============================================================================
-// Types
-// ============================================================================
 
 interface DashboardActionsProps {
 	theme: Theme
@@ -25,17 +22,9 @@ interface SvgIconProps {
 	className?: string
 }
 
-// ============================================================================
-// Helper Components
-// ============================================================================
-
 const SvgIcon = ({ src, className }: SvgIconProps) => (
-	<img src={src} alt="" className={cn("w-4 h-4", className)} aria-hidden="true" />
+	<Image src={src} alt="" width={16} height={16} className={cn("w-4 h-4", className)} aria-hidden="true" />
 )
-
-// ============================================================================
-// Action Button Component
-// ============================================================================
 
 interface ActionButtonProps {
 	config: {
@@ -90,10 +79,6 @@ const ActionButton = ({
 		</>
 	)
 }
-
-// ============================================================================
-// Main Component
-// ============================================================================
 
 export const DashboardActions = ({
 	theme,

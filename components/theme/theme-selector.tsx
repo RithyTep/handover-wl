@@ -40,11 +40,9 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 	const { themes, selectedTheme, isLoading, handleThemeSelect, handleSaveToServer, isSaving } =
 		useTheme()
 
-	// Pending theme - only applied when saving
 	const [pendingTheme, setPendingTheme] = useState<Theme>(selectedTheme as Theme)
 	const [hasChanges, setHasChanges] = useState(false)
 
-	// Sync pending theme when selected theme changes or dialog opens
 	useEffect(() => {
 		setPendingTheme(selectedTheme as Theme)
 		setHasChanges(false)
@@ -101,7 +99,6 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 						</div>
 					) : (
 						<div className="space-y-6 py-4">
-							{/* Theme Dropdown */}
 							<Select value={pendingTheme} onValueChange={handlePendingChange} disabled={isSaving}>
 								<SelectTrigger
 									className="w-full border"
@@ -127,14 +124,12 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 								</SelectContent>
 							</Select>
 
-							{/* Change indicator */}
 							{hasChanges && (
 								<p className="text-sm text-amber-500">
 									Theme changed to "{themes.find(t => t.id === pendingTheme)?.name}". Click save to apply.
 								</p>
 							)}
 
-							{/* About section */}
 							<div className="p-4 bg-muted rounded-lg">
 								<h4 className="font-semibold mb-2">About Rithy</h4>
 								<p className="text-sm text-muted-foreground">
@@ -142,7 +137,6 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 								</p>
 							</div>
 
-							{/* Save button */}
 							<div className="flex justify-end gap-2">
 								<Button
 									variant="outline"

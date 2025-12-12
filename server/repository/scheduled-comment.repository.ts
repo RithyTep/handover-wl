@@ -3,6 +3,18 @@ import { CommentType } from "@/enums"
 import type { ScheduledComment as PrismaScheduledComment } from "@/lib/generated/prisma"
 import type { ScheduledComment } from "@/lib/types"
 
+export interface InsertCommentOptions {
+	commentType: CommentType
+	commentText: string
+	cronSchedule: string
+	enabled: boolean
+	ticketKey: string | null
+}
+
+export interface UpdateCommentOptions extends InsertCommentOptions {
+	id: number
+}
+
 function toDomain(row: PrismaScheduledComment): ScheduledComment {
 	return {
 		id: row.id,
@@ -40,13 +52,8 @@ export class ScheduledCommentRepository {
 		return row ? toDomain(row) : null
 	}
 
-	async insert(
-		commentType: CommentType,
-		commentText: string,
-		cronSchedule: string,
-		enabled: boolean,
-		ticketKey: string | null
-	): Promise<ScheduledComment> {
+	async insert(options: InsertCommentOptions): Promise<ScheduledComment> {
+		const { commentType, commentText, cronSchedule, enabled, ticketKey } = options
 		const row = await prisma.scheduledComment.create({
 			data: {
 				commentType,
@@ -59,14 +66,8 @@ export class ScheduledCommentRepository {
 		return toDomain(row)
 	}
 
-	async update(
-		id: number,
-		commentType: CommentType,
-		commentText: string,
-		cronSchedule: string,
-		enabled: boolean,
-		ticketKey: string | null
-	): Promise<ScheduledComment | null> {
+	async update(options: UpdateCommentOptions): Promise<ScheduledComment | null> {
+		const { id, commentType, commentText, cronSchedule, enabled, ticketKey } = options
 		try {
 			const row = await prisma.scheduledComment.update({
 				where: { id },

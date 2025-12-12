@@ -22,7 +22,6 @@ export function TicketCard({ ticket, ticketData, onEdit }: TicketCardProps) {
 
   return (
     <div className="bg-card border border-border rounded-2xl p-6 hover:border-primary/50 transition-all duration-200 hover:shadow-glow-sm group">
-      {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
           <a
@@ -43,9 +42,7 @@ export function TicketCard({ ticket, ticketData, onEdit }: TicketCardProps) {
         </div>
       </div>
 
-      {/* Status and Action */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Status */}
         <div className="space-y-2">
           <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
             Status
@@ -64,7 +61,6 @@ export function TicketCard({ ticket, ticketData, onEdit }: TicketCardProps) {
           </button>
         </div>
 
-        {/* Action */}
         <div className="space-y-2">
           <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
             Action

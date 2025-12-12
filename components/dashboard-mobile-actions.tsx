@@ -5,10 +5,6 @@ import { cn } from "@/lib/utils"
 import { getMobileActionsConfig, getLayoutConfig } from "@/lib/theme"
 import type { Theme } from "@/lib/types"
 
-// ============================================================================
-// Types
-// ============================================================================
-
 interface DashboardMobileActionsProps {
 	theme: Theme
 	onAIFillAll: () => void
@@ -17,10 +13,6 @@ interface DashboardMobileActionsProps {
 	onSave: () => void
 	onSendSlack: () => void
 }
-
-// ============================================================================
-// Main Component
-// ============================================================================
 
 export const DashboardMobileActions = ({
 	theme,

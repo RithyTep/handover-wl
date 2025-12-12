@@ -19,10 +19,6 @@ import { cn } from "@/lib/utils"
 import { getLayoutConfig } from "@/lib/theme"
 import type { Theme, Ticket } from "@/lib/types"
 
-// ============================================================================
-// Types
-// ============================================================================
-
 interface DashboardLayoutProps {
 	theme: Theme
 	tickets: Ticket[]
@@ -44,10 +40,6 @@ interface DashboardLayoutProps {
 	onSendSlackOpenChange: (open: boolean) => void
 }
 
-// ============================================================================
-// Scene Components Mapping
-// ============================================================================
-
 const THEME_SCENES: Record<Theme, React.ComponentType | null> = {
 	default: ProfessionalScene,
 	christmas: NewYearScene,
@@ -57,10 +49,6 @@ const THEME_SCENES: Record<Theme, React.ComponentType | null> = {
 	clash: null,
 	angkor_pixel: AngkorPixelScene,
 }
-
-// ============================================================================
-// Main Component
-// ============================================================================
 
 export const DashboardLayout = ({
 	theme,
@@ -84,7 +72,6 @@ export const DashboardLayout = ({
 }: DashboardLayoutProps) => {
 	const layoutConfig = useMemo(() => getLayoutConfig(theme), [theme])
 
-	// Apply body theme class
 	useEffect(() => {
 		document.body.classList.remove(
 			"theme-christmas",

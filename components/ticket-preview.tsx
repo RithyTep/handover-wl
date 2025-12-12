@@ -88,7 +88,6 @@ export function TicketPreview({
         }}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-muted/30">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold text-foreground">{ticket.key}</span>
@@ -114,18 +113,14 @@ export function TicketPreview({
           </div>
         </div>
 
-        {/* Content */}
         <div className="p-4 space-y-3">
-          {/* Summary */}
           <div>
             <h3 className="text-sm font-medium text-foreground leading-snug">
               {ticket.summary}
             </h3>
           </div>
 
-          {/* Meta Info Grid */}
           <div className="grid grid-cols-2 gap-3 pt-2">
-            {/* Status */}
             <div className="flex items-start gap-2">
               <CheckCircle2 className="w-3.5 h-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
               <div className="flex-1 min-w-0">
@@ -134,7 +129,6 @@ export function TicketPreview({
               </div>
             </div>
 
-            {/* Assignee */}
             <div className="flex items-start gap-2">
               <User className="w-3.5 h-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
               <div className="flex-1 min-w-0">
@@ -152,7 +146,6 @@ export function TicketPreview({
               </div>
             </div>
 
-            {/* Created */}
             <div className="flex items-start gap-2">
               <Calendar className="w-3.5 h-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
               <div className="flex-1 min-w-0">
@@ -163,7 +156,6 @@ export function TicketPreview({
               </div>
             </div>
 
-            {/* Due Date */}
             {ticket.dueDate && (
               <div className="flex items-start gap-2">
                 <Clock className="w-3.5 h-3.5 text-muted-foreground mt-0.5 flex-shrink-0" />
@@ -177,7 +169,6 @@ export function TicketPreview({
             )}
           </div>
 
-          {/* Additional Info */}
           {(ticket.wlMainTicketType || ticket.wlSubTicketType || ticket.customerLevel) && (
             <div className="pt-2 border-t border-border space-y-2">
               {ticket.wlMainTicketType && ticket.wlMainTicketType !== "N/A" && (

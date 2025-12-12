@@ -1,0 +1,111 @@
+# Cursor Rules for Jira Handover Dashboard
+
+You are an expert TypeScript/React developer working on a Next.js 16 application.
+
+## Critical Rules
+
+### File Size Limits (ENFORCED)
+- API Routes: MAX 100 lines → Extract to service
+- Services: MAX 300 lines → Split into focused services
+- Components: MAX 250 lines → Extract sub-components
+- Utilities: MAX 200 lines → Split by domain
+
+### Architecture Pattern
+```
+API Route (< 100 lines)
+    ↓ delegates to
+Service (< 300 lines)
+    ↓ uses
+Repository / Lib Utils
+```
+
+### Before Writing Code
+1. Check if target file exceeds limit
+2. If yes, refactor first by extracting to service/component
+3. Follow existing patterns in codebase
+
+## Code Style
+
+### Imports Order
+```typescript
+// 1. External packages
+import { NextResponse } from "next/server"
+
+// 2. Internal (@/)
+import { Service } from "@/server/services"
+import { apiSuccess } from "@/lib/api"
+import type { Type } from "@/lib/types"
+
+// 3. Relative
+import { helper } from "./utils"
+```
+
+### API Routes Pattern
+```typescript
+import { FeatureService } from "@/server/services"
+import { apiSuccess, badRequest, handleApiError } from "@/lib/api"
+
+const service = new FeatureService()
+
+export async function POST(request: Request) {
+  try {
+    const body = await request.json()
+    if (!body.required) return badRequest("Field required")
+
+    const result = await service.process(body)
+    return apiSuccess({ result })
+  } catch (error) {
+    return handleApiError(error, "POST /api/feature")
+  }
+}
+```
+
+### Service Pattern
+```typescript
+import { createLogger } from "@/lib/logger"
+
+const logger = createLogger("FeatureName")
+
+export class FeatureService {
+  async process(input: Input): Promise<Output> {
+    logger.info("Processing", { input })
+    // Business logic
+    return result
+  }
+}
+```
+
+## File Locations
+
+| What | Where |
+|------|-------|
+| API routes | `app/api/*/route.ts` |
+| Services | `server/services/*.service.ts` |
+| Components | `components/*.tsx` |
+| Types | `lib/types/*.ts` |
+| Utilities | `lib/**/*.ts` |
+| Theme configs | `lib/theme/themes/*.ts` |
+
+## Don't Do
+
+- ❌ Business logic in API routes
+- ❌ Files over line limits
+- ❌ `any` type (use `unknown`)
+- ❌ `console.log` (use `logger`)
+- ❌ Duplicate code (extract to lib)
+- ❌ Deep nesting (> 3 levels)
+
+## Do
+
+- ✅ Extract to services
+- ✅ Use standardized API responses
+- ✅ Define proper types
+- ✅ Follow existing patterns
+- ✅ Keep functions focused (< 50 lines)
+- ✅ Use logger for debugging
+
+## Project Docs
+
+- `CLAUDE.md` - Full coding guidelines
+- `SPECKIT.md` - Technical specification
+- `.serena/memories/` - AI context documents

@@ -1,15 +1,12 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ThemeSelector } from "@/components/theme/theme-selector"
 import { cn } from "@/lib/utils"
 import { getHeaderConfig, getHeaderNavItems, getKbdIcon } from "@/lib/theme"
 import type { Theme } from "@/lib/types"
-
-// ============================================================================
-// Types
-// ============================================================================
 
 interface DashboardHeaderProps {
 	theme: Theme
@@ -22,19 +19,11 @@ interface SvgIconProps {
 	alt?: string
 }
 
-// ============================================================================
-// Helper Components
-// ============================================================================
-
 const SvgIcon = ({ src, className, alt = "" }: SvgIconProps) => (
-	<img src={src} alt={alt} className={cn("w-4 h-4", className)} aria-hidden="true" />
+	<Image src={src} alt={alt} width={16} height={16} className={cn("w-4 h-4", className)} aria-hidden="true" />
 )
 
-// ============================================================================
-// Coding Theme Header (Special Layout)
-// ============================================================================
-
-const CodingHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
+const CodingHeader = ({ theme, ticketCount: _ticketCount }: DashboardHeaderProps) => {
 	const config = getHeaderConfig(theme)
 	const navItems = getHeaderNavItems(theme)
 	const kbdConfig = getKbdIcon(theme)
@@ -90,10 +79,6 @@ const CodingHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 	)
 }
 
-// ============================================================================
-// Clash Theme Header (Clash of Clans Style)
-// ============================================================================
-
 const ClashHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 	const config = getHeaderConfig(theme)
 	const navItems = getHeaderNavItems(theme)
@@ -101,9 +86,7 @@ const ClashHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 
 	return (
 		<header className={config.container}>
-			{/* Left side - Logo and badge */}
 			<div className="flex items-center gap-2 sm:gap-4">
-				{/* Clash of Clans Emblem + Handover Title */}
 				<div className="flex items-center gap-2 sm:gap-3">
 					<img
 						src="/assets/clash/emblem.png"
@@ -124,14 +107,12 @@ const ClashHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 						Handover
 					</h1>
 				</div>
-				{/* Badge with gold coin */}
 				<div className="flex items-center gap-1.5 clash-badge">
-					<img src="/icons/clash/gold-coin.svg" alt="" className="w-4 h-4" />
+					<Image src="/icons/clash/gold-coin.svg" alt="" width={16} height={16} className="w-4 h-4" />
 					<span>{ticketCount}</span>
 				</div>
 			</div>
 
-			{/* Right side - Navigation */}
 			<nav className="flex items-center gap-1 sm:gap-2" aria-label="Main navigation">
 				<ThemeSelector variant={theme} />
 				{navItems.map((item) => (
@@ -159,10 +140,6 @@ const ClashHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 		</header>
 	)
 }
-
-// ============================================================================
-// Standard Theme Header
-// ============================================================================
 
 const StandardHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 	const config = getHeaderConfig(theme)
@@ -226,10 +203,6 @@ const StandardHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 	)
 }
 
-// ============================================================================
-// Default Theme Header (Has different structure)
-// ============================================================================
-
 const DefaultHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 	const config = getHeaderConfig(theme)
 	const navItems = getHeaderNavItems(theme)
@@ -276,10 +249,6 @@ const DefaultHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 		</header>
 	)
 }
-
-// ============================================================================
-// Main Export
-// ============================================================================
 
 export const DashboardHeader = ({ theme, ticketCount }: DashboardHeaderProps) => {
 	if (theme === "coding") {

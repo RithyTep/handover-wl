@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
-import { useRouter } from "next/navigation";
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -19,10 +17,8 @@ import {
   Trash2,
   RefreshCw,
   Copy,
-  Clock,
   Moon,
   Sun,
-  Search,
   Sparkles,
 } from "lucide-react";
 import { useTheme } from "next-themes";

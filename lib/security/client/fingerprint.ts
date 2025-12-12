@@ -1,14 +1,5 @@
-/**
- * Browser fingerprint generator
- * Creates a unique fingerprint based on browser characteristics
- * This fingerprint cannot be replicated by curl/Postman
- */
-
 import type { BrowserFingerprint } from "../types";
 
-/**
- * Generate SHA-256 hash using Web Crypto API
- */
 async function sha256(input: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);
@@ -17,10 +8,6 @@ async function sha256(input: string): Promise<string> {
   return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-/**
- * Generate canvas fingerprint
- * Draws text and shapes, then hashes the result
- */
 async function getCanvasFingerprint(): Promise<string> {
   try {
     const canvas = document.createElement("canvas");
@@ -30,7 +17,6 @@ async function getCanvasFingerprint(): Promise<string> {
     canvas.width = 200;
     canvas.height = 50;
 
-    // Draw text with specific font
     ctx.textBaseline = "top";
     ctx.font = "14px 'Arial'";
     ctx.fillStyle = "#f60";
@@ -40,7 +26,6 @@ async function getCanvasFingerprint(): Promise<string> {
     ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
     ctx.fillText("Canvas test", 4, 30);
 
-    // Draw shapes
     ctx.beginPath();
     ctx.arc(50, 25, 10, 0, Math.PI * 2);
     ctx.stroke();
@@ -52,10 +37,6 @@ async function getCanvasFingerprint(): Promise<string> {
   }
 }
 
-/**
- * Get WebGL fingerprint
- * Extracts renderer and vendor info
- */
 async function getWebGLFingerprint(): Promise<string> {
   try {
     const canvas = document.createElement("canvas");
@@ -80,18 +61,12 @@ async function getWebGLFingerprint(): Promise<string> {
   }
 }
 
-/**
- * Get screen fingerprint
- */
 function getScreenFingerprint(): string {
   const { width, height, colorDepth, pixelDepth } = window.screen;
   const devicePixelRatio = window.devicePixelRatio || 1;
   return `${width}x${height}x${colorDepth}x${pixelDepth}@${devicePixelRatio}`;
 }
 
-/**
- * Get timezone fingerprint
- */
 function getTimezoneFingerprint(): string {
   try {
     return Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -100,23 +75,14 @@ function getTimezoneFingerprint(): string {
   }
 }
 
-/**
- * Get language fingerprint
- */
 function getLanguageFingerprint(): string {
   return navigator.language || (navigator as Navigator).language || "unknown";
 }
 
-/**
- * Get platform fingerprint
- */
 function getPlatformFingerprint(): string {
   return navigator.platform || "unknown";
 }
 
-/**
- * Generate complete browser fingerprint
- */
 export async function generateBrowserFingerprint(): Promise<BrowserFingerprint> {
   const [canvas, webgl] = await Promise.all([
     getCanvasFingerprint(),
@@ -128,7 +94,6 @@ export async function generateBrowserFingerprint(): Promise<BrowserFingerprint> 
   const language = getLanguageFingerprint();
   const platform = getPlatformFingerprint();
 
-  // Combine all components for final hash
   const combined = [canvas, webgl, screen, timezone, language, platform].join(
     "|"
   );
@@ -146,9 +111,6 @@ export async function generateBrowserFingerprint(): Promise<BrowserFingerprint> 
   };
 }
 
-/**
- * Get just the fingerprint hash (for headers)
- */
 export async function getFingerprintHash(): Promise<string> {
   const fingerprint = await generateBrowserFingerprint();
   return fingerprint.hash;

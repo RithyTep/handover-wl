@@ -38,13 +38,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const comment = await createScheduledComment(
-      comment_type,
-      comment_text,
-      cron_schedule,
+    const comment = await createScheduledComment({
+      commentType: comment_type,
+      commentText: comment_text,
+      cronSchedule: cron_schedule,
       enabled,
-      ticket_key
-    );
+      ticketKey: ticket_key,
+    });
 
     if (!comment) {
       return NextResponse.json(
@@ -82,14 +82,14 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const comment = await updateScheduledComment(
+    const comment = await updateScheduledComment({
       id,
-      comment_type,
-      comment_text,
-      cron_schedule,
+      commentType: comment_type,
+      commentText: comment_text,
+      cronSchedule: cron_schedule,
       enabled,
-      ticket_key
-    );
+      ticketKey: ticket_key,
+    });
 
     if (!comment) {
       return NextResponse.json(

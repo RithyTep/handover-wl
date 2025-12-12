@@ -3206,3 +3206,24 @@ body.theme-clash label {
     filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8)) brightness(1.2) !important;
   }
 }
+
+/* Loading page animations - Angkor Pixel theme */
+@keyframes angkor-progress-frames {
+  0%, 16.66% { background-image: url('/assets/angkor-pixel/buttons/progress-bar-6.png'); }
+  16.67%, 33.32% { background-image: url('/assets/angkor-pixel/buttons/progress-bar-5.png'); }
+  33.33%, 49.99% { background-image: url('/assets/angkor-pixel/buttons/progress-bar-4.png'); }
+  50%, 66.66% { background-image: url('/assets/angkor-pixel/buttons/progress-bar-3.png'); }
+  66.67%, 83.32% { background-image: url('/assets/angkor-pixel/buttons/progress-bar-2.png'); }
+  83.33%, 100% { background-image: url('/assets/angkor-pixel/buttons/progress-bar-1.png'); }
+}
+
+@keyframes angkor-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes angkor-dots {
+  0%, 20% { opacity: 0; }
+  40% { opacity: 1; }
+  100% { opacity: 0; }
+}

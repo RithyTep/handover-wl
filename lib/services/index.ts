@@ -1,4 +1,3 @@
-// Database exports
 export {
   initDatabase,
   saveTicketData,
@@ -39,7 +38,6 @@ export {
   checkHealth as checkDatabaseHealth,
 } from "./database";
 
-// Jira exports
 export {
   fetchTickets,
   transformIssue,
@@ -50,10 +48,8 @@ export {
   checkHealth as checkJiraHealth,
 } from "./jira";
 
-// Re-export JiraComment interface from types
 export type { JiraComment } from "@/lib/types";
 
-// Slack exports
 export {
   postMessage,
   postThreadReply,

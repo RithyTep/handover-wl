@@ -90,3 +90,19 @@ export {
 	createApiResponse,
 	createApiError,
 } from "./api"
+
+export type {
+	AdfNode,
+	JiraRawComment,
+	ProcessedComment,
+	StatusChange,
+	AssigneeChange,
+	TicketHistory,
+	AISuggestion,
+	AIAutofillRequest,
+	AIAutofillResponse,
+	AIProvider,
+	AIClientConfig,
+} from "./ai-autofill"
+
+export { aiSuggestionSchema } from "./ai-autofill"

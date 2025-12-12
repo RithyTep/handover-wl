@@ -23,6 +23,7 @@ const envSchema = z.object({
 
 	GROQ_API_KEY: z.string().optional(),
 	OPENAI_API_KEY: z.string().optional(),
+	AI_PROVIDER: z.enum(["groq", "openai"]).default("groq"),
 
 	SCHEDULE_ENABLED: z
 		.string()
@@ -107,5 +108,21 @@ export function getAppConfig() {
 		nodeEnv: env.NODE_ENV,
 		schedulerEnabled: env.SCHEDULE_ENABLED,
 		logLevel: env.LOG_LEVEL,
+	}
+}
+
+export function getAIConfig() {
+	return {
+		provider: env.AI_PROVIDER,
+		groqApiKey: env.GROQ_API_KEY,
+		openaiApiKey: env.OPENAI_API_KEY,
+		apiKey:
+			env.AI_PROVIDER === "groq" ? env.GROQ_API_KEY : env.OPENAI_API_KEY,
+		baseUrl:
+			env.AI_PROVIDER === "groq"
+				? "https://api.groq.com/openai/v1"
+				: undefined,
+		model:
+			env.AI_PROVIDER === "groq" ? "llama-3.3-70b-versatile" : "gpt-4o-mini",
 	}
 }
