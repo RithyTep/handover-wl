@@ -21,7 +21,6 @@ const PROTECTED_MUTATIONS = [
   "ticketData.save",
   "slack.send",
   "slack.postThread",
-  "ai.autofill",
   "backup.create",
   "backup.restore",
   "feedback.create",
