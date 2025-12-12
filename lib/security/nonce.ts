@@ -1,5 +1,4 @@
 import { NONCE_EXPIRY_MS, MAX_NONCES_PER_SESSION } from "./constants";
-import type { NonceEntry } from "./types";
 
 const nonceStore = new Map<string, Map<string, number>>();
 

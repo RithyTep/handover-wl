@@ -151,30 +151,73 @@ export function extractAssigneeChanges(
 		})
 }
 
+interface JiraConfig {
+	baseUrl: string
+	email: string
+	apiToken: string
+}
+
+function isJiraConfigValid(config: JiraConfig): boolean {
+	return !!(config.baseUrl && config.email && config.apiToken)
+}
+
+function buildAuthHeader(config: JiraConfig): string {
+	const credentials = `${config.email}:${config.apiToken}`
+	return Buffer.from(credentials).toString("base64")
+}
+
+function buildHistoryUrl(baseUrl: string, ticketKey: string): string {
+	return `${baseUrl}/rest/api/3/issue/${ticketKey}?expand=changelog,comment`
+}
+
+interface JiraHistoryResponse {
+	fields?: {
+		comment?: { comments?: JiraRawComment[] }
+		description?: AdfNode | string
+	}
+	changelog?: { histories?: ChangelogEntry[] }
+}
+
+function parseHistoryResponse(
+	data: JiraHistoryResponse,
+	ticketKey: string
+): TicketHistory {
+	const rawComments = data.fields?.comment?.comments || []
+	const changelog = data.changelog?.histories || []
+
+	logger.debug(`Fetched history for ${ticketKey}`, {
+		comments: rawComments.length,
+		changelogEntries: changelog.length,
+	})
+
+	return {
+		comments: processComments(rawComments).reverse(),
+		statusChanges: extractStatusChanges(changelog),
+		assigneeChanges: extractAssigneeChanges(changelog),
+		description: extractDescription(data.fields?.description),
+	}
+}
+
 export async function fetchTicketHistory(
 	ticketKey: string
 ): Promise<TicketHistory | null> {
 	const jiraConfig = getJiraConfig()
 
-	if (!jiraConfig.baseUrl || !jiraConfig.email || !jiraConfig.apiToken) {
+	if (!isJiraConfigValid(jiraConfig)) {
 		logger.warn("Jira credentials not configured")
 		return null
 	}
 
 	try {
-		const auth = Buffer.from(
-			`${jiraConfig.email}:${jiraConfig.apiToken}`
-		).toString("base64")
+		const authHeader = buildAuthHeader(jiraConfig)
+		const url = buildHistoryUrl(jiraConfig.baseUrl, ticketKey)
 
-		const response = await fetch(
-			`${jiraConfig.baseUrl}/rest/api/3/issue/${ticketKey}?expand=changelog,comment`,
-			{
-				headers: {
-					Authorization: `Basic ${auth}`,
-					Accept: "application/json",
-				},
-			}
-		)
+		const response = await fetch(url, {
+			headers: {
+				Authorization: `Basic ${authHeader}`,
+				Accept: "application/json",
+			},
+		})
 
 		if (!response.ok) {
 			logger.error("Failed to fetch ticket history", {
@@ -185,23 +228,8 @@ export async function fetchTicketHistory(
 			return null
 		}
 
-		const data = await response.json()
-
-		const rawComments = (data.fields?.comment?.comments ||
-			[]) as JiraRawComment[]
-		const changelog = data.changelog?.histories || []
-
-		logger.debug(`Fetched history for ${ticketKey}`, {
-			comments: rawComments.length,
-			changelogEntries: changelog.length,
-		})
-
-		return {
-			comments: processComments(rawComments).reverse(),
-			statusChanges: extractStatusChanges(changelog),
-			assigneeChanges: extractAssigneeChanges(changelog),
-			description: extractDescription(data.fields?.description),
-		}
+		const data = (await response.json()) as JiraHistoryResponse
+		return parseHistoryResponse(data, ticketKey)
 	} catch (error) {
 		logger.error("Error fetching ticket history", {
 			ticketKey,

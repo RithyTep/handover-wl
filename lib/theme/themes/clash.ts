@@ -1,4 +1,4 @@
-import { Trash2, Save, Send, Sword, Shield, Hammer } from "lucide-react"
+import { Trash2, Send, Sword, Shield, Hammer } from "lucide-react"
 import type { ThemeConfig } from "../types"
 
 export const clashThemeConfig: ThemeConfig = {

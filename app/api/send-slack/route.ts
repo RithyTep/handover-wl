@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
 import { logger } from "@/lib/logger"
+import { rateLimit, getClientIP, getRateLimitHeaders } from "@/lib/security/rate-limit"
 
 const log = logger.api
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
@@ -9,7 +10,23 @@ const SLACK_CHANNEL = process.env.SLACK_CHANNEL
 const JIRA_URL = process.env.JIRA_URL
 const STORAGE_FILE = path.join(process.cwd(), "ticket_data.json")
 
+const SLACK_RATE_LIMIT = 10
+const SLACK_RATE_WINDOW_MS = 60000
+
 export async function POST(request: NextRequest) {
+	const ip = getClientIP(request)
+	const rateLimitResult = rateLimit(ip, SLACK_RATE_LIMIT, SLACK_RATE_WINDOW_MS)
+
+	if (!rateLimitResult.success) {
+		return NextResponse.json(
+			{ success: false, error: "Rate limit exceeded. Please try again later." },
+			{
+				status: 429,
+				headers: getRateLimitHeaders(rateLimitResult, SLACK_RATE_LIMIT),
+			}
+		)
+	}
+
 	try {
 		const body = await request.json()
 		const { ticketData, ticketDetails } = body

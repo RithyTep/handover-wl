@@ -1,5 +1,5 @@
 import { HEADERS } from "../constants";
-import type { ChallengeResponse, ChallengeHeaders } from "../types";
+import type { ChallengeResponse } from "../types";
 import { getFingerprintHash } from "./fingerprint";
 import { solvePoWWithWorker, hashRequestBody, generateNonce } from "./pow-solver";
 

@@ -1,7 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { updateCommentLastPosted, postComment } from "@/lib/services";
+import { rateLimit, getClientIP, getRateLimitHeaders } from "@/lib/security/rate-limit";
+
+const JIRA_RATE_LIMIT = 20;
+const JIRA_RATE_WINDOW_MS = 60000;
 
 export async function POST(req: NextRequest) {
+  const ip = getClientIP(req);
+  const rateLimitResult = rateLimit(ip, JIRA_RATE_LIMIT, JIRA_RATE_WINDOW_MS);
+
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { success: false, error: "Rate limit exceeded. Please try again later." },
+      {
+        status: 429,
+        headers: getRateLimitHeaders(rateLimitResult, JIRA_RATE_LIMIT),
+      }
+    );
+  }
+
   try {
     const body = await req.json();
     const { ticket_key, comment_text, scheduled_comment_id } = body;

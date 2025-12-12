@@ -17,28 +17,27 @@ export const scheduledCommentsRouter = router({
 	create: protectedMutation
 		.input(scheduledCommentCreateSchema)
 		.mutation(async ({ input }) => {
-			const comment = await scheduledCommentService.create(
-				input.comment_type,
-				input.comment_text,
-				input.cron_schedule,
-				input.enabled,
-				input.ticket_key
-			)
+			const comment = await scheduledCommentService.create({
+				commentType: input.comment_type,
+				commentText: input.comment_text,
+				cronSchedule: input.cron_schedule,
+				enabled: input.enabled,
+				ticketKey: input.ticket_key,
+			})
 			return { success: true, comment }
 		}),
 
 	update: protectedMutation
 		.input(scheduledCommentUpdateSchema)
 		.mutation(async ({ input }) => {
-			const { id, ...updateData } = input
-			const comment = await scheduledCommentService.update(
-				id,
-				updateData.comment_type,
-				updateData.comment_text,
-				updateData.cron_schedule,
-				updateData.enabled,
-				updateData.ticket_key
-			)
+			const comment = await scheduledCommentService.update({
+				id: input.id,
+				commentType: input.comment_type,
+				commentText: input.comment_text,
+				cronSchedule: input.cron_schedule,
+				enabled: input.enabled,
+				ticketKey: input.ticket_key,
+			})
 			return { success: true, comment }
 		}),
 

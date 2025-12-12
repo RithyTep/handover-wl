@@ -2,7 +2,6 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import { initDatabase } from "@/server/repository/database.repository";
 import { validateChallenge, createChallengeErrorResponse } from "@/lib/security/challenge.service";
-import { HEADERS } from "@/lib/security/constants";
 
 interface TRPCContext {
   headers?: Headers;

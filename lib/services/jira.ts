@@ -48,36 +48,58 @@ export async function fetchTickets(
 
 type CustomField = { value?: string } | undefined
 
+function extractCustomFieldValue(
+	fields: JiraIssue["fields"],
+	fieldKey: string
+): string {
+	const field = fields[fieldKey] as CustomField
+	return field?.value || "None"
+}
+
+function extractAssigneeInfo(assignee: JiraIssue["fields"]["assignee"]): {
+	name: string
+	avatar: string | null
+} {
+	return {
+		name: assignee?.displayName || "Unassigned",
+		avatar: assignee?.avatarUrls?.["48x48"] || null,
+	}
+}
+
+function extractSavedData(savedData?: TicketData): {
+	status: string
+	action: string
+} {
+	return {
+		status: savedData?.status || "--",
+		action: savedData?.action || "--",
+	}
+}
+
 export function transformIssue(
 	issue: JiraIssue,
 	savedData?: TicketData
 ): Ticket {
 	const { baseUrl } = getConfig()
-	const mainTicketType = issue.fields[
-		JIRA.FIELDS.WL_MAIN_TICKET_TYPE
-	] as CustomField
-	const subTicketType = issue.fields[
-		JIRA.FIELDS.WL_SUB_TICKET_TYPE
-	] as CustomField
-	const customerLevel = issue.fields[JIRA.FIELDS.CUSTOMER_LEVEL] as
-		| string
-		| undefined
+	const { fields, key } = issue
+	const assignee = extractAssigneeInfo(fields.assignee)
+	const saved = extractSavedData(savedData)
 
 	return {
-		key: issue.key,
-		summary: issue.fields.summary,
-		status: issue.fields.status.name,
-		assignee: issue.fields.assignee?.displayName || "Unassigned",
-		assigneeAvatar: issue.fields.assignee?.avatarUrls?.["48x48"] || null,
-		created: issue.fields.created,
-		dueDate: issue.fields.duedate || null,
-		issueType: issue.fields.issuetype?.name || "None",
-		wlMainTicketType: mainTicketType?.value || "None",
-		wlSubTicketType: subTicketType?.value || "None",
-		customerLevel: customerLevel || "None",
-		jiraUrl: `${baseUrl}/browse/${issue.key}`,
-		savedStatus: savedData?.status || "--",
-		savedAction: savedData?.action || "--",
+		key,
+		summary: fields.summary,
+		status: fields.status.name,
+		assignee: assignee.name,
+		assigneeAvatar: assignee.avatar,
+		created: fields.created,
+		dueDate: fields.duedate || null,
+		issueType: fields.issuetype?.name || "None",
+		wlMainTicketType: extractCustomFieldValue(fields, JIRA.FIELDS.WL_MAIN_TICKET_TYPE),
+		wlSubTicketType: extractCustomFieldValue(fields, JIRA.FIELDS.WL_SUB_TICKET_TYPE),
+		customerLevel: (fields[JIRA.FIELDS.CUSTOMER_LEVEL] as string) || "None",
+		jiraUrl: `${baseUrl}/browse/${key}`,
+		savedStatus: saved.status,
+		savedAction: saved.action,
 	}
 }
 

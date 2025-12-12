@@ -79,7 +79,7 @@ export const slackRouter = router({
         text: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input: _input }) => {
       return { success: true };
     }),
 });

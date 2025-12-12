@@ -1,10 +1,3 @@
-/**
- * Handover Service
- *
- * Orchestrates handover operations including scanning for handover messages
- * and posting automated replies with ticket information.
- */
-
 import {
 	loadTicketData,
 	getCustomChannelId,
@@ -16,12 +9,9 @@ import {
 import { getSlackConfig } from "@/lib/env"
 import { SlackMessagingService } from "./slack-messaging.service"
 import { createLogger } from "@/lib/logger"
+import type { ScheduledComment } from "@/lib/types"
 
 const logger = createLogger("Handover")
-
-// ============================================
-// Types
-// ============================================
 
 export interface ScanAndReplyResult {
 	success: boolean
@@ -33,9 +23,34 @@ export interface ScanAndReplyResult {
 	error?: string
 }
 
-// ============================================
-// Service Class
-// ============================================
+interface ValidationResult {
+	valid: boolean
+	userToken?: string
+	channelId?: string
+	slackComments?: ScheduledComment[]
+	errorResult?: ScanAndReplyResult
+}
+
+function createErrorResult(message: string, error?: string): ScanAndReplyResult {
+	return {
+		success: false,
+		replied: false,
+		message,
+		error,
+	}
+}
+
+function createSuccessResult(
+	message: string,
+	options: Partial<ScanAndReplyResult> = {}
+): ScanAndReplyResult {
+	return {
+		success: true,
+		replied: false,
+		message,
+		...options,
+	}
+}
 
 export class HandoverService {
 	private slackMessaging: SlackMessagingService
@@ -44,31 +59,20 @@ export class HandoverService {
 		this.slackMessaging = new SlackMessagingService()
 	}
 
-	/**
-	 * Scan for handover message and reply with ticket information
-	 *
-	 * This method:
-	 * 1. Checks if there are enabled Slack scheduled comments
-	 * 2. Finds the most recent handover message
-	 * 3. Checks if it already has replies
-	 * 4. If not, posts a reply with current ticket data
-	 * 5. Updates the last posted timestamp for scheduled comments
-	 */
-	async scanAndReplyToHandover(): Promise<ScanAndReplyResult> {
+	private async validateConfiguration(): Promise<ValidationResult> {
 		const config = getSlackConfig()
 
-		// Get user token for API calls
 		const userToken = config.userToken
 		if (!userToken) {
 			return {
-				success: false,
-				replied: false,
-				message: "No Slack user token configured",
-				error: "SLACK_USER_TOKEN not set",
+				valid: false,
+				errorResult: createErrorResult(
+					"No Slack user token configured",
+					"SLACK_USER_TOKEN not set"
+				),
 			}
 		}
 
-		// Check for enabled Slack scheduled comments
 		const scheduledComments = await getEnabledScheduledComments()
 		const slackComments = scheduledComments.filter(
 			(c) => c.comment_type === "slack"
@@ -76,82 +80,85 @@ export class HandoverService {
 
 		if (slackComments.length === 0) {
 			return {
-				success: true,
-				replied: false,
-				message: "No scheduled comments configured",
+				valid: false,
+				errorResult: createSuccessResult("No scheduled comments configured"),
 			}
 		}
 
-		// Get channel
 		const customChannelId = await getCustomChannelId()
-		const channelToUse = customChannelId || config.channelId
+		const channelId = customChannelId || config.channelId
 
-		if (!channelToUse) {
+		if (!channelId) {
 			return {
-				success: false,
-				replied: false,
-				message: "No Slack channel configured",
-				error: "No channel ID available",
+				valid: false,
+				errorResult: createErrorResult(
+					"No Slack channel configured",
+					"No channel ID available"
+				),
 			}
 		}
 
-		logger.info("Scanning for handover message", { channel: channelToUse })
+		return { valid: true, userToken, channelId, slackComments }
+	}
 
-		// Find handover message
-		const handoverCheck = await this.slackMessaging.findHandoverMessage(
-			userToken,
-			channelToUse
-		)
-
-		if (!handoverCheck.found) {
-			return {
-				success: true,
-				replied: false,
-				message: "No handover message found",
-			}
-		}
-
-		// Check if already has replies
-		if (handoverCheck.hasReplies) {
-			return {
-				success: true,
-				replied: false,
-				message: "Handover message already has replies",
-				handoverMessageTs: handoverCheck.messageTs,
-			}
-		}
-
-		// Load ticket data
+	private async prepareTicketData() {
 		const savedData = await loadTicketData()
 		const tickets = await getTicketsWithSavedData(savedData)
 		const ticketData = this.slackMessaging.convertTicketsToMessageData(tickets)
-
-		// Get member mentions
 		const mentions = await getMemberMentions()
 
-		// Post reply
+		return { tickets, ticketData, mentions }
+	}
+
+	private async updateAllCommentTimestamps(
+		comments: ScheduledComment[]
+	): Promise<void> {
+		for (const comment of comments) {
+			await updateCommentLastPosted(comment.id)
+		}
+	}
+
+	async scanAndReplyToHandover(): Promise<ScanAndReplyResult> {
+		const validation = await this.validateConfiguration()
+
+		if (!validation.valid) {
+			return validation.errorResult!
+		}
+
+		const { userToken, channelId, slackComments } = validation
+
+		logger.info("Scanning for handover message", { channel: channelId })
+
+		const handoverCheck = await this.slackMessaging.findHandoverMessage(
+			userToken!,
+			channelId!
+		)
+
+		if (!handoverCheck.found) {
+			return createSuccessResult("No handover message found")
+		}
+
+		if (handoverCheck.hasReplies) {
+			return createSuccessResult("Handover message already has replies", {
+				handoverMessageTs: handoverCheck.messageTs,
+			})
+		}
+
+		const { tickets, ticketData, mentions } = await this.prepareTicketData()
+
 		const replyResult = await this.slackMessaging.postHandoverReply(
 			ticketData,
 			handoverCheck.messageTs!,
-			userToken,
-			channelToUse,
+			userToken!,
+			channelId!,
 			mentions || undefined
 		)
 
 		if (!replyResult.success) {
-			return {
-				success: false,
-				replied: false,
-				message: "Failed to post reply",
-				error: replyResult.error,
-				handoverMessageTs: handoverCheck.messageTs,
-			}
+			return createErrorResult("Failed to post reply", replyResult.error)
 		}
 
-		// Update last posted timestamp for all Slack comments
-		for (const comment of slackComments) {
-			await updateCommentLastPosted(comment.id)
-		}
+		await this.updateAllCommentTimestamps(slackComments!)
 
 		logger.info("Posted handover reply", {
 			handoverTs: handoverCheck.messageTs,
