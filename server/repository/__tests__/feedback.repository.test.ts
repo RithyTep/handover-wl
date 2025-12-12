@@ -85,7 +85,7 @@ describe("FeedbackRepository", () => {
 				FeedbackType.BUG,
 				"Test Bug",
 				"Description of bug",
-				FeedbackStatus.PENDING
+				FeedbackStatus.NEW
 			)
 
 			expect(prisma.feedback.create).toHaveBeenCalledWith({
@@ -93,7 +93,7 @@ describe("FeedbackRepository", () => {
 					type: FeedbackType.BUG,
 					title: "Test Bug",
 					description: "Description of bug",
-					status: FeedbackStatus.PENDING,
+					status: FeedbackStatus.NEW,
 				},
 			})
 			expect(result.title).toBe("Test Bug")

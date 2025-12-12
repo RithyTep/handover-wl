@@ -89,14 +89,17 @@ export function determineOverallStatus(
 	return "healthy"
 }
 
-export function buildHealthResponse(
-	overallStatus: HealthStatus,
-	dbHealth: ServiceHealth,
-	jiraHealth: ServiceHealth,
-	slackHealth: ServiceHealth,
-	envStatus: EnvironmentStatus,
+interface BuildHealthResponseOptions {
+	overallStatus: HealthStatus
+	dbHealth: ServiceHealth
+	jiraHealth: ServiceHealth
+	slackHealth: ServiceHealth
+	envStatus: EnvironmentStatus
 	allRequiredSet: boolean
-): HealthResponse {
+}
+
+export function buildHealthResponse(options: BuildHealthResponseOptions): HealthResponse {
+	const { overallStatus, dbHealth, jiraHealth, slackHealth, envStatus, allRequiredSet } = options
 	return {
 		status: overallStatus,
 		timestamp: new Date().toISOString(),

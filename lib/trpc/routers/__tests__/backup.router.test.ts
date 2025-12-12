@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest"
+import { BackupType } from "@/enums"
 
 // Use vi.hoisted to define mocks before vi.mock is hoisted
 const { mockGetAllItems, mockCreate, mockRestore, mockTransformToItem } = vi.hoisted(() => ({
@@ -82,7 +83,7 @@ describe("backupRouter", () => {
 
 			const caller = backupRouter.createCaller({ headers: new Headers() })
 			const result = await caller.create({
-				backup_type: "manual",
+				backup_type: BackupType.MANUAL,
 				description: "Test backup",
 			})
 
@@ -100,7 +101,7 @@ describe("backupRouter", () => {
 
 			const caller = backupRouter.createCaller({ headers: new Headers() })
 			const result = await caller.create({
-				backup_type: "auto",
+				backup_type: BackupType.AUTO,
 				description: "Automatic backup",
 			})
 

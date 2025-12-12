@@ -33,14 +33,14 @@ export async function GET(request: Request) {
 		})
 	}
 
-	const response = buildHealthResponse(
+	const response = buildHealthResponse({
 		overallStatus,
 		dbHealth,
 		jiraHealth,
 		slackHealth,
 		envStatus,
-		allRequiredSet
-	)
+		allRequiredSet,
+	})
 
 	return NextResponse.json(response, {
 		status: overallStatus === "healthy" ? 200 : 503,

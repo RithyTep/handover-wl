@@ -138,7 +138,7 @@ describe("scheduledCommentsRouter", () => {
 				ticketKey: "PROJ-1",
 			})
 			expect(result.success).toBe(true)
-			expect(result.comment.comment_text).toBe("Updated comment")
+			expect(result.comment?.comment_text).toBe("Updated comment")
 		})
 	})
 

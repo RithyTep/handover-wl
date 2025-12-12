@@ -84,6 +84,7 @@ function log(
   if (level === "error" || level === "warn") {
     console.error(formatted);
   } else {
+    // eslint-disable-next-line no-console
     console.log(formatted);
   }
 }

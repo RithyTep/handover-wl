@@ -69,7 +69,7 @@ describe("feedbackRouter", () => {
 			const multipleFeedback = [
 				mockFeedback,
 				{ ...mockFeedback, id: 2, type: FeedbackType.FEATURE, title: "Feature Request" },
-				{ ...mockFeedback, id: 3, type: FeedbackType.IMPROVEMENT, title: "Improvement" },
+				{ ...mockFeedback, id: 3, type: FeedbackType.SUGGESTION, title: "Suggestion" },
 			]
 			mockGetAllItems.mockResolvedValue(multipleFeedback)
 

@@ -24,6 +24,7 @@ import {
 	useTicketFilters,
 	DEFAULT_COLUMN_VISIBILITY,
 	getColumnVisibility,
+	getButtonThemeStyles,
 } from "./tickets"
 
 interface TicketsTableProps<TData, TValue> {
@@ -127,21 +128,7 @@ export function TicketsTable<TData, TValue>({
 					variant="ghost"
 					size="sm"
 					onClick={toggleDetails}
-					className={`h-9 px-3 border ${
-						theme === "christmas"
-							? "text-white/80 hover:text-white hover:bg-white/10 border-white/20"
-							: theme === "pixel"
-								? "bg-slate-900 border-2 border-slate-700 hover:border-indigo-500 hover:text-indigo-400 pixel-shadow"
-								: theme === "lunar"
-									? "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg"
-									: theme === "coding"
-										? "text-green-500/80 bg-black hover:bg-green-900/20 border border-green-900/30 font-mono"
-										: theme === "clash"
-											? "text-[#fbcc14] bg-[#3f2e21] hover:bg-black/20 border-2 border-[#9c9c9c] clash-btn-primary"
-											: theme === "angkor_pixel"
-												? "text-[#ffd700] bg-[#3a2a1a] hover:bg-[#4b3a2a] border-4 border-[#8b7355] angkor-pixel-btn"
-												: "text-slate-300 hover:bg-slate-800 border-slate-700"
-					}`}
+					className={`h-9 px-3 border ${getButtonThemeStyles(theme)}`}
 					title={showDetails ? "Hide Details" : "Show Details"}
 				>
 					{showDetails ? (

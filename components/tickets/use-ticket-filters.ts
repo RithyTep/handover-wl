@@ -1,97 +1,68 @@
 import { useMemo } from "react"
 import type { Ticket, TicketFilters, FilterOptions } from "./ticket-table-types"
 
+function extractUniqueValues<T>(items: T[], extractor: (item: T) => string | undefined): string[] {
+	return Array.from(new Set(items.map(extractor)))
+		.filter((v): v is string => Boolean(v) && v !== "N/A")
+		.sort()
+}
+
+function buildFilterOptions(tickets: Ticket[]): FilterOptions {
+	return {
+		assignees: extractUniqueValues(tickets, (t) => t.assignee),
+		statuses: extractUniqueValues(tickets, (t) => t.status),
+		mainTypes: extractUniqueValues(tickets, (t) => t.wlMainTicketType),
+		subTypes: extractUniqueValues(tickets, (t) => t.wlSubTicketType),
+		customerLevels: extractUniqueValues(tickets, (t) => t.customerLevel),
+	}
+}
+
+function matchesStringFilter(value: string | undefined, filter: string | undefined): boolean {
+	return !filter || value === filter
+}
+
+function matchesDateFrom(ticketDate: string, dateFrom: string | undefined): boolean {
+	if (!dateFrom) return true
+	return new Date(ticketDate) >= new Date(dateFrom)
+}
+
+function matchesDateTo(ticketDate: string, dateTo: string | undefined): boolean {
+	if (!dateTo) return true
+	const toDate = new Date(dateTo)
+	toDate.setHours(23, 59, 59, 999)
+	return new Date(ticketDate) <= toDate
+}
+
+function matchesJqlQuery(ticket: Ticket, query: string | undefined): boolean {
+	if (!query) return true
+	const searchText = `${ticket.key} ${ticket.summary} ${ticket.status} ${ticket.assignee}`.toLowerCase()
+	return searchText.includes(query.toLowerCase())
+}
+
+function ticketMatchesFilters(ticket: Ticket, filters: TicketFilters): boolean {
+	return (
+		matchesStringFilter(ticket.assignee, filters.assignee) &&
+		matchesStringFilter(ticket.status, filters.status) &&
+		matchesStringFilter(ticket.wlMainTicketType, filters.wlMainTicketType) &&
+		matchesStringFilter(ticket.wlSubTicketType, filters.wlSubTicketType) &&
+		matchesStringFilter(ticket.customerLevel, filters.customerLevel) &&
+		matchesDateFrom(ticket.created, filters.dateFrom) &&
+		matchesDateTo(ticket.created, filters.dateTo) &&
+		matchesJqlQuery(ticket, filters.jqlQuery)
+	)
+}
+
 export function useTicketFilters<TData>(
 	data: TData[],
 	activeFilters: TicketFilters
 ): { filterOptions: FilterOptions; filteredData: Ticket[] } {
 	const filterOptions = useMemo(() => {
-		const ticketsData = data as Ticket[]
-		return {
-			assignees: Array.from(new Set(ticketsData.map((t) => t.assignee)))
-				.filter(Boolean)
-				.sort(),
-			statuses: Array.from(new Set(ticketsData.map((t) => t.status)))
-				.filter(Boolean)
-				.sort(),
-			mainTypes: Array.from(new Set(ticketsData.map((t) => t.wlMainTicketType)))
-				.filter((v) => v && v !== "N/A")
-				.sort(),
-			subTypes: Array.from(new Set(ticketsData.map((t) => t.wlSubTicketType)))
-				.filter((v) => v && v !== "N/A")
-				.sort(),
-			customerLevels: Array.from(
-				new Set(ticketsData.map((t) => t.customerLevel))
-			)
-				.filter((v) => v && v !== "N/A")
-				.sort(),
-		}
+		return buildFilterOptions(data as Ticket[])
 	}, [data])
 
 	const filteredData = useMemo(() => {
-		const ticketsData = data as Ticket[]
-
-		return ticketsData.filter((ticket) => {
-			if (
-				activeFilters.assignee &&
-				ticket.assignee !== activeFilters.assignee
-			) {
-				return false
-			}
-
-			if (activeFilters.status && ticket.status !== activeFilters.status) {
-				return false
-			}
-
-			if (
-				activeFilters.wlMainTicketType &&
-				ticket.wlMainTicketType !== activeFilters.wlMainTicketType
-			) {
-				return false
-			}
-
-			if (
-				activeFilters.wlSubTicketType &&
-				ticket.wlSubTicketType !== activeFilters.wlSubTicketType
-			) {
-				return false
-			}
-
-			if (
-				activeFilters.customerLevel &&
-				ticket.customerLevel !== activeFilters.customerLevel
-			) {
-				return false
-			}
-
-			if (activeFilters.dateFrom) {
-				const ticketDate = new Date(ticket.created)
-				const fromDate = new Date(activeFilters.dateFrom)
-				if (ticketDate < fromDate) {
-					return false
-				}
-			}
-
-			if (activeFilters.dateTo) {
-				const ticketDate = new Date(ticket.created)
-				const toDate = new Date(activeFilters.dateTo)
-				toDate.setHours(23, 59, 59, 999)
-				if (ticketDate > toDate) {
-					return false
-				}
-			}
-
-			if (activeFilters.jqlQuery) {
-				const query = activeFilters.jqlQuery.toLowerCase()
-				const searchText =
-					`${ticket.key} ${ticket.summary} ${ticket.status} ${ticket.assignee}`.toLowerCase()
-				if (!searchText.includes(query)) {
-					return false
-				}
-			}
-
-			return true
-		})
+		const tickets = data as Ticket[]
+		return tickets.filter((ticket) => ticketMatchesFilters(ticket, activeFilters))
 	}, [data, activeFilters])
 
 	return { filterOptions, filteredData }
