@@ -111,10 +111,6 @@ export function getAppConfig() {
 	}
 }
 
-/**
- * AI Provider configuration
- * Supports Groq (default) and OpenAI
- */
 export function getAIConfig() {
 	return {
 		provider: env.AI_PROVIDER,

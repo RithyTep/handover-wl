@@ -1,9 +1,3 @@
-/**
- * Security module exports
- * Browser challenge system for API protection
- */
-
-// Server-side exports
 export { validateChallenge, generateChallengeToken, createChallengeErrorResponse, hasValidInternalSecret } from "./challenge.service";
 export { validatePoWSolution, generateChallenge, hashRequestBody } from "./pow";
 export { validateFingerprint, hashFingerprint, isValidFingerprintFormat } from "./fingerprint";

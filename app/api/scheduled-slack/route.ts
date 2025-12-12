@@ -1,12 +1,3 @@
-/**
- * Scheduled Slack API Route
- *
- * POST /api/scheduled-slack
- *
- * Posts shift handover messages to Slack with ticket information.
- * Supports evening and night shifts with different tokens and mentions.
- */
-
 import { NextRequest } from "next/server"
 import {
 	loadTicketData,
@@ -27,12 +18,10 @@ export async function POST(request: NextRequest) {
 		const body = await request.json()
 		const shift = body.shift as "evening" | "night" | undefined
 
-		// Validate shift parameter
 		if (!shift || !["evening", "night"].includes(shift)) {
 			return badRequest("Shift parameter (evening or night) is required")
 		}
 
-		// Get shift-specific configuration
 		const userToken =
 			shift === "evening"
 				? await getEveningUserToken()
@@ -47,17 +36,13 @@ export async function POST(request: NextRequest) {
 				? await getEveningMentions()
 				: await getNightMentions()
 
-		// Get channel
 		const customChannelId = await getCustomChannelId()
 
-		// Load tickets with saved data
 		const savedData = await loadTicketData()
 		const tickets = await getTicketsWithSavedData(savedData)
 
-		// Convert to message data format
 		const ticketData = slackMessaging.convertTicketsToMessageData(tickets)
 
-		// Post handover message
 		const result = await slackMessaging.postShiftHandover(
 			ticketData,
 			shift,

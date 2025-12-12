@@ -18,7 +18,6 @@ export function ThemeProvider({ children, initialTheme }: { children: ReactNode;
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    // Apply theme class to body
     document.body.classList.toggle("theme-christmas", newTheme === "christmas");
     document.body.classList.toggle("theme-default", newTheme === "default");
   };

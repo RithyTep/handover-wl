@@ -1,15 +1,7 @@
-/**
- * Theme Configuration
- *
- * Main entry point for theme configurations.
- * Re-exports types and provides accessor functions.
- */
-
 import type { Theme } from "@/lib/types"
 import type { LucideIcon } from "lucide-react"
 import { MessageSquare, FileText, Command } from "lucide-react"
 
-// Re-export types
 export type {
 	ThemeConfig,
 	ThemeHeaderConfig,
@@ -19,13 +11,8 @@ export type {
 	ThemeMobileAction,
 } from "./types"
 
-// Import theme map and types
 import { THEME_CONFIGS } from "./themes"
 import type { ThemeConfig, ThemeHeaderConfig, ThemeLayoutConfig, ThemeTableConfig } from "./types"
-
-// ============================================================================
-// Theme Accessor Functions
-// ============================================================================
 
 export const getThemeConfig = (theme: Theme): ThemeConfig => {
 	return THEME_CONFIGS[theme] ?? THEME_CONFIGS.default
@@ -50,10 +37,6 @@ export const getActionsConfig = (theme: Theme) => {
 export const getMobileActionsConfig = (theme: Theme) => {
 	return getThemeConfig(theme).mobileActions
 }
-
-// ============================================================================
-// Header Navigation Items
-// ============================================================================
 
 export interface HeaderNavItem {
 	href: string

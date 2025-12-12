@@ -1,7 +1,3 @@
-/**
- * Default Theme Configuration
- */
-
 import { Zap, Trash2, RefreshCw, Copy, Save, Send, Sparkles } from "lucide-react"
 import type { ThemeConfig } from "../types"
 

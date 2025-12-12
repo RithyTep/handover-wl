@@ -1,14 +1,4 @@
-/**
- * Theme Configuration Types
- *
- * Shared types for all theme configurations.
- */
-
 import type { LucideIcon } from "lucide-react"
-
-// ============================================================================
-// Header Configuration Types
-// ============================================================================
 
 export interface ThemeHeaderConfig {
 	container: string
@@ -28,10 +18,6 @@ export interface ThemeHeaderConfig {
 	}
 }
 
-// ============================================================================
-// Action Button Types
-// ============================================================================
-
 export interface ThemeActionButton {
 	id: string
 	label: string
@@ -49,10 +35,6 @@ export interface ThemeMobileAction {
 	iconColor: string
 }
 
-// ============================================================================
-// Layout & Table Types
-// ============================================================================
-
 export interface ThemeLayoutConfig {
 	body: string
 	background: string
@@ -68,10 +50,6 @@ export interface ThemeTableConfig {
 	mobileCard: string
 	detailsButton: string
 }
-
-// ============================================================================
-// Main Theme Config Type
-// ============================================================================
 
 export interface ThemeConfig {
 	header: ThemeHeaderConfig
@@ -94,10 +72,6 @@ export interface ThemeConfig {
 		send: ThemeMobileAction
 	}
 }
-
-// ============================================================================
-// Navigation Types
-// ============================================================================
 
 export interface HeaderNavItem {
 	href: string

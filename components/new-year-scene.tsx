@@ -3,10 +3,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 
-// ============================================================================
-// Constants
-// ============================================================================
-
 const SNOWFLAKE_COUNTS = {
   small: 30,
   medium: 15,
@@ -19,7 +15,6 @@ const CANDY_CLEANUP_DELAY_MS = 1200;
 const CANDY_COUNT = 8;
 const CANDY_COLORS = ["#ADD8E6", "#B2F2BB", "#FFFACD", "#FFB6C1"];
 
-// Subtle floating snowflakes only - elegant and minimal
 const floatingDecorations = [
   { icon: "snowflake", left: "10%", delay: "0s", duration: "12s" },
   { icon: "snowflake", left: "30%", delay: "4s", duration: "15s" },
@@ -149,7 +144,6 @@ export function NewYearScene() {
     <>
       <div className="winter-wrapper pointer-events-none" ref={winterWrapperRef} />
 
-      {/* Subtle floating snowflakes */}
       <div className="fixed inset-0 pointer-events-none z-5 overflow-hidden">
         {floatingDecorations.map((deco, index) => (
           <Image

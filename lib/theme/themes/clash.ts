@@ -1,7 +1,3 @@
-/**
- * Clash Theme Configuration (Clash of Clans Style)
- */
-
 import { Trash2, Save, Send, Sword, Shield, Hammer } from "lucide-react"
 import type { ThemeConfig } from "../types"
 

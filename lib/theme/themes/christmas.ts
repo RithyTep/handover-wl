@@ -1,7 +1,3 @@
-/**
- * Christmas Theme Configuration
- */
-
 import { Zap, Trash2, Save, Send, Snowflake } from "lucide-react"
 import type { ThemeConfig } from "../types"
 

@@ -28,11 +28,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <head>
-        {/* Resource hints for external domains */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.openai.com" />
-        {/* Preload background image to prevent flash on load */}
         <link
           rel="preload"
           href="/assets/angkor-pixel/background.png"

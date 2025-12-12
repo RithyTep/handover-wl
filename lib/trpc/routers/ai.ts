@@ -66,7 +66,6 @@ export const aiRouter = router({
       const model =
         AI_PROVIDER === "groq" ? "llama-3.3-70b-versatile" : "gpt-4o-mini";
 
-      // Fetch ticket comments to analyze
       const comments = await fetchTicketComments(input.ticket.key);
       const latestWLComment = getLatestWLTCComment(comments);
 

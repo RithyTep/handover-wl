@@ -1,12 +1,3 @@
-/**
- * Scan and Reply Handover API Route
- *
- * POST /api/scan-and-reply-handover
- *
- * Scans for the most recent handover message in Slack and
- * posts a reply with current ticket information if no reply exists.
- */
-
 import { HandoverService } from "@/server/services"
 import { apiSuccess, handleApiError } from "@/lib/api"
 

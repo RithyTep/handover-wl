@@ -155,7 +155,6 @@ export default function ChangelogPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <Link href="/">
             <Button
@@ -178,7 +177,6 @@ export default function ChangelogPage() {
           </p>
         </div>
 
-        {/* Changelog entries */}
         <div className="space-y-6">
           {changelog.map((entry, index) => (
             <Card key={entry.version} className={index === 0 ? "border-primary/30 bg-primary/5" : ""}>
@@ -221,7 +219,6 @@ export default function ChangelogPage() {
           ))}
         </div>
 
-        {/* Footer */}
         <div className="mt-8 pt-6 border-t border-border text-center">
           <p className="text-sm text-muted-foreground">
             Have feedback or suggestions?{" "}

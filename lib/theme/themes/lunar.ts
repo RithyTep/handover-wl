@@ -1,7 +1,3 @@
-/**
- * Lunar Theme Configuration
- */
-
 import { Zap, Trash2, Save, Send, Sparkles } from "lucide-react"
 import type { ThemeConfig } from "../types"
 

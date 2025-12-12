@@ -1,12 +1,3 @@
-/**
- * AI Autofill API Route
- *
- * POST /api/ai-autofill
- *
- * Generates AI-powered suggestions for ticket status and action
- * by analyzing ticket history, comments, and status changes.
- */
-
 import { NextResponse } from "next/server"
 import { AIAutofillService } from "@/server/services"
 import { apiSuccess, badRequest, handleApiError } from "@/lib/api"
@@ -20,12 +11,10 @@ export async function POST(request: Request) {
 		const body = (await request.json()) as Partial<AIAutofillRequest>
 		const { ticket } = body
 
-		// Validate request
 		if (!ticket) {
 			return badRequest("Ticket data is required")
 		}
 
-		// Generate suggestion
 		const { suggestion, debug } =
 			await aiAutofillService.generateSuggestion(ticket)
 
@@ -36,7 +25,6 @@ export async function POST(request: Request) {
 	} catch (error: unknown) {
 		const config = getAIConfig()
 
-		// Handle API key errors with specific message
 		const apiError = error as { status?: number }
 		if (apiError.status === 401) {
 			return handleApiError(
@@ -49,11 +37,9 @@ export async function POST(request: Request) {
 			)
 		}
 
-		// Return error with fallback suggestion
 		const message =
 			error instanceof Error ? error.message : "Failed to generate suggestion"
 
-		// Return fallback suggestion on error (still indicates error but provides usable data)
 		return NextResponse.json(
 			{
 				success: false,

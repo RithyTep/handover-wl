@@ -12,7 +12,6 @@ import { isValidTheme, type Theme } from "@/lib/types"
 import { DEFAULT_THEME } from "@/lib/constants"
 
 async function DashboardWithData() {
-	// Opt into dynamic rendering - required for database access
 	await connection()
 	await initDatabase()
 

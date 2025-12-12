@@ -19,7 +19,6 @@ export function AngkorPixelLoading({
 
 	useEffect(() => {
 		if (isLoading) {
-			// Animate progress
 			const progressInterval = setInterval(() => {
 				setAnimatedProgress((prev) => {
 					if (progress > 0) return progress
@@ -28,7 +27,6 @@ export function AngkorPixelLoading({
 				})
 			}, 200)
 
-			// Animate dots
 			const dotsInterval = setInterval(() => {
 				setDots((prev) => (prev.length >= 3 ? "" : prev + "."))
 			}, 500)
@@ -46,7 +44,6 @@ export function AngkorPixelLoading({
 
 	return (
 		<div className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#2d4a3e]">
-			{/* Background */}
 			<div
 				className="absolute inset-0 opacity-30"
 				style={{
@@ -57,14 +54,10 @@ export function AngkorPixelLoading({
 				}}
 			/>
 
-			{/* Loading content */}
 			<div className="relative z-10 flex flex-col items-center gap-6">
-				{/* Animated character */}
 				<div className="angkor-monster-goblin" style={{ transform: "scale(1.5)" }} />
 
-				{/* Progress bar container */}
 				<div className="relative w-80">
-					{/* Progress bar background */}
 					<div
 						className="h-10 rounded-lg overflow-hidden"
 						style={{
@@ -73,8 +66,7 @@ export function AngkorPixelLoading({
 							boxShadow: "inset 0 2px 8px rgba(0,0,0,0.5)",
 						}}
 					>
-						{/* Progress fill */}
-						<div
+							<div
 							className="h-full transition-all duration-300 ease-out"
 							style={{
 								width: `${animatedProgress}%`,
@@ -84,8 +76,7 @@ export function AngkorPixelLoading({
 						/>
 					</div>
 
-					{/* Progress text */}
-					<div className="absolute inset-0 flex items-center justify-center">
+						<div className="absolute inset-0 flex items-center justify-center">
 						<span
 							className="text-sm font-bold"
 							style={{
@@ -99,8 +90,7 @@ export function AngkorPixelLoading({
 					</div>
 				</div>
 
-				{/* Loading message */}
-				<p
+					<p
 					className="text-lg font-bold uppercase tracking-wider"
 					style={{
 						color: "#ffd700",
@@ -112,8 +102,7 @@ export function AngkorPixelLoading({
 					{dots}
 				</p>
 
-				{/* Decorative clouds */}
-				<div className="absolute -top-20 -left-20 opacity-60">
+					<div className="absolute -top-20 -left-20 opacity-60">
 					<Image
 						src="/assets/angkor-pixel/pixel-art/cloud-1.png"
 						alt=""

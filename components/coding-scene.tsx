@@ -1,6 +1,5 @@
 "use client";
 
-// Minimal floating code icons - subtle and professional
 const floatingIcons = [
   { icon: "git-branch", left: "8%", top: "20%", delay: "0s", duration: "18s" },
   { icon: "commit", left: "85%", top: "30%", delay: "3s", duration: "20s" },
@@ -10,7 +9,6 @@ const floatingIcons = [
 export function CodingScene() {
   return (
     <>
-      {/* Technical Background - Grid Pattern */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <div
           className="absolute inset-0 opacity-20"
@@ -19,12 +17,10 @@ export function CodingScene() {
             backgroundSize: '32px 32px'
           }}
         />
-        {/* Syntax Highlight Glows */}
         <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500/5 blur-[100px] rounded-full" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-emerald-500/5 blur-[100px] rounded-full" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/3 blur-[150px] rounded-full" />
 
-        {/* Minimal floating icons */}
         {floatingIcons.map((item, index) => (
           <img
             key={index}

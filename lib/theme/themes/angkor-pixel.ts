@@ -1,7 +1,3 @@
-/**
- * Angkor Pixel Theme Configuration (Cambodian Pixel Art)
- */
-
 import type { ThemeConfig } from "../types"
 
 export const angkorPixelThemeConfig: ThemeConfig = {

@@ -9,9 +9,7 @@ export default function Loading() {
         backgroundPosition: 'center',
       }}
     >
-      {/* Loading Content */}
       <div className="relative z-10 flex flex-col items-center gap-6 p-8">
-        {/* Pixel Art Character */}
         <div
           className="relative"
           style={{
@@ -26,7 +24,6 @@ export default function Loading() {
           }}
         />
 
-        {/* Title */}
         <h1
           className="text-3xl sm:text-4xl font-bold uppercase tracking-wide text-center"
           style={{
@@ -39,7 +36,6 @@ export default function Loading() {
           Handover
         </h1>
 
-        {/* Subtitle */}
         <p
           className="text-xs uppercase tracking-widest"
           style={{
@@ -52,14 +48,12 @@ export default function Loading() {
           Task Manager
         </p>
 
-        {/* Progress Bar Container */}
         <div
           className="relative w-80 max-w-[90vw]"
           style={{
             height: '48px',
           }}
         >
-          {/* Animated Progress Bar (cycles through PNG frames) */}
           <div
             className="absolute inset-0"
             style={{

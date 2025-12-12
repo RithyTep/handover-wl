@@ -5,20 +5,12 @@ import { cn } from "@/lib/utils"
 import { Theme } from "@/enums"
 import type { IThemeInfo } from "@/interfaces"
 
-// ============================================================================
-// Types
-// ============================================================================
-
 interface ThemeButtonProps {
 	theme: IThemeInfo
 	isSelected: boolean
 	onSelect: (theme: Theme) => void
 	disabled: boolean
 }
-
-// ============================================================================
-// Main Component
-// ============================================================================
 
 export const ThemeButton = ({ theme, isSelected, onSelect, disabled }: ThemeButtonProps) => {
 	const handleClick = () => {

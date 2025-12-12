@@ -9,7 +9,6 @@ interface Cloud {
 	scale: number
 }
 
-// Pre-defined cloud configurations (deterministic, no random generation)
 const CLOUDS: Cloud[] = [
 	{ id: 0, src: "/assets/angkor-pixel/pixel-art/cloud-1.png", top: 8, delay: 0, duration: 70, scale: 0.5 },
 	{ id: 1, src: "/assets/angkor-pixel/pixel-art/cloud-2.png", top: 18, delay: 15, duration: 85, scale: 0.4 },
@@ -22,7 +21,6 @@ export function AngkorPixelScene() {
 
 	return (
 		<>
-			{/* Floating clouds */}
 			<div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
 				{CLOUDS.map((cloud) => (
 					<div

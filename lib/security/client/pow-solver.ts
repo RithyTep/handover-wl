@@ -1,8 +1,3 @@
-/**
- * Proof-of-Work solver for browser
- * Uses Web Worker for non-blocking computation
- */
-
 import type { PoWSolution } from "../types";
 
 interface PoWWorkerMessage {
@@ -15,9 +10,6 @@ interface PoWWorkerMessage {
   error?: string;
 }
 
-/**
- * Solve proof-of-work challenge using Web Worker
- */
 export function solvePoWWithWorker(
   challenge: string,
   fingerprint: string,
@@ -26,7 +18,6 @@ export function solvePoWWithWorker(
   onProgress?: (iterations: number) => void
 ): Promise<PoWSolution> {
   return new Promise((resolve, reject) => {
-    // Create worker
     const worker = new Worker("/pow-worker.js");
 
     worker.onmessage = (e: MessageEvent<PoWWorkerMessage>) => {
@@ -52,7 +43,6 @@ export function solvePoWWithWorker(
       reject(new Error(`Worker error: ${error.message}`));
     };
 
-    // Start solving
     worker.postMessage({
       type: "solve",
       challenge,
@@ -63,9 +53,6 @@ export function solvePoWWithWorker(
   });
 }
 
-/**
- * SHA-256 using Web Crypto API (for request hashing)
- */
 export async function sha256Browser(input: string): Promise<string> {
   const encoder = new TextEncoder();
   const data = encoder.encode(input);
@@ -74,17 +61,11 @@ export async function sha256Browser(input: string): Promise<string> {
   return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-/**
- * Hash a request body for integrity checking
- */
 export async function hashRequestBody(body: unknown): Promise<string> {
   const bodyStr = typeof body === "string" ? body : JSON.stringify(body);
   return sha256Browser(bodyStr);
 }
 
-/**
- * Generate a random nonce
- */
 export function generateNonce(): string {
   const bytes = new Uint8Array(16);
   crypto.getRandomValues(bytes);

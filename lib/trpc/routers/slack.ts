@@ -80,8 +80,6 @@ export const slackRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      // Implementation for posting to Slack thread
-      // This would use the Slack service
       return { success: true };
     }),
 });
