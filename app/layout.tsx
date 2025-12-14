@@ -1,7 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
 import { Toaster } from "sonner";
+import { unstable_cache } from "next/cache";
 import { TRPCProvider } from "@/components/trpc-provider";
+import { ThemeRepository } from "@/server/repository/theme.repository";
+import { DEFAULT_THEME } from "@/lib/constants";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -20,13 +23,28 @@ export const viewport: Viewport = {
   themeColor: "#111111",
 };
 
-export default function RootLayout({
+const getTheme = unstable_cache(
+  async (): Promise<string> => {
+    try {
+      const themeRepository = new ThemeRepository();
+      return await themeRepository.getThemePreference();
+    } catch {
+      return DEFAULT_THEME;
+    }
+  },
+  ["theme-preference"],
+  { revalidate: 60, tags: ["theme"] }
+);
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const theme = await getTheme();
+
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" className="dark" data-loading-theme={theme} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

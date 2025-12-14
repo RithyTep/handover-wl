@@ -60,8 +60,8 @@ export default [
 			// Cyclomatic complexity (max 10)
 			complexity: ["warn", { max: 10 }],
 
-			// Max parameters (4 max)
-			"max-params": ["warn", { max: 4 }],
+			// Max parameters (5 max - allows for common patterns)
+			"max-params": ["warn", { max: 5 }],
 
 			// Max nesting depth (4 levels)
 			"max-depth": ["warn", { max: 4 }],
@@ -93,7 +93,7 @@ export default [
 			"no-console": [
 				"warn",
 				{
-					allow: ["warn", "error"],
+					allow: ["warn", "error", "info"],
 				},
 			],
 
@@ -116,10 +116,131 @@ export default [
 		},
 	},
 	{
-		// Stricter rules for API routes (should be thin)
+		// Relaxed rules for React components (JSX is verbose)
+		files: ["components/**/*.tsx", "app/**/*.tsx"],
+		rules: {
+			"max-lines-per-function": [
+				"warn",
+				{
+					max: 200, // JSX components with forms/modals need more space
+					skipBlankLines: true,
+					skipComments: true,
+					IIFEs: true,
+				},
+			],
+			"max-statements": ["warn", { max: 40 }],
+			complexity: ["warn", { max: 15 }], // UI logic can have more branches
+		},
+	},
+	{
+		// Relaxed rules for test files
+		files: [
+			"**/*.test.ts",
+			"**/*.test.tsx",
+			"**/__tests__/**/*.ts",
+			"**/__tests__/**/*.tsx",
+			"server/**/__tests__/**/*.ts",
+			"vitest.setup.ts",
+		],
+		rules: {
+			"max-lines": "off",
+			"max-lines-per-function": "off",
+			"max-statements": "off",
+			complexity: "off",
+		},
+	},
+	{
+		// Relaxed rules for API routes (handlers can be larger)
 		files: ["app/api/**/route.ts"],
 		rules: {
-			"max-lines": ["warn", { max: 100, skipBlankLines: true, skipComments: true }],
+			"max-lines": ["warn", { max: 200, skipBlankLines: true, skipComments: true }],
+			"max-lines-per-function": [
+				"warn",
+				{
+					max: 80,
+					skipBlankLines: true,
+					skipComments: true,
+					IIFEs: true,
+				},
+			],
+			"max-statements": ["warn", { max: 25 }],
+			complexity: ["warn", { max: 12 }],
+		},
+	},
+	{
+		// Relaxed rules for hooks (often contain complex logic)
+		files: ["hooks/**/*.ts", "hooks/**/*.tsx"],
+		rules: {
+			"max-lines-per-function": [
+				"warn",
+				{
+					max: 100,
+					skipBlankLines: true,
+					skipComments: true,
+					IIFEs: true,
+				},
+			],
+			"max-statements": ["warn", { max: 35 }],
+		},
+	},
+	{
+		// Relaxed rules for column definitions and configuration-heavy files
+		files: ["**/columns.tsx", "**/columns.ts"],
+		rules: {
+			"max-lines": "off",
+			"max-lines-per-function": "off",
+		},
+	},
+	{
+		// Relaxed rules for services (business logic can be complex)
+		// Note: Test files inside services are handled by the test files override
+		files: ["server/services/*.ts", "lib/services/**/*.ts"],
+		ignores: ["**/__tests__/**"],
+		rules: {
+			"max-lines-per-function": [
+				"warn",
+				{
+					max: 60,
+					skipBlankLines: true,
+					skipComments: true,
+					IIFEs: true,
+				},
+			],
+			"max-statements": ["warn", { max: 25 }],
+			complexity: ["warn", { max: 12 }],
+		},
+	},
+	{
+		// Relaxed rules for security code (validation requires many checks)
+		files: ["lib/security/**/*.ts"],
+		rules: {
+			"max-lines-per-function": [
+				"warn",
+				{
+					max: 60,
+					skipBlankLines: true,
+					skipComments: true,
+					IIFEs: true,
+				},
+			],
+			"max-statements": ["warn", { max: 30 }],
+			complexity: ["warn", { max: 15 }],
+		},
+	},
+	{
+		// Relaxed rules for scheduler (complex async flows)
+		files: ["lib/scheduler/**/*.ts"],
+		rules: {
+			"max-lines-per-function": [
+				"warn",
+				{
+					max: 60,
+					skipBlankLines: true,
+					skipComments: true,
+					IIFEs: true,
+				},
+			],
+			"max-statements": ["warn", { max: 25 }],
 		},
 	},
 	{

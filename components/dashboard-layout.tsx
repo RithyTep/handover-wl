@@ -1,11 +1,7 @@
 "use client"
 
 import { useEffect, useMemo } from "react"
-import { NewYearScene } from "@/components/new-year-scene"
-import { LunarScene } from "@/components/lunar-scene"
-import { CodingScene } from "@/components/coding-scene"
-import { ProfessionalScene } from "@/components/professional-scene"
-import { AngkorPixelScene } from "@/components/angkor-pixel-scene"
+import dynamic from "next/dynamic"
 import { DashboardHeader } from "./dashboard-header"
 import { DashboardContent } from "./dashboard-content"
 import { DashboardMobileActions } from "./dashboard-mobile-actions"
@@ -13,11 +9,18 @@ import { CommandPalette } from "@/components/command-palette"
 import { QuickFillDialog } from "./quick-fill-dialog"
 import { ClearDialog } from "./clear-dialog"
 import { SendSlackDialog } from "./send-slack-dialog"
-import { PixelStatusBar } from "@/components/pixel-status-bar"
-import { CodingFooter } from "@/components/coding-footer"
 import { cn } from "@/lib/utils"
 import { getLayoutConfig } from "@/lib/theme"
 import type { Theme, Ticket } from "@/lib/types"
+
+// Dynamically import heavy theme scenes for code splitting
+const NewYearScene = dynamic(() => import("@/components/new-year-scene").then(m => ({ default: m.NewYearScene })), { ssr: false })
+const LunarScene = dynamic(() => import("@/components/lunar-scene").then(m => ({ default: m.LunarScene })), { ssr: false })
+const CodingScene = dynamic(() => import("@/components/coding-scene").then(m => ({ default: m.CodingScene })), { ssr: false })
+const ProfessionalScene = dynamic(() => import("@/components/professional-scene").then(m => ({ default: m.ProfessionalScene })), { ssr: false })
+const AngkorPixelScene = dynamic(() => import("@/components/angkor-pixel-scene").then(m => ({ default: m.AngkorPixelScene })), { ssr: false })
+const PixelStatusBar = dynamic(() => import("@/components/pixel-status-bar").then(m => ({ default: m.PixelStatusBar })), { ssr: false })
+const CodingFooter = dynamic(() => import("@/components/coding-footer").then(m => ({ default: m.CodingFooter })), { ssr: false })
 
 interface DashboardLayoutProps {
 	theme: Theme

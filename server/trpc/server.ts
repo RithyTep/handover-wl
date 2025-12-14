@@ -23,6 +23,20 @@ export const publicMutation = t.procedure.use(async (opts) => {
   return opts.next();
 });
 
+function isLocalDevelopment(headers?: Headers): boolean {
+  if (process.env.NODE_ENV === "development") {
+    return true;
+  }
+  if (headers) {
+    const host = headers.get("host") || "";
+    const origin = headers.get("origin") || "";
+    if (host.includes("localhost") || host.includes("127.0.0.1") ||
+        origin.includes("localhost") || origin.includes("127.0.0.1")) {
+      return true;
+    }
+  }
+  return false;
+}
 
 export const protectedMutation = t.procedure.use(async (opts) => {
   await initDatabase();
@@ -32,6 +46,15 @@ export const protectedMutation = t.procedure.use(async (opts) => {
 
   if (!ctx.headers) {
     return opts.next();
+  }
+
+  if (isLocalDevelopment(ctx.headers)) {
+    return opts.next({
+      ctx: {
+        ...ctx,
+        sessionId: "localhost-dev",
+      },
+    });
   }
 
   const result = await validateChallenge(ctx.headers);

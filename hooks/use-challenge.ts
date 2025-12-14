@@ -8,7 +8,6 @@ import { useState, useEffect, useCallback } from "react";
 import {
   initChallengeSession,
   clearChallengeSession,
-  hasChallengeSession,
   getSessionTimeRemaining,
 } from "@/lib/security/client/challenge-manager";
 

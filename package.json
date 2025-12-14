@@ -11,13 +11,16 @@
     "start": "next start -p ${PORT:-3000}",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
-    "lint:check": "eslint . --ext .ts,.tsx --format stylish"
+    "lint:check": "eslint . --ext .ts,.tsx --format stylish",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^6.19.0",
     "@prisma/client": "^6.19.0",
     "@radix-ui/react-dialog": "^1.0.5",
-    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-popover": "^1.1.15",
     "@radix-ui/react-select": "^2.2.6",
@@ -27,7 +30,6 @@
     "@tanstack/react-query": "^5.90.12",
     "@tanstack/react-table": "^8.21.3",
     "@trpc/client": "^11.7.2",
-    "@trpc/next": "^11.7.2",
     "@trpc/react-query": "^11.7.2",
     "@trpc/server": "^11.7.2",
     "@types/canvas-confetti": "^1.9.0",
@@ -55,16 +57,22 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.3",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/node": "^20.11.5",
     "@types/pg": "^8.15.6",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.49.0",
     "@typescript-eslint/parser": "^8.49.0",
+    "@vitest/coverage-v8": "^4.0.15",
+    "@vitest/ui": "^4.0.15",
     "autoprefixer": "^10.4.17",
+    "happy-dom": "^20.0.11",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "vitest": "^4.0.15"
   }
 }

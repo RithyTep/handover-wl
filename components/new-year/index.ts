@@ -1,0 +1,6 @@
+export { NewYearScene } from "./new-year-scene"
+export { SantaMailModal } from "./santa-mail-modal"
+export { Mailbox } from "./mailbox"
+export { FloatingDecorations } from "./floating-decorations"
+export { useSnowflakes } from "./use-snowflakes"
+export { useFireworks } from "./use-fireworks"
