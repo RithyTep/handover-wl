@@ -1,6 +1,8 @@
+import { revalidateTag } from "next/cache"
 import { ThemeRepository } from "@/server/repository/theme.repository"
 import type { Theme, ThemeInfo } from "@/lib/types"
 import { THEMES } from "@/lib/constants"
+import { CACHE } from "@/lib/config"
 
 let themeCache: { theme: Theme; timestamp: number } | null = null
 const THEME_CACHE_TTL = 10000
@@ -29,5 +31,6 @@ export class ThemeService {
 	async setSelectedTheme(theme: Theme): Promise<void> {
 		await this.repository.setThemePreference(theme)
 		themeCache = { theme, timestamp: Date.now() }
+		revalidateTag("theme", CACHE.EXPIRE_NOW)
 	}
 }

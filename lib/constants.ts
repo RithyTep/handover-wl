@@ -47,3 +47,5 @@ export const THEMES: ThemeInfo[] = [
 ]
 
 export const DEFAULT_THEME = Theme.CLASH
+
+export const THEME_COOKIE_NAME = "theme_preference"
