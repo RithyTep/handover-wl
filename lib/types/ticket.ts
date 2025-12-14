@@ -19,6 +19,7 @@ export interface Ticket {
 	assigneeAvatar: string | null
 	created: string
 	dueDate: string | null
+	releaseDate: string | null
 	issueType: string
 	wlMainTicketType: string
 	wlSubTicketType: string

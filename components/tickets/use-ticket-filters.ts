@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import type { Ticket, TicketFilters, FilterOptions } from "./ticket-table-types"
+import type { TicketStatusFilter } from "@/components/filters"
 
 function extractUniqueValues<T>(items: T[], extractor: (item: T) => string | undefined): string[] {
 	return Array.from(new Set(items.map(extractor)))
@@ -19,6 +20,20 @@ function buildFilterOptions(tickets: Ticket[]): FilterOptions {
 
 function matchesStringFilter(value: string | undefined, filter: string | undefined): boolean {
 	return !filter || value === filter
+}
+
+function matchesTicketStatus(ticket: Ticket, ticketStatus: TicketStatusFilter | undefined): boolean {
+	if (!ticketStatus || ticketStatus === "all") return true
+
+	if (ticketStatus === "pending") {
+		return ticket.status === "WL - Pending"
+	}
+
+	if (ticketStatus === "ready_to_release") {
+		return !!ticket.releaseDate
+	}
+
+	return true
 }
 
 function matchesDateFrom(ticketDate: string, dateFrom: string | undefined): boolean {
@@ -41,6 +56,7 @@ function matchesJqlQuery(ticket: Ticket, query: string | undefined): boolean {
 
 function ticketMatchesFilters(ticket: Ticket, filters: TicketFilters): boolean {
 	return (
+		matchesTicketStatus(ticket, filters.ticketStatus) &&
 		matchesStringFilter(ticket.assignee, filters.assignee) &&
 		matchesStringFilter(ticket.status, filters.status) &&
 		matchesStringFilter(ticket.wlMainTicketType, filters.wlMainTicketType) &&

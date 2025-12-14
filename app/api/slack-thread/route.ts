@@ -1,144 +1,58 @@
-import { NextRequest, NextResponse } from "next/server"
-import { logger } from "@/lib/logger"
-
-const log = logger.api
-const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
-const SLACK_CHANNEL = process.env.SLACK_CHANNEL
+import { NextRequest } from "next/server"
+import { postMessage, getHistory, testAuth } from "@/lib/services/slack"
+import { getSlackConfig } from "@/lib/env"
+import { apiSuccess, badRequest, handleApiError } from "@/lib/api"
 
 export async function POST(request: NextRequest) {
 	try {
-		if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
-			return NextResponse.json(
-				{
-					success: false,
-					error: "Missing SLACK_BOT_TOKEN or SLACK_CHANNEL in .env.local",
-					setup: {
-						step1: "Go to https://api.slack.com/apps and create an app",
-						step2: "Add Bot Token Scopes: chat:write, channels:history",
-						step3: "Install app to workspace",
-						step4: "Copy Bot User OAuth Token (starts with xoxb-)",
-						step5: "Get channel ID (right-click channel > View channel details)",
-					}
-				},
-				{ status: 400 }
-			)
+		const config = getSlackConfig()
+		if (!config.botToken || !config.channelId) {
+			return badRequest("Missing SLACK_BOT_TOKEN or SLACK_CHANNEL")
 		}
 
-		const body = await request.json()
-		const { message, thread_ts } = body
+		const { message, thread_ts } = await request.json()
+		const result = await postMessage(message, config.channelId)
 
-		const response = await fetch("https://slack.com/api/chat.postMessage", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
-			},
-			body: JSON.stringify({
-				channel: SLACK_CHANNEL,
-				text: message,
-				...(thread_ts && { thread_ts }),
-				unfurl_links: false,
-				unfurl_media: false,
-			}),
-		})
+		if (!result.ok) return badRequest(result.error || "Failed to post")
 
-		const result = await response.json()
-
-		if (!result.ok) {
-			return NextResponse.json(
-				{ success: false, error: result.error },
-				{ status: 400 }
-			)
-		}
-
-		return NextResponse.json({
-			success: true,
+		return apiSuccess({
 			ts: result.ts,
 			channel: result.channel,
-			message: "Message posted successfully"
+			message: thread_ts ? "Thread reply posted" : "Message posted",
 		})
-	} catch (error: unknown) {
-		const errMessage = error instanceof Error ? error.message : "Unknown error"
-		log.error("Slack thread POST error", { error: errMessage })
-		return NextResponse.json(
-			{ success: false, error: errMessage },
-			{ status: 500 }
-		)
+	} catch (error) {
+		return handleApiError(error, "POST /api/slack-thread")
 	}
 }
 
-export async function GET(_request: NextRequest) {
+export async function GET() {
 	try {
-		if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
-			return NextResponse.json(
-				{ success: false, error: "Missing SLACK_BOT_TOKEN or SLACK_CHANNEL" },
-				{ status: 400 }
-			)
+		const config = getSlackConfig()
+		if (!config.botToken || !config.channelId) {
+			return badRequest("Missing SLACK_BOT_TOKEN or SLACK_CHANNEL")
 		}
 
-		const authTest = await fetch("https://slack.com/api/auth.test", {
-			headers: {
-				"Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
-			},
-		})
-		const authResult = await authTest.json()
-
+		const authResult = await testAuth()
 		if (!authResult.ok) {
-			return NextResponse.json(
-				{
-					success: false,
-					error: `Token invalid: ${authResult.error}`,
-					debug: {
-						tokenPrefix: SLACK_BOT_TOKEN?.substring(0, 10) + "...",
-						channel: SLACK_CHANNEL
-					}
-				},
-				{ status: 400 }
-			)
+			return badRequest(`Token invalid: ${authResult.error}`)
 		}
 
-		const response = await fetch(
-			`https://slack.com/api/conversations.history?channel=${SLACK_CHANNEL}&limit=10`,
-			{
-				headers: {
-					"Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
-				},
-			}
-		)
-
-		const result = await response.json()
-
+		const result = await getHistory(config.channelId, 10)
 		if (!result.ok) {
-			return NextResponse.json(
-				{
-					success: false,
-					error: result.error,
-					debug: {
-						botUser: authResult.user,
-						botId: authResult.user_id,
-						team: authResult.team,
-						channel: SLACK_CHANNEL,
-						hint: result.error === "channel_not_found"
-							? "Bot needs to be invited to channel: /invite @" + authResult.user
-							: null
-					}
-				},
-				{ status: 400 }
-			)
+			const errorMsg = result.error === "channel_not_found"
+				? `Bot needs to be invited: /invite @${authResult.user}`
+				: result.error || "Failed to get history"
+			return badRequest(errorMsg)
 		}
 
-		const messages = result.messages.map((msg: { ts: string; text?: string; user?: string }) => ({
+		const messages = (result.messages || []).map((msg: { ts: string; text?: string; user?: string }) => ({
 			ts: msg.ts,
 			text: msg.text?.substring(0, 100) + (msg.text && msg.text.length > 100 ? "..." : ""),
 			user: msg.user,
 		}))
 
-		return NextResponse.json({ success: true, messages })
-	} catch (error: unknown) {
-		const message = error instanceof Error ? error.message : "Unknown error"
-		return NextResponse.json(
-			{ success: false, error: message },
-			{ status: 500 }
-		)
+		return apiSuccess({ messages })
+	} catch (error) {
+		return handleApiError(error, "GET /api/slack-thread")
 	}
 }

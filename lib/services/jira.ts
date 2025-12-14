@@ -93,6 +93,7 @@ export function transformIssue(
 		assigneeAvatar: assignee.avatar,
 		created: fields.created,
 		dueDate: fields.duedate || null,
+		releaseDate: (fields[JIRA.FIELDS.RELEASE_DATE] as string) || null,
 		issueType: fields.issuetype?.name || "None",
 		wlMainTicketType: extractCustomFieldValue(fields, JIRA.FIELDS.WL_MAIN_TICKET_TYPE),
 		wlSubTicketType: extractCustomFieldValue(fields, JIRA.FIELDS.WL_SUB_TICKET_TYPE),

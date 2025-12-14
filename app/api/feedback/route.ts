@@ -1,31 +1,11 @@
-import { NextRequest, NextResponse } from "next/server"
-import { Pool } from "pg"
+import { NextRequest } from "next/server"
+import { FeedbackService } from "@/server/services/feedback.service"
+import { FeedbackType, FeedbackTypeValues } from "@/enums"
+import { apiSuccess, badRequest, handleApiError } from "@/lib/api"
 import { logger } from "@/lib/logger"
 
 const log = logger.api
-
-const pool = new Pool({
-	connectionString: process.env.DATABASE_URL,
-	ssl: process.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
-})
-
-async function initFeedbackTable() {
-	const client = await pool.connect()
-	try {
-		await client.query(`
-			CREATE TABLE IF NOT EXISTS feedback (
-				id SERIAL PRIMARY KEY,
-				type VARCHAR(50) NOT NULL,
-				title VARCHAR(200) NOT NULL,
-				description TEXT NOT NULL,
-				created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-				status VARCHAR(50) DEFAULT 'new'
-			)
-		`)
-	} finally {
-		client.release()
-	}
-}
+const feedbackService = new FeedbackService()
 
 export async function POST(request: NextRequest) {
 	try {
@@ -33,97 +13,32 @@ export async function POST(request: NextRequest) {
 		const { type, title, description } = body
 
 		if (!type || !title || !description) {
-			return NextResponse.json(
-				{ success: false, error: "Missing required fields" },
-				{ status: 400 }
-			)
+			return badRequest("Missing required fields")
 		}
 
-		const validTypes = ["bug", "feedback", "suggestion", "feature"]
-		if (!validTypes.includes(type)) {
-			return NextResponse.json(
-				{ success: false, error: "Invalid feedback type" },
-				{ status: 400 }
-			)
+		if (!FeedbackTypeValues.includes(type)) {
+			return badRequest("Invalid feedback type")
 		}
 
-		if (title.length > 200) {
-			return NextResponse.json(
-				{ success: false, error: "Title too long (max 200 characters)" },
-				{ status: 400 }
-			)
-		}
+		const feedback = await feedbackService.create(type as FeedbackType, title, description)
 
-		if (description.length > 2000) {
-			return NextResponse.json(
-				{ success: false, error: "Description too long (max 2000 characters)" },
-				{ status: 400 }
-			)
-		}
+		log.info("Feedback submitted", {
+			id: feedback.id,
+			type,
+			title: title.substring(0, 50) + (title.length > 50 ? "..." : ""),
+		})
 
-		await initFeedbackTable()
-
-		const client = await pool.connect()
-		try {
-			const result = await client.query(
-				`INSERT INTO feedback (type, title, description, created_at, status)
-				 VALUES ($1, $2, $3, CURRENT_TIMESTAMP, 'new')
-				 RETURNING id, created_at`,
-				[type, title.trim(), description.trim()]
-			)
-
-			log.info("Feedback submitted", {
-				id: result.rows[0].id,
-				type,
-				title: title.substring(0, 50) + (title.length > 50 ? "..." : ""),
-			})
-
-			return NextResponse.json({
-				success: true,
-				data: {
-					id: result.rows[0].id,
-					message: "Feedback submitted successfully",
-				},
-			})
-		} finally {
-			client.release()
-		}
-	} catch (error: unknown) {
-		const message = error instanceof Error ? error.message : "Unknown error"
-		log.error("Feedback POST error", { error: message })
-		return NextResponse.json(
-			{ success: false, error: "Failed to submit feedback" },
-			{ status: 500 }
-		)
+		return apiSuccess({ id: feedback.id, message: "Feedback submitted successfully" })
+	} catch (error) {
+		return handleApiError(error, "POST /api/feedback")
 	}
 }
 
 export async function GET() {
 	try {
-		await initFeedbackTable()
-
-		const client = await pool.connect()
-		try {
-			const result = await client.query(
-				`SELECT id, type, title, description, created_at, status
-				 FROM feedback
-				 ORDER BY created_at DESC
-				 LIMIT 100`
-			)
-
-			return NextResponse.json({
-				success: true,
-				data: result.rows,
-			})
-		} finally {
-			client.release()
-		}
-	} catch (error: unknown) {
-		const message = error instanceof Error ? error.message : "Unknown error"
-		log.error("Feedback GET error", { error: message })
-		return NextResponse.json(
-			{ success: false, error: "Failed to fetch feedback" },
-			{ status: 500 }
-		)
+		const feedbacks = await feedbackService.getAllItems()
+		return apiSuccess({ data: feedbacks })
+	} catch (error) {
+		return handleApiError(error, "GET /api/feedback")
 	}
 }

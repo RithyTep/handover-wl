@@ -1,7 +1,7 @@
 export { MobileTicketCard } from "./mobile-ticket-card"
 export { DesktopTable } from "./desktop-table"
 export { useTicketFilters } from "./use-ticket-filters"
-export { getTableThemeStyles, getButtonThemeStyles } from "./theme-styles"
+export { getTableThemeStyles, getButtonThemeStyles, getSelectThemeStyles } from "./theme-styles"
 export {
 	DEFAULT_COLUMN_VISIBILITY,
 	getColumnVisibility,

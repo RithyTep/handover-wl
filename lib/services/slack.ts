@@ -188,6 +188,28 @@ export function formatTime(date: Date = new Date()): string {
 	})
 }
 
+export async function testAuth(): Promise<SlackResponse & { user?: string; user_id?: string; team?: string }> {
+	const config = getConfig()
+
+	if (!config.botToken) {
+		return { ok: false, error: "No bot token configured" }
+	}
+
+	try {
+		const response = await fetch(`${SLACK_API}/auth.test`, {
+			method: "POST",
+			headers: {
+				Authorization: `Bearer ${config.botToken}`,
+				"Content-Type": "application/json",
+			},
+		})
+		return response.json()
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		return { ok: false, error: message }
+	}
+}
+
 export async function checkHealth(): Promise<{
 	healthy: boolean
 	latency: number

@@ -124,3 +124,40 @@ const buttonThemeMap: Record<string, string> = {
 export function getButtonThemeStyles(theme: Theme): string {
 	return buttonThemeMap[theme] || "text-slate-300 hover:bg-slate-800 border-slate-700"
 }
+
+// Select/Dropdown theme styles
+const selectThemeMap: Record<string, { trigger: string; content: string }> = {
+	christmas: {
+		trigger: "bg-red-900/60 text-white border-2 border-green-600 hover:bg-red-800/70",
+		content: "bg-red-900 border-2 border-green-600 text-white",
+	},
+	pixel: {
+		trigger: "bg-slate-900 text-indigo-400 border-2 border-slate-700 hover:border-indigo-500 pixel-shadow",
+		content: "bg-slate-900 border-2 border-slate-700 text-slate-200",
+	},
+	lunar: {
+		trigger: "bg-red-900/50 text-amber-200 border-2 border-amber-600/50 hover:bg-red-800/60",
+		content: "bg-red-900 border-2 border-amber-600/50 text-amber-100",
+	},
+	coding: {
+		trigger: "bg-black text-green-400 border-2 border-green-700 hover:border-green-500 font-mono",
+		content: "bg-black border-2 border-green-700 text-green-400 font-mono",
+	},
+	clash: {
+		trigger: "bg-[#3f2e21] text-[#fbcc14] border-2 border-[#9c9c9c] hover:bg-[#4f3e31] clash-btn-primary",
+		content: "bg-[#3f2e21] border-2 border-[#9c9c9c] text-[#fbcc14]",
+	},
+	angkor_pixel: {
+		trigger: "bg-[#3a2a1a] text-[#ffd700] border-4 border-[#8b7355] hover:bg-[#4b3a2a]",
+		content: "bg-[#3a2a1a] border-4 border-[#8b7355] text-[#ffd700]",
+	},
+}
+
+const defaultSelectStyles = {
+	trigger: "bg-slate-800 text-slate-200 border border-slate-600 hover:bg-slate-700",
+	content: "bg-slate-800 border border-slate-600 text-slate-200",
+}
+
+export function getSelectThemeStyles(theme: Theme): { trigger: string; content: string } {
+	return selectThemeMap[theme] || defaultSelectStyles
+}
