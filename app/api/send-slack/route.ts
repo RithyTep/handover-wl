@@ -1,17 +1,39 @@
 import { NextRequest, NextResponse } from "next/server"
 import fs from "fs"
 import path from "path"
-import { logger } from "@/lib/logger"
+import { postMessage } from "@/lib/services/slack"
+import { getSlackConfig } from "@/lib/env"
+import { apiSuccess, badRequest, handleApiError } from "@/lib/api"
 import { rateLimit, getClientIP, getRateLimitHeaders } from "@/lib/security/rate-limit"
 
-const log = logger.api
-const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
-const SLACK_CHANNEL = process.env.SLACK_CHANNEL
 const JIRA_URL = process.env.JIRA_URL
 const STORAGE_FILE = path.join(process.cwd(), "ticket_data.json")
-
 const SLACK_RATE_LIMIT = 10
 const SLACK_RATE_WINDOW_MS = 60000
+
+function formatSlackMessage(
+	ticketData: Record<string, string>,
+	ticketDetails: Record<string, { summary?: string; wlMainTicketType?: string; wlSubTicketType?: string }>
+): string {
+	const ticketKeys = Object.keys(ticketData)
+		.filter((key) => key.startsWith("status-"))
+		.map((key) => key.replace("status-", ""))
+
+	let message = "Please refer to this ticket information\n\n"
+	ticketKeys.forEach((ticketKey, index) => {
+		const status = ticketData[`status-${ticketKey}`] || "--"
+		const action = ticketData[`action-${ticketKey}`] || "--"
+		const details = ticketDetails?.[ticketKey] || {}
+		const ticketUrl = `${JIRA_URL}/browse/${ticketKey}`
+
+		message += `--- Ticket ${index + 1} ---\n`
+		message += `Ticket Link: <${ticketUrl}|${ticketKey}> ${details.summary || ""}\n`
+		message += `WL Main Type: ${details.wlMainTicketType || "--"}\n`
+		message += `WL Sub Type: ${details.wlSubTicketType || "--"}\n`
+		message += `Status: ${status}\nAction: ${action}\n\n`
+	})
+	return message + "===========================\n"
+}
 
 export async function POST(request: NextRequest) {
 	const ip = getClientIP(request)
@@ -20,84 +42,30 @@ export async function POST(request: NextRequest) {
 	if (!rateLimitResult.success) {
 		return NextResponse.json(
 			{ success: false, error: "Rate limit exceeded. Please try again later." },
-			{
-				status: 429,
-				headers: getRateLimitHeaders(rateLimitResult, SLACK_RATE_LIMIT),
-			}
+			{ status: 429, headers: getRateLimitHeaders(rateLimitResult, SLACK_RATE_LIMIT) }
 		)
 	}
 
 	try {
+		const config = getSlackConfig()
+		if (!config.botToken || !config.channelId) {
+			return badRequest("Missing SLACK_BOT_TOKEN or SLACK_CHANNEL")
+		}
+
 		const body = await request.json()
 		const { ticketData, ticketDetails } = body
 
 		fs.writeFileSync(STORAGE_FILE, JSON.stringify(ticketData, null, 2))
 
-		if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
-			return NextResponse.json(
-				{ success: false, error: "Missing SLACK_BOT_TOKEN or SLACK_CHANNEL" },
-				{ status: 400 }
-			)
+		const message = formatSlackMessage(ticketData, ticketDetails)
+		const result = await postMessage(message.trim(), config.channelId)
+
+		if (!result.ok) {
+			return badRequest(result.error || "Failed to post message")
 		}
 
-		const ticketKeys = Object.keys(ticketData)
-			.filter((key) => key.startsWith("status-"))
-			.map((key) => key.replace("status-", ""))
-
-		let message = "Please refer to this ticket information\n\n"
-
-		ticketKeys.forEach((ticketKey, index) => {
-			const status = ticketData[`status-${ticketKey}`] || "--"
-			const action = ticketData[`action-${ticketKey}`] || "--"
-			const details = ticketDetails?.[ticketKey] || {}
-			const summary = details.summary || ""
-			const wlMainType = details.wlMainTicketType || "--"
-			const wlSubType = details.wlSubTicketType || "--"
-			const ticketUrl = `${JIRA_URL}/browse/${ticketKey}`
-
-			message += `--- Ticket ${index + 1} ---\n`
-			message += `Ticket Link: <${ticketUrl}|${ticketKey}> ${summary}\n`
-			message += `WL Main Type: ${wlMainType}\n`
-			message += `WL Sub Type: ${wlSubType}\n`
-			message += `Status: ${status}\n`
-			message += `Action: ${action}\n`
-			message += `\n`
-		})
-		message += `===========================\n`
-
-		const postResponse = await fetch("https://slack.com/api/chat.postMessage", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				"Authorization": `Bearer ${SLACK_BOT_TOKEN}`,
-			},
-			body: JSON.stringify({
-				channel: SLACK_CHANNEL,
-				text: message.trim(),
-				unfurl_links: false,
-				unfurl_media: false,
-			}),
-		})
-
-		const postResult = await postResponse.json()
-
-		if (!postResult.ok) {
-			return NextResponse.json(
-				{ success: false, error: postResult.error },
-				{ status: 400 }
-			)
-		}
-
-		return NextResponse.json({
-			success: true,
-			message_ts: postResult.ts
-		})
-	} catch (error: unknown) {
-		const message = error instanceof Error ? error.message : "Unknown error"
-		log.error("Send Slack error", { error: message })
-		return NextResponse.json(
-			{ success: false, error: message },
-			{ status: 500 }
-		)
+		return apiSuccess({ message_ts: result.ts })
+	} catch (error) {
+		return handleApiError(error, "POST /api/send-slack")
 	}
 }

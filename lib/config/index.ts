@@ -5,6 +5,7 @@ export const JIRA = {
     WL_MAIN_TICKET_TYPE: "customfield_10451",
     WL_SUB_TICKET_TYPE: "customfield_10453",
     CUSTOMER_LEVEL: "customfield_10400",
+    RELEASE_DATE: "customfield_11412",
   },
 } as const;
 
@@ -12,7 +13,6 @@ export const JQL_QUERY = `
 project = ${JIRA.PROJECT_KEY}
 AND issuetype in standardIssueTypes()
 AND status in ("WL - Pending", "WL - Processing")
-AND "Release Date[Date]" = EMPTY
 ORDER BY created ASC, updated DESC
 `.trim();
 
@@ -27,6 +27,7 @@ export const JIRA_FIELDS = [
   JIRA.FIELDS.WL_MAIN_TICKET_TYPE,
   JIRA.FIELDS.WL_SUB_TICKET_TYPE,
   JIRA.FIELDS.CUSTOMER_LEVEL,
+  JIRA.FIELDS.RELEASE_DATE,
 ] as const;
 
 export const TIMEZONE = {

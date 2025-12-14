@@ -62,7 +62,14 @@ function handleFilterUpdate(
 	if (value === "" || value === "all") {
 		delete newFilters[key]
 	} else {
-		newFilters[key] = value
+		// Use type-safe assignment based on key
+		switch (key) {
+			case "ticketStatus":
+				newFilters.ticketStatus = value as TicketFilters["ticketStatus"]
+				break
+			default:
+				(newFilters as Record<string, string>)[key] = value
+		}
 	}
 	return newFilters
 }

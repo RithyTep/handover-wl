@@ -1,4 +1,7 @@
+export type TicketStatusFilter = "all" | "pending" | "ready_to_release"
+
 export interface TicketFilters {
+	ticketStatus?: TicketStatusFilter
 	assignee?: string
 	status?: string
 	wlMainTicketType?: string

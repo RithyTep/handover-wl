@@ -2,8 +2,22 @@
 
 import { Calendar } from "lucide-react"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select"
 import { FilterSelect } from "./filter-select"
-import type { TicketFilters } from "./filter-types"
+import type { TicketFilters, TicketStatusFilter } from "./filter-types"
+
+const TICKET_STATUS_OPTIONS: { value: TicketStatusFilter; label: string }[] = [
+	{ value: "all", label: "All Tickets" },
+	{ value: "pending", label: "Pending" },
+	{ value: "ready_to_release", label: "Ready to Release" },
+]
 
 interface FilterFormProps {
 	filters: TicketFilters
@@ -26,6 +40,27 @@ export function FilterForm({
 }: FilterFormProps) {
 	return (
 		<div className="space-y-4">
+			<div className="space-y-2">
+				<Label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+					Ticket Status
+				</Label>
+				<Select
+					value={filters.ticketStatus || "all"}
+					onValueChange={(value) => onFilterChange("ticketStatus", value)}
+				>
+					<SelectTrigger className="h-8 text-xs">
+						<SelectValue placeholder="All Tickets" />
+					</SelectTrigger>
+					<SelectContent>
+						{TICKET_STATUS_OPTIONS.map((option) => (
+							<SelectItem key={option.value} value={option.value}>
+								{option.label}
+							</SelectItem>
+						))}
+					</SelectContent>
+				</Select>
+			</div>
+
 			<FilterSelect
 				label="Assignee"
 				value={filters.assignee || ""}
@@ -35,7 +70,7 @@ export function FilterForm({
 			/>
 
 			<FilterSelect
-				label="Status"
+				label="Jira Status"
 				value={filters.status || ""}
 				options={availableStatuses}
 				placeholder="All statuses"
