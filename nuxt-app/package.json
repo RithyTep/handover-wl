@@ -1,0 +1,45 @@
+{
+  "name": "jira-slack-integration-nuxt",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@pinia/nuxt": "^0.5.5",
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^6.1.0",
+    "@tanstack/vue-table": "^8.21.3",
+    "@vueuse/core": "^11.3.0",
+    "@vueuse/nuxt": "^11.3.0",
+    "axios": "^1.13.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "jose": "^6.1.3",
+    "lucide-vue-next": "^0.561.0",
+    "nuxt": "^3.14.0",
+    "pg": "^8.16.3",
+    "pinia": "^2.2.8",
+    "radix-vue": "^1.9.17",
+    "reka-ui": "^2.6.1",
+    "tailwind-merge": "^2.6.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.2",
+    "@types/node": "^22.10.2",
+    "prisma": "^6.1.0",
+    "shadcn-nuxt": "^2.4.3",
+    "typescript": "^5.7.2",
+    "vue-tsc": "^3.1.8"
+  }
+}

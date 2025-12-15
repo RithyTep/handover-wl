@@ -9,6 +9,11 @@ out/
 build/
 dist/
 
+# Nuxt
+.nuxt/
+.output/
+.nitro/
+
 # Environment
 .env
 .env.local

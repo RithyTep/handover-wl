@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TicketData {
+  ticketKey String   @id @map("ticket_key") @db.VarChar(50)
+  status    String   @default("--") @db.VarChar(100)
+  action    String   @default("--") @db.VarChar(100)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz
+
+  @@map("ticket_data")
+}
+
+model AppSetting {
+  key       String   @id @db.VarChar(100)
+  value     String   @db.Text
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz
+
+  @@map("app_settings")
+}
+
+model ScheduledComment {
+  id           Int       @id @default(autoincrement())
+  commentType  String    @default("jira") @map("comment_type") @db.VarChar(20)
+  ticketKey    String?   @map("ticket_key") @db.VarChar(50)
+  commentText  String    @map("comment_text") @db.Text
+  cronSchedule String    @map("cron_schedule") @db.VarChar(100)
+  enabled      Boolean   @default(true)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz
+  updatedAt    DateTime  @default(now()) @map("updated_at") @db.Timestamptz
+  lastPostedAt DateTime? @map("last_posted_at") @db.Timestamptz
+
+  @@map("scheduled_comments")
+}
+
+model Backup {
+  id                Int      @id @default(autoincrement())
+  backupType        String   @default("auto") @map("backup_type") @db.VarChar(50)
+  ticketData        Json?    @map("ticket_data") @db.JsonB
+  appSettings       Json?    @map("app_settings") @db.JsonB
+  scheduledComments Json?    @map("scheduled_comments") @db.JsonB
+  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
+  description       String?  @db.Text
+
+  @@map("backups")
+}
+
+model Feedback {
+  id          Int      @id @default(autoincrement())
+  type        String   @db.VarChar(50)
+  title       String   @db.Text
+  description String   @db.Text
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz
+  status      String   @default("new") @db.VarChar(50)
+
+  @@map("feedback")
+}

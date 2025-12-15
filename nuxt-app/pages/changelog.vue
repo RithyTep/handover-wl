@@ -1,0 +1,245 @@
+<script setup lang="ts">
+import { ArrowLeft, Tag, Calendar, Sparkles, Bug, Wrench, Zap } from 'lucide-vue-next'
+import { Button } from '~/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '~/components/ui/card'
+import { Badge } from '~/components/ui/badge'
+
+interface ChangelogEntry {
+  version: string
+  date: string
+  title: string
+  changes: {
+    type: 'feature' | 'fix' | 'improvement' | 'breaking'
+    description: string
+  }[]
+}
+
+const changelog: ChangelogEntry[] = [
+  {
+    version: '3.6.0',
+    date: '2024-12-05',
+    title: 'Custom SVG Icons, tRPC & Theme Enhancement',
+    changes: [
+      { type: 'feature', description: 'Added 64+ custom SVG icons across all 4 themes (Christmas, Pixel, Lunar, Coding)' },
+      { type: 'feature', description: 'New themed loading screens with animated decorations' },
+      { type: 'feature', description: 'Floating animated icons in scene backgrounds' },
+      { type: 'feature', description: 'Migrated to tRPC for type-safe API calls' },
+      { type: 'improvement', description: 'Enhanced dashboard header with theme-specific icons' },
+      { type: 'improvement', description: 'Updated action buttons with custom themed icons' },
+      { type: 'improvement', description: 'Added custom themed cursors for Pixel, Lunar, and Coding themes' },
+      { type: 'improvement', description: 'New CSS animations: christmas-fall, coding-float, lunar-float, pixel-float' },
+    ],
+  },
+  {
+    version: '3.5.0',
+    date: '2024-11-30',
+    title: 'Feedback & Changelog',
+    changes: [
+      { type: 'feature', description: 'Added anonymous feedback page - submit bugs, suggestions, and feature requests' },
+      { type: 'feature', description: 'Added changelog page to track version history' },
+      { type: 'improvement', description: 'Updated navigation with Feedback and Changelog links' },
+      { type: 'improvement', description: 'Backup system with SSR and Next.js 16 support' },
+    ],
+  },
+  {
+    version: '3.4.1',
+    date: '2024-11-25',
+    title: 'Bug Fixes',
+    changes: [
+      { type: 'fix', description: 'Fixed input bug in forms' },
+      { type: 'improvement', description: 'Enhanced mobile UI responsiveness' },
+    ],
+  },
+  {
+    version: '3.4.0',
+    date: '2024-11-20',
+    title: 'AI Integration',
+    changes: [
+      { type: 'feature', description: 'Added AI-powered features (v2)' },
+      { type: 'improvement', description: 'Enhanced AI autofill capabilities' },
+    ],
+  },
+  {
+    version: '3.3.0',
+    date: '2024-11-15',
+    title: 'UI Enhancement',
+    changes: [
+      { type: 'improvement', description: 'Major UI enhancements and polish' },
+      { type: 'improvement', description: 'Better visual design and user experience' },
+    ],
+  },
+  {
+    version: '3.2.0',
+    date: '2024-11-10',
+    title: 'Scheduler & Fixes',
+    changes: [
+      { type: 'feature', description: 'Added scheduler functionality' },
+      { type: 'fix', description: 'Fixed copy error with invalid URL' },
+      { type: 'feature', description: 'Shift-based scheduler with separate user tokens' },
+    ],
+  },
+  {
+    version: '3.1.2',
+    date: '2024-11-05',
+    title: 'URL Copy Fix',
+    changes: [
+      { type: 'fix', description: 'Fixed URL copy functionality' },
+    ],
+  },
+  {
+    version: '3.1.1',
+    date: '2024-11-03',
+    title: 'Input Bug Fix',
+    changes: [
+      { type: 'fix', description: 'Fixed bug in input fields' },
+    ],
+  },
+  {
+    version: '3.1.0',
+    date: '2024-11-01',
+    title: 'Feature Update',
+    changes: [
+      { type: 'feature', description: 'Comment feature for tickets' },
+      { type: 'feature', description: 'Member mentions and secret scheduler route' },
+    ],
+  },
+  {
+    version: '3.0.0',
+    date: '2024-10-25',
+    title: 'Major Release',
+    changes: [
+      { type: 'feature', description: 'Complete UI overhaul' },
+      { type: 'feature', description: 'Detailed ticket information display' },
+      { type: 'breaking', description: 'New architecture and design system' },
+    ],
+  },
+  {
+    version: '2.1.0',
+    date: '2024-10-15',
+    title: 'Copy Feature',
+    changes: [
+      { type: 'feature', description: 'Added copy feature for ticket data' },
+    ],
+  },
+  {
+    version: '2.0.0',
+    date: '2024-10-01',
+    title: 'Next.js Migration',
+    changes: [
+      { type: 'feature', description: 'Migrated to Next.js with new UI' },
+      { type: 'feature', description: 'Slack alert integration' },
+      { type: 'feature', description: 'PostgreSQL database support' },
+      { type: 'improvement', description: 'Railway deployment support' },
+    ],
+  },
+  {
+    version: '1.0.0',
+    date: '2024-09-01',
+    title: 'Initial Release',
+    changes: [
+      { type: 'feature', description: 'Python GUI application for Jira handover management' },
+      { type: 'feature', description: 'Basic Slack notification integration' },
+      { type: 'feature', description: 'Local data storage' },
+    ],
+  },
+]
+
+const typeConfig = {
+  feature: { icon: Sparkles, label: 'Feature', color: 'bg-green-500/10 text-green-500 border-green-500/20' },
+  fix: { icon: Bug, label: 'Fix', color: 'bg-red-500/10 text-red-500 border-red-500/20' },
+  improvement: { icon: Zap, label: 'Improvement', color: 'bg-blue-500/10 text-blue-500 border-blue-500/20' },
+  breaking: { icon: Wrench, label: 'Breaking', color: 'bg-orange-500/10 text-orange-500 border-orange-500/20' },
+}
+
+useHead({
+  title: 'Changelog - Jira Handover',
+  meta: [
+    { name: 'description', content: 'Version history and updates for Jira Handover Dashboard' },
+  ],
+})
+</script>
+
+<template>
+  <div class="min-h-screen bg-background">
+    <div class="max-w-3xl mx-auto px-4 py-8">
+      <div class="mb-8">
+        <NuxtLink to="/">
+          <Button
+            variant="ghost"
+            size="sm"
+            class="mb-4 -ml-2 text-muted-foreground hover:text-foreground"
+          >
+            <ArrowLeft class="w-4 h-4 mr-2" />
+            Back to Dashboard
+          </Button>
+        </NuxtLink>
+        <div class="flex items-center gap-3 mb-2">
+          <h1 class="text-3xl font-bold tracking-tight">Changelog</h1>
+          <Badge variant="outline" class="text-xs">
+            v{{ changelog[0].version }}
+          </Badge>
+        </div>
+        <p class="text-muted-foreground">
+          Track all updates, improvements, and fixes to the Jira Handover Dashboard.
+        </p>
+      </div>
+
+      <div class="space-y-6">
+        <Card
+          v-for="(entry, index) in changelog"
+          :key="entry.version"
+          :class="index === 0 ? 'border-primary/30 bg-primary/5' : ''"
+        >
+          <CardHeader class="pb-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
+                  <Tag class="w-4 h-4 text-primary" />
+                  <CardTitle class="text-lg">v{{ entry.version }}</CardTitle>
+                </div>
+                <Badge
+                  v-if="index === 0"
+                  class="bg-primary/10 text-primary border-primary/20"
+                >
+                  Latest
+                </Badge>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Calendar class="w-3.5 h-3.5" />
+                {{ entry.date }}
+              </div>
+            </div>
+            <CardDescription class="font-medium">{{ entry.title }}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul class="space-y-2">
+              <li
+                v-for="(change, changeIndex) in entry.changes"
+                :key="changeIndex"
+                class="flex items-start gap-3"
+              >
+                <Badge
+                  variant="outline"
+                  :class="[typeConfig[change.type].color, 'text-xs shrink-0 mt-0.5']"
+                >
+                  <component :is="typeConfig[change.type].icon" class="w-3 h-3 mr-1" />
+                  {{ typeConfig[change.type].label }}
+                </Badge>
+                <span class="text-sm text-muted-foreground">{{ change.description }}</span>
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div class="mt-8 pt-6 border-t border-border text-center">
+        <p class="text-sm text-muted-foreground">
+          Have feedback or suggestions?
+          <NuxtLink to="/feedback" class="text-primary hover:underline">
+            Let us know
+          </NuxtLink>
+        </p>
+      </div>
+    </div>
+  </div>
+</template>
