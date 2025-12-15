@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <!-- Terminal/coding cursor - indigo theme -->
-  <path d="M4 4L4 24L10 18L14 26L18 24L14 16L22 16L4 4Z" fill="#3730a3" stroke="#818cf8" stroke-width="1.5"/>
-  <!-- Code brackets decoration -->
-  <text x="20" y="10" font-family="monospace" font-size="6" fill="#818cf8">&lt;/&gt;</text>
-</svg>
