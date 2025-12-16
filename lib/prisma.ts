@@ -1,20 +1,19 @@
 import { PrismaClient } from "@/lib/generated/prisma"
-import { PrismaPg } from "@prisma/adapter-pg"
-import { Pool } from "pg"
-import { getDatabaseConfig, isProduction } from "@/lib/env"
+import { PrismaNeon } from "@prisma/adapter-neon"
+import { isProduction } from "@/lib/env"
 
 const globalForPrisma = globalThis as unknown as {
 	prisma: PrismaClient | undefined
-	pool: Pool | undefined
 }
 
 function createPrismaClient(): PrismaClient {
-	const pool = globalForPrisma.pool ?? new Pool(getDatabaseConfig())
-	const adapter = new PrismaPg(pool)
+	const connectionString = process.env.DATABASE_URL
 
-	if (!isProduction) {
-		globalForPrisma.pool = pool
+	if (!connectionString) {
+		throw new Error("DATABASE_URL environment variable is not set")
 	}
+
+	const adapter = new PrismaNeon({ connectionString })
 
 	return new PrismaClient({
 		adapter,

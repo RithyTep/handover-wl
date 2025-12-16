@@ -8,8 +8,8 @@ const envSchema = z.object({
 	APP_URL: z.string().url().default("http://localhost:3000"),
 	PORT: z.coerce.number().positive().default(3000),
 
-	DATABASE_URL: z.string().url(),
-	DATABASE_PUBLIC_URL: z.string().url().optional(),
+	DATABASE_URL: z.string().min(1),
+	DATABASE_URL_UNPOOLED: z.string().min(1).optional(),
 
 	JIRA_URL: z.string().url(),
 	JIRA_EMAIL: z.string().email(),
@@ -77,10 +77,6 @@ export const isTest = env.NODE_ENV === "test"
 export function getDatabaseConfig() {
 	return {
 		connectionString: env.DATABASE_URL,
-		ssl: isProduction ? { rejectUnauthorized: false } : false,
-		max: isProduction ? 20 : 5,
-		idleTimeoutMillis: 30000,
-		connectionTimeoutMillis: 10000,
 	}
 }
 
