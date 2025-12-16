@@ -33,8 +33,11 @@ export function useSlackIntegration({
 	const handleSendSlack = useCallback(async () => {
 		const loadingToast = toast.loading("Sending to Slack...")
 		try {
+			// Filter out "Ready to Release" tickets (tickets with dueDate)
+			const pendingTickets = tickets.filter((ticket) => !ticket.dueDate)
+
 			const ticketDetails: Record<string, Record<string, unknown>> = {}
-			tickets.forEach((ticket) => {
+			pendingTickets.forEach((ticket) => {
 				ticketDetails[ticket.key] = {
 					summary: ticket.summary,
 					status: ticket.status,
@@ -46,8 +49,18 @@ export function useSlackIntegration({
 					customerLevel: ticket.customerLevel,
 				}
 			})
+
+			// Filter ticketData to only include pending tickets
+			const filteredTicketData: Record<string, string> = {}
+			Object.keys(ticketData).forEach((key) => {
+				const ticketKey = key.replace(/^(status|action)-/, "")
+				if (pendingTickets.some((t) => t.key === ticketKey)) {
+					filteredTicketData[key] = ticketData[key]
+				}
+			})
+
 			await sendSlackMutation.mutateAsync({
-				ticketData,
+				ticketData: filteredTicketData,
 				ticketDetails,
 			})
 		} finally {
@@ -62,9 +75,14 @@ export function useSlackIntegration({
 			return
 		}
 
+		// Filter out "Ready to Release" tickets (tickets with dueDate)
+		const pendingTickets = tickets.filter((ticket) => !ticket.dueDate)
+
 		const ticketKeys = Object.keys(ticketData)
 			.filter((key) => key.startsWith("status-"))
 			.map((key) => key.replace("status-", ""))
+			// Only include tickets that are not "Ready to Release"
+			.filter((ticketKey) => pendingTickets.some((t) => t.key === ticketKey))
 
 		const filledTickets = ticketKeys.filter((ticketKey) => {
 			const status = ticketData[`status-${ticketKey}`]
@@ -80,7 +98,7 @@ export function useSlackIntegration({
 		const messages = filledTickets.map((ticketKey, index) => {
 			const status = ticketData[`status-${ticketKey}`]
 			const action = ticketData[`action-${ticketKey}`]
-			const ticket = tickets.find((t) => t.key === ticketKey)
+			const ticket = pendingTickets.find((t) => t.key === ticketKey)
 			if (!ticket) return ""
 
 			const ticketUrl = `${JIRA_URL}/browse/${ticketKey}`
