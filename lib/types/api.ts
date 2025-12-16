@@ -32,17 +32,3 @@ export interface HealthStatus {
 	timestamp: string
 	services: ServiceHealth[]
 }
-
-export function createApiResponse<T>(data: T): ApiResponse<T> {
-	return {
-		success: true,
-		data,
-	}
-}
-
-export function createApiError(error: string): ApiResponse<never> {
-	return {
-		success: false,
-		error,
-	}
-}
