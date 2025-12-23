@@ -44,3 +44,28 @@ Thumbs.db
 test_persistence.txt
 
 /lib/generated/prisma
+
+# Capacitor
+android/
+ios/
+.capacitor/
+
+# Android signing keys (NEVER commit!)
+android/key.properties
+*.keystore
+*.jks
+
+# Android Studio
+*.iml
+.gradle
+local.properties
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries
+.idea/libraries
+/build
+/captures
+.externalNativeBuild
+.cxx

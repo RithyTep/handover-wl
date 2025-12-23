@@ -46,6 +46,7 @@ export default async function RootLayout({
   return (
     <html lang="en" className="dark" data-loading-theme={theme} suppressHydrationWarning>
       <head>
+        <link rel="manifest" href="/manifest.json" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://api.openai.com" />

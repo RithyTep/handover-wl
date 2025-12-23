@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Icon Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f0f0f0;
+            font-family: 'Space Grotesk', -apple-system, sans-serif;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .instructions ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .icons {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .icon-wrapper {
+            text-align: center;
+        }
+        .icon-wrapper h3 {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        .icon {
+            width: 512px;
+            height: 512px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 80px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .icon.small {
+            width: 192px;
+            height: 192px;
+            border-radius: 30px;
+        }
+        .icon-text {
+            font-size: 80px;
+            font-weight: bold;
+            letter-spacing: -2px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 2;
+        }
+        .icon.small .icon-text {
+            font-size: 32px;
+        }
+        .icon-subtext {
+            font-size: 24px;
+            margin-top: 10px;
+            opacity: 0.9;
+            z-index: 2;
+        }
+        .icon.small .icon-subtext {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .icon::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            top: -50%;
+            left: -50%;
+        }
+        .screenshot-zone {
+            border: 3px dashed #667eea;
+            padding: 20px;
+            margin-top: 10px;
+            background: white;
+            display: inline-block;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 Jira Handover App Icon Generator</h1>
+
+        <div class="instructions">
+            <h2>Instructions:</h2>
+            <ol>
+                <li><strong>Take a screenshot</strong> of each icon below (use the dashed border as guide)</li>
+                <li><strong>Save as:</strong>
+                    <ul>
+                        <li>512×512 icon → <code>public/icons/android-chrome-512x512.png</code></li>
+                        <li>192×192 icon → <code>public/icons/android-chrome-192x192.png</code></li>
+                    </ul>
+                </li>
+                <li><strong>Crop to exact size</strong> (512×512 and 192×192 pixels) using Preview or any image editor</li>
+                <li><strong>Verify</strong> the files are in the correct location</li>
+            </ol>
+            <p><strong>💡 Tip:</strong> Use macOS screenshot (⌘+Shift+4), select the area inside the dashed border, then crop/resize in Preview.</p>
+        </div>
+
+        <div class="icons">
+            <div class="icon-wrapper">
+                <h3>512×512 Icon</h3>
+                <div class="screenshot-zone">
+                    <div class="icon">
+                        <div class="icon-text">JH</div>
+                        <div class="icon-subtext">DASHBOARD</div>
+                    </div>
+                </div>
+                <p><small>Save as: <code>android-chrome-512x512.png</code></small></p>
+            </div>
+
+            <div class="icon-wrapper">
+                <h3>192×192 Icon</h3>
+                <div class="screenshot-zone">
+                    <div class="icon small">
+                        <div class="icon-text">JH</div>
+                        <div class="icon-subtext">DASHBOARD</div>
+                    </div>
+                </div>
+                <p><small>Save as: <code>android-chrome-192x192.png</code></small></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // You can customize the icon appearance by modifying the CSS above
+        // Try different gradients, colors, or text!
+    </script>
+</body>
+</html>
