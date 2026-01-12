@@ -75,12 +75,20 @@ export const isDevelopment = env.NODE_ENV === "development"
 export const isTest = env.NODE_ENV === "test"
 
 export function getDatabaseConfig() {
+	// Parse URL using WHATWG URL API to avoid url.parse() deprecation warning
+	const dbUrl = new URL(env.DATABASE_URL)
+
 	return {
-		connectionString: env.DATABASE_URL,
+		host: dbUrl.hostname,
+		port: parseInt(dbUrl.port || "5432"),
+		database: dbUrl.pathname.slice(1),
+		user: dbUrl.username,
+		password: dbUrl.password,
 		ssl: isProduction ? { rejectUnauthorized: false } : false,
-		max: isProduction ? 20 : 5,
-		idleTimeoutMillis: 30000,
-		connectionTimeoutMillis: 10000,
+		// Optimized for serverless - fewer connections, shorter timeouts
+		max: isProduction ? 3 : 2,
+		idleTimeoutMillis: 10000,
+		connectionTimeoutMillis: 5000,
 	}
 }
 

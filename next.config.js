@@ -16,6 +16,22 @@ const nextConfig = {
     // Cache images for 1 year (pixel art assets don't change often)
     minimumCacheTTL: 31536000,
   },
+
+  // Performance optimizations
+  experimental: {
+    // Optimize package imports for faster cold starts
+    optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
+  },
+
+  // Reduce bundle size
+  modularizeImports: {
+    'lucide-react': {
+      transform: 'lucide-react/dist/esm/icons/{{kebabCase member}}',
+    },
+  },
+
+  // Optimize for serverless
+  serverExternalPackages: ['pg'],
 };
 
 module.exports = nextConfig;
