@@ -1,14 +1,13 @@
 import { NextRequest, NextResponse } from "next/server"
-import fs from "fs"
-import path from "path"
 import { logger } from "@/lib/logger"
 import { rateLimit, getClientIP, getRateLimitHeaders } from "@/lib/security/rate-limit"
+import { TicketService } from "@/server/services/ticket.service"
 
 const log = logger.api
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN
 const SLACK_CHANNEL = process.env.SLACK_CHANNEL
 const JIRA_URL = process.env.JIRA_URL
-const STORAGE_FILE = path.join(process.cwd(), "ticket_data.json")
+const ticketService = new TicketService()
 
 const SLACK_RATE_LIMIT = 10
 const SLACK_RATE_WINDOW_MS = 60000
@@ -31,7 +30,20 @@ export async function POST(request: NextRequest) {
 		const body = await request.json()
 		const { ticketData, ticketDetails } = body
 
-		fs.writeFileSync(STORAGE_FILE, JSON.stringify(ticketData, null, 2))
+		// Save to database instead of file system
+		const formattedData: Record<string, { status: string; action: string }> = {}
+		for (const [key, value] of Object.entries(ticketData)) {
+			const isStatus = key.startsWith("status-")
+			const isAction = key.startsWith("action-")
+			if (!isStatus && !isAction) continue
+			const ticketKey = key.replace(/^(status|action)-/, "")
+			if (!formattedData[ticketKey]) {
+				formattedData[ticketKey] = { status: "--", action: "--" }
+			}
+			if (isStatus) formattedData[ticketKey].status = value as string
+			if (isAction) formattedData[ticketKey].action = value as string
+		}
+		await ticketService.saveTicketData(formattedData)
 
 		if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
 			return NextResponse.json(

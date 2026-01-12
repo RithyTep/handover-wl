@@ -1,29 +1,27 @@
 import { NextResponse } from "next/server"
-import fs from "fs"
-import path from "path"
 import { logger } from "@/lib/logger"
+import { TicketService } from "@/server/services/ticket.service"
 
 const log = logger.api
-const STORAGE_FILE = path.join(process.cwd(), "../ticket_data.json")
+const ticketService = new TicketService()
 
 export async function GET() {
 	try {
-		if (fs.existsSync(STORAGE_FILE)) {
-			const data = fs.readFileSync(STORAGE_FILE, "utf8")
-			const jsonData = JSON.parse(data)
+		const data = await ticketService.loadTicketData()
 
-			return new NextResponse(JSON.stringify(jsonData, null, 2), {
-				status: 200,
-				headers: {
-					"Content-Type": "application/json",
-				},
-			})
-		} else {
-			return NextResponse.json(
-				{ error: "ticket_data.json not found" },
-				{ status: 404 }
-			)
+		// Convert to the expected format: { "status-KEY": "value", "action-KEY": "value" }
+		const formattedData: Record<string, string> = {}
+		for (const [ticketKey, ticketData] of Object.entries(data)) {
+			formattedData[`status-${ticketKey}`] = ticketData.status
+			formattedData[`action-${ticketKey}`] = ticketData.action
 		}
+
+		return new NextResponse(JSON.stringify(formattedData, null, 2), {
+			status: 200,
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
 	} catch (error: unknown) {
 		const message = error instanceof Error ? error.message : "Unknown error"
 		log.error("Ticket data read error", { error: message })
