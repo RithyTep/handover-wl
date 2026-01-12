@@ -44,3 +44,6 @@ Thumbs.db
 test_persistence.txt
 
 /lib/generated/prisma
+
+bun.lock
+.vercel

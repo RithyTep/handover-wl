@@ -1,12 +1,11 @@
 import { z } from "zod";
 import { router, protectedMutation } from "@/server/trpc/server";
-import fs from "fs";
-import path from "path";
+import { TicketService } from "@/server/services/ticket.service";
 
 const SLACK_BOT_TOKEN = process.env.SLACK_BOT_TOKEN;
 const SLACK_CHANNEL = process.env.SLACK_CHANNEL;
 const JIRA_URL = process.env.JIRA_URL;
-const STORAGE_FILE = path.join(process.cwd(), "ticket_data.json");
+const ticketService = new TicketService();
 
 export const slackRouter = router({
   send: protectedMutation
@@ -17,7 +16,20 @@ export const slackRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      fs.writeFileSync(STORAGE_FILE, JSON.stringify(input.ticketData, null, 2));
+      // Save to database instead of file system
+      const formattedData: Record<string, { status: string; action: string }> = {};
+      for (const [key, value] of Object.entries(input.ticketData)) {
+        const isStatus = key.startsWith("status-");
+        const isAction = key.startsWith("action-");
+        if (!isStatus && !isAction) continue;
+        const ticketKey = key.replace(/^(status|action)-/, "");
+        if (!formattedData[ticketKey]) {
+          formattedData[ticketKey] = { status: "--", action: "--" };
+        }
+        if (isStatus) formattedData[ticketKey].status = value;
+        if (isAction) formattedData[ticketKey].action = value;
+      }
+      await ticketService.saveTicketData(formattedData);
 
       if (!SLACK_BOT_TOKEN || !SLACK_CHANNEL) {
         throw new Error("Missing SLACK_BOT_TOKEN or SLACK_CHANNEL");
