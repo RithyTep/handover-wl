@@ -275,25 +275,7 @@ async function handleCopyCommand(): Promise<SlackCommandResponse> {
 
 		return {
 			response_type: "ephemeral",
-			text: "Open the copy page to auto-copy the handover text.",
-			blocks: [
-				{
-					type: "section",
-					text: {
-						type: "mrkdwn",
-						text: "Open the copy page to auto-copy the handover text.",
-					},
-					accessory: {
-						type: "button",
-						text: { type: "plain_text", text: "Copy Handover", emoji: true },
-						url: copyUrl,
-					},
-				},
-				{
-					type: "section",
-					text: { type: "mrkdwn", text: `\`\`\`\n${copyText}\n\`\`\`` },
-				},
-			],
+			text: `Open this link to auto-copy:\n${copyUrl}\n\n\`\`\`\n${copyText}\n\`\`\``,
 		}
 	} catch (error) {
 		logger.error("Failed to build copy text", { error })
