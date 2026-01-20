@@ -9,6 +9,8 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p ${PORT:-3000}",
+    "handover": "node scripts/handover.mjs",
+    "handover:send": "node scripts/handover.mjs send",
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "lint:check": "eslint . --ext .ts,.tsx --format stylish",
