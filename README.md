@@ -193,12 +193,84 @@ After cloning and installing dependencies, you can enable a global `handover` co
 npm run setup:cli
 ```
 
+### CLI (One-Line Install)
+
+From the repo root:
+```bash
+curl -fsSL https://raw.githubusercontent.com/RithyTep/handover-wl/main/scripts/install-cli.sh | bash
+```
+
+### Full UI (Browser)
+
+Launch the local scheduler dashboard:
+```bash
+node scripts/lazyhand-ui.mjs
+```
+
+Or double-click:
+```bash
+./scripts/lazyhand-ui.command
+```
+
+The UI stores your settings in `~/.lazyhand/config.json` and applies the
+schedule using `scripts/setup-lazyhand-macos.sh`.
+
+Use "Sync LaunchAgent" to pull the active schedule from
+`~/Library/LaunchAgents/com.handover.lazyhand.plist`.
+
+Preset times:
+```bash
+# Day preset: 17:16
+SCHEDULE_PRESET=day ./scripts/setup-lazyhand-macos.sh
+
+# Night preset: 23:46
+SCHEDULE_PRESET=night ./scripts/setup-lazyhand-macos.sh
+```
+
+### Auto-Start UI on macOS
+
+Install a background LaunchAgent so the UI server runs even after closing the app:
+```bash
+./scripts/setup-lazyhand-ui-macos.sh
+```
+
+Open it later at `http://127.0.0.1:3199` (or set `LAZYHAND_UI_PORT` before install).
+
+### GUI CLI (Installable)
+
+After running `npm run setup:cli`, you can launch the UI with:
+```bash
+handover-gui
+```
+
+### Native macOS App (No Xcode)
+
+Build a native `.app` wrapper that launches the local UI:
+```bash
+./scripts/build-lazyhand-app.sh
+```
+
+Then open:
+`dist/Lazyhand.app`
+
+On first run, the app asks for your repo path and saves it to `~/.lazyhand/app_path`.
+
+### DMG Package (macOS)
+
+Build a DMG you can share:
+```bash
+./scripts/build-lazyhand-dmg.sh
+```
+
+Output: `dist/Lazyhand.dmg`
+
 Usage:
 ```bash
 handover copy    # Copy handover text to clipboard
 handover send    # Send handover to Slack
 handover print   # Print handover text to stdout
 handover reply   # Reply to latest handover message in Slack
+lazyhand         # AI fill missing fields and reply to latest handover
 ```
 
 Set `HANDOVER_APP_URL` (or `APP_URL`) to point at your running app, e.g.

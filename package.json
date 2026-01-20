@@ -79,6 +79,8 @@
     "vitest": "^4.0.15"
   },
   "bin": {
-    "handover": "scripts/handover.mjs"
+    "handover": "scripts/handover.mjs",
+    "lazyhand": "scripts/handover.mjs",
+    "handover-gui": "scripts/handover-gui.sh"
   }
 }

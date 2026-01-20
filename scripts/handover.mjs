@@ -1,8 +1,12 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process"
 
+import { basename } from "node:path"
+
 const args = process.argv.slice(2)
-const command = (args[0] || "copy").toLowerCase()
+const invokedAs = basename(process.argv[1] || "")
+const defaultCommand = invokedAs === "lazyhand" ? "reply" : "copy"
+const command = (args[0] || defaultCommand).toLowerCase()
 const appUrl = (process.env.HANDOVER_APP_URL || process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "")
 const envToken = process.env.HANDOVER_SLACK_USER_TOKEN || process.env.SLACK_USER_TOKEN
 const envChannel = process.env.HANDOVER_SLACK_CHANNEL_ID || process.env.SLACK_CHANNEL_ID
@@ -21,6 +25,7 @@ function usage() {
   handover print      Print handover text to stdout
   handover send       Send handover to Slack
   handover reply      Reply to latest handover message in Slack
+  lazyhand            AI fill missing fields and reply to latest handover
 
 Environment:
   HANDOVER_APP_URL or APP_URL (default: http://localhost:3000)
