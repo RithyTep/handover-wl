@@ -1,5 +1,5 @@
 import { createLogger } from "@/lib/logger"
-import { getJiraConfig, getSlackConfig } from "@/lib/env"
+import { getAppConfig, getJiraConfig, getSlackConfig } from "@/lib/env"
 import { loadTicketData, getTicketsWithSavedData, saveTicketData } from "@/lib/services"
 import { SlackMessagingService } from "@/server/services/slack-messaging.service"
 import { AIAutofillService } from "@/server/services/ai-autofill.service"
@@ -270,10 +270,30 @@ async function handleCopyCommand(): Promise<SlackCommandResponse> {
 
 		const ticketData = slackMessaging.convertTicketsToMessageData(ticketsWithData)
 		const copyText = formatTicketCopyMessage(ticketData)
+		const appUrl = getAppConfig().url
+		const copyUrl = `${appUrl}/handover-copy`
 
 		return {
 			response_type: "ephemeral",
-			text: `Copy the handover text below:\n\`\`\`\n${copyText}\n\`\`\``,
+			text: "Open the copy page to auto-copy the handover text.",
+			blocks: [
+				{
+					type: "section",
+					text: {
+						type: "mrkdwn",
+						text: "Open the copy page to auto-copy the handover text.",
+					},
+					accessory: {
+						type: "button",
+						text: { type: "plain_text", text: "Copy Handover", emoji: true },
+						url: copyUrl,
+					},
+				},
+				{
+					type: "section",
+					text: { type: "mrkdwn", text: `\`\`\`\n${copyText}\n\`\`\`` },
+				},
+			],
 		}
 	} catch (error) {
 		logger.error("Failed to build copy text", { error })
