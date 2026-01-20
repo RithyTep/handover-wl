@@ -1,6 +1,7 @@
 import { createLogger } from "@/lib/logger"
-import { getJiraConfig } from "@/lib/env"
-import { fetchTickets, loadTicketData, getTicketsWithSavedData } from "@/lib/services"
+import { getJiraConfig, getSlackConfig } from "@/lib/env"
+import { loadTicketData, getTicketsWithSavedData } from "@/lib/services"
+import { SlackMessagingService } from "@/server/services/slack-messaging.service"
 import type { SlackCommandPayload } from "@/lib/security/slack-verify"
 
 const logger = createLogger("SlackCommands")
@@ -160,17 +161,76 @@ async function handleListCommand(): Promise<SlackCommandResponse> {
 }
 
 async function handleSendCommand(payload: SlackCommandPayload): Promise<SlackCommandResponse> {
-	const appUrl = process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || "https://handover-production.rithytep.online"
+	const slackConfig = getSlackConfig()
+	const slackMessaging = new SlackMessagingService()
 
-	// For sending, we redirect to the dashboard since it requires selecting tickets
-	// In future, this could trigger the actual send via response_url
-	return {
-		response_type: "ephemeral",
-		text: [
-			"To send a handover, please use the dashboard:",
-			`<${appUrl}|Open Handover Dashboard>`,
-			"",
-			"_Tip: You can configure scheduled handovers in the dashboard settings._",
-		].join("\n"),
+	try {
+		// Load tickets with saved handover data
+		const savedData = await loadTicketData()
+		const tickets = await getTicketsWithSavedData(savedData)
+
+		if (tickets.length === 0) {
+			return {
+				response_type: "ephemeral",
+				text: "No tickets in the handover queue to send.",
+			}
+		}
+
+		// Filter tickets that have handover info filled
+		const ticketsWithData = tickets.filter(
+			(t) => t.savedStatus !== "--" || t.savedAction !== "--"
+		)
+
+		if (ticketsWithData.length === 0) {
+			return {
+				response_type: "ephemeral",
+				text: "No tickets have handover status/action filled. Please update tickets in the dashboard first.",
+			}
+		}
+
+		// Convert to message format
+		const ticketData = slackMessaging.convertTicketsToMessageData(ticketsWithData)
+
+		// Determine channel - use command channel or default
+		const targetChannel = payload.channelId || slackConfig.channelId
+
+		if (!targetChannel) {
+			return {
+				response_type: "ephemeral",
+				text: "No Slack channel configured. Please set SLACK_CHANNEL in environment.",
+			}
+		}
+
+		// Send handover message
+		const result = await slackMessaging.postTicketSummary(
+			ticketData,
+			targetChannel,
+			slackConfig.botToken
+		)
+
+		if (!result.success) {
+			logger.error("Failed to send handover from slash command", { error: result.error })
+			return {
+				response_type: "ephemeral",
+				text: `Failed to send handover: ${result.error}`,
+			}
+		}
+
+		logger.info("Handover sent via slash command", {
+			user: payload.userName,
+			ticketCount: ticketsWithData.length,
+			channel: targetChannel,
+		})
+
+		return {
+			response_type: "ephemeral",
+			text: `Handover sent successfully with ${ticketsWithData.length} ticket(s).`,
+		}
+	} catch (error) {
+		logger.error("Error in send command", { error })
+		return {
+			response_type: "ephemeral",
+			text: "Failed to send handover. Please try again or use the dashboard.",
+		}
 	}
 }
