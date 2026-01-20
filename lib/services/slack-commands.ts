@@ -1,8 +1,10 @@
 import { createLogger } from "@/lib/logger"
 import { getJiraConfig, getSlackConfig } from "@/lib/env"
-import { loadTicketData, getTicketsWithSavedData } from "@/lib/services"
+import { loadTicketData, getTicketsWithSavedData, saveTicketData } from "@/lib/services"
 import { SlackMessagingService } from "@/server/services/slack-messaging.service"
+import { AIAutofillService } from "@/server/services/ai-autofill.service"
 import type { SlackCommandPayload } from "@/lib/security/slack-verify"
+import type { Ticket } from "@/lib/types"
 
 const logger = createLogger("SlackCommands")
 
@@ -39,6 +41,8 @@ export async function handleSlashCommand(
 			return await handleListCommand()
 		case "send":
 			return await handleSendCommand(payload)
+		case "ai":
+			return await handleAiCommand(payload)
 		default:
 			// Assume it's a ticket key like TCP-12345
 			if (isTicketKey(subcommand)) {
@@ -59,7 +63,8 @@ function buildHelpResponse(prefix?: string): SlackCommandResponse {
 		"\u2022 `/handover` - Show this help message",
 		"\u2022 `/handover TCP-12345` - View ticket handover status",
 		"\u2022 `/handover list` - Show all pending handover tickets",
-		"\u2022 `/handover send` - Trigger handover message to channel",
+		"\u2022 `/handover send` - Send handover to channel",
+		"\u2022 `/handover ai` - AI fill empty tickets and save to DB",
 	].filter(Boolean)
 
 	return {
@@ -232,5 +237,104 @@ async function handleSendCommand(payload: SlackCommandPayload): Promise<SlackCom
 			response_type: "ephemeral",
 			text: "Failed to send handover. Please try again or use the dashboard.",
 		}
+	}
+}
+
+async function handleAiCommand(payload: SlackCommandPayload): Promise<SlackCommandResponse> {
+	const aiService = new AIAutofillService()
+
+	try {
+		// Load tickets with saved handover data
+		const savedData = await loadTicketData()
+		const tickets = await getTicketsWithSavedData(savedData)
+
+		if (tickets.length === 0) {
+			return {
+				response_type: "ephemeral",
+				text: "No tickets in the handover queue.",
+			}
+		}
+
+		// Filter tickets with empty status AND action (both must be "--")
+		const emptyTickets = tickets.filter(
+			(t) => t.savedStatus === "--" && t.savedAction === "--"
+		)
+
+		if (emptyTickets.length === 0) {
+			return {
+				response_type: "ephemeral",
+				text: "All tickets already have handover info filled.",
+			}
+		}
+
+		logger.info("Starting AI fill for empty tickets", {
+			user: payload.userName,
+			totalTickets: tickets.length,
+			emptyTickets: emptyTickets.length,
+		})
+
+		// Process tickets with AI (limit to avoid timeout)
+		const maxTickets = Math.min(emptyTickets.length, 5)
+		const ticketsToProcess = emptyTickets.slice(0, maxTickets)
+		const results: Record<string, { status: string; action: string }> = {}
+		const processed: string[] = []
+		const failed: string[] = []
+
+		for (const ticket of ticketsToProcess) {
+			try {
+				const { suggestion } = await aiService.generateSuggestion(
+					convertTicketToAIRequest(ticket)
+				)
+				results[ticket.key] = {
+					status: suggestion.status,
+					action: suggestion.action,
+				}
+				processed.push(ticket.key)
+			} catch (error) {
+				logger.error("AI fill failed for ticket", { ticketKey: ticket.key, error })
+				failed.push(ticket.key)
+			}
+		}
+
+		// Save to database
+		if (Object.keys(results).length > 0) {
+			await saveTicketData(results)
+		}
+
+		const summary = [
+			`*AI Fill Complete*`,
+			`\u2022 Processed: ${processed.length} ticket(s)`,
+			processed.length > 0 ? `  \u2192 ${processed.join(", ")}` : "",
+			failed.length > 0 ? `\u2022 Failed: ${failed.length} (${failed.join(", ")})` : "",
+			emptyTickets.length > maxTickets
+				? `\u2022 Remaining: ${emptyTickets.length - maxTickets} (run again to continue)`
+				: "",
+		].filter(Boolean)
+
+		return {
+			response_type: "ephemeral",
+			text: summary.join("\n"),
+		}
+	} catch (error) {
+		logger.error("Error in AI command", { error })
+		return {
+			response_type: "ephemeral",
+			text: "Failed to run AI fill. Please check AI configuration or try again.",
+		}
+	}
+}
+
+function convertTicketToAIRequest(ticket: Ticket) {
+	return {
+		key: ticket.key,
+		summary: ticket.summary,
+		status: ticket.status,
+		assignee: ticket.assignee,
+		issueType: ticket.issueType,
+		wlMainTicketType: ticket.wlMainTicketType,
+		wlSubTicketType: ticket.wlSubTicketType,
+		customerLevel: ticket.customerLevel,
+		created: ticket.created,
+		dueDate: ticket.dueDate,
 	}
 }
