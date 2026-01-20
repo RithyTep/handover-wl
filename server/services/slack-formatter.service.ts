@@ -81,3 +81,25 @@ export function buildShiftHeader(shift: "evening" | "night"): string {
 export function getHandoverMarker(): string {
 	return "*Ticket Handover Information*"
 }
+
+export function formatTicketCopyMessage(tickets: TicketMessageData[]): string {
+	const jiraConfig = getJiraConfig()
+
+	if (tickets.length === 0) {
+		return "No tickets to report."
+	}
+
+	const blocks = tickets.map((ticket, index) => {
+		const ticketUrl = `${jiraConfig.baseUrl}/browse/${ticket.key}`
+		return [
+			`--- Ticket ${index + 1} ---`,
+			`Ticket Link: <${ticketUrl}> ${ticket.summary}`,
+			`WL Main Type: ${ticket.wlMainTicketType}`,
+			`WL Sub Type: ${ticket.wlSubTicketType}`,
+			`Status: ${ticket.savedStatus}`,
+			`Action: ${ticket.savedAction}`,
+		].join("\n")
+	})
+
+	return `${blocks.join("\n\n")}`.trim()
+}

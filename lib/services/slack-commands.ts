@@ -3,6 +3,7 @@ import { getJiraConfig, getSlackConfig } from "@/lib/env"
 import { loadTicketData, getTicketsWithSavedData, saveTicketData } from "@/lib/services"
 import { SlackMessagingService } from "@/server/services/slack-messaging.service"
 import { AIAutofillService } from "@/server/services/ai-autofill.service"
+import { formatTicketCopyMessage } from "@/server/services/slack-formatter.service"
 import type { SlackCommandPayload } from "@/lib/security/slack-verify"
 import type { Ticket } from "@/lib/types"
 
@@ -41,6 +42,8 @@ export async function handleSlashCommand(
 			return await handleListCommand()
 		case "send":
 			return await handleSendCommand(payload)
+		case "copy":
+			return await handleCopyCommand()
 		case "ai":
 			return await handleAiCommand(payload)
 		default:
@@ -64,6 +67,7 @@ function buildHelpResponse(prefix?: string): SlackCommandResponse {
 		"\u2022 `/handover TCP-12345` - View ticket handover status",
 		"\u2022 `/handover list` - Show all pending handover tickets",
 		"\u2022 `/handover send` - Send handover to channel",
+		"\u2022 `/handover copy` - Copy handover text",
 		"\u2022 `/handover ai` - AI fill empty tickets and save to DB",
 	].filter(Boolean)
 
@@ -236,6 +240,46 @@ async function handleSendCommand(payload: SlackCommandPayload): Promise<SlackCom
 		return {
 			response_type: "ephemeral",
 			text: "Failed to send handover. Please try again or use the dashboard.",
+		}
+	}
+}
+
+async function handleCopyCommand(): Promise<SlackCommandResponse> {
+	try {
+		const slackMessaging = new SlackMessagingService()
+		const savedData = await loadTicketData()
+		const tickets = await getTicketsWithSavedData(savedData)
+
+		if (tickets.length === 0) {
+			return {
+				response_type: "ephemeral",
+				text: "No tickets in the handover queue to copy.",
+			}
+		}
+
+		const ticketsWithData = tickets.filter(
+			(t) => t.savedStatus !== "--" || t.savedAction !== "--"
+		)
+
+		if (ticketsWithData.length === 0) {
+			return {
+				response_type: "ephemeral",
+				text: "No tickets have handover status/action filled. Please update tickets in the dashboard first.",
+			}
+		}
+
+		const ticketData = slackMessaging.convertTicketsToMessageData(ticketsWithData)
+		const copyText = formatTicketCopyMessage(ticketData)
+
+		return {
+			response_type: "ephemeral",
+			text: `Copy the handover text below:\n\`\`\`\n${copyText}\n\`\`\``,
+		}
+	} catch (error) {
+		logger.error("Failed to build copy text", { error })
+		return {
+			response_type: "ephemeral",
+			text: "Failed to prepare handover copy text. Please try again.",
 		}
 	}
 }
