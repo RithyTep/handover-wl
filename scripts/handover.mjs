@@ -4,6 +4,14 @@ import { spawn } from "node:child_process"
 const args = process.argv.slice(2)
 const command = (args[0] || "copy").toLowerCase()
 const appUrl = (process.env.HANDOVER_APP_URL || process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "")
+const envToken = process.env.HANDOVER_SLACK_USER_TOKEN || process.env.SLACK_USER_TOKEN
+const envChannel = process.env.HANDOVER_SLACK_CHANNEL_ID || process.env.SLACK_CHANNEL_ID
+
+function getArgValue(flag) {
+	const index = args.indexOf(flag)
+	if (index === -1) return undefined
+	return args[index + 1]
+}
 
 function usage() {
 	console.log(`Usage:
@@ -11,19 +19,74 @@ function usage() {
   handover copy       Copy handover text to clipboard
   handover print      Print handover text to stdout
   handover send       Send handover to Slack
+  handover reply      Reply to latest handover message in Slack
 
 Environment:
-  HANDOVER_APP_URL or APP_URL (default: http://localhost:3000)`)
+  HANDOVER_APP_URL or APP_URL (default: http://localhost:3000)
+  HANDOVER_SLACK_USER_TOKEN or SLACK_USER_TOKEN
+  HANDOVER_SLACK_CHANNEL_ID or SLACK_CHANNEL_ID`)
 }
 
 async function fetchJson(path, options) {
-	const response = await fetch(`${appUrl}${path}`, options)
-	const data = await response.json().catch(() => ({}))
-	if (!response.ok || data?.success === false) {
-		const errorText = data?.error || `Request failed (${response.status})`
-		throw new Error(errorText)
+	try {
+		const response = await fetch(`${appUrl}${path}`, options)
+		const data = await response.json().catch(() => ({}))
+		if (!response.ok || data?.success === false) {
+			const errorText = data?.error || `Request failed (${response.status})`
+			throw new Error(errorText)
+		}
+		return data
+	} catch (error) {
+		const data = await fetchJsonWithCurl(path, options)
+		if (data?.success === false) {
+			const errorText = data?.error || "Request failed"
+			throw new Error(errorText)
+		}
+		return data
 	}
-	return data
+}
+
+function runCurl(url, options) {
+	return new Promise((resolve, reject) => {
+		const args = ["-sS", "-X", options?.method || "GET"]
+		const headers = options?.headers || {}
+		for (const [key, value] of Object.entries(headers)) {
+			args.push("-H", `${key}: ${value}`)
+		}
+		if (options?.body) {
+			args.push("-d", options.body)
+		}
+		args.push(url)
+
+		const proc = spawn("curl", args)
+		let stdout = ""
+		let stderr = ""
+		proc.stdout.on("data", (chunk) => {
+			stdout += chunk.toString()
+		})
+		proc.stderr.on("data", (chunk) => {
+			stderr += chunk.toString()
+		})
+		proc.on("error", reject)
+		proc.on("close", (code) => {
+			if (code === 0) resolve(stdout)
+			else reject(new Error(stderr || `curl exited with ${code}`))
+		})
+	})
+}
+
+async function fetchJsonWithCurl(path, options) {
+	const url = `${appUrl}${path}`
+	const responseText = await runCurl(url, options)
+	if (!responseText || !responseText.trim()) {
+		throw new Error("Empty response from server.")
+	}
+	try {
+		return JSON.parse(responseText)
+	} catch (error) {
+		const preview = responseText.slice(0, 200)
+		throw new Error(`Invalid JSON response: ${preview}`)
+	}
 }
 
 function tryCopyWith(commandName, argsList, text) {
@@ -89,6 +152,30 @@ async function runSend() {
 	)
 }
 
+async function runReply() {
+	const token = getArgValue("--token") || envToken
+	const channelId = getArgValue("--channel") || envChannel
+	const limit = Number(getArgValue("--limit") || 10)
+
+	if (!token || !channelId) {
+		console.error("Missing --token/--channel or env vars for Slack user token and channel ID.")
+		process.exit(1)
+	}
+
+	const data = await fetchJson("/api/handover-reply", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ token, channelId, limit }),
+	})
+
+	if (data.replied) {
+		console.log(`Replied to handover message in ${channelId}.`)
+		return
+	}
+
+	console.log(data.message || "No reply was sent.")
+}
+
 async function main() {
 	if (["-h", "--help", "help"].includes(command)) {
 		usage()
@@ -107,6 +194,11 @@ async function main() {
 
 	if (command === "send") {
 		await runSend()
+		return
+	}
+
+	if (command === "reply") {
+		await runReply()
 		return
 	}
 

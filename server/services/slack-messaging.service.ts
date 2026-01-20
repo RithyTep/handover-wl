@@ -128,12 +128,12 @@ async function postHandoverReplyMessage(
 
 async function findHandoverMessageInChannel(
 	channel: string,
-	_token: string,
+	token: string,
 	limit: number = 10
 ): Promise<HandoverCheckResult> {
 	logger.debug("Searching for handover message", { channel, limit })
 
-	const historyResponse = await getHistory(channel, limit)
+	const historyResponse = await getHistory(channel, limit, token)
 
 	if (!historyResponse.ok || !historyResponse.messages) {
 		logger.warn("Failed to fetch channel history", {
@@ -152,7 +152,7 @@ async function findHandoverMessageInChannel(
 		return { found: false, hasReplies: false }
 	}
 
-	const repliesResponse = await getThreadReplies(handoverMessage.ts, channel)
+	const repliesResponse = await getThreadReplies(handoverMessage.ts, channel, token)
 
 	const hasReplies = Boolean(
 		repliesResponse.ok &&

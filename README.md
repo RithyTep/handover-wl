@@ -185,6 +185,29 @@ npm run start            # Start production server
 npm run lint             # Run ESLint
 ```
 
+### CLI (Local Install)
+
+After cloning and installing dependencies, you can enable a global `handover` command:
+
+```bash
+npm run setup:cli
+```
+
+Usage:
+```bash
+handover copy    # Copy handover text to clipboard
+handover send    # Send handover to Slack
+handover print   # Print handover text to stdout
+handover reply   # Reply to latest handover message in Slack
+```
+
+Set `HANDOVER_APP_URL` (or `APP_URL`) to point at your running app, e.g.
+`HANDOVER_APP_URL=http://localhost:3000`.
+
+For `handover reply`, set:
+`HANDOVER_SLACK_USER_TOKEN` (or `SLACK_USER_TOKEN`) and
+`HANDOVER_SLACK_CHANNEL_ID` (or `SLACK_CHANNEL_ID`).
+
 ### Logging
 
 The application uses structured logging (Factor XI):

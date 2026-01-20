@@ -138,7 +138,8 @@ export async function updateMessage(
 
 export async function getHistory(
 	channel?: string,
-	limit: number = 100
+	limit: number = 100,
+	token?: string
 ): Promise<SlackResponse> {
 	const config = getConfig()
 	const targetChannel = channel || config.channelId
@@ -148,12 +149,13 @@ export async function getHistory(
 		return { ok: false, error: "No channel specified" }
 	}
 
-	return callApi("conversations.history", { channel: targetChannel, limit })
+	return callApi("conversations.history", { channel: targetChannel, limit }, token)
 }
 
 export async function getThreadReplies(
 	threadTs: string,
-	channel?: string
+	channel?: string,
+	token?: string
 ): Promise<SlackResponse> {
 	const config = getConfig()
 	const targetChannel = channel || config.channelId
@@ -163,10 +165,14 @@ export async function getThreadReplies(
 		return { ok: false, error: "No channel specified" }
 	}
 
-	return callApi("conversations.replies", {
-		channel: targetChannel,
-		ts: threadTs,
-	})
+	return callApi(
+		"conversations.replies",
+		{
+			channel: targetChannel,
+			ts: threadTs,
+		},
+		token
+	)
 }
 
 export function formatDate(date: Date = new Date()): string {
