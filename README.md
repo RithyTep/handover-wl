@@ -207,6 +207,8 @@ Set `HANDOVER_APP_URL` (or `APP_URL`) to point at your running app, e.g.
 For `handover reply`, set:
 `HANDOVER_SLACK_USER_TOKEN` (or `SLACK_USER_TOKEN`) and
 `HANDOVER_SLACK_CHANNEL_ID` (or `SLACK_CHANNEL_ID`).
+Optional: `HANDOVER_SLACK_MENTIONS` (e.g. `<@U123> <@U456>`), or pass
+`--mentions "<@U123> <@U456>"`.
 
 ### Logging
 

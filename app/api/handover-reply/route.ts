@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
 		const token = body.token || config.userToken
 		const channelId = body.channelId || config.channelId
 		const limit = Number(body.limit) || 10
+		const mentions = typeof body.mentions === "string" ? body.mentions : undefined
 
 		if (!token) {
 			return badRequest("Missing Slack user token")
@@ -65,7 +66,8 @@ export async function POST(request: NextRequest) {
 			ticketData,
 			handoverCheck.messageTs!,
 			token,
-			channelId
+			channelId,
+			mentions
 		)
 
 		if (!replyResult.success) {

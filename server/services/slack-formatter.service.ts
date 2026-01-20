@@ -28,11 +28,11 @@ export function formatTicketMessage(
 		message += `${header}\n\n`
 	}
 
-	message += "Please refer to this ticket information\n"
-
 	if (mentions) {
 		message += `${mentions}\n`
 	}
+
+	message += "Please refer to this ticket information\n"
 
 	message += "\n"
 

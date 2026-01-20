@@ -6,6 +6,7 @@ const command = (args[0] || "copy").toLowerCase()
 const appUrl = (process.env.HANDOVER_APP_URL || process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "")
 const envToken = process.env.HANDOVER_SLACK_USER_TOKEN || process.env.SLACK_USER_TOKEN
 const envChannel = process.env.HANDOVER_SLACK_CHANNEL_ID || process.env.SLACK_CHANNEL_ID
+const envMentions = process.env.HANDOVER_SLACK_MENTIONS
 
 function getArgValue(flag) {
 	const index = args.indexOf(flag)
@@ -24,7 +25,8 @@ function usage() {
 Environment:
   HANDOVER_APP_URL or APP_URL (default: http://localhost:3000)
   HANDOVER_SLACK_USER_TOKEN or SLACK_USER_TOKEN
-  HANDOVER_SLACK_CHANNEL_ID or SLACK_CHANNEL_ID`)
+  HANDOVER_SLACK_CHANNEL_ID or SLACK_CHANNEL_ID
+  HANDOVER_SLACK_MENTIONS (e.g. "<@U123> <@U456>")`)
 }
 
 async function fetchJson(path, options) {
@@ -155,6 +157,7 @@ async function runSend() {
 async function runReply() {
 	const token = getArgValue("--token") || envToken
 	const channelId = getArgValue("--channel") || envChannel
+	const mentions = getArgValue("--mentions") || envMentions
 	const limit = Number(getArgValue("--limit") || 10)
 
 	if (!token || !channelId) {
@@ -165,7 +168,7 @@ async function runReply() {
 	const data = await fetchJson("/api/handover-reply", {
 		method: "POST",
 		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ token, channelId, limit }),
+		body: JSON.stringify({ token, channelId, limit, mentions }),
 	})
 
 	if (data.replied) {
