@@ -20,6 +20,7 @@ const envSchema = z.object({
 	SLACK_WEBHOOK_URL: z.string().url().optional(),
 	SLACK_CHANNEL_ID: z.string().optional(),
 	SLACK_CHANNEL: z.string().optional(),
+	SLACK_SIGNING_SECRET: z.string().optional(),
 
 	GROQ_API_KEY: z.string().optional(),
 	OPENAI_API_KEY: z.string().optional(),
