@@ -3,6 +3,7 @@ import { getAppConfig, getJiraConfig, getSlackConfig } from "@/lib/env"
 import { loadTicketData, getTicketsWithSavedData, saveTicketData } from "@/lib/services"
 import { SlackMessagingService } from "@/server/services/slack-messaging.service"
 import { AIAutofillService } from "@/server/services/ai-autofill.service"
+import { ensureHandoverTicketsFilled } from "@/server/services/handover-ai.service"
 import { formatTicketCopyMessage } from "@/server/services/slack-formatter.service"
 import type { SlackCommandPayload } from "@/lib/security/slack-verify"
 import type { Ticket } from "@/lib/types"
@@ -75,6 +76,12 @@ function buildHelpResponse(prefix?: string): SlackCommandResponse {
 		response_type: "ephemeral",
 		text: lines.join("\n"),
 	}
+}
+
+function hasHandoverData(ticket: { savedStatus?: string; savedAction?: string }) {
+	const status = ticket.savedStatus?.trim()
+	const action = ticket.savedAction?.trim()
+	return (status && status !== "--") || (action && action !== "--")
 }
 
 async function handleViewTicketCommand(ticketKey: string): Promise<SlackCommandResponse> {
@@ -185,10 +192,8 @@ async function handleSendCommand(payload: SlackCommandPayload): Promise<SlackCom
 			}
 		}
 
-		// Filter tickets that have handover info filled
-		const ticketsWithData = tickets.filter(
-			(t) => t.savedStatus !== "--" || t.savedAction !== "--"
-		)
+		const fillResult = await ensureHandoverTicketsFilled(tickets)
+		const ticketsWithData = fillResult.tickets.filter(hasHandoverData)
 
 		if (ticketsWithData.length === 0) {
 			return {
@@ -257,9 +262,8 @@ async function handleCopyCommand(): Promise<SlackCommandResponse> {
 			}
 		}
 
-		const ticketsWithData = tickets.filter(
-			(t) => t.savedStatus !== "--" || t.savedAction !== "--"
-		)
+		const fillResult = await ensureHandoverTicketsFilled(tickets)
+		const ticketsWithData = fillResult.tickets.filter(hasHandoverData)
 
 		if (ticketsWithData.length === 0) {
 			return {

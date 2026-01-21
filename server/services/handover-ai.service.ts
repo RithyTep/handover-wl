@@ -8,6 +8,11 @@ interface FillResult {
 	filledCount: number
 }
 
+function isMissing(value?: string | null): boolean {
+	if (!value) return true
+	return value.trim() === "" || value.trim() === "--"
+}
+
 function convertTicketToAIRequest(ticket: Ticket) {
 	return {
 		key: ticket.key,
@@ -27,7 +32,7 @@ export async function ensureHandoverTicketsFilled(
 	tickets: Ticket[]
 ): Promise<FillResult> {
 	const missing = tickets.filter(
-		(t) => t.savedStatus === "--" || t.savedAction === "--"
+		(t) => isMissing(t.savedStatus) || isMissing(t.savedAction)
 	)
 
 	if (missing.length === 0) {
@@ -47,19 +52,22 @@ export async function ensureHandoverTicketsFilled(
 	const results: Record<string, { status: string; action: string }> = {}
 
 	for (const ticket of missing) {
+		const needsStatus = isMissing(ticket.savedStatus)
+		const needsAction = isMissing(ticket.savedAction)
+
 		try {
 			const { suggestion } = await aiService.generateSuggestion(
 				convertTicketToAIRequest(ticket)
 			)
 			results[ticket.key] = {
-				status: suggestion.status,
-				action: suggestion.action,
+				status: needsStatus ? suggestion.status : ticket.savedStatus,
+				action: needsAction ? suggestion.action : ticket.savedAction,
 			}
 		} catch (error) {
 			const fallback = aiService.getFallbackSuggestion()
 			results[ticket.key] = {
-				status: fallback.status,
-				action: fallback.action,
+				status: needsStatus ? fallback.status : ticket.savedStatus,
+				action: needsAction ? fallback.action : ticket.savedAction,
 			}
 		}
 	}
