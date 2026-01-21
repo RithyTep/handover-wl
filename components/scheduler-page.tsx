@@ -133,7 +133,7 @@ export function SchedulerPage() {
 		)
 
 		try {
-			const response = await fetch("/api/scan-and-reply-handover", {
+			const response = await fetch("/api/scan-and-reply-handover?manual=1", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 			})

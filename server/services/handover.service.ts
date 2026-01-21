@@ -59,7 +59,9 @@ export class HandoverService {
 		this.slackMessaging = new SlackMessagingService()
 	}
 
-	private async validateConfiguration(): Promise<ValidationResult> {
+	private async validateConfiguration(options?: {
+		allowWithoutScheduledComments?: boolean
+	}): Promise<ValidationResult> {
 		const config = getSlackConfig()
 
 		const userToken = config.userToken
@@ -78,7 +80,7 @@ export class HandoverService {
 			(c) => c.comment_type === "slack"
 		)
 
-		if (slackComments.length === 0) {
+		if (slackComments.length === 0 && !options?.allowWithoutScheduledComments) {
 			return {
 				valid: false,
 				errorResult: createSuccessResult("No scheduled comments configured"),
@@ -118,8 +120,10 @@ export class HandoverService {
 		}
 	}
 
-	async scanAndReplyToHandover(): Promise<ScanAndReplyResult> {
-		const validation = await this.validateConfiguration()
+	async scanAndReplyToHandover(options?: {
+		allowWithoutScheduledComments?: boolean
+	}): Promise<ScanAndReplyResult> {
+		const validation = await this.validateConfiguration(options)
 
 		if (!validation.valid) {
 			return validation.errorResult!
@@ -158,7 +162,9 @@ export class HandoverService {
 			return createErrorResult("Failed to post reply", replyResult.error)
 		}
 
-		await this.updateAllCommentTimestamps(slackComments!)
+		if (slackComments && slackComments.length > 0) {
+			await this.updateAllCommentTimestamps(slackComments)
+		}
 
 		logger.info("Posted handover reply", {
 			handoverTs: handoverCheck.messageTs,

@@ -3,9 +3,13 @@ import { apiSuccess, handleApiError } from "@/lib/api"
 
 const handoverService = new HandoverService()
 
-export async function POST() {
+export async function POST(request: Request) {
 	try {
-		const result = await handoverService.scanAndReplyToHandover()
+		const url = new URL(request.url)
+		const manual = url.searchParams.get("manual") === "1"
+		const result = await handoverService.scanAndReplyToHandover({
+			allowWithoutScheduledComments: manual,
+		})
 
 		return apiSuccess({
 			message: result.message,
