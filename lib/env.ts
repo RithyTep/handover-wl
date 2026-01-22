@@ -31,6 +31,8 @@ const envSchema = z.object({
 		.default("false")
 		.transform((val) => val === "true"),
 
+	CRON_SECRET: z.string().optional(),
+
 	LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 })
 

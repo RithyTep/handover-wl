@@ -11,6 +11,7 @@ import {
 	ChannelSettings,
 	ShiftConfig,
 	ManualTrigger,
+	TriggerTimesConfig,
 } from "./scheduler"
 
 export function SchedulerPage() {
@@ -23,11 +24,14 @@ export function SchedulerPage() {
 	const [nightToken, setNightToken] = useState("")
 	const [eveningMentions, setEveningMentions] = useState("")
 	const [nightMentions, setNightMentions] = useState("")
+	const [eveningTime, setEveningTime] = useState("17:10")
+	const [nightTime, setNightTime] = useState("22:40")
 
 	const { data: schedulerState, isLoading: schedulerLoading } =
 		trpc.scheduler.getState.useQuery()
 	const { data: shiftSettings } = trpc.settings.getShiftTokens.useQuery()
 	const { data: customChannel } = trpc.settings.getCustomChannel.useQuery()
+	const { data: triggerTimes } = trpc.scheduler.getTriggerTimes.useQuery()
 
 	const setSchedulerStateMutation = trpc.scheduler.setState.useMutation({
 		onSuccess: (data) => {
@@ -66,6 +70,15 @@ export function SchedulerPage() {
 		},
 	})
 
+	const saveTriggerTimesMutation = trpc.scheduler.setTriggerTimes.useMutation({
+		onSuccess: () => {
+			toast.success("Trigger times saved successfully!")
+		},
+		onError: (error) => {
+			toast.error("Error saving trigger times: " + error.message)
+		},
+	})
+
 	useEffect(() => {
 		if (schedulerState) {
 			setScheduleEnabled(schedulerState.enabled)
@@ -90,6 +103,13 @@ export function SchedulerPage() {
 			setCustomChannelId(customChannel.channelId || "")
 		}
 	}, [customChannel])
+
+	useEffect(() => {
+		if (triggerTimes) {
+			setEveningTime(triggerTimes.time1 || "17:10")
+			setNightTime(triggerTimes.time2 || "22:40")
+		}
+	}, [triggerTimes])
 
 	const handleToggleSchedule = async () => {
 		const newValue = !scheduleEnabled
@@ -120,6 +140,18 @@ export function SchedulerPage() {
 				night_user_token: nightToken,
 				evening_mentions: eveningMentions,
 				night_mentions: nightMentions,
+			})
+		} finally {
+			toast.dismiss(loadingToast)
+		}
+	}
+
+	const handleSaveTriggerTimes = async () => {
+		const loadingToast = toast.loading("Saving trigger times...")
+		try {
+			await saveTriggerTimesMutation.mutateAsync({
+				time1: eveningTime,
+				time2: nightTime,
 			})
 		} finally {
 			toast.dismiss(loadingToast)
@@ -184,6 +216,15 @@ export function SchedulerPage() {
 				enabled={scheduleEnabled}
 				loading={loading}
 				onToggle={handleToggleSchedule}
+			/>
+
+			<TriggerTimesConfig
+				eveningTime={eveningTime}
+				nightTime={nightTime}
+				onEveningTimeChange={setEveningTime}
+				onNightTimeChange={setNightTime}
+				onSave={handleSaveTriggerTimes}
+				isSaving={saveTriggerTimesMutation.isPending}
 			/>
 
 			<ChannelSettings
