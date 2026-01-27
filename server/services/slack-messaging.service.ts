@@ -42,7 +42,9 @@ async function postTicketSummary(
 	channel: string,
 	token?: string
 ): Promise<HandoverMessageResult> {
-	const message = formatTicketMessage(tickets)
+	const message = formatTicketMessage(tickets, {
+		header: getHandoverMarker(),
+	})
 
 	logger.info("Posting ticket summary", {
 		channel,

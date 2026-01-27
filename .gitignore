@@ -47,3 +47,9 @@ test_persistence.txt
 
 bun.lock
 .vercel
+
+# LazyhandBar (Swift)
+LazyhandBar/.build/
+LazyhandBar/.swiftpm/
+LazyhandBar/DerivedData/
+**/*.xcuserdata/
