@@ -5,33 +5,40 @@ struct ConnectionSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Connection")
-                .font(.headline)
-
-            LabeledField("App URL") {
-                TextField("https://handover-production...", text: $viewModel.appUrl)
+            // Section header
+            HStack(spacing: 6) {
+                Image(systemName: "link")
+                    .font(.system(size: 11))
+                    .foregroundStyle(Theme.accent)
+                Text("Connection")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Theme.textPrimary)
             }
 
-            LabeledField("Slack User Token") {
-                SecureField("xoxp-...", text: $viewModel.token)
-            }
-
-            LabeledField("Channel ID") {
-                TextField("C09S9U5ND5X", text: $viewModel.channelId)
-            }
-
-            LabeledField("Mentions") {
-                TextField("<@U123> <@U456>", text: $viewModel.mentions)
+            VStack(spacing: 8) {
+                FieldRow(label: "App URL") {
+                    TextField("https://handover-production...", text: $viewModel.appUrl)
+                }
+                FieldRow(label: "Token") {
+                    SecureField("xoxp-...", text: $viewModel.token)
+                }
+                FieldRow(label: "Channel") {
+                    TextField("C09S9U5ND5X", text: $viewModel.channelId)
+                }
+                FieldRow(label: "Mentions") {
+                    TextField("<@U123> <@U456>", text: $viewModel.mentions)
+                }
             }
         }
+        .cardStyle()
     }
 }
 
-private struct LabeledField<Content: View>: View {
+private struct FieldRow<Content: View>: View {
     let label: String
     let content: Content
 
-    init(_ label: String, @ViewBuilder content: () -> Content) {
+    init(label: String, @ViewBuilder content: () -> Content) {
         self.label = label
         self.content = content()
     }
@@ -39,8 +46,8 @@ private struct LabeledField<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
+                .font(.system(size: 10))
+                .foregroundStyle(Theme.textTertiary)
             content
                 .textFieldStyle(.roundedBorder)
                 .controlSize(.small)

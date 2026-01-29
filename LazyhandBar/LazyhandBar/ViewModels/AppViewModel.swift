@@ -12,6 +12,11 @@ final class AppViewModel: ObservableObject {
     @Published var hour: Int = 17
     @Published var minute: Int = 16
 
+    // Preferences
+    @Published var soundEnabled: Bool = true
+    @Published var selectedSound: String = "Tink"
+    @Published var widgetEnabled: Bool = false
+
     // State
     @Published var statusMessage: String = "Ready."
     @Published var isError: Bool = false
@@ -38,6 +43,9 @@ final class AppViewModel: ObservableObject {
         preset = SchedulePreset(fromString: config.preset)
         hour = config.hourInt
         minute = config.minuteInt
+        soundEnabled = config.isSoundEnabled
+        selectedSound = config.selectedSound
+        widgetEnabled = config.isWidgetEnabled
     }
 
     func saveConfig() {
@@ -106,7 +114,11 @@ final class AppViewModel: ObservableObject {
             mentions: mentions,
             preset: preset.rawValue,
             hour: String(hour),
-            minute: String(minute)
+            minute: String(minute),
+            soundEnabled: soundEnabled ? "true" : "false",
+            selectedSound: selectedSound,
+            widgetEnabled: widgetEnabled ? "true" : "false",
+            pollingInterval: "30"
         )
     }
 

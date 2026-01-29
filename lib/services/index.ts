@@ -44,6 +44,8 @@ export {
   getTicketsWithSavedData,
   postComment,
   fetchTicketComments,
+  fetchTransitions,
+  transitionIssue,
   getLatestWLTCComment,
   checkHealth as checkJiraHealth,
 } from "./jira";

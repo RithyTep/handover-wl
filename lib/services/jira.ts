@@ -196,6 +196,52 @@ export function getLatestWLTCComment(
 	return { author: latest.author, text: latest.text }
 }
 
+export async function fetchTransitions(
+	issueKey: string
+): Promise<Array<{ id: string; name: string }>> {
+	const { baseUrl } = getConfig()
+
+	try {
+		const response = await axios.get(
+			`${baseUrl}/rest/api/3/issue/${issueKey}/transitions`,
+			{ headers: createHeaders(), timeout: TIMEOUTS.JIRA }
+		)
+
+		const transitions = response.data.transitions || []
+		return transitions.map((t: { id: string; name: string }) => ({
+			id: t.id,
+			name: t.name,
+		}))
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to fetch transitions", { issueKey, error: message })
+		return []
+	}
+}
+
+export async function transitionIssue(
+	issueKey: string,
+	transitionId: string
+): Promise<boolean> {
+	const { baseUrl } = getConfig()
+	log.info("Transitioning issue", { issueKey, transitionId })
+
+	try {
+		await axios.post(
+			`${baseUrl}/rest/api/3/issue/${issueKey}/transitions`,
+			{ transition: { id: transitionId } },
+			{ headers: createHeaders(), timeout: TIMEOUTS.JIRA }
+		)
+
+		log.info("Issue transitioned successfully", { issueKey, transitionId })
+		return true
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to transition issue", { issueKey, error: message })
+		return false
+	}
+}
+
 export async function checkHealth(): Promise<{
 	healthy: boolean
 	latency: number
