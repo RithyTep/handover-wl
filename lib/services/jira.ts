@@ -146,10 +146,112 @@ export async function postComment(
 
 function extractTextFromBody(body: JiraComment["body"]): string {
 	if (!body?.content) return ""
-	return body.content
-		.flatMap((block) => block.content?.map((item) => item.text) || [])
-		.filter(Boolean)
-		.join(" ")
+	const parts: string[] = []
+	for (const block of body.content) {
+		if (block.type === "mediaSingle" || block.type === "mediaGroup") {
+			parts.push("[Image]")
+		} else if (block.content) {
+			const text = block.content
+				.map((item) => {
+					if (item.type === "media" || item.type === "mediaInline") return "[Image]"
+					return item.text || ""
+				})
+				.filter(Boolean)
+				.join("")
+			if (text) parts.push(text)
+		}
+	}
+	return parts.join("\n")
+}
+
+interface JiraAttachment {
+	id: string
+	filename: string
+	created: string
+	mimeType: string
+	content: string
+	thumbnail?: string
+	size: number
+	author: { displayName: string }
+}
+
+export interface TicketAttachmentInfo {
+	id: string
+	filename: string
+	mimeType: string
+	created: string
+	size: number
+	author: string
+	thumbnailUrl: string
+	contentUrl: string
+}
+
+export async function fetchIssueAttachments(
+	issueKey: string
+): Promise<TicketAttachmentInfo[]> {
+	const { baseUrl } = getConfig()
+
+	try {
+		const response = await axios.get(
+			`${baseUrl}/rest/api/3/issue/${issueKey}?fields=attachment`,
+			{ headers: createHeaders(), timeout: TIMEOUTS.JIRA }
+		)
+
+		const attachments: JiraAttachment[] =
+			response.data.fields?.attachment || []
+
+		return attachments
+			.filter((a) => a.mimeType.startsWith("image/"))
+			.map((a) => ({
+				id: a.id,
+				filename: a.filename,
+				mimeType: a.mimeType,
+				created: a.created,
+				size: a.size,
+				author: a.author.displayName,
+				thumbnailUrl: `/api/jira-image?id=${a.id}&type=thumbnail`,
+				contentUrl: `/api/jira-image?id=${a.id}&type=content`,
+			}))
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to fetch attachments", { issueKey, error: message })
+		return []
+	}
+}
+
+export async function fetchAttachmentContent(
+	attachmentId: string,
+	type: "content" | "thumbnail"
+): Promise<{ data: Buffer; contentType: string } | null> {
+	const { baseUrl } = getConfig()
+
+	try {
+		const url =
+			type === "thumbnail"
+				? `${baseUrl}/rest/api/3/attachment/thumbnail/${attachmentId}`
+				: `${baseUrl}/rest/api/3/attachment/content/${attachmentId}`
+
+		const response = await axios.get(url, {
+			headers: {
+				Authorization: `Basic ${getAuthHeader()}`,
+				Accept: "*/*",
+			},
+			responseType: "arraybuffer",
+			timeout: TIMEOUTS.JIRA,
+		})
+
+		return {
+			data: Buffer.from(response.data),
+			contentType: response.headers["content-type"] || "image/png",
+		}
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to fetch attachment content", {
+			attachmentId,
+			error: message,
+		})
+		return null
+	}
 }
 
 export async function fetchTicketComments(
@@ -198,7 +300,7 @@ export function getLatestWLTCComment(
 
 export async function fetchTransitions(
 	issueKey: string
-): Promise<Array<{ id: string; name: string }>> {
+): Promise<Array<{ id: string; name: string; statusName: string }>> {
 	const { baseUrl } = getConfig()
 
 	try {
@@ -208,10 +310,13 @@ export async function fetchTransitions(
 		)
 
 		const transitions = response.data.transitions || []
-		return transitions.map((t: { id: string; name: string }) => ({
-			id: t.id,
-			name: t.name,
-		}))
+		return transitions.map(
+			(t: { id: string; name: string; to?: { name?: string } }) => ({
+				id: t.id,
+				name: t.name,
+				statusName: t.to?.name || t.name,
+			})
+		)
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Unknown error"
 		log.error("Failed to fetch transitions", { issueKey, error: message })
@@ -239,6 +344,49 @@ export async function transitionIssue(
 		const message = error instanceof Error ? error.message : "Unknown error"
 		log.error("Failed to transition issue", { issueKey, error: message })
 		return false
+	}
+}
+
+export async function uploadAttachment(
+	issueKey: string,
+	fileBuffer: Buffer,
+	filename: string,
+	mimeType: string
+): Promise<{ id: string; filename: string; mimeType: string } | null> {
+	const { baseUrl } = getConfig()
+	log.info("Uploading attachment to Jira", { issueKey, filename })
+
+	try {
+		const FormData = (await import("form-data")).default
+		const form = new FormData()
+		form.append("file", fileBuffer, { filename, contentType: mimeType })
+
+		const response = await axios.post(
+			`${baseUrl}/rest/api/3/issue/${issueKey}/attachments`,
+			form,
+			{
+				headers: {
+					...form.getHeaders(),
+					Authorization: `Basic ${getAuthHeader()}`,
+					"X-Atlassian-Token": "no-check",
+				},
+				timeout: TIMEOUTS.JIRA,
+			}
+		)
+
+		const attachment = response.data?.[0]
+		if (!attachment) return null
+
+		log.info("Attachment uploaded", { issueKey, filename: attachment.filename })
+		return {
+			id: attachment.id,
+			filename: attachment.filename,
+			mimeType: attachment.mimeType,
+		}
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to upload attachment", { issueKey, error: message })
+		return null
 	}
 }
 

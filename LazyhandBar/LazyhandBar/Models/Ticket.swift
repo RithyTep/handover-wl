@@ -49,6 +49,7 @@ struct TicketCommentsResponse: Decodable {
 struct TicketTransition: Decodable, Identifiable {
     let id: String
     let name: String
+    let statusName: String?
 }
 
 struct TicketTransitionsResponse: Decodable {
@@ -60,4 +61,29 @@ struct GenericAPIResponse: Decodable {
     let success: Bool
     let message: String?
     let error: String?
+}
+
+struct AttachmentUploadResponse: Decodable {
+    let success: Bool
+    let filename: String?
+    let mimeType: String?
+    let error: String?
+}
+
+// MARK: - Ticket Attachments
+
+struct TicketAttachment: Decodable, Identifiable {
+    let id: String
+    let filename: String
+    let mimeType: String
+    let created: String
+    let size: Int
+    let author: String
+    let thumbnailUrl: String
+    let contentUrl: String
+}
+
+struct TicketAttachmentsResponse: Decodable {
+    let success: Bool
+    let attachments: [TicketAttachment]
 }

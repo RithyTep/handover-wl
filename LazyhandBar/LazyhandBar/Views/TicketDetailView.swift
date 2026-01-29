@@ -19,6 +19,9 @@ struct TicketDetailView: View {
                 VStack(spacing: 10) {
                     summaryCard
                     infoCard
+                    if !detailVM.attachments.isEmpty || detailVM.isLoadingAttachments {
+                        attachmentsCard
+                    }
                     transitionCard
                     commentCard
                     commentsListCard
@@ -30,6 +33,7 @@ struct TicketDetailView: View {
         .task {
             await detailVM.loadComments()
             await detailVM.loadTransitions()
+            await detailVM.loadAttachments()
         }
     }
 
@@ -129,7 +133,112 @@ struct TicketDetailView: View {
         .cardStyle()
     }
 
-    // MARK: - Transitions
+    // MARK: - Attachments
+
+    @ViewBuilder
+    private var attachmentsCard: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 6) {
+                Image(systemName: "photo.on.rectangle")
+                    .font(.system(size: 11))
+                    .foregroundStyle(Theme.accent)
+                Text("Attachments")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                if !detailVM.attachments.isEmpty {
+                    Text("\(detailVM.attachments.count)")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundStyle(Theme.bg)
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 1)
+                        .background(Capsule().fill(Theme.accent))
+                }
+                Spacer()
+                Button {
+                    Task { await detailVM.loadAttachments() }
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 10))
+                        .foregroundStyle(Theme.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .disabled(detailVM.isLoadingAttachments)
+            }
+
+            if detailVM.isLoadingAttachments && detailVM.attachments.isEmpty {
+                HStack {
+                    Spacer()
+                    ProgressView().controlSize(.small)
+                    Spacer()
+                }
+                .padding(.vertical, 10)
+            } else {
+                let columns = [
+                    GridItem(.flexible(), spacing: 8),
+                    GridItem(.flexible(), spacing: 8),
+                    GridItem(.flexible(), spacing: 8),
+                ]
+                LazyVGrid(columns: columns, spacing: 8) {
+                    ForEach(detailVM.attachments) { attachment in
+                        attachmentThumbnail(attachment)
+                    }
+                }
+            }
+        }
+        .cardStyle()
+    }
+
+    private func attachmentThumbnail(_ attachment: TicketAttachment) -> some View {
+        let fullUrl = detailVM.appUrl + attachment.thumbnailUrl
+
+        return VStack(spacing: 4) {
+            if let url = URL(string: fullUrl) {
+                AsyncImage(url: url) { phase in
+                    switch phase {
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 70)
+                            .clipped()
+                    case .failure:
+                        imagePlaceholder(icon: "exclamationmark.triangle")
+                    case .empty:
+                        imagePlaceholder(icon: "photo")
+                            .overlay(ProgressView().controlSize(.mini))
+                    @unknown default:
+                        imagePlaceholder(icon: "photo")
+                    }
+                }
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Theme.divider, lineWidth: 0.5)
+                )
+            } else {
+                imagePlaceholder(icon: "photo")
+            }
+
+            Text(attachment.filename)
+                .font(.system(size: 8))
+                .foregroundStyle(Theme.textTertiary)
+                .lineLimit(1)
+                .truncationMode(.middle)
+        }
+    }
+
+    private func imagePlaceholder(icon: String) -> some View {
+        RoundedRectangle(cornerRadius: 6)
+            .fill(Theme.bg)
+            .frame(height: 70)
+            .overlay(
+                Image(systemName: icon)
+                    .font(.system(size: 16))
+                    .foregroundStyle(Theme.textTertiary)
+            )
+    }
+
+    // MARK: - Transitions (Dropdown)
 
     private var transitionCard: some View {
         VStack(alignment: .leading, spacing: 10) {
@@ -145,36 +254,47 @@ struct TicketDetailView: View {
             if detailVM.isLoadingTransitions {
                 HStack {
                     ProgressView().controlSize(.mini)
-                    Text("Loading transitions...")
+                    Text("Loading...")
                         .font(.system(size: 10))
                         .foregroundStyle(Theme.textTertiary)
+                }
+            } else if detailVM.isTransitioning {
+                HStack {
+                    ProgressView().controlSize(.mini)
+                    Text(detailVM.statusMessage ?? "Transitioning...")
+                        .font(.system(size: 10))
+                        .foregroundStyle(Theme.accent)
                 }
             } else if detailVM.transitions.isEmpty {
                 Text("No transitions available")
                     .font(.system(size: 10))
                     .foregroundStyle(Theme.textTertiary)
             } else {
-                FlowLayout(spacing: 6) {
+                Menu {
                     ForEach(detailVM.transitions) { transition in
-                        Button {
+                        Button(transition.statusName ?? transition.name) {
                             Task { await detailVM.transition(to: transition) }
-                        } label: {
-                            Text(transition.name)
-                                .font(.system(size: 10, weight: .medium))
-                                .foregroundStyle(Theme.accent)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
-                                .background(
-                                    Capsule().fill(Theme.selectedBg)
-                                )
-                                .overlay(
-                                    Capsule().stroke(Theme.accent.opacity(0.3), lineWidth: 0.5)
-                                )
                         }
-                        .buttonStyle(.plain)
-                        .disabled(detailVM.isTransitioning)
                     }
+                } label: {
+                    HStack(spacing: 6) {
+                        statusDot
+                        Text(detailVM.ticket.status)
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(Theme.textPrimary)
+                        Spacer()
+                        Image(systemName: "chevron.up.chevron.down")
+                            .font(.system(size: 9))
+                            .foregroundStyle(Theme.textTertiary)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Theme.bg)
+                    )
                 }
+                .menuStyle(.borderlessButton)
             }
         }
         .cardStyle()
@@ -204,13 +324,70 @@ struct TicketDetailView: View {
                         .fill(Theme.bg)
                 )
 
-            HStack {
+            // Image preview
+            if let image = detailVM.attachedImage {
+                HStack(spacing: 8) {
+                    Image(nsImage: image)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 60)
+                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 6)
+                                .stroke(Theme.divider, lineWidth: 0.5)
+                        )
+
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Image attached")
+                            .font(.system(size: 9, weight: .medium))
+                            .foregroundStyle(Theme.textSecondary)
+                        Button {
+                            detailVM.removeImage()
+                        } label: {
+                            Text("Remove")
+                                .font(.system(size: 9))
+                                .foregroundStyle(Theme.accentRed)
+                        }
+                        .buttonStyle(.plain)
+                    }
+
+                    Spacer()
+                }
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Theme.bg)
+                )
+            }
+
+            // Action buttons
+            HStack(spacing: 8) {
+                // Attach image
+                Button { detailVM.attachImage() } label: {
+                    Image(systemName: "paperclip")
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .help("Attach image file")
+
+                // Paste from clipboard
+                Button { detailVM.pasteImage() } label: {
+                    Image(systemName: "doc.on.clipboard")
+                        .font(.system(size: 11))
+                        .foregroundStyle(Theme.textSecondary)
+                }
+                .buttonStyle(.plain)
+                .help("Paste image from clipboard")
+
                 Spacer()
+
+                // Send
                 Button {
                     Task { await detailVM.postComment() }
                 } label: {
                     HStack(spacing: 4) {
-                        if detailVM.isPostingComment {
+                        if detailVM.isPostingComment || detailVM.isUploadingImage {
                             ProgressView().controlSize(.mini)
                         } else {
                             Image(systemName: "paperplane.fill")
@@ -225,10 +402,15 @@ struct TicketDetailView: View {
                     .background(Capsule().fill(Theme.accent))
                 }
                 .buttonStyle(.plain)
-                .disabled(detailVM.isPostingComment || detailVM.commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(detailVM.isPostingComment || detailVM.isUploadingImage || (!hasContent))
             }
         }
         .cardStyle()
+    }
+
+    private var hasContent: Bool {
+        !detailVM.commentText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            || detailVM.attachedImage != nil
     }
 
     // MARK: - Comments List
@@ -311,7 +493,7 @@ struct TicketDetailView: View {
             if let message = detailVM.statusMessage {
                 Theme.divider.frame(height: 0.5)
                 HStack(spacing: 6) {
-                    if detailVM.isTransitioning || detailVM.isPostingComment {
+                    if detailVM.isTransitioning || detailVM.isPostingComment || detailVM.isUploadingImage {
                         ProgressView().controlSize(.mini)
                     }
                     Text(message)
@@ -356,7 +538,6 @@ struct TicketDetailView: View {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
         guard let date = formatter.date(from: isoString) else {
-            // Try without fractional seconds
             formatter.formatOptions = [.withInternetDateTime]
             guard let date = formatter.date(from: isoString) else {
                 return isoString
@@ -364,50 +545,5 @@ struct TicketDetailView: View {
             return RelativeDateTimeFormatter().localizedString(for: date, relativeTo: Date())
         }
         return RelativeDateTimeFormatter().localizedString(for: date, relativeTo: Date())
-    }
-}
-
-// MARK: - Flow Layout (for transition buttons wrapping)
-
-struct FlowLayout: Layout {
-    var spacing: CGFloat = 6
-
-    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-        let result = layout(proposal: proposal, subviews: subviews)
-        return result.size
-    }
-
-    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-        let result = layout(proposal: proposal, subviews: subviews)
-        for (index, subview) in subviews.enumerated() {
-            subview.place(at: CGPoint(
-                x: bounds.minX + result.positions[index].x,
-                y: bounds.minY + result.positions[index].y
-            ), proposal: .unspecified)
-        }
-    }
-
-    private func layout(proposal: ProposedViewSize, subviews: Subviews) -> (size: CGSize, positions: [CGPoint]) {
-        let maxWidth = proposal.width ?? .infinity
-        var positions: [CGPoint] = []
-        var x: CGFloat = 0
-        var y: CGFloat = 0
-        var rowHeight: CGFloat = 0
-        var totalHeight: CGFloat = 0
-
-        for subview in subviews {
-            let size = subview.sizeThatFits(.unspecified)
-            if x + size.width > maxWidth, x > 0 {
-                x = 0
-                y += rowHeight + spacing
-                rowHeight = 0
-            }
-            positions.append(CGPoint(x: x, y: y))
-            x += size.width + spacing
-            rowHeight = max(rowHeight, size.height)
-            totalHeight = y + rowHeight
-        }
-
-        return (CGSize(width: maxWidth, height: totalHeight), positions)
     }
 }

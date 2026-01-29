@@ -46,6 +46,9 @@ export {
   fetchTicketComments,
   fetchTransitions,
   transitionIssue,
+  uploadAttachment,
+  fetchIssueAttachments,
+  fetchAttachmentContent,
   getLatestWLTCComment,
   checkHealth as checkJiraHealth,
 } from "./jira";
