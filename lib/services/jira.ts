@@ -2,7 +2,7 @@ import axios from "axios"
 import { getJiraConfig } from "@/lib/env"
 import { logger } from "@/lib/logger"
 import { JQL_QUERY, JIRA_FIELDS, JIRA, TIMEOUTS } from "@/lib/config"
-import type { Ticket, JiraIssue, JiraComment, TicketData } from "@/lib/types"
+import type { Ticket, JiraIssue, TicketData } from "@/lib/types"
 
 const log = logger.jira
 
@@ -144,26 +144,6 @@ export async function postComment(
 	}
 }
 
-function extractTextFromBody(body: JiraComment["body"]): string {
-	if (!body?.content) return ""
-	const parts: string[] = []
-	for (const block of body.content) {
-		if (block.type === "mediaSingle" || block.type === "mediaGroup") {
-			parts.push("[Image]")
-		} else if (block.content) {
-			const text = block.content
-				.map((item) => {
-					if (item.type === "media" || item.type === "mediaInline") return "[Image]"
-					return item.text || ""
-				})
-				.filter(Boolean)
-				.join("")
-			if (text) parts.push(text)
-		}
-	}
-	return parts.join("\n")
-}
-
 interface JiraAttachment {
 	id: string
 	filename: string
@@ -254,24 +234,93 @@ export async function fetchAttachmentContent(
 	}
 }
 
+export async function fetchJiraImageByUrl(
+	imageUrl: string
+): Promise<{ data: Buffer; contentType: string } | null> {
+	try {
+		const response = await axios.get(imageUrl, {
+			headers: {
+				Authorization: `Basic ${getAuthHeader()}`,
+				Accept: "*/*",
+			},
+			responseType: "arraybuffer",
+			timeout: TIMEOUTS.JIRA,
+		})
+
+		return {
+			data: Buffer.from(response.data),
+			contentType: response.headers["content-type"] || "image/png",
+		}
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to fetch Jira image by URL", { imageUrl, error: message })
+		return null
+	}
+}
+
+function stripHtml(html: string): string {
+	return html
+		.replace(/<br\s*\/?>/gi, "\n")
+		.replace(/<\/p>/gi, "\n")
+		.replace(/<[^>]+>/g, "")
+		.replace(/&nbsp;/g, " ")
+		.replace(/&amp;/g, "&")
+		.replace(/&lt;/g, "<")
+		.replace(/&gt;/g, ">")
+		.replace(/\n{3,}/g, "\n\n")
+		.trim()
+}
+
+function extractImageUrls(html: string, baseUrl: string): string[] {
+	const imgRegex = /<img[^>]+src=["']([^"']+)["']/gi
+	const urls: string[] = []
+	let match: RegExpExecArray | null
+	while ((match = imgRegex.exec(html)) !== null) {
+		let src = match[1]
+		if (src.startsWith("/")) {
+			src = baseUrl + src
+		}
+		urls.push(`/api/jira-image?url=${encodeURIComponent(src)}`)
+	}
+	return urls
+}
+
+interface CommentWithImages {
+	author: string
+	text: string
+	created: string
+	images: string[]
+}
+
 export async function fetchTicketComments(
 	issueKey: string
-): Promise<Array<{ author: string; text: string; created: string }>> {
+): Promise<CommentWithImages[]> {
 	const { baseUrl } = getConfig()
 
 	try {
 		const response = await axios.get(
-			`${baseUrl}/rest/api/3/issue/${issueKey}/comment`,
+			`${baseUrl}/rest/api/2/issue/${issueKey}/comment?expand=renderedBody`,
 			{ headers: createHeaders(), timeout: TIMEOUTS.JIRA }
 		)
 
-		const comments: JiraComment[] = response.data.comments || []
+		interface V2Comment {
+			author: { displayName: string }
+			renderedBody?: string
+			body?: string
+			created: string
+		}
 
-		return comments.map((comment) => ({
-			author: comment.author.displayName,
-			text: extractTextFromBody(comment.body),
-			created: comment.created,
-		}))
+		const comments: V2Comment[] = response.data.comments || []
+
+		return comments.map((comment) => {
+			const html = comment.renderedBody || ""
+			return {
+				author: comment.author.displayName,
+				text: html ? stripHtml(html) : comment.body || "",
+				created: comment.created,
+				images: html ? extractImageUrls(html, baseUrl) : [],
+			}
+		})
 	} catch (error) {
 		const message = error instanceof Error ? error.message : "Unknown error"
 		log.error("Failed to fetch comments", { issueKey, error: message })
@@ -415,5 +464,29 @@ export async function checkHealth(): Promise<{
 			latency: Date.now() - start,
 			error: message,
 		}
+	}
+}
+
+// Lightweight poll: returns only total count and latest key (fast ~200ms)
+export async function fetchTicketPoll(): Promise<{
+	total: number
+	latestKey: string | null
+}> {
+	const { baseUrl } = getConfig()
+
+	try {
+		const response = await axios.post(
+			`${baseUrl}/rest/api/3/search/jql`,
+			{ jql: JQL_QUERY, maxResults: 1, fields: ["key"] },
+			{ headers: createHeaders(), timeout: 10000 }
+		)
+
+		const total = response.data.total ?? 0
+		const latestKey =
+			response.data.issues?.[0]?.key ?? null
+
+		return { total, latestKey }
+	} catch {
+		return { total: -1, latestKey: null }
 	}
 }

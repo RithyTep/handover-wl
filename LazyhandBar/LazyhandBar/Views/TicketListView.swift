@@ -6,15 +6,24 @@ struct TicketListView: View {
     @State private var selectedTicket: Ticket?
 
     var body: some View {
-        if let ticket = selectedTicket {
-            TicketDetailView(
-                ticket: ticket,
-                appUrl: appUrl,
-                onBack: { selectedTicket = nil }
-            )
-        } else {
-            ticketListContent
+        ZStack {
+            if let ticket = selectedTicket {
+                TicketDetailView(
+                    ticket: ticket,
+                    appUrl: appUrl,
+                    onBack: {
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTicket = nil
+                        }
+                    }
+                )
+                .transition(.move(edge: .trailing))
+            } else {
+                ticketListContent
+                    .transition(.move(edge: .leading))
+            }
         }
+        .animation(.easeInOut(duration: 0.2), value: selectedTicket?.id)
     }
 
     // MARK: - List Content
@@ -46,6 +55,13 @@ struct TicketListView: View {
                     Image(systemName: "arrow.clockwise")
                         .font(.system(size: 12))
                         .foregroundStyle(Theme.textSecondary)
+                        .rotationEffect(.degrees(viewModel.isLoading ? 360 : 0))
+                        .animation(
+                            viewModel.isLoading
+                                ? .linear(duration: 1).repeatForever(autoreverses: false)
+                                : .default,
+                            value: viewModel.isLoading
+                        )
                 }
                 .buttonStyle(.plain)
                 .disabled(viewModel.isLoading)
@@ -164,10 +180,12 @@ struct TicketListView: View {
 
     private var ticketList: some View {
         ScrollView {
-            LazyVStack(spacing: 6) {
+            LazyVStack(spacing: 4) {
                 ForEach(viewModel.filteredTickets) { ticket in
                     TicketRowView(ticket: ticket) {
-                        selectedTicket = ticket
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            selectedTicket = ticket
+                        }
                     }
                 }
             }

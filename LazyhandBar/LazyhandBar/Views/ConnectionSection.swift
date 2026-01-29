@@ -5,15 +5,7 @@ struct ConnectionSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Section header
-            HStack(spacing: 6) {
-                Image(systemName: "link")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Connection")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
-            }
+            SectionHeader(icon: "link", title: "Connection")
 
             VStack(spacing: 8) {
                 FieldRow(label: "App URL") {
@@ -49,7 +41,14 @@ private struct FieldRow<Content: View>: View {
                 .font(.system(size: 10))
                 .foregroundStyle(Theme.textTertiary)
             content
-                .textFieldStyle(.roundedBorder)
+                .textFieldStyle(.plain)
+                .font(.system(size: 11))
+                .foregroundStyle(Theme.textPrimary)
+                .padding(8)
+                .background(
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Theme.bg)
+                )
                 .controlSize(.small)
         }
     }

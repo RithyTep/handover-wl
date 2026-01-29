@@ -6,15 +6,7 @@ struct PreferencesSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Section header
-            HStack(spacing: 6) {
-                Image(systemName: "bell.badge")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Preferences")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
-            }
+            SectionHeader(icon: "bell.badge", title: "Preferences")
 
             // Sound toggle
             HStack {

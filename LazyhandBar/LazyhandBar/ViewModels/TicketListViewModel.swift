@@ -19,8 +19,12 @@ final class TicketListViewModel: ObservableObject {
     private let apiService = TicketAPIService()
     private var knownTicketKeys: Set<String> = []
     private var pollTimer: Timer?
+    private var fastCheckTimer: Timer?
     private var isFirstFetch = true
     private var currentAppUrl: String = ""
+    private var lastKnownTotal: Int = -1
+    private var lastKnownLatestKey: String?
+    private var isFastChecking = false
 
     init() {
         autoStartPolling()
@@ -67,6 +71,13 @@ final class TicketListViewModel: ObservableObject {
             ticketCount = response.total
             lastFetchDate = Date()
 
+            // Sync fast-check state so it doesn't re-trigger
+            lastKnownTotal = response.total
+            lastKnownLatestKey = response.tickets.first?.key
+
+            // Preload detail data in background for instant taps
+            TicketDetailViewModel.preload(tickets: response.tickets, appUrl: config.trimmedAppUrl)
+
             if !newTickets.isEmpty {
                 showNewTicketNotification(newTickets)
             }
@@ -87,7 +98,7 @@ final class TicketListViewModel: ObservableObject {
         let config = buildConfig(appUrl: appUrl)
         Task { await fetchTickets(config: config) }
 
-        // Then poll on interval
+        // Full refresh on interval (fallback, keeps data fresh)
         pollTimer = Timer.scheduledTimer(
             withTimeInterval: interval,
             repeats: true
@@ -98,6 +109,9 @@ final class TicketListViewModel: ObservableObject {
                 await self.fetchTickets(config: cfg)
             }
         }
+
+        // Fast event check every 5 seconds (lightweight, ~200ms)
+        startFastCheck()
     }
 
     func updatePollingUrl(_ appUrl: String) {
@@ -107,6 +121,44 @@ final class TicketListViewModel: ObservableObject {
     func stopPolling() {
         pollTimer?.invalidate()
         pollTimer = nil
+        fastCheckTimer?.invalidate()
+        fastCheckTimer = nil
+    }
+
+    // MARK: - Fast Event Check (5-second lightweight poll)
+
+    private func startFastCheck() {
+        fastCheckTimer?.invalidate()
+        fastCheckTimer = Timer.scheduledTimer(
+            withTimeInterval: 5,
+            repeats: true
+        ) { [weak self] _ in
+            guard let self else { return }
+            Task { @MainActor in
+                await self.performFastCheck()
+            }
+        }
+    }
+
+    private func performFastCheck() async {
+        guard !isFastChecking, !isLoading else { return }
+        isFastChecking = true
+        defer { isFastChecking = false }
+
+        let config = buildConfig(appUrl: currentAppUrl)
+        guard let poll = try? await apiService.pollCheck(config: config),
+              poll.success else { return }
+
+        let totalChanged = lastKnownTotal != -1 && poll.total != lastKnownTotal
+        let keyChanged = lastKnownLatestKey != nil && poll.latestKey != lastKnownLatestKey
+
+        lastKnownTotal = poll.total
+        lastKnownLatestKey = poll.latestKey
+
+        // Something changed → trigger immediate full fetch
+        if totalChanged || keyChanged {
+            await fetchTickets(config: config)
+        }
     }
 
     // MARK: - New Ticket Detection

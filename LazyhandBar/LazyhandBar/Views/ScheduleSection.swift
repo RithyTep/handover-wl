@@ -5,15 +5,7 @@ struct ScheduleSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Section header
-            HStack(spacing: 6) {
-                Image(systemName: "clock")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Schedule")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
-            }
+            SectionHeader(icon: "clock", title: "Schedule")
 
             // Presets
             HStack(spacing: 6) {

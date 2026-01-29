@@ -31,6 +31,27 @@ final class TicketAPIService {
         return try JSONDecoder().decode(TicketListResponse.self, from: data)
     }
 
+    // Lightweight poll check — only returns total count + latest key (~200ms)
+    func pollCheck(config: AppConfig) async throws -> TicketPollResponse {
+        let urlString = config.trimmedAppUrl + "/api/tickets-poll"
+        guard let url = URL(string: urlString) else {
+            throw HandoverError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.timeoutInterval = 10
+
+        let (data, httpResponse) = try await URLSession.shared.data(for: request)
+
+        guard let http = httpResponse as? HTTPURLResponse, http.statusCode < 400 else {
+            throw HandoverError.invalidResponse
+        }
+
+        return try JSONDecoder().decode(TicketPollResponse.self, from: data)
+    }
+
     func fetchComments(ticketKey: String, config: AppConfig) async throws -> TicketCommentsResponse {
         let urlString = config.trimmedAppUrl + "/api/ticket-comments?key=\(ticketKey)"
         guard let url = URL(string: urlString) else {

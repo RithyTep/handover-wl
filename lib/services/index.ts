@@ -49,6 +49,8 @@ export {
   uploadAttachment,
   fetchIssueAttachments,
   fetchAttachmentContent,
+  fetchJiraImageByUrl,
+  fetchTicketPoll,
   getLatestWLTCComment,
   checkHealth as checkJiraHealth,
 } from "./jira";

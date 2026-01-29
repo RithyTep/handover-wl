@@ -19,9 +19,6 @@ struct TicketDetailView: View {
                 VStack(spacing: 10) {
                     summaryCard
                     infoCard
-                    if !detailVM.attachments.isEmpty || detailVM.isLoadingAttachments {
-                        attachmentsCard
-                    }
                     transitionCard
                     commentCard
                     commentsListCard
@@ -31,9 +28,10 @@ struct TicketDetailView: View {
             statusBar
         }
         .task {
-            await detailVM.loadComments()
-            await detailVM.loadTransitions()
-            await detailVM.loadAttachments()
+            // Run concurrently — transitions are instant from cache
+            async let c: Void = detailVM.loadComments()
+            async let t: Void = detailVM.loadTransitions()
+            _ = await (c, t)
         }
     }
 
@@ -105,14 +103,7 @@ struct TicketDetailView: View {
 
     private var infoCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 6) {
-                Image(systemName: "info.circle")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Details")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
-            }
+            SectionHeader(icon: "info.circle", title: "Details")
 
             VStack(spacing: 6) {
                 detailRow("Type", detailVM.ticket.issueType)
@@ -133,123 +124,11 @@ struct TicketDetailView: View {
         .cardStyle()
     }
 
-    // MARK: - Attachments
-
-    @ViewBuilder
-    private var attachmentsCard: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 6) {
-                Image(systemName: "photo.on.rectangle")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Attachments")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
-                if !detailVM.attachments.isEmpty {
-                    Text("\(detailVM.attachments.count)")
-                        .font(.system(size: 9, weight: .bold))
-                        .foregroundStyle(Theme.bg)
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 1)
-                        .background(Capsule().fill(Theme.accent))
-                }
-                Spacer()
-                Button {
-                    Task { await detailVM.loadAttachments() }
-                } label: {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 10))
-                        .foregroundStyle(Theme.textSecondary)
-                }
-                .buttonStyle(.plain)
-                .disabled(detailVM.isLoadingAttachments)
-            }
-
-            if detailVM.isLoadingAttachments && detailVM.attachments.isEmpty {
-                HStack {
-                    Spacer()
-                    ProgressView().controlSize(.small)
-                    Spacer()
-                }
-                .padding(.vertical, 10)
-            } else {
-                let columns = [
-                    GridItem(.flexible(), spacing: 8),
-                    GridItem(.flexible(), spacing: 8),
-                    GridItem(.flexible(), spacing: 8),
-                ]
-                LazyVGrid(columns: columns, spacing: 8) {
-                    ForEach(detailVM.attachments) { attachment in
-                        attachmentThumbnail(attachment)
-                    }
-                }
-            }
-        }
-        .cardStyle()
-    }
-
-    private func attachmentThumbnail(_ attachment: TicketAttachment) -> some View {
-        let fullUrl = detailVM.appUrl + attachment.thumbnailUrl
-
-        return VStack(spacing: 4) {
-            if let url = URL(string: fullUrl) {
-                AsyncImage(url: url) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(height: 70)
-                            .clipped()
-                    case .failure:
-                        imagePlaceholder(icon: "exclamationmark.triangle")
-                    case .empty:
-                        imagePlaceholder(icon: "photo")
-                            .overlay(ProgressView().controlSize(.mini))
-                    @unknown default:
-                        imagePlaceholder(icon: "photo")
-                    }
-                }
-                .clipShape(RoundedRectangle(cornerRadius: 6))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 6)
-                        .stroke(Theme.divider, lineWidth: 0.5)
-                )
-            } else {
-                imagePlaceholder(icon: "photo")
-            }
-
-            Text(attachment.filename)
-                .font(.system(size: 8))
-                .foregroundStyle(Theme.textTertiary)
-                .lineLimit(1)
-                .truncationMode(.middle)
-        }
-    }
-
-    private func imagePlaceholder(icon: String) -> some View {
-        RoundedRectangle(cornerRadius: 6)
-            .fill(Theme.bg)
-            .frame(height: 70)
-            .overlay(
-                Image(systemName: icon)
-                    .font(.system(size: 16))
-                    .foregroundStyle(Theme.textTertiary)
-            )
-    }
-
     // MARK: - Transitions (Dropdown)
 
     private var transitionCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 6) {
-                Image(systemName: "arrow.triangle.swap")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Move Status")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
-            }
+            SectionHeader(icon: "arrow.triangle.swap", title: "Move Status")
 
             if detailVM.isLoadingTransitions {
                 HStack {
@@ -291,7 +170,11 @@ struct TicketDetailView: View {
                     .padding(.vertical, 8)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Theme.bg)
+                            .fill(Theme.cardBg.opacity(0.5))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Theme.divider, lineWidth: 0.5)
                     )
                 }
                 .menuStyle(.borderlessButton)
@@ -304,14 +187,7 @@ struct TicketDetailView: View {
 
     private var commentCard: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 6) {
-                Image(systemName: "text.bubble")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Quick Comment")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
-            }
+            SectionHeader(icon: "text.bubble", title: "Quick Comment")
 
             TextEditor(text: $detailVM.commentText)
                 .font(.system(size: 11))
@@ -418,12 +294,7 @@ struct TicketDetailView: View {
     private var commentsListCard: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 6) {
-                Image(systemName: "bubble.left.and.bubble.right")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Comments")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
+                SectionHeader(icon: "bubble.left.and.bubble.right", title: "Comments")
                 if !detailVM.comments.isEmpty {
                     Text("\(detailVM.comments.count)")
                         .font(.system(size: 9, weight: .bold))
@@ -459,31 +330,85 @@ struct TicketDetailView: View {
             } else {
                 VStack(spacing: 8) {
                     ForEach(detailVM.comments) { comment in
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text(comment.author)
-                                    .font(.system(size: 10, weight: .semibold))
-                                    .foregroundStyle(Theme.textPrimary)
-                                Spacer()
-                                Text(formatDate(comment.created))
-                                    .font(.system(size: 9))
-                                    .foregroundStyle(Theme.textTertiary)
-                            }
-                            Text(comment.text)
-                                .font(.system(size: 10))
-                                .foregroundStyle(Theme.textSecondary)
-                                .fixedSize(horizontal: false, vertical: true)
-                        }
-                        .padding(10)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Theme.bg)
-                        )
+                        commentBubble(comment)
                     }
                 }
             }
         }
         .cardStyle()
+    }
+
+    private func commentBubble(_ comment: TicketComment) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            HStack {
+                Text(comment.author)
+                    .font(.system(size: 10, weight: .semibold))
+                    .foregroundStyle(Theme.textPrimary)
+                Spacer()
+                Text(formatDate(comment.created))
+                    .font(.system(size: 9))
+                    .foregroundStyle(Theme.textTertiary)
+            }
+
+            if !comment.text.isEmpty {
+                Text(comment.text)
+                    .font(.system(size: 10))
+                    .foregroundStyle(Theme.textSecondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            // Inline images from Jira comment
+            if let images = comment.images, !images.isEmpty {
+                VStack(spacing: 6) {
+                    ForEach(images, id: \.self) { imagePath in
+                        let fullUrl = detailVM.appUrl + imagePath
+                        if let url = URL(string: fullUrl) {
+                            AsyncImage(url: url) { phase in
+                                switch phase {
+                                case .success(let image):
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .frame(maxHeight: 200)
+                                        .clipShape(RoundedRectangle(cornerRadius: 6))
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 6)
+                                                .stroke(Theme.divider, lineWidth: 0.5)
+                                        )
+                                case .failure:
+                                    HStack(spacing: 4) {
+                                        Image(systemName: "photo.badge.exclamationmark")
+                                            .font(.system(size: 10))
+                                        Text("Failed to load image")
+                                            .font(.system(size: 9))
+                                    }
+                                    .foregroundStyle(Theme.textTertiary)
+                                    .padding(6)
+                                case .empty:
+                                    RoundedRectangle(cornerRadius: 6)
+                                        .fill(Theme.bg.opacity(0.5))
+                                        .frame(height: 80)
+                                        .overlay(ProgressView().controlSize(.small))
+                                @unknown default:
+                                    EmptyView()
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(.top, 4)
+            }
+        }
+        .padding(10)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Theme.bg)
+        )
+        .overlay(alignment: .leading) {
+            RoundedRectangle(cornerRadius: 1)
+                .fill(Theme.accent.opacity(0.3))
+                .frame(width: 2)
+        }
     }
 
     // MARK: - Status Bar

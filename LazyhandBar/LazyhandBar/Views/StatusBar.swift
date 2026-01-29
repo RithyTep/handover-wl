@@ -5,15 +5,7 @@ struct StatusSection: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            // Section header
-            HStack(spacing: 6) {
-                Image(systemName: "info.circle")
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.accent)
-                Text("Status")
-                    .font(.system(size: 12, weight: .semibold))
-                    .foregroundStyle(Theme.textPrimary)
-            }
+            SectionHeader(icon: "info.circle", title: "Status")
 
             // Status row
             HStack(spacing: 8) {

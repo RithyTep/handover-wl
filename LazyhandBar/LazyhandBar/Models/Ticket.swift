@@ -26,6 +26,13 @@ struct TicketListResponse: Decodable {
     let storage: String?
 }
 
+struct TicketPollResponse: Decodable {
+    let success: Bool
+    let total: Int
+    let latestKey: String?
+    let ts: Int?
+}
+
 struct TicketErrorResponse: Decodable {
     let success: Bool?
     let error: String?
@@ -37,6 +44,7 @@ struct TicketComment: Decodable, Identifiable {
     let author: String
     let text: String
     let created: String
+    let images: [String]?
 
     var id: String { "\(author)-\(created)" }
 }

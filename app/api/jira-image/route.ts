@@ -1,29 +1,32 @@
 import { NextRequest, NextResponse } from "next/server"
-import { fetchAttachmentContent } from "@/lib/services"
+import { fetchAttachmentContent, fetchJiraImageByUrl } from "@/lib/services"
 
 export async function GET(req: NextRequest) {
 	const id = req.nextUrl.searchParams.get("id")
+	const url = req.nextUrl.searchParams.get("url")
 	const type = req.nextUrl.searchParams.get("type") as
 		| "content"
 		| "thumbnail"
 		| null
 
-	if (!id) {
+	if (!id && !url) {
 		return NextResponse.json(
-			{ success: false, error: "Missing required query param: id" },
+			{ success: false, error: "Missing required query param: id or url" },
 			{ status: 400 }
 		)
 	}
 
 	try {
-		const result = await fetchAttachmentContent(
-			id,
-			type === "thumbnail" ? "thumbnail" : "content"
-		)
+		const result = url
+			? await fetchJiraImageByUrl(url)
+			: await fetchAttachmentContent(
+					id!,
+					type === "thumbnail" ? "thumbnail" : "content"
+				)
 
 		if (!result) {
 			return NextResponse.json(
-				{ success: false, error: "Attachment not found" },
+				{ success: false, error: "Image not found" },
 				{ status: 404 }
 			)
 		}

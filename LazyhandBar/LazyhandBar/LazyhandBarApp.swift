@@ -8,7 +8,7 @@ struct LazyhandBarApp: App {
     var body: some Scene {
         MenuBarExtra {
             PopoverContentView(viewModel: viewModel, ticketVM: ticketVM)
-                .frame(width: 380, height: 600)
+                .frame(width: 420, height: 700)
         } label: {
             menuBarLabel
         }

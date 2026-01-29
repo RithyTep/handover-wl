@@ -4,13 +4,12 @@ import AppKit
 @MainActor
 final class TicketDetailViewModel: ObservableObject {
     let ticket: Ticket
+    let appUrl: String
 
     @Published var comments: [TicketComment] = []
     @Published var transitions: [TicketTransition] = []
-    @Published var attachments: [TicketAttachment] = []
     @Published var isLoadingComments = false
     @Published var isLoadingTransitions = false
-    @Published var isLoadingAttachments = false
     @Published var isPostingComment = false
     @Published var isTransitioning = false
     @Published var isUploadingImage = false
@@ -21,13 +20,23 @@ final class TicketDetailViewModel: ObservableObject {
 
     // Cache transitions forever — Jira workflows rarely change
     private static var transitionCache: [String: [TicketTransition]] = [:]
+    // Cache comments briefly — preloaded for instant detail view
+    private static var commentsCache: [String: (comments: [TicketComment], fetchedAt: Date)] = [:]
+    private static let commentsCacheMaxAge: TimeInterval = 60 // 1 minute
 
     private let apiService = TicketAPIService()
-    let appUrl: String
 
     init(ticket: Ticket, appUrl: String) {
         self.ticket = ticket
         self.appUrl = appUrl
+        // Pre-populate from cache so data shows instantly
+        if let cached = Self.transitionCache[ticket.key] {
+            self.transitions = cached
+        }
+        if let cached = Self.commentsCache[ticket.key],
+           Date().timeIntervalSince(cached.fetchedAt) < Self.commentsCacheMaxAge {
+            self.comments = cached.comments
+        }
     }
 
     private var config: AppConfig {
@@ -39,27 +48,69 @@ final class TicketDetailViewModel: ObservableObject {
         )
     }
 
+    // MARK: - Preloading (called from TicketListViewModel)
+
+    static func preload(tickets: [Ticket], appUrl: String) {
+        let service = TicketAPIService()
+        let config = AppConfig(
+            appUrl: appUrl, token: "", channelId: "",
+            mentions: "", preset: "day", hour: "17", minute: "16",
+            soundEnabled: "true", selectedSound: "Tink",
+            widgetEnabled: "false", pollingInterval: "30"
+        )
+
+        // Preload transitions for ALL tickets (cached forever)
+        for ticket in tickets where transitionCache[ticket.key] == nil {
+            Task {
+                if let response = try? await service.fetchTransitions(
+                    ticketKey: ticket.key, config: config
+                ) {
+                    transitionCache[ticket.key] = response.transitions
+                }
+            }
+        }
+
+        // Preload comments for first 5 tickets
+        for ticket in tickets.prefix(5) {
+            let existing = commentsCache[ticket.key]
+            let isStale = existing == nil
+                || Date().timeIntervalSince(existing!.fetchedAt) > commentsCacheMaxAge
+            guard isStale else { continue }
+
+            Task {
+                if let response = try? await service.fetchComments(
+                    ticketKey: ticket.key, config: config
+                ) {
+                    let reversed = Array(response.comments.reversed())
+                    commentsCache[ticket.key] = (comments: reversed, fetchedAt: Date())
+                }
+            }
+        }
+    }
+
     // MARK: - Load Data
 
     func loadComments() async {
-        isLoadingComments = true
+        // Show cache instantly, still refresh in background
+        let hadCached = !comments.isEmpty
+        if !hadCached { isLoadingComments = true }
+
         do {
             let response = try await apiService.fetchComments(
                 ticketKey: ticket.key, config: config
             )
-            comments = response.comments.reversed()
+            let reversed = response.comments.reversed()
+            comments = Array(reversed)
+            Self.commentsCache[ticket.key] = (comments: comments, fetchedAt: Date())
         } catch {
-            setStatus("Failed to load comments", isError: true)
+            if !hadCached { setStatus("Failed to load comments", isError: true) }
         }
         isLoadingComments = false
     }
 
     func loadTransitions() async {
-        // Return cached transitions if available
-        if let cached = Self.transitionCache[ticket.key] {
-            transitions = cached
-            return
-        }
+        // Already populated from cache in init
+        if !transitions.isEmpty { return }
 
         isLoadingTransitions = true
         do {
@@ -72,19 +123,6 @@ final class TicketDetailViewModel: ObservableObject {
             setStatus("Failed to load transitions", isError: true)
         }
         isLoadingTransitions = false
-    }
-
-    func loadAttachments() async {
-        isLoadingAttachments = true
-        do {
-            let response = try await apiService.fetchAttachments(
-                ticketKey: ticket.key, config: config
-            )
-            attachments = response.attachments
-        } catch {
-            setStatus("Failed to load attachments", isError: true)
-        }
-        isLoadingAttachments = false
     }
 
     // MARK: - Actions
@@ -103,6 +141,8 @@ final class TicketDetailViewModel: ObservableObject {
             if response.success {
                 setStatus("Moved to \(displayName)", isError: false)
                 Self.transitionCache.removeValue(forKey: ticket.key)
+                // Reload fresh transitions after status change
+                transitions = []
                 await loadTransitions()
             } else {
                 setStatus(response.error ?? "Transition failed", isError: true)
@@ -231,5 +271,14 @@ final class TicketDetailViewModel: ObservableObject {
     private func setStatus(_ message: String, isError: Bool) {
         statusMessage = message
         self.isError = isError
+        // Auto-clear success messages after 3 seconds
+        if !isError {
+            Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                if self.statusMessage == message {
+                    self.statusMessage = nil
+                }
+            }
+        }
     }
 }

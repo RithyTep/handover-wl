@@ -11,6 +11,10 @@ struct PopoverContentView: View {
     @ObservedObject var ticketVM: TicketListViewModel
     @State private var selectedTab: PopoverTab = .tickets
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
+    @Namespace private var tabNamespace
+    @State private var isSettingsHovered = false
+    @State private var isWidgetHovered = false
+    @State private var statusPulse = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -61,7 +65,7 @@ struct PopoverContentView: View {
     private func tabItem(_ title: String, icon: String, tab: PopoverTab) -> some View {
         let isActive = selectedTab == tab
         return Button {
-            withAnimation(.easeInOut(duration: 0.15)) {
+            withAnimation(.easeInOut(duration: 0.2)) {
                 selectedTab = tab
             }
         } label: {
@@ -74,10 +78,15 @@ struct PopoverContentView: View {
             .frame(maxWidth: .infinity)
             .padding(.vertical, 7)
             .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(isActive ? Theme.accent : Color.clear)
+                Group {
+                    if isActive {
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Theme.accent.opacity(0.15))
+                            .matchedGeometryEffect(id: "activeTab", in: tabNamespace)
+                    }
+                }
             )
-            .foregroundStyle(isActive ? Theme.bg : Theme.textSecondary)
+            .foregroundStyle(isActive ? Theme.accent : Theme.textSecondary)
         }
         .buttonStyle(.plain)
         .padding(2)
@@ -95,8 +104,10 @@ struct PopoverContentView: View {
                 Image(systemName: "gearshape.fill")
                     .font(.system(size: 14))
                     .foregroundStyle(Theme.textSecondary)
+                    .opacity(isSettingsHovered ? 1.0 : 0.7)
             }
             .buttonStyle(.plain)
+            .onHover { isSettingsHovered = $0 }
 
             Button {
                 // Toggle widget
@@ -112,13 +123,24 @@ struct PopoverContentView: View {
                 Image(systemName: viewModel.widgetEnabled ? "pip.fill" : "pip")
                     .font(.system(size: 14))
                     .foregroundStyle(viewModel.widgetEnabled ? Theme.accent : Theme.textSecondary)
+                    .opacity(isWidgetHovered ? 1.0 : 0.7)
             }
             .buttonStyle(.plain)
+            .onHover { isWidgetHovered = $0 }
 
-            // Status dot
+            // Status dot with pulse
             Circle()
                 .fill(statusColor)
                 .frame(width: 8, height: 8)
+                .shadow(
+                    color: statusColor.opacity(statusPulse ? 0.6 : 0),
+                    radius: statusPulse ? 4 : 0
+                )
+                .onAppear {
+                    withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
+                        statusPulse = true
+                    }
+                }
 
             Spacer()
 
