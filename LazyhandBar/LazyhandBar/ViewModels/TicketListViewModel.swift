@@ -10,6 +10,39 @@ final class TicketListViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var searchText: String = ""
     @Published var lastFetchDate: Date?
+    @Published var selectedTicket: Ticket?
+
+    var hasSelectedTicket: Bool { selectedTicket != nil }
+
+    // MARK: - Keyboard Navigation
+
+    func navigateDown() {
+        let list = filteredTickets
+        guard !list.isEmpty else { return }
+        if let current = selectedTicket,
+           let idx = list.firstIndex(where: { $0.id == current.id }),
+           idx + 1 < list.count {
+            selectedTicket = list[idx + 1]
+        } else {
+            selectedTicket = list.first
+        }
+    }
+
+    func navigateUp() {
+        let list = filteredTickets
+        guard !list.isEmpty else { return }
+        if let current = selectedTicket,
+           let idx = list.firstIndex(where: { $0.id == current.id }),
+           idx > 0 {
+            selectedTicket = list[idx - 1]
+        } else {
+            selectedTicket = list.last
+        }
+    }
+
+    func clearSelection() {
+        selectedTicket = nil
+    }
 
     // Preferences (synced from AppViewModel)
     @Published var soundEnabled: Bool = true
@@ -74,6 +107,12 @@ final class TicketListViewModel: ObservableObject {
             // Sync fast-check state so it doesn't re-trigger
             lastKnownTotal = response.total
             lastKnownLatestKey = response.tickets.first?.key
+
+            // Keep selected ticket data fresh
+            if let selected = selectedTicket,
+               let updated = response.tickets.first(where: { $0.key == selected.key }) {
+                selectedTicket = updated
+            }
 
             // Preload detail data in background for instant taps
             TicketDetailViewModel.preload(tickets: response.tickets, appUrl: config.trimmedAppUrl)
@@ -207,6 +246,56 @@ final class TicketListViewModel: ObservableObject {
                 isPolling: polling
             )
         }
+    }
+
+    // MARK: - Quick Actions
+
+    func quickTransition(ticket: Ticket, statusName: String) async {
+        guard let transitions = TicketDetailViewModel.cachedTransitions(for: ticket.key),
+              let target = transitions.first(where: {
+                  ($0.statusName ?? $0.name) == statusName
+              }) else { return }
+
+        let config = buildConfig(appUrl: currentAppUrl)
+        do {
+            let response = try await apiService.transitionTicket(
+                ticketKey: ticket.key,
+                transitionId: target.id,
+                config: config
+            )
+            if response.success {
+                TicketDetailViewModel.clearTransitionCache(for: ticket.key)
+                await fetchTickets(config: config)
+            }
+        } catch { }
+    }
+
+    func bulkTransition(ticketKeys: Set<String>, statusName: String) async {
+        let config = buildConfig(appUrl: currentAppUrl)
+        for key in ticketKeys {
+            guard let transitions = TicketDetailViewModel.cachedTransitions(for: key),
+                  let target = transitions.first(where: {
+                      ($0.statusName ?? $0.name) == statusName
+                  }) else { continue }
+
+            _ = try? await apiService.transitionTicket(
+                ticketKey: key,
+                transitionId: target.id,
+                config: config
+            )
+            TicketDetailViewModel.clearTransitionCache(for: key)
+        }
+        await fetchTickets(config: config)
+    }
+
+    func setDueDate(ticketKey: String, dueDate: String) async {
+        let config = buildConfig(appUrl: currentAppUrl)
+        _ = try? await apiService.setDueDate(
+            ticketKey: ticketKey,
+            dueDate: dueDate,
+            config: config
+        )
+        await fetchTickets(config: config)
     }
 
     // MARK: - Private

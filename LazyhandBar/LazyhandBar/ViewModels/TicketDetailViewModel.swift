@@ -88,6 +88,16 @@ final class TicketDetailViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Cache Access
+
+    static func cachedTransitions(for key: String) -> [TicketTransition]? {
+        transitionCache[key]
+    }
+
+    static func clearTransitionCache(for key: String) {
+        transitionCache.removeValue(forKey: key)
+    }
+
     // MARK: - Load Data
 
     func loadComments() async {

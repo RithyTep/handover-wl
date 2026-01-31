@@ -10,6 +10,10 @@
 	<string>LazyhandBar</string>
 	<key>CFBundleDisplayName</key>
 	<string>Lazyhand</string>
+	<key>NSWindowTabbingEnabled</key>
+	<true/>
+	<key>NSQuitAlwaysKeepsWindows</key>
+	<true/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

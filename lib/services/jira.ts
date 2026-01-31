@@ -439,6 +439,29 @@ export async function uploadAttachment(
 	}
 }
 
+export async function setDueDate(
+	issueKey: string,
+	dueDate: string
+): Promise<boolean> {
+	const { baseUrl } = getConfig()
+	log.info("Setting due date", { issueKey, dueDate })
+
+	try {
+		await axios.put(
+			`${baseUrl}/rest/api/3/issue/${issueKey}`,
+			{ fields: { duedate: dueDate } },
+			{ headers: createHeaders(), timeout: TIMEOUTS.JIRA }
+		)
+
+		log.info("Due date set successfully", { issueKey, dueDate })
+		return true
+	} catch (error) {
+		const message = error instanceof Error ? error.message : "Unknown error"
+		log.error("Failed to set due date", { issueKey, error: message })
+		return false
+	}
+}
+
 export async function checkHealth(): Promise<{
 	healthy: boolean
 	latency: number

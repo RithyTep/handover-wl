@@ -150,6 +150,35 @@ final class TicketAPIService {
         return try JSONDecoder().decode(GenericAPIResponse.self, from: data)
     }
 
+    func setDueDate(ticketKey: String, dueDate: String, config: AppConfig) async throws -> GenericAPIResponse {
+        let urlString = config.trimmedAppUrl + "/api/set-duedate"
+        guard let url = URL(string: urlString) else {
+            throw HandoverError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.timeoutInterval = 30
+        request.httpBody = try JSONEncoder().encode([
+            "ticket_key": ticketKey,
+            "due_date": dueDate,
+        ])
+
+        let (data, httpResponse) = try await URLSession.shared.data(for: request)
+
+        guard let http = httpResponse as? HTTPURLResponse, http.statusCode < 400 else {
+            let errorBody = try? JSONDecoder().decode(GenericAPIResponse.self, from: data)
+            throw HandoverError.apiError(
+                statusCode: (httpResponse as? HTTPURLResponse)?.statusCode ?? 500,
+                message: errorBody?.error ?? "Failed to set due date"
+            )
+        }
+
+        return try JSONDecoder().decode(GenericAPIResponse.self, from: data)
+    }
+
     func fetchAttachments(ticketKey: String, config: AppConfig) async throws -> TicketAttachmentsResponse {
         let urlString = config.trimmedAppUrl + "/api/ticket-attachments?key=\(ticketKey)"
         guard let url = URL(string: urlString) else {

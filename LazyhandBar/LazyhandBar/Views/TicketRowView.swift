@@ -3,89 +3,136 @@ import SwiftUI
 struct TicketRowView: View {
     let ticket: Ticket
     let onTap: () -> Void
+    var canQuickMove: Bool = false
+    var onQuickMove: (() -> Void)? = nil
+    var onSetDueDate: (() -> Void)? = nil
+    var isSelected: Bool = false
     @State private var isHovered = false
 
     var body: some View {
-        Button(action: onTap) {
-            VStack(alignment: .leading, spacing: 6) {
-                // Top: key + status chip + assignee
-                HStack(spacing: 8) {
-                    Text(ticket.key)
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(Theme.accent)
+        VStack(alignment: .leading, spacing: 3) {
+            // Line 1: key + status + actions + avatar
+            HStack(spacing: 6) {
+                Text(ticket.key)
+                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                    .foregroundStyle(Theme.accent)
 
-                    HStack(spacing: 4) {
-                        Circle()
-                            .fill(statusColor)
-                            .frame(width: 6, height: 6)
-                        Text(ticket.status)
-                            .font(.system(size: 10))
-                            .foregroundStyle(Theme.textSecondary)
-                    }
-                    .padding(.horizontal, 6)
-                    .padding(.vertical, 2)
-                    .background(
-                        Capsule().fill(statusColor.opacity(0.12))
-                    )
+                Circle()
+                    .fill(statusColor)
+                    .frame(width: 6, height: 6)
 
-                    Spacer()
+                Text(ticket.status)
+                    .font(.system(size: 12))
+                    .foregroundStyle(Theme.textSecondary)
+                    .lineLimit(1)
 
-                    Text(ticket.assignee)
-                        .font(.system(size: 10))
+                if ticket.savedStatus != "--" && !ticket.savedStatus.isEmpty {
+                    Text("·")
+                        .font(.system(size: 12))
                         .foregroundStyle(Theme.textTertiary)
+                    Text(ticket.savedStatus)
+                        .font(.system(size: 12))
+                        .foregroundStyle(Theme.accent)
                         .lineLimit(1)
                 }
 
-                // Summary
-                Text(ticket.summary)
-                    .font(.system(size: 11))
-                    .foregroundStyle(Theme.textSecondary)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
+                Spacer()
 
-                // Bottom: type + saved status
-                HStack(spacing: 6) {
-                    Text(ticket.issueType)
-                        .font(.system(size: 9, weight: .medium))
-                        .foregroundStyle(Theme.textTertiary)
-
-                    Spacer()
-
-                    if ticket.savedStatus != "--" && !ticket.savedStatus.isEmpty {
-                        Text(ticket.savedStatus)
-                            .font(.system(size: 9, weight: .medium))
-                            .foregroundStyle(Theme.accent)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 3)
-                            .background(
-                                Capsule().fill(Theme.selectedBg)
-                            )
+                // Quick actions (hover only)
+                if isHovered {
+                    if canQuickMove {
+                        Button {
+                            onQuickMove?()
+                        } label: {
+                            Text("→WL-P")
+                                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                                .foregroundStyle(Theme.bg)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 3)
+                                .background(Capsule().fill(Theme.accent))
+                        }
+                        .buttonStyle(ScalePressStyle())
+                        .pointerCursor()
+                        .help("Move to WL - Processing")
+                        .transition(.opacity)
                     }
 
-                    Image(systemName: "chevron.right")
-                        .font(.system(size: 8))
-                        .foregroundStyle(Theme.textTertiary)
-                        .opacity(isHovered ? 1 : 0)
+                    if ticket.dueDate == nil {
+                        Button {
+                            onSetDueDate?()
+                        } label: {
+                            Text("+Due")
+                                .font(.system(size: 10, weight: .bold, design: .monospaced))
+                                .foregroundStyle(Theme.bg)
+                                .padding(.horizontal, 6)
+                                .padding(.vertical, 3)
+                                .background(Capsule().fill(Theme.accentRed))
+                        }
+                        .buttonStyle(ScalePressStyle())
+                        .pointerCursor()
+                        .help("Set due date to tomorrow")
+                        .transition(.opacity)
+                    }
+                } else if ticket.dueDate == nil {
+                    Circle()
+                        .fill(Theme.accentRed)
+                        .frame(width: 6, height: 6)
+                        .help("No due date")
                 }
+
+                avatarView
             }
-            .padding(12)
-            .background(
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(isHovered ? Theme.cardBgHover : Theme.cardBg)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 10)
-                    .stroke(Theme.divider.opacity(0.2), lineWidth: 0.5)
-            )
-            .contentShape(Rectangle())
+
+            // Line 2: summary
+            Text(ticket.summary)
+                .font(.system(size: 13))
+                .foregroundStyle(Theme.textPrimary.opacity(0.75))
+                .lineLimit(1)
         }
-        .buttonStyle(.plain)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(isSelected ? Theme.selectedBg : (isHovered ? Theme.cardBgHover.opacity(0.5) : Color.clear))
+        .contentShape(Rectangle())
+        .onTapGesture(perform: onTap)
+        .pointerCursor()
+        .help(ticket.summary)
         .onHover { hovering in
             withAnimation(.easeInOut(duration: 0.15)) {
                 isHovered = hovering
             }
         }
     }
+
+    // MARK: - Avatar
+
+    @ViewBuilder
+    private var avatarView: some View {
+        if let avatarUrlStr = ticket.assigneeAvatar,
+           let url = URL(string: avatarUrlStr) {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .success(let image):
+                    image.resizable().aspectRatio(contentMode: .fill)
+                default:
+                    avatarFallback
+                }
+            }
+            .frame(width: 22, height: 22)
+            .clipShape(Circle())
+        } else {
+            avatarFallback
+        }
+    }
+
+    private var avatarFallback: some View {
+        Text(String(ticket.assignee.prefix(1)).uppercased())
+            .font(.system(size: 10, weight: .bold))
+            .foregroundStyle(Theme.textPrimary)
+            .frame(width: 22, height: 22)
+            .background(Circle().fill(Theme.accent.opacity(0.25)))
+    }
+
+    // MARK: - Helpers
 
     private var statusColor: Color {
         let s = ticket.status.lowercased()

@@ -51,6 +51,7 @@ export {
   fetchAttachmentContent,
   fetchJiraImageByUrl,
   fetchTicketPoll,
+  setDueDate,
   getLatestWLTCComment,
   checkHealth as checkJiraHealth,
 } from "./jira";

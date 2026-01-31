@@ -88,7 +88,8 @@ struct PopoverContentView: View {
             )
             .foregroundStyle(isActive ? Theme.accent : Theme.textSecondary)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(ScalePressStyle())
+        .pointerCursor()
         .padding(2)
     }
 
@@ -106,7 +107,8 @@ struct PopoverContentView: View {
                     .foregroundStyle(Theme.textSecondary)
                     .opacity(isSettingsHovered ? 1.0 : 0.7)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(ScalePressStyle())
+            .pointerCursor()
             .onHover { isSettingsHovered = $0 }
 
             Button {
@@ -125,7 +127,8 @@ struct PopoverContentView: View {
                     .foregroundStyle(viewModel.widgetEnabled ? Theme.accent : Theme.textSecondary)
                     .opacity(isWidgetHovered ? 1.0 : 0.7)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(ScalePressStyle())
+            .pointerCursor()
             .onHover { isWidgetHovered = $0 }
 
             // Status dot with pulse
@@ -155,7 +158,8 @@ struct PopoverContentView: View {
             Button("Quit") {
                 NSApplication.shared.terminate(nil)
             }
-            .buttonStyle(.plain)
+            .buttonStyle(ScalePressStyle())
+            .pointerCursor()
             .font(.system(size: 12))
             .foregroundStyle(Theme.textSecondary)
         }
