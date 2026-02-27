@@ -33,6 +33,8 @@ const envSchema = z.object({
 
 	CRON_SECRET: z.string().optional(),
 
+	TRUSTED_IPS: z.string().optional(),
+
 	LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 })
 

@@ -40,6 +40,12 @@ export function unauthorized(
 	return apiError(message, 401, "UNAUTHORIZED")
 }
 
+export function forbidden(
+	message: string = "Forbidden"
+): NextResponse<ApiResponse<never>> {
+	return apiError(message, 403, "FORBIDDEN")
+}
+
 export function notFound(
 	message: string = "Not found"
 ): NextResponse<ApiResponse<never>> {

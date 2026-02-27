@@ -3,6 +3,7 @@ export {
 	apiError,
 	badRequest,
 	unauthorized,
+	forbidden,
 	notFound,
 	conflict,
 	serverError,
