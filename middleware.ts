@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
-import { parseTrustedIPs, isIPAllowed } from "@/lib/security/ip-whitelist"
+import {
+	parseTrustedIPs,
+	isIPAllowed,
+	createSessionCookie,
+	verifySessionCookie,
+	SESSION_COOKIE_NAME,
+	SESSION_MAX_AGE_S,
+} from "@/lib/security/ip-whitelist"
 
 const securityHeaders = {
 	"X-Content-Type-Options": "nosniff",
@@ -11,7 +18,8 @@ const securityHeaders = {
 }
 
 // Parsed once at cold start, reused for all requests
-const trustedIPs = parseTrustedIPs(process.env.TRUSTED_IPS ?? "")
+const TRUSTED_IPS_RAW = process.env.TRUSTED_IPS ?? ""
+const trustedIPs = parseTrustedIPs(TRUSTED_IPS_RAW)
 const isDev = process.env.NODE_ENV === "development"
 
 const PUBLIC_PATHS = [
@@ -31,30 +39,51 @@ function getClientIP(request: NextRequest): string {
 	return request.headers.get("x-real-ip") ?? "unknown"
 }
 
-export function middleware(request: NextRequest) {
+function applySecurityHeaders(response: NextResponse): NextResponse {
+	Object.entries(securityHeaders).forEach(([key, value]) => {
+		response.headers.set(key, value)
+	})
+	return response
+}
+
+export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl
 
 	// IP whitelist check (skip for public paths)
 	if (trustedIPs.length > 0 && !isPublicPath(pathname)) {
 		const clientIP = getClientIP(request)
 
-		if (!isIPAllowed(clientIP, trustedIPs, isDev)) {
-			console.warn(
-				`[Security] Blocked untrusted IP: ${clientIP} → ${request.method} ${pathname}`
-			)
-			return new NextResponse(
-				JSON.stringify({ success: false, error: "Access denied" }),
-				{ status: 403, headers: { "Content-Type": "application/json" } }
-			)
+		// 1. Check session cookie first (works from any IP)
+		const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value
+		if (sessionCookie && (await verifySessionCookie(sessionCookie, TRUSTED_IPS_RAW))) {
+			return applySecurityHeaders(NextResponse.next())
 		}
+
+		// 2. Trusted IP → allow + set 7-day session cookie
+		if (isIPAllowed(clientIP, trustedIPs, isDev)) {
+			const response = applySecurityHeaders(NextResponse.next())
+			const cookieValue = await createSessionCookie(TRUSTED_IPS_RAW)
+			response.cookies.set(SESSION_COOKIE_NAME, cookieValue, {
+				httpOnly: true,
+				secure: !isDev,
+				sameSite: "lax",
+				path: "/",
+				maxAge: SESSION_MAX_AGE_S,
+			})
+			return response
+		}
+
+		// 3. No cookie, no trusted IP → block
+		console.warn(
+			`[Security] Blocked untrusted IP: ${clientIP} → ${request.method} ${pathname}`
+		)
+		return new NextResponse(
+			JSON.stringify({ success: false, error: "Access denied" }),
+			{ status: 403, headers: { "Content-Type": "application/json" } }
+		)
 	}
 
-	// Apply security headers
-	const response = NextResponse.next()
-	Object.entries(securityHeaders).forEach(([key, value]) => {
-		response.headers.set(key, value)
-	})
-	return response
+	return applySecurityHeaders(NextResponse.next())
 }
 
 export const config = {

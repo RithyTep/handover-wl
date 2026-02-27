@@ -80,3 +80,49 @@ export function isIPAllowed(
 		return isIPInCIDR(clientIP, entry.parsed)
 	})
 }
+
+// --- Session cookie (7-day) using Web Crypto API (Edge Runtime safe) ---
+
+const SESSION_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
+export const SESSION_MAX_AGE_S = 7 * 24 * 60 * 60 // 7 days in seconds
+export const SESSION_COOKIE_NAME = "ip_session"
+
+async function hmacSign(data: string, secret: string): Promise<string> {
+	const enc = new TextEncoder()
+	const key = await crypto.subtle.importKey(
+		"raw",
+		enc.encode(secret),
+		{ name: "HMAC", hash: "SHA-256" },
+		false,
+		["sign"]
+	)
+	const sig = await crypto.subtle.sign("HMAC", key, enc.encode(data))
+	return btoa(String.fromCharCode(...new Uint8Array(sig)))
+}
+
+/** Create a signed session cookie value: `timestamp.signature` */
+export async function createSessionCookie(secret: string): Promise<string> {
+	const timestamp = Date.now().toString()
+	const signature = await hmacSign(timestamp, secret)
+	return `${timestamp}.${signature}`
+}
+
+/** Verify session cookie: valid signature + not expired (7 days) */
+export async function verifySessionCookie(
+	value: string,
+	secret: string
+): Promise<boolean> {
+	const dotIndex = value.indexOf(".")
+	if (dotIndex === -1) return false
+
+	const timestamp = value.substring(0, dotIndex)
+	const signature = value.substring(dotIndex + 1)
+
+	const elapsed = Date.now() - parseInt(timestamp, 10)
+	if (isNaN(elapsed) || elapsed < 0 || elapsed > SESSION_MAX_AGE_MS) {
+		return false
+	}
+
+	const expected = await hmacSign(timestamp, secret)
+	return signature === expected
+}

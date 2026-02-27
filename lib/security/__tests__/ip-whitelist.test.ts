@@ -1,5 +1,10 @@
-import { describe, it, expect } from "vitest"
-import { parseTrustedIPs, isIPAllowed } from "../ip-whitelist"
+import { describe, it, expect, vi } from "vitest"
+import {
+	parseTrustedIPs,
+	isIPAllowed,
+	createSessionCookie,
+	verifySessionCookie,
+} from "../ip-whitelist"
 
 describe("parseTrustedIPs", () => {
 	it("returns empty array for empty string", () => {
@@ -78,5 +83,41 @@ describe("isIPAllowed", () => {
 		const wl = parseTrustedIPs("203.0.113.50")
 		expect(isIPAllowed("unknown", wl, false)).toBe(false)
 		expect(isIPAllowed("1.1.1.1", wl, false)).toBe(false)
+	})
+})
+
+describe("session cookie", () => {
+	const secret = "203.0.113.50,10.0.0.0/16"
+
+	it("creates and verifies a valid cookie", async () => {
+		const cookie = await createSessionCookie(secret)
+		expect(cookie).toContain(".")
+		expect(await verifySessionCookie(cookie, secret)).toBe(true)
+	})
+
+	it("rejects cookie with wrong secret", async () => {
+		const cookie = await createSessionCookie(secret)
+		expect(await verifySessionCookie(cookie, "wrong-secret")).toBe(false)
+	})
+
+	it("rejects tampered cookie", async () => {
+		const cookie = await createSessionCookie(secret)
+		const tampered = "9999999999999." + cookie.split(".")[1]
+		expect(await verifySessionCookie(tampered, secret)).toBe(false)
+	})
+
+	it("rejects malformed cookie", async () => {
+		expect(await verifySessionCookie("garbage", secret)).toBe(false)
+		expect(await verifySessionCookie("", secret)).toBe(false)
+	})
+
+	it("rejects expired cookie (>7 days)", async () => {
+		const eightDaysAgo = Date.now() - 8 * 24 * 60 * 60 * 1000
+		// Manually craft a cookie with old timestamp
+		vi.spyOn(Date, "now").mockReturnValue(eightDaysAgo)
+		const cookie = await createSessionCookie(secret)
+		vi.restoreAllMocks()
+
+		expect(await verifySessionCookie(cookie, secret)).toBe(false)
 	})
 })
