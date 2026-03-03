@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import confetti from "canvas-confetti";
 import { Clock, Play, CheckCircle2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -34,11 +33,9 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
     onSuccess: (data) => {
       setScheduleEnabled(data.enabled);
       if (data.enabled) {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 },
-        });
+        import("canvas-confetti").then((m) =>
+          m.default({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
+        );
         toast.success("Scheduler enabled! Reports will be sent at 5:00 PM and 11:30 PM GMT+7");
       } else {
         toast.success("Scheduler disabled");
@@ -51,12 +48,12 @@ export function SchedulerDialog({ open, onOpenChange }: SchedulerDialogProps) {
 
   const triggerScheduleMutation = trpc.scheduler.triggerSchedule.useMutation({
     onSuccess: () => {
-      confetti({
-        particleCount: 200,
-        spread: 100,
-        origin: { y: 0.5 },
-        colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
-      });
+      import("canvas-confetti").then((m) =>
+        m.default({
+          particleCount: 200, spread: 100, origin: { y: 0.5 },
+          colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
+        })
+      );
       toast.success("Scheduler triggered successfully! Check your Slack channel.");
     },
     onError: (error) => {

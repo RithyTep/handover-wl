@@ -1,6 +1,5 @@
 import { useCallback } from "react"
 import { toast } from "sonner"
-import confetti from "canvas-confetti"
 import { trpc } from "@/components/trpc-provider"
 import type { Ticket } from "@/lib/types"
 
@@ -99,11 +98,9 @@ export function useAIAutofill({
 			toast.dismiss(loadingToast)
 
 			if (errorCount === 0) {
-				confetti({
-					particleCount: 100,
-					spread: 70,
-					origin: { y: 0.6 },
-				})
+				import("canvas-confetti").then((m) =>
+					m.default({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
+				)
 				toast.success(`Successfully AI-filled ${successCount} ticket(s)`)
 			} else {
 				toast.warning(`Filled ${successCount} ticket(s), ${errorCount} failed`)

@@ -51,15 +51,17 @@ export async function middleware(request: NextRequest) {
 
 	// IP whitelist check (skip for public paths)
 	if (trustedIPs.length > 0 && !isPublicPath(pathname)) {
-		const clientIP = getClientIP(request)
-
-		// 1. Check session cookie first (works from any IP)
 		const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value
-		if (sessionCookie && (await verifySessionCookie(sessionCookie, TRUSTED_IPS_RAW))) {
+		const hasValidSession =
+			sessionCookie && (await verifySessionCookie(sessionCookie, TRUSTED_IPS_RAW))
+
+		// 1. Valid session cookie → instant pass (any IP)
+		if (hasValidSession) {
 			return applySecurityHeaders(NextResponse.next())
 		}
 
-		// 2. Trusted IP → allow + set 7-day session cookie
+		// 2. Trusted IP → pass + set 7-day cookie (only when no valid cookie)
+		const clientIP = getClientIP(request)
 		if (isIPAllowed(clientIP, trustedIPs, isDev)) {
 			const response = applySecurityHeaders(NextResponse.next())
 			const cookieValue = await createSessionCookie(TRUSTED_IPS_RAW)

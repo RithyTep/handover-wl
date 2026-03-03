@@ -15,6 +15,7 @@ model TicketData {
   action    String   @default("--") @db.VarChar(100)
   updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamptz
 
+  @@index([updatedAt])
   @@map("ticket_data")
 }
 
@@ -37,6 +38,7 @@ model ScheduledComment {
   updatedAt    DateTime  @default(now()) @map("updated_at") @db.Timestamptz
   lastPostedAt DateTime? @map("last_posted_at") @db.Timestamptz
 
+  @@index([enabled])
   @@map("scheduled_comments")
 }
 
@@ -49,6 +51,7 @@ model Backup {
   createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
   description       String?  @db.Text
 
+  @@index([createdAt])
   @@map("backups")
 }
 

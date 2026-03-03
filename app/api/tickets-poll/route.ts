@@ -7,12 +7,10 @@ export async function GET() {
   try {
     const result = await fetchTicketPoll();
 
-    return NextResponse.json({
-      success: true,
-      total: result.total,
-      latestKey: result.latestKey,
-      ts: Date.now(),
-    });
+    return NextResponse.json(
+      { success: true, total: result.total, latestKey: result.latestKey, ts: Date.now() },
+      { headers: { "Cache-Control": "private, max-age=5, stale-while-revalidate=10" } }
+    );
   } catch (error: unknown) {
     const message =
       error instanceof Error ? error.message : "Poll check failed";

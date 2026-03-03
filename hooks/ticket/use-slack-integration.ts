@@ -1,6 +1,5 @@
 import { useCallback } from "react"
 import { toast } from "sonner"
-import confetti from "canvas-confetti"
 import { trpc } from "@/components/trpc-provider"
 import type { Ticket } from "@/lib/types"
 
@@ -17,12 +16,12 @@ export function useSlackIntegration({
 }: UseSlackIntegrationOptions) {
 	const sendSlackMutation = trpc.slack.send.useMutation({
 		onSuccess: () => {
-			confetti({
-				particleCount: 200,
-				spread: 100,
-				origin: { y: 0.5 },
-				colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
-			})
+			import("canvas-confetti").then((m) =>
+				m.default({
+					particleCount: 200, spread: 100, origin: { y: 0.5 },
+					colors: ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"],
+				})
+			)
 			toast.success("Successfully sent to Slack")
 		},
 		onError: (error) => {

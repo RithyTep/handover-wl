@@ -9,7 +9,10 @@ export async function GET() {
 	try {
 		await initDatabase()
 		const theme = await getThemePreference()
-		return NextResponse.json({ success: true, theme })
+		return NextResponse.json(
+			{ success: true, theme },
+			{ headers: { "Cache-Control": "private, max-age=3600, stale-while-revalidate=86400" } }
+		)
 	} catch (error: unknown) {
 		const message = error instanceof Error ? error.message : "Unknown error"
 		log.error("Theme GET error", { error: message })

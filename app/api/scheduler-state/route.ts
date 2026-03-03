@@ -6,10 +6,10 @@ export async function GET(_request: NextRequest) {
     await initDatabase();
     const enabled = await getSchedulerEnabled();
 
-    return NextResponse.json({
-      success: true,
-      enabled,
-    });
+    return NextResponse.json(
+      { success: true, enabled },
+      { headers: { "Cache-Control": "private, max-age=30, stale-while-revalidate=60" } }
+    );
   } catch (error: unknown) {
     const message = error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(

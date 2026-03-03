@@ -87,16 +87,28 @@ const SESSION_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 export const SESSION_MAX_AGE_S = 7 * 24 * 60 * 60 // 7 days in seconds
 export const SESSION_COOKIE_NAME = "ip_session"
 
+// Cache imported CryptoKey per secret (key import is expensive, only do it once)
+const keyCache = new Map<string, Promise<CryptoKey>>()
+const encoder = new TextEncoder()
+
+function getCachedKey(secret: string): Promise<CryptoKey> {
+	let cached = keyCache.get(secret)
+	if (!cached) {
+		cached = crypto.subtle.importKey(
+			"raw",
+			encoder.encode(secret),
+			{ name: "HMAC", hash: "SHA-256" },
+			false,
+			["sign"]
+		)
+		keyCache.set(secret, cached)
+	}
+	return cached
+}
+
 async function hmacSign(data: string, secret: string): Promise<string> {
-	const enc = new TextEncoder()
-	const key = await crypto.subtle.importKey(
-		"raw",
-		enc.encode(secret),
-		{ name: "HMAC", hash: "SHA-256" },
-		false,
-		["sign"]
-	)
-	const sig = await crypto.subtle.sign("HMAC", key, enc.encode(data))
+	const key = await getCachedKey(secret)
+	const sig = await crypto.subtle.sign("HMAC", key, encoder.encode(data))
 	return btoa(String.fromCharCode(...new Uint8Array(sig)))
 }
 

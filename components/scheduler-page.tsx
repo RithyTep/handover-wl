@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { toast } from "sonner"
-import confetti from "canvas-confetti"
 import { Clock, Save } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { trpc } from "@/components/trpc-provider"
@@ -37,11 +36,9 @@ export function SchedulerPage() {
 		onSuccess: (data) => {
 			setScheduleEnabled(data.enabled)
 			if (data.enabled) {
-				confetti({
-					particleCount: 100,
-					spread: 70,
-					origin: { y: 0.6 },
-				})
+				import("canvas-confetti").then((m) =>
+					m.default({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
+				)
 				toast.success("Scheduler enabled! Reports will be sent at configured times.")
 			} else {
 				toast.success("Scheduler disabled")
@@ -174,11 +171,9 @@ export function SchedulerPage() {
 			toast.dismiss(loadingToast)
 
 			if (data.replied) {
-				confetti({
-					particleCount: 150,
-					spread: 80,
-					origin: { y: 0.5 },
-				})
+				import("canvas-confetti").then((m) =>
+					m.default({ particleCount: 150, spread: 80, origin: { y: 0.5 } })
+				)
 				toast.success(`Reply posted successfully! (${data.ticketsCount} tickets)`)
 			} else {
 				toast.info(data.message || "No handover messages found that need replies")

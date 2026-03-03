@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react"
 import { toast } from "sonner"
-import confetti from "canvas-confetti"
 import { trpc } from "@/components/trpc-provider"
 import type { Ticket } from "@/lib/types"
 import { useAIAutofill } from "./use-ai-autofill"
@@ -31,11 +30,9 @@ export const useTicketActions = ({ tickets }: UseTicketActionsProps): UseTicketA
 
 	const saveMutation = trpc.ticketData.save.useMutation({
 		onSuccess: () => {
-			confetti({
-				particleCount: 100,
-				spread: 70,
-				origin: { y: 0.6 },
-			})
+			import("canvas-confetti").then((m) =>
+				m.default({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
+			)
 			toast.success("Your changes have been saved")
 		},
 		onError: (error) => {
@@ -97,11 +94,9 @@ export const useTicketActions = ({ tickets }: UseTicketActionsProps): UseTicketA
 			})
 			setTicketData(newData)
 			setRenderKey((prev) => prev + 1)
-			confetti({
-				particleCount: 100,
-				spread: 70,
-				origin: { y: 0.6 },
-			})
+			import("canvas-confetti").then((m) =>
+				m.default({ particleCount: 100, spread: 70, origin: { y: 0.6 } })
+			)
 			toast.success("All tickets have been filled")
 		},
 		[ticketData, tickets]
