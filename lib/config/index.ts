@@ -16,6 +16,16 @@ AND "Release Date[Date]" = EMPTY
 ORDER BY created ASC, updated DESC
 `.trim();
 
+export const JQL_RELEASE_DATE = `
+project = ${JIRA.PROJECT_KEY}
+AND issuetype in standardIssueTypes()
+AND status in ("WL - Pending", "WL - Processing")
+AND "Release Date[Date]" != EMPTY
+ORDER BY created ASC, updated DESC
+`.trim();
+
+export const JIRA_RELEASE_DATE_FIELD = "customfield_10401";
+
 export const JIRA_FIELDS = [
   "key",
   "summary",
@@ -27,6 +37,7 @@ export const JIRA_FIELDS = [
   JIRA.FIELDS.WL_MAIN_TICKET_TYPE,
   JIRA.FIELDS.WL_SUB_TICKET_TYPE,
   JIRA.FIELDS.CUSTOMER_LEVEL,
+  JIRA_RELEASE_DATE_FIELD,
 ] as const;
 
 export const TIMEZONE = {

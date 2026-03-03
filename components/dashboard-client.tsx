@@ -3,10 +3,11 @@
 import { useState, useCallback, useEffect } from "react"
 import { DashboardLayout } from "./dashboard-layout"
 import { useTickets } from "@/hooks/ticket/use-tickets"
+import { useReleaseDateTickets } from "@/hooks/ticket/use-release-date-tickets"
 import { useTicketActions } from "@/hooks/ticket/use-ticket-actions"
 import { useThemeStore } from "@/lib/stores/theme-store"
 import { DEFAULT_THEME } from "@/lib/constants"
-import type { Theme, Ticket } from "@/lib/types"
+import type { Theme, Ticket, DashboardTab } from "@/lib/types"
 
 interface DashboardClientProps {
 	initialTickets?: Ticket[]
@@ -17,7 +18,14 @@ export function DashboardClient({
 	initialTickets,
 	initialTheme,
 }: DashboardClientProps) {
-	const { tickets, refetch } = useTickets({ initialTickets })
+	const [activeTab, setActiveTab] = useState<DashboardTab>("pending")
+
+	const { tickets: pendingTickets, refetch: refetchPending } = useTickets({ initialTickets })
+	const {
+		tickets: releaseDateTickets,
+		refetch: refetchReleaseDate,
+	} = useReleaseDateTickets({ enabled: activeTab === "release-date" })
+
 	const selectedTheme = useThemeStore((state) => state.selectedTheme)
 	const setTheme = useThemeStore((state) => state.setTheme)
 	const loadFromLocalStorage = useThemeStore(
@@ -33,6 +41,9 @@ export function DashboardClient({
 		loadFromLocalStorage()
 	}, [initialTheme, selectedTheme, setTheme, loadFromLocalStorage])
 
+	const tickets = activeTab === "pending" ? pendingTickets : releaseDateTickets
+	const handleRefresh = activeTab === "pending" ? () => refetchPending() : () => refetchReleaseDate()
+
 	const {
 		ticketData,
 		updateTicketData,
@@ -43,7 +54,7 @@ export function DashboardClient({
 		handleCopyForSlack,
 		handleQuickFill: handleQuickFillAction,
 		handleClear: handleClearAction,
-	} = useTicketActions({ tickets })
+	} = useTicketActions({ tickets: pendingTickets })
 
 	const [quickFillOpen, setQuickFillOpen] = useState(false)
 	const [clearOpen, setClearOpen] = useState(false)
@@ -69,10 +80,14 @@ export function DashboardClient({
 			ticketData={ticketData}
 			updateTicketData={updateTicketData}
 			renderKey={renderKey}
+			activeTab={activeTab}
+			onTabChange={setActiveTab}
+			pendingCount={pendingTickets.length}
+			releaseDateCount={releaseDateTickets.length}
 			onAIFillAll={handleAIFillAll}
 			onQuickFill={handleQuickFill}
 			onClear={handleClear}
-			onRefresh={() => refetch()}
+			onRefresh={handleRefresh}
 			onCopy={handleCopyForSlack}
 			onSave={handleSave}
 			onSendSlack={handleSendSlack}

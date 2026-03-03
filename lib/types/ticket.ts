@@ -26,6 +26,7 @@ export interface Ticket {
 	jiraUrl: string
 	savedStatus: string
 	savedAction: string
+	releaseDate?: string | null
 }
 
 export interface JiraIssue {

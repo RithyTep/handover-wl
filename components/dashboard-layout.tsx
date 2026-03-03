@@ -5,13 +5,14 @@ import dynamic from "next/dynamic"
 import { DashboardHeader } from "./dashboard-header"
 import { DashboardContent } from "./dashboard-content"
 import { DashboardMobileActions } from "./dashboard-mobile-actions"
+import { DashboardTabBar } from "./dashboard-tab-bar"
 import { CommandPalette } from "@/components/command-palette"
 import { QuickFillDialog } from "./quick-fill-dialog"
 import { ClearDialog } from "./clear-dialog"
 import { SendSlackDialog } from "./send-slack-dialog"
 import { cn } from "@/lib/utils"
 import { getLayoutConfig } from "@/lib/theme"
-import type { Theme, Ticket } from "@/lib/types"
+import type { Theme, Ticket, DashboardTab } from "@/lib/types"
 
 // Dynamically import heavy theme scenes for code splitting
 const NewYearScene = dynamic(() => import("@/components/new-year-scene").then(m => ({ default: m.NewYearScene })), { ssr: false })
@@ -28,6 +29,10 @@ interface DashboardLayoutProps {
 	ticketData: Record<string, string>
 	updateTicketData: (key: string, value: string) => void
 	renderKey: number
+	activeTab: DashboardTab
+	onTabChange: (tab: DashboardTab) => void
+	pendingCount: number
+	releaseDateCount: number
 	onAIFillAll: () => void
 	onQuickFill: (status: string, action: string) => void
 	onClear: () => void
@@ -59,6 +64,10 @@ export const DashboardLayout = ({
 	ticketData,
 	updateTicketData,
 	renderKey,
+	activeTab,
+	onTabChange,
+	pendingCount,
+	releaseDateCount,
 	onAIFillAll,
 	onQuickFill,
 	onClear,
@@ -111,12 +120,20 @@ export const DashboardLayout = ({
 			>
 				{SceneComponent && <SceneComponent />}
 				<DashboardHeader theme={theme} ticketCount={tickets.length} />
+				<DashboardTabBar
+					activeTab={activeTab}
+					onTabChange={onTabChange}
+					pendingCount={pendingCount}
+					releaseDateCount={releaseDateCount}
+					theme={theme}
+				/>
 				<DashboardContent
 					tickets={tickets}
 					ticketData={ticketData}
 					updateTicketData={updateTicketData}
 					renderKey={renderKey}
 					theme={theme}
+					activeTab={activeTab}
 					onAIFillAll={onAIFillAll}
 					onQuickFill={handleOpenQuickFill}
 					onClear={handleOpenClear}

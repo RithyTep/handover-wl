@@ -6,6 +6,8 @@ export type {
 	JiraComment,
 } from "./ticket"
 
+export type DashboardTab = "pending" | "release-date"
+
 export {
 	ticketDataSchema,
 	ticketDataMapSchema,

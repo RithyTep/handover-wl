@@ -1,7 +1,7 @@
 import axios from "axios"
 import { getJiraConfig } from "@/lib/env"
 import { logger } from "@/lib/logger"
-import { JQL_QUERY, JIRA_FIELDS, JIRA, TIMEOUTS } from "@/lib/config"
+import { JQL_QUERY, JIRA_FIELDS, JIRA, JIRA_RELEASE_DATE_FIELD, TIMEOUTS } from "@/lib/config"
 import type { Ticket, JiraIssue, TicketData } from "@/lib/types"
 
 const log = logger.jira
@@ -100,6 +100,7 @@ export function transformIssue(
 		jiraUrl: `${baseUrl}/browse/${key}`,
 		savedStatus: saved.status,
 		savedAction: saved.action,
+		releaseDate: (fields[JIRA_RELEASE_DATE_FIELD] as string) || null,
 	}
 }
 
