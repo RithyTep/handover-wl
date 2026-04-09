@@ -31,11 +31,16 @@ final class SchedulerService: ObservableObject {
         }
 
         let source = DispatchSource.makeTimerSource(queue: queue)
-        source.schedule(deadline: .now() + interval)
+        // Use strict timing with 0 leeway to prevent early firing
+        source.schedule(
+            deadline: .now() + interval,
+            leeway: .seconds(0)
+        )
         source.setEventHandler { [weak self] in
             guard let self else { return }
             DispatchQueue.main.async {
                 self.onFire?()
+                // Reschedule for next day
                 self.schedule(hour: hour, minute: minute)
             }
         }
@@ -43,8 +48,8 @@ final class SchedulerService: ObservableObject {
         timer = source
 
         let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm, MMM d"
-        print("[Scheduler] Next fire: \(formatter.string(from: nextDate))")
+        formatter.dateFormat = "HH:mm:ss, MMM d"
+        print("[Scheduler] Next fire: \(formatter.string(from: nextDate)) (in \(Int(interval))s)")
     }
 
     func cancel() {

@@ -5,8 +5,9 @@ import SwiftUI
 @MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem!
-    private var viewModel: AppViewModel!
-    private var ticketVM: TicketListViewModel!
+    var viewModel: AppViewModel!
+    var ticketVM: TicketListViewModel!
+    private var popover: NSPopover!
     private var cancellables = Set<AnyCancellable>()
 
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -14,8 +15,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         ticketVM = TicketListViewModel()
 
         setupStatusItem()
-        setupMenuBar()
-        setupMainWindow()
+        setupPopover()
 
         ticketVM.$ticketCount
             .receive(on: RunLoop.main)
@@ -33,7 +33,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             accessibilityDescription: "LazyhandBar"
         )
         button.imagePosition = .imageLeading
-        button.action = #selector(toggleMainWindow)
+        button.action = #selector(togglePopover)
         button.target = self
         updateStatusLabel()
     }
@@ -44,62 +44,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         button.title = count > 0 ? " \(count)" : ""
     }
 
-    // MARK: - Menu Bar
+    // MARK: - Popover
 
-    private func setupMenuBar() {
-        let menu = NSMenu()
-
-        menu.addItem(NSMenuItem(
-            title: "Show LazyhandBar",
-            action: #selector(showMainWindow),
-            keyEquivalent: ""
-        ))
-
-        menu.addItem(NSMenuItem.separator())
-
-        menu.addItem(NSMenuItem(
-            title: "New Ticket Window",
-            action: #selector(newTicketWindow),
-            keyEquivalent: "n"
-        ))
-
-        menu.addItem(NSMenuItem.separator())
-
-        menu.addItem(NSMenuItem(
-            title: "Quit LazyhandBar",
-            action: #selector(NSApplication.terminate(_:)),
-            keyEquivalent: "q"
-        ))
-
-        statusItem.menu = menu
-    }
-
-    // MARK: - Main Window
-
-    private func setupMainWindow() {
-        let mainWindow = MainWindowController.shared
+    private func setupPopover() {
+        popover = NSPopover()
+        popover.contentSize = NSSize(width: 360, height: 480)
+        popover.behavior = .transient
+        popover.animates = true
 
         let content = PopoverContentView(
             viewModel: viewModel,
             ticketVM: ticketVM
         )
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .preferredColorScheme(.dark)
-
-        mainWindow.window?.contentView = NSHostingView(rootView: content)
+        popover.contentViewController = NSHostingController(rootView: content)
     }
 
-    @objc private func toggleMainWindow() {
-        MainWindowController.shared.toggle()
-    }
+    @objc private func togglePopover() {
+        guard let button = statusItem.button else { return }
 
-    @objc private func showMainWindow() {
-        MainWindowController.shared.show()
-    }
-
-    @objc private func newTicketWindow() {
-        guard let ticket = ticketVM.selectedTicket else { return }
-        WindowManager.shared.openDetailWindow(for: ticket, appUrl: viewModel.appUrl)
+        if popover.isShown {
+            popover.performClose(nil)
+        } else {
+            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+            NSApp.activate(ignoringOtherApps: true)
+        }
     }
 
     // MARK: - Application Lifecycle
@@ -109,14 +77,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        if !flag {
-            MainWindowController.shared.show()
+        if !flag, let button = statusItem.button {
+            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         }
         return true
     }
 }
-
-// MARK: - Notifications
 
 extension Notification.Name {
     static let submitComment = Notification.Name("submitComment")

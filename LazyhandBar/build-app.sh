@@ -4,9 +4,12 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_NAME="LazyhandBar"
 BUNDLE_ID="com.lazyhand.bar"
-BUILD_DIR="$SCRIPT_DIR/.build/release"
-APP_BUNDLE="$SCRIPT_DIR/dist/${APP_NAME}.app"
+VERSION="1.0.0"
+BUILD_DIR="$SCRIPT_DIR/.build/arm64-apple-macosx/release"
+DIST_DIR="$SCRIPT_DIR/dist"
+APP_BUNDLE="$DIST_DIR/${APP_NAME}.app"
 CONTENTS="$APP_BUNDLE/Contents"
+DMG_NAME="${APP_NAME}-${VERSION}.dmg"
 
 echo "Building release binary..."
 cd "$SCRIPT_DIR"
@@ -33,9 +36,9 @@ cat > "$CONTENTS/Info.plist" <<EOF
     <key>CFBundleIdentifier</key>
     <string>${BUNDLE_ID}</string>
     <key>CFBundleVersion</key>
-    <string>1.0.0</string>
+    <string>${VERSION}</string>
     <key>CFBundleShortVersionString</key>
-    <string>1.0.0</string>
+    <string>${VERSION}</string>
     <key>CFBundleExecutable</key>
     <string>${APP_NAME}</string>
     <key>CFBundlePackageType</key>
@@ -53,13 +56,44 @@ cat > "$CONTENTS/Info.plist" <<EOF
 </plist>
 EOF
 
-# Create zip for distribution
-cd "$SCRIPT_DIR/dist"
+# Create zip
+echo "Creating ZIP..."
+cd "$DIST_DIR"
+rm -f "${APP_NAME}.zip"
 zip -r -q "${APP_NAME}.zip" "${APP_NAME}.app"
 
+# Create DMG
+echo "Creating DMG..."
+DMG_TEMP="$DIST_DIR/dmg_temp"
+rm -rf "$DMG_TEMP" "$DIST_DIR/$DMG_NAME"
+mkdir -p "$DMG_TEMP"
+
+# Copy app to temp folder
+cp -R "$APP_BUNDLE" "$DMG_TEMP/"
+
+# Create Applications symlink
+ln -s /Applications "$DMG_TEMP/Applications"
+
+# Create DMG
+hdiutil create -volname "$APP_NAME" \
+    -srcfolder "$DMG_TEMP" \
+    -ov -format UDZO \
+    "$DIST_DIR/$DMG_NAME"
+
+# Cleanup
+rm -rf "$DMG_TEMP"
+
 echo ""
-echo "Done!"
+echo "========================================="
+echo "  Build Complete!"
+echo "========================================="
+echo ""
 echo "  App:  $APP_BUNDLE"
-echo "  Zip:  $SCRIPT_DIR/dist/${APP_NAME}.zip"
+echo "  ZIP:  $DIST_DIR/${APP_NAME}.zip"
+echo "  DMG:  $DIST_DIR/$DMG_NAME"
 echo ""
-echo "To install: unzip and drag LazyhandBar.app to /Applications"
+echo "To install:"
+echo "  1. Open the DMG file"
+echo "  2. Drag LazyhandBar to Applications"
+echo "  3. Open from Applications"
+echo ""

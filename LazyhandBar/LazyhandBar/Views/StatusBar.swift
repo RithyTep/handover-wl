@@ -28,12 +28,12 @@ struct StatusSection: View {
                 VStack(alignment: .leading, spacing: 4) {
                     if let nextFire = viewModel.scheduler.nextFireDate {
                         InfoRow(icon: "calendar.badge.clock", label: "Next") {
-                            Text(nextFire, style: .relative)
+                            Text(nextFire.formatted(date: .omitted, time: .shortened))
                         }
                     }
                     if let lastRun = viewModel.lastRunTime {
                         InfoRow(icon: "checkmark.circle", label: "Last") {
-                            Text(lastRun, style: .relative)
+                            Text(lastRun.formatted(date: .omitted, time: .shortened))
                         }
                     }
                 }
