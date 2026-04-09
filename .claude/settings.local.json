@@ -1,0 +1,92 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \".claude/hooks/check-file-size.sh\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(cd /Users/rithytep/SIDE\\ PROJECT/jira-slack-integration && npx prisma generate:*)",
+      "Bash(cd:*)",
+      "Bash(npm uninstall @prisma/adapter-pg pg ws @types/pg @types/ws)",
+      "mcp__filesystem__list_directory",
+      "mcp__filesystem__directory_tree",
+      "Bash(npx tsc:*)",
+      "Bash(npm install)",
+      "mcp__serena__read_memory",
+      "Bash(cat:*)",
+      "Bash(find:*)",
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "Bash(npx cap init:*)",
+      "Bash(npx cap:*)",
+      "Bash(open:*)",
+      "WebSearch",
+      "Bash(echo:*)",
+      "Bash(npx:*)",
+      "Bash(sips:*)",
+      "Bash(ls:*)",
+      "Bash(./gradlew assembleDebug:*)",
+      "Bash(brew install:*)",
+      "Bash(export JAVA_HOME:*)",
+      "Bash(java -version:*)",
+      "Bash(tee:*)",
+      "Bash(chmod:*)",
+      "Bash(/opt/homebrew/opt/openjdk@17/bin/java:*)",
+      "Bash(JAVA_HOME=\"/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home\" ./gradlew:*)",
+      "Bash(bash -c:*)",
+      "Bash(cd /Users/rithytep/SIDE\\ PROJECT/jira-slack-integration && git restore:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nadd capacitor android build setup\n\n- Configure Capacitor for Android APK wrapping Railway web app\n- Fix X-Frame-Options (DENY → SAMEORIGIN) for WebView compatibility\n- Add manifest.json and app icons (192x192, 512x512)\n- Add Capacitor dependencies and build scripts\n- Update .gitignore for Android/Capacitor files\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n)\")",
+      "mcp__serena__find_file",
+      "mcp__serena__get_symbols_overview",
+      "mcp__serena__find_symbol",
+      "mcp__serena__list_dir",
+      "mcp__serena__think_about_collected_information",
+      "Bash(cd /Users/rithytep/SIDE\\\\ PROJECT/jira-slack-integration && vercel logs:*)",
+      "Bash(cd /Users/rithytep/SIDE\\\\ PROJECT/jira-slack-integration && vercel env ls:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(curl:*)",
+      "Bash(swift build:*)",
+      "Bash(\"/Users/rithytep/SIDE PROJECT/jira-slack-integration/LazyhandBar/build-app.sh\")",
+      "Bash(sw_vers:*)",
+      "Bash(xcodebuild:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(git clone:*)",
+      "Bash(./build-app.sh:*)",
+      "Bash(screencapture:*)",
+      "Bash(git reset:*)",
+      "Bash(git init:*)",
+      "Bash(gh repo create:*)",
+      "Bash(swift -e:*)",
+      "Bash(tree:*)",
+      "Bash(say:*)",
+      "mcp__filesystem__read_multiple_files",
+      "mcp__filesystem__read_text_file",
+      "Bash(bash:*)",
+      "Bash(pkill:*)",
+      "mcp__serena__write_memory",
+      "Bash(test:*)",
+      "Bash(xargs:*)",
+      "Bash(wc:*)",
+      "WebFetch(domain:dribbble.com)",
+      "Bash(hdiutil create:*)",
+      "Bash(hdiutil attach:*)",
+      "Bash(hdiutil detach:*)",
+      "Bash(killall:*)",
+      "mcp__serena__list_memories",
+      "Bash(swift package:*)"
+    ]
+  },
+  "outputStyle": "default"
+}
