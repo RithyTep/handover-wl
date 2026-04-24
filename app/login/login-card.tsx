@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { clientEnv } from "@/lib/env"
 
 type GoogleCredentialResponse = { credential?: string }
 
@@ -35,7 +34,7 @@ export function LoginCard() {
 	const buttonRef = useRef<HTMLDivElement>(null)
 	const [error, setError] = useState<string | null>(null)
 	const [loading, setLoading] = useState(false)
-	const clientId = clientEnv.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+	const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
 	useEffect(() => {
 		if (!clientId) return
