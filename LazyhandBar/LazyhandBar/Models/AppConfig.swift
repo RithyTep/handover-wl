@@ -14,13 +14,13 @@ struct AppConfig: Codable, Equatable {
     var pollingInterval: String
 
     static let defaultConfig = AppConfig(
-        appUrl: "https://handover-production.rithytep.online",
+        appUrl: "",
         token: "",
         channelId: "",
         mentions: "",
-        preset: "day",
+        preset: "off",
         hour: "17",
-        minute: "16",
+        minute: "00",
         soundEnabled: "true",
         selectedSound: "Tink",
         widgetEnabled: "false",

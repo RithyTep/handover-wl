@@ -54,10 +54,31 @@ final class AppViewModel: ObservableObject {
     }
 
     func presetChanged() {
+        // Guard: if the user has set a custom time, the preset must not fire.
+        // Cancel any active preset timer and wait for an explicit Apply.
+        if preset == .custom {
+            scheduler.cancel()
+            saveConfig()
+            return
+        }
         if let h = preset.defaultHour { hour = h }
         if let m = preset.defaultMinute { minute = m }
         saveConfig()
         applyScheduleIfNeeded()
+    }
+
+    /// Called when the user tweaks hour or minute while on a named preset.
+    /// If the value diverges from the preset default, snap to Custom and
+    /// cancel the preset timer so it cannot fire alongside the new time.
+    func snapToCustomIfNeeded() {
+        guard preset != .custom, preset != .off else { return }
+        guard let presetH = preset.defaultHour,
+              let presetM = preset.defaultMinute else { return }
+        if hour != presetH || minute != presetM {
+            preset = .custom
+            scheduler.cancel()
+            saveConfig()
+        }
     }
 
     func applySchedule() {
@@ -90,12 +111,14 @@ final class AppViewModel: ObservableObject {
             if response.replied {
                 let count = response.ticketsProcessed ?? 0
                 let ai = response.aiFilled ?? 0
-                var msg = "Replied (\(count) tickets"
+                var msg = "✓ Replied (\(count) tickets"
                 if ai > 0 { msg += ", \(ai) AI-filled" }
                 msg += ")"
                 setStatus(msg, isError: false)
             } else {
-                setStatus(response.message ?? "No reply sent.", isError: false)
+                let msg = response.message ?? "No reply sent"
+                let hint = formatHint(for: msg)
+                setStatus(hint, isError: true)
             }
         } catch {
             setStatus(error.localizedDescription, isError: true)
@@ -142,5 +165,27 @@ final class AppViewModel: ObservableObject {
     private func setStatus(_ message: String, isError: Bool) {
         statusMessage = message
         self.isError = isError
+    }
+
+    private func formatHint(for message: String) -> String {
+        let lower = message.lowercased()
+
+        if lower.contains("no handover message") || lower.contains("not found") {
+            return "⚠ No handover message in channel. Post one first or check Channel ID."
+        }
+        if lower.contains("channel_not_found") || lower.contains("channel not found") {
+            return "⚠ Channel not found. Check your Channel ID in Settings."
+        }
+        if lower.contains("invalid_auth") || lower.contains("token") {
+            return "⚠ Invalid token. Check your Slack Token in Settings."
+        }
+        if lower.contains("not_in_channel") {
+            return "⚠ Bot not in channel. Add the bot to the Slack channel."
+        }
+        if lower.contains("rate_limit") || lower.contains("rate limit") {
+            return "⚠ Rate limited. Wait a moment and try again."
+        }
+
+        return "⚠ \(message)"
     }
 }

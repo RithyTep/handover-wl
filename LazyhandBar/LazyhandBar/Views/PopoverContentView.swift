@@ -1,180 +1,120 @@
 import SwiftUI
-import ServiceManagement
-
-enum PopoverTab: Int, CaseIterable {
-    case tickets
-    case settings
-}
 
 struct PopoverContentView: View {
     @ObservedObject var viewModel: AppViewModel
     @ObservedObject var ticketVM: TicketListViewModel
-    @State private var selectedTab: PopoverTab = .tickets
-    @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
-    @Namespace private var tabNamespace
-    @State private var isSettingsHovered = false
-    @State private var isWidgetHovered = false
-    @State private var statusPulse = false
+    @State private var showSettings = false
 
     var body: some View {
         VStack(spacing: 0) {
-            // Tab picker
-            tabPicker
-                .padding(.horizontal, 16)
-                .padding(.top, 14)
-                .padding(.bottom, 10)
+            // Simple header
+            HStack {
+                Label("Tickets", systemImage: "ticket")
+                    .font(.headline)
 
-            Theme.divider.frame(height: 0.5)
+                if ticketVM.totalCount > 0 {
+                    Text("\(ticketVM.totalCount)")
+                        .font(.caption.bold())
+                        .padding(.horizontal, 6)
+                        .padding(.vertical, 2)
+                        .background(.tint, in: Capsule())
+                        .foregroundStyle(.white)
+                }
 
-            // Content
-            Group {
-                switch selectedTab {
-                case .tickets:
-                    TicketListView(viewModel: ticketVM, appUrl: viewModel.appUrl)
-                        .onAppear {
-                            if ticketVM.tickets.isEmpty {
-                                Task { await loadTickets() }
-                            }
+                Spacer()
+
+                Button {
+                    showSettings = true
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+                .buttonStyle(.borderless)
+
+                Button {
+                    Task { await refreshTickets() }
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .rotationEffect(.degrees(ticketVM.isLoading ? 360 : 0))
+                        .animation(
+                            ticketVM.isLoading ? .linear(duration: 1).repeatForever(autoreverses: false) : .default,
+                            value: ticketVM.isLoading
+                        )
+                }
+                .buttonStyle(.borderless)
+                .disabled(ticketVM.isLoading)
+            }
+            .padding()
+
+            Divider()
+
+            // Content - either settings or tickets
+            if showSettings {
+                SettingsView(viewModel: viewModel, ticketVM: ticketVM)
+                    .frame(maxHeight: .infinity)
+
+                Divider()
+
+                HStack {
+                    Button("Back to Tickets") {
+                        showSettings = false
+                    }
+                    .buttonStyle(.borderless)
+
+                    Spacer()
+
+                    Button("Quit") {
+                        NSApplication.shared.terminate(nil)
+                    }
+                    .buttonStyle(.borderless)
+                    .foregroundStyle(.red)
+                }
+                .padding()
+            } else {
+                // Ticket list - direct
+                TicketListView(viewModel: ticketVM, appUrl: viewModel.appUrl)
+                    .onAppear {
+                        if ticketVM.tickets.isEmpty {
+                            Task { await refreshTickets() }
                         }
-                case .settings:
-                    SettingsView(viewModel: viewModel, ticketVM: ticketVM)
-                }
-            }
-
-            Theme.divider.frame(height: 0.5)
-
-            // Footer
-            footer
-                .padding(.horizontal, 16)
-                .padding(.vertical, 10)
-        }
-        .background(Theme.bg)
-        .preferredColorScheme(.dark)
-    }
-
-    // MARK: - Tab Picker
-
-    private var tabPicker: some View {
-        HStack(spacing: 0) {
-            tabItem("Tickets", icon: "list.bullet.rectangle", tab: .tickets)
-            tabItem("Settings", icon: "gearshape", tab: .settings)
-        }
-        .background(RoundedRectangle(cornerRadius: 10).fill(Theme.cardBg))
-    }
-
-    private func tabItem(_ title: String, icon: String, tab: PopoverTab) -> some View {
-        let isActive = selectedTab == tab
-        return Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                selectedTab = tab
-            }
-        } label: {
-            HStack(spacing: 5) {
-                Image(systemName: icon)
-                    .font(.system(size: 10))
-                Text(title)
-                    .font(.system(size: 12, weight: .medium))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 7)
-            .background(
-                Group {
-                    if isActive {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Theme.accent.opacity(0.15))
-                            .matchedGeometryEffect(id: "activeTab", in: tabNamespace)
                     }
-                }
-            )
-            .foregroundStyle(isActive ? Theme.accent : Theme.textSecondary)
-        }
-        .buttonStyle(ScalePressStyle())
-        .pointerCursor()
-        .padding(2)
-    }
 
-    // MARK: - Footer
+                Divider()
 
-    private var footer: some View {
-        HStack(spacing: 12) {
-            Button {
-                withAnimation {
-                    selectedTab = .settings
-                }
-            } label: {
-                Image(systemName: "gearshape.fill")
-                    .font(.system(size: 14))
-                    .foregroundStyle(Theme.textSecondary)
-                    .opacity(isSettingsHovered ? 1.0 : 0.7)
-            }
-            .buttonStyle(ScalePressStyle())
-            .pointerCursor()
-            .onHover { isSettingsHovered = $0 }
+                // Simple footer
+                HStack {
+                    Circle()
+                        .fill(statusColor)
+                        .frame(width: 8, height: 8)
 
-            Button {
-                // Toggle widget
-                viewModel.widgetEnabled.toggle()
-                viewModel.saveConfig()
-                ticketVM.widgetEnabled = viewModel.widgetEnabled
-                if viewModel.widgetEnabled {
-                    ticketVM.updateWidget()
-                } else {
-                    NotificationPanel.shared.dismissWidget()
-                }
-            } label: {
-                Image(systemName: viewModel.widgetEnabled ? "pip.fill" : "pip")
-                    .font(.system(size: 14))
-                    .foregroundStyle(viewModel.widgetEnabled ? Theme.accent : Theme.textSecondary)
-                    .opacity(isWidgetHovered ? 1.0 : 0.7)
-            }
-            .buttonStyle(ScalePressStyle())
-            .pointerCursor()
-            .onHover { isWidgetHovered = $0 }
+                    Text(viewModel.statusMessage)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
 
-            // Status dot with pulse
-            Circle()
-                .fill(statusColor)
-                .frame(width: 8, height: 8)
-                .shadow(
-                    color: statusColor.opacity(statusPulse ? 0.6 : 0),
-                    radius: statusPulse ? 4 : 0
-                )
-                .onAppear {
-                    withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
-                        statusPulse = true
+                    Spacer()
+
+                    Button("Quit") {
+                        NSApplication.shared.terminate(nil)
                     }
+                    .buttonStyle(.borderless)
+                    .font(.caption)
                 }
-
-            Spacer()
-
-            Toggle("Login", isOn: $launchAtLogin)
-                .toggleStyle(.switch)
-                .controlSize(.mini)
-                .labelsHidden()
-                .onChange(of: launchAtLogin) { _, newValue in
-                    setLaunchAtLogin(newValue)
-                }
-
-            Button("Quit") {
-                NSApplication.shared.terminate(nil)
+                .padding(.horizontal)
+                .padding(.vertical, 8)
             }
-            .buttonStyle(ScalePressStyle())
-            .pointerCursor()
-            .font(.system(size: 12))
-            .foregroundStyle(Theme.textSecondary)
         }
+        .frame(width: 380, height: showSettings ? 520 : 480)
+        .animation(.easeInOut(duration: 0.2), value: showSettings)
     }
 
     private var statusColor: Color {
         if viewModel.isRunning { return .orange }
-        if viewModel.isError { return Theme.accentRed }
-        if viewModel.scheduler.isScheduled { return Theme.accent }
-        return Theme.textTertiary
+        if viewModel.isError { return .red }
+        if viewModel.scheduler.isScheduled { return .green }
+        return .secondary
     }
 
-    // MARK: - Actions
-
-    private func loadTickets() async {
+    private func refreshTickets() async {
         let config = AppConfig(
             appUrl: viewModel.appUrl, token: "", channelId: "",
             mentions: "", preset: "day", hour: "17", minute: "16",
@@ -182,18 +122,5 @@ struct PopoverContentView: View {
             widgetEnabled: "false", pollingInterval: "30"
         )
         await ticketVM.fetchTickets(config: config)
-    }
-
-    private func setLaunchAtLogin(_ enabled: Bool) {
-        do {
-            if enabled {
-                try SMAppService.mainApp.register()
-            } else {
-                try SMAppService.mainApp.unregister()
-            }
-        } catch {
-            print("[LaunchAtLogin] Error: \(error)")
-            launchAtLogin = SMAppService.mainApp.status == .enabled
-        }
     }
 }

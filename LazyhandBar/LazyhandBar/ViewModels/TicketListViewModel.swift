@@ -65,14 +65,37 @@ final class TicketListViewModel: ObservableObject {
 
     private func autoStartPolling() {
         let config = ConfigService.shared.load()
-        guard !config.appUrl.isEmpty else { return }
+        debugLog("Config loaded - appUrl: \(config.appUrl)")
+        guard !config.appUrl.isEmpty else {
+            debugLog("appUrl is empty, skipping polling")
+            return
+        }
         soundEnabled = config.isSoundEnabled
         selectedSound = config.selectedSound
         widgetEnabled = config.isWidgetEnabled
+        debugLog("Starting polling with URL: \(config.trimmedAppUrl)")
         startBackgroundPolling(
             appUrl: config.trimmedAppUrl,
             interval: config.pollingIntervalSeconds
         )
+    }
+
+    private func debugLog(_ message: String) {
+        let logFile = FileManager.default.homeDirectoryForCurrentUser
+            .appendingPathComponent(".lazyhand/debug.log")
+        let timestamp = ISO8601DateFormatter().string(from: Date())
+        let line = "[\(timestamp)] \(message)\n"
+        if let data = line.data(using: .utf8) {
+            if FileManager.default.fileExists(atPath: logFile.path) {
+                if let handle = try? FileHandle(forWritingTo: logFile) {
+                    handle.seekToEndOfFile()
+                    handle.write(data)
+                    handle.closeFile()
+                }
+            } else {
+                try? data.write(to: logFile)
+            }
+        }
     }
 
     var filteredTickets: [Ticket] {
@@ -96,8 +119,11 @@ final class TicketListViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
 
+        debugLog("Fetching from: \(config.trimmedAppUrl)")
+
         do {
             let response = try await apiService.fetchTickets(config: config)
+            debugLog("Got \(response.tickets.count) tickets, total: \(response.total)")
             let newTickets = detectNewTickets(response.tickets)
             tickets = response.tickets
             totalCount = response.total
@@ -121,6 +147,7 @@ final class TicketListViewModel: ObservableObject {
                 showNewTicketNotification(newTickets)
             }
         } catch {
+            debugLog("Error: \(error)")
             errorMessage = error.localizedDescription
         }
 
