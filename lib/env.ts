@@ -47,6 +47,7 @@ const envSchema = z.object({
 
 const clientEnvSchema = z.object({
 	NEXT_PUBLIC_APP_URL: z.string().url().optional(),
+	NEXT_PUBLIC_GOOGLE_CLIENT_ID: z.string().optional(),
 })
 
 function parseEnv<T extends z.ZodType>(
@@ -77,6 +78,7 @@ export const env = parseEnv(envSchema, process.env)
 
 export const clientEnv = parseEnv(clientEnvSchema, {
 	NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+	NEXT_PUBLIC_GOOGLE_CLIENT_ID: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID,
 })
 
 export type Env = z.infer<typeof envSchema>

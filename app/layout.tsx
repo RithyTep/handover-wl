@@ -3,6 +3,7 @@ import { Space_Grotesk } from "next/font/google";
 import { Toaster } from "sonner";
 import { unstable_cache } from "next/cache";
 import { TRPCProvider } from "@/components/trpc-provider";
+import { SilentRefresh } from "@/components/auth/silent-refresh";
 import { ThemeRepository } from "@/server/repository/theme.repository";
 import { DEFAULT_THEME } from "@/lib/constants";
 import "./globals.css";
@@ -59,6 +60,7 @@ export default async function RootLayout({
       </head>
       <body className={spaceGrotesk.className}>
         <TRPCProvider>
+          <SilentRefresh />
           {children}
           <Toaster position="top-right" duration={3000} />
         </TRPCProvider>

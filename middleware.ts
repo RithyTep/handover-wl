@@ -9,6 +9,7 @@ import {
 	SESSION_MAX_AGE_S,
 } from "@/lib/security/ip-whitelist"
 import { verifyAccessToken } from "@/lib/auth/jwt"
+import { AUTH_COOKIE_NAME } from "@/lib/auth/cookies"
 
 const securityHeaders = {
 	"X-Content-Type-Options": "nosniff",
@@ -18,7 +19,6 @@ const securityHeaders = {
 	"Permissions-Policy": "camera=(), microphone=(), geolocation=()",
 }
 
-// Parsed once at cold start, reused for all requests
 const TRUSTED_IPS_RAW = process.env.TRUSTED_IPS ?? ""
 const trustedIPs = parseTrustedIPs(TRUSTED_IPS_RAW)
 const isDev = process.env.NODE_ENV === "development"
@@ -31,6 +31,7 @@ const PUBLIC_PATHS = [
 	"/api/auth/google",
 	"/api/auth/refresh",
 	"/api/auth/logout",
+	"/login",
 ]
 
 function isPublicPath(pathname: string): boolean {
@@ -50,21 +51,49 @@ function applySecurityHeaders(response: NextResponse): NextResponse {
 	return response
 }
 
+function wantsHtml(request: NextRequest): boolean {
+	const accept = request.headers.get("accept") ?? ""
+	return accept.includes("text/html")
+}
+
+function unauthorized(request: NextRequest, pathname: string): NextResponse {
+	if (wantsHtml(request)) {
+		const url = request.nextUrl.clone()
+		url.pathname = "/login"
+		url.searchParams.set("next", pathname)
+		return NextResponse.redirect(url)
+	}
+	return new NextResponse(
+		JSON.stringify({ success: false, error: "Access denied" }),
+		{ status: 403, headers: { "Content-Type": "application/json" } }
+	)
+}
+
 export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl
 
-	// IP whitelist check (skip for public paths)
 	if (trustedIPs.length > 0 && !isPublicPath(pathname)) {
 		const sessionCookie = request.cookies.get(SESSION_COOKIE_NAME)?.value
 		const hasValidSession =
 			sessionCookie && (await verifySessionCookie(sessionCookie, TRUSTED_IPS_RAW))
 
-		// 1. Valid session cookie → instant pass (any IP)
 		if (hasValidSession) {
 			return applySecurityHeaders(NextResponse.next())
 		}
 
-		// 1b. Valid Bearer access token (mobile / off-VPN users)
+		// Google-auth cookie (browser nav off-VPN)
+		const authCookie = request.cookies.get(AUTH_COOKIE_NAME)?.value
+		if (authCookie) {
+			const claims = await verifyAccessToken(authCookie)
+			if (claims) {
+				const res = applySecurityHeaders(NextResponse.next())
+				res.headers.set("x-user-id", claims.sub)
+				res.headers.set("x-user-email", claims.email)
+				return res
+			}
+		}
+
+		// Bearer access token (mobile / API clients)
 		const authHeader = request.headers.get("authorization")
 		if (authHeader?.startsWith("Bearer ")) {
 			const claims = await verifyAccessToken(authHeader.slice(7))
@@ -76,7 +105,7 @@ export async function middleware(request: NextRequest) {
 			}
 		}
 
-		// 2. Trusted IP → pass + set 7-day cookie (only when no valid cookie)
+		// Trusted IP → set 7-day IP session cookie
 		const clientIP = getClientIP(request)
 		if (isIPAllowed(clientIP, trustedIPs, isDev)) {
 			const response = applySecurityHeaders(NextResponse.next())
@@ -91,14 +120,10 @@ export async function middleware(request: NextRequest) {
 			return response
 		}
 
-		// 3. No cookie, no trusted IP → block
 		console.warn(
 			`[Security] Blocked untrusted IP: ${clientIP} → ${request.method} ${pathname}`
 		)
-		return new NextResponse(
-			JSON.stringify({ success: false, error: "Access denied" }),
-			{ status: 403, headers: { "Content-Type": "application/json" } }
-		)
+		return unauthorized(request, pathname)
 	}
 
 	return applySecurityHeaders(NextResponse.next())

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { z } from "zod"
 import { loginWithGoogle } from "@/server/services/auth.service"
+import { setAuthCookies } from "@/lib/auth/cookies"
 import { logger } from "@/lib/logger"
 
 const log = logger.api
@@ -14,7 +15,12 @@ export async function POST(request: Request) {
 		}
 		const userAgent = request.headers.get("user-agent") ?? undefined
 		const tokens = await loginWithGoogle(parsed.data.idToken, userAgent)
-		return NextResponse.json({ success: true, data: tokens })
+		const response = NextResponse.json({ success: true, data: tokens })
+		setAuthCookies(response, {
+			accessToken: tokens.accessToken,
+			refreshToken: tokens.refreshToken,
+		})
+		return response
 	} catch (err) {
 		log.warn("Google login failed", { error: (err as Error).message })
 		return NextResponse.json({ success: false, error: "Authentication failed" }, { status: 401 })
