@@ -8,6 +8,7 @@ import {
 	SESSION_COOKIE_NAME,
 	SESSION_MAX_AGE_S,
 } from "@/lib/security/ip-whitelist"
+import { verifyAccessToken } from "@/lib/auth/jwt"
 
 const securityHeaders = {
 	"X-Content-Type-Options": "nosniff",
@@ -27,6 +28,9 @@ const PUBLIC_PATHS = [
 	"/api/cron",
 	"/api/slack/commands",
 	"/api/webhook-jira",
+	"/api/auth/google",
+	"/api/auth/refresh",
+	"/api/auth/logout",
 ]
 
 function isPublicPath(pathname: string): boolean {
@@ -58,6 +62,18 @@ export async function middleware(request: NextRequest) {
 		// 1. Valid session cookie → instant pass (any IP)
 		if (hasValidSession) {
 			return applySecurityHeaders(NextResponse.next())
+		}
+
+		// 1b. Valid Bearer access token (mobile / off-VPN users)
+		const authHeader = request.headers.get("authorization")
+		if (authHeader?.startsWith("Bearer ")) {
+			const claims = await verifyAccessToken(authHeader.slice(7))
+			if (claims) {
+				const res = applySecurityHeaders(NextResponse.next())
+				res.headers.set("x-user-id", claims.sub)
+				res.headers.set("x-user-email", claims.email)
+				return res
+			}
 		}
 
 		// 2. Trusted IP → pass + set 7-day cookie (only when no valid cookie)

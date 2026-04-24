@@ -35,6 +35,13 @@ const envSchema = z.object({
 
 	TRUSTED_IPS: z.string().optional(),
 
+	GOOGLE_CLIENT_ID: z.string().optional(),
+	GOOGLE_CLIENT_SECRET: z.string().optional(),
+	GOOGLE_ALLOWED_HD: z.string().default("techbodia.com"),
+	JWT_SECRET: z.string().min(32).optional(),
+	ACCESS_TOKEN_TTL_S: z.coerce.number().default(60 * 60),
+	REFRESH_TOKEN_TTL_S: z.coerce.number().default(60 * 60 * 24 * 14),
+
 	LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 })
 
