@@ -1,13 +1,3 @@
 {
-  "regions": ["sin1"],
-  "crons": [
-    {
-      "path": "/api/cron?task=ai-autofill&slot=evening",
-      "schedule": "59 4 * * *"
-    },
-    {
-      "path": "/api/cron?task=ai-autofill&slot=night",
-      "schedule": "44 16 * * *"
-    }
-  ]
+  "regions": ["sin1"]
 }
