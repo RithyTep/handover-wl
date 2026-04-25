@@ -74,8 +74,11 @@ export async function GET(request: NextRequest) {
 			case "handover":
 				return await runHandoverReplyTask()
 
-			case "ai-autofill":
-				return await runAIAutofillTask()
+			case "ai-autofill": {
+				const slotParam = request.nextUrl.searchParams.get("slot")
+				const slot = slotParam === "night" ? "night" : "evening"
+				return await runAIAutofillTask(slot)
+			}
 
 			default:
 				return handleApiError(
@@ -223,8 +226,8 @@ function isMissingField(value: string | null | undefined): boolean {
 	return trimmed === "" || trimmed === "--"
 }
 
-async function runAIAutofillTask() {
-	log.info("Running AI autofill task via Vercel cron")
+async function runAIAutofillTask(slot: "evening" | "night") {
+	log.info("Running AI autofill task via Vercel cron", { slot })
 
 	const savedData = await loadTicketData()
 	const tickets = await getTicketsWithSavedData(savedData)
@@ -233,52 +236,95 @@ async function runAIAutofillTask() {
 		(t) => isMissingField(t.savedStatus) || isMissingField(t.savedAction)
 	)
 
-	if (missing.length === 0) {
-		log.info("No tickets with missing status/action")
-		return apiSuccess({
-			success: true,
-			processed: 0,
-			total: tickets.length,
-			reason: "no_missing_fields",
-		})
-	}
-
-	log.info("Found tickets needing autofill", { count: missing.length })
-
 	const aiService = new AIAutofillService()
 	const updates: Record<string, { status: string; action: string }> = {}
 	const failures: Array<{ key: string; error: string }> = []
 
-	for (const ticket of missing) {
-		try {
-			const { suggestion } = await aiService.generateSuggestion(ticket)
-			updates[ticket.key] = {
-				status: suggestion.status,
-				action: suggestion.action,
+	if (missing.length === 0) {
+		log.info("No tickets with missing status/action")
+	} else {
+		log.info("Found tickets needing autofill", { count: missing.length })
+
+		for (const ticket of missing) {
+			try {
+				const { suggestion } = await aiService.generateSuggestion(ticket)
+				updates[ticket.key] = {
+					status: suggestion.status,
+					action: suggestion.action,
+				}
+			} catch (error) {
+				const message = error instanceof Error ? error.message : "Unknown error"
+				log.error("AI autofill failed for ticket", { key: ticket.key, error: message })
+				failures.push({ key: ticket.key, error: message })
 			}
-		} catch (error) {
-			const message = error instanceof Error ? error.message : "Unknown error"
-			log.error("AI autofill failed for ticket", { key: ticket.key, error: message })
-			failures.push({ key: ticket.key, error: message })
+		}
+
+		if (Object.keys(updates).length > 0) {
+			await saveTicketData(updates)
 		}
 	}
 
-	const succeededCount = Object.keys(updates).length
-	if (succeededCount > 0) {
-		await saveTicketData(updates)
+	const ticketsForSlack = tickets.map((t) => {
+		const update = updates[t.key]
+		return update
+			? { ...t, savedStatus: update.status, savedAction: update.action }
+			: t
+	})
+
+	const userToken =
+		slot === "evening" ? await getEveningUserToken() : await getNightUserToken()
+
+	if (!userToken) {
+		log.info("Skipping Slack post - no token configured", { slot })
+		return apiSuccess({
+			success: true,
+			slot,
+			autofill: {
+				total: missing.length,
+				processed: Object.keys(updates).length,
+				failed: failures.length,
+				failures,
+			},
+			slackPosted: false,
+			reason: "no_token",
+		})
 	}
 
-	log.info("AI autofill task completed", {
-		total: missing.length,
-		succeeded: succeededCount,
-		failed: failures.length,
+	const mentions =
+		slot === "evening" ? await getEveningMentions() : await getNightMentions()
+	const customChannelId = await getCustomChannelId()
+
+	const slackMessaging = new SlackMessagingService()
+	const ticketData = slackMessaging.convertTicketsToMessageData(ticketsForSlack)
+
+	const result = await slackMessaging.postShiftHandover(
+		ticketData,
+		slot,
+		userToken,
+		customChannelId || undefined,
+		mentions || undefined
+	)
+
+	if (!result.success) {
+		throw new Error(result.error || "Failed to post Slack handover")
+	}
+
+	log.info("AI autofill + Slack post completed", {
+		slot,
+		autofilled: Object.keys(updates).length,
+		ticketCount: ticketsForSlack.length,
 	})
 
 	return apiSuccess({
 		success: true,
-		total: missing.length,
-		processed: succeededCount,
-		failed: failures.length,
-		failures,
+		slot,
+		autofill: {
+			total: missing.length,
+			processed: Object.keys(updates).length,
+			failed: failures.length,
+			failures,
+		},
+		slackPosted: true,
+		messageTs: result.messageTs,
 	})
 }
