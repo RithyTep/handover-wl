@@ -13,19 +13,28 @@ export interface FormatOptions {
 	header?: string
 	mentions?: string
 	includeFooter?: boolean
+	sentBy?: string
 }
 
 export function formatTicketMessage(
 	tickets: TicketMessageData[],
 	options: FormatOptions = {}
 ): string {
-	const { header, mentions, includeFooter = true } = options
+	const { header, mentions, includeFooter = true, sentBy } = options
 	const jiraConfig = getJiraConfig()
 
 	let message = ""
 
 	if (header) {
-		message += `${header}\n\n`
+		message += `${header}\n`
+	}
+
+	if (sentBy) {
+		message += `_Sent by: ${sentBy}_\n`
+	}
+
+	if (header || sentBy) {
+		message += `\n`
 	}
 
 	if (mentions) {

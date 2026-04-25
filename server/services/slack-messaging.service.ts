@@ -67,14 +67,15 @@ interface ShiftHandoverOptions {
 	channel: string
 	token: string
 	mentions?: string
+	sentBy?: string
 }
 
 async function postShiftHandoverMessage(
 	options: ShiftHandoverOptions
 ): Promise<HandoverMessageResult> {
-	const { tickets, shift, channel, token, mentions } = options
+	const { tickets, shift, channel, token, mentions, sentBy } = options
 	const header = buildShiftHeader(shift)
-	const message = formatTicketMessage(tickets, { header, mentions })
+	const message = formatTicketMessage(tickets, { header, mentions, sentBy })
 
 	logger.info("Posting shift handover", {
 		shift,
@@ -195,7 +196,8 @@ export class SlackMessagingService {
 		shift: "evening" | "night",
 		token: string,
 		channel?: string,
-		mentions?: string
+		mentions?: string,
+		sentBy?: string
 	): Promise<HandoverMessageResult> {
 		const config = getSlackConfig()
 		const targetChannel = channel || config.channelId
@@ -210,6 +212,7 @@ export class SlackMessagingService {
 			channel: targetChannel,
 			token,
 			mentions,
+			sentBy,
 		})
 	}
 

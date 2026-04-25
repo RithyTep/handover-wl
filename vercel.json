@@ -3,7 +3,7 @@
   "crons": [
     {
       "path": "/api/cron?task=ai-autofill&slot=evening",
-      "schedule": "50 4 * * *"
+      "schedule": "59 4 * * *"
     },
     {
       "path": "/api/cron?task=ai-autofill&slot=night",

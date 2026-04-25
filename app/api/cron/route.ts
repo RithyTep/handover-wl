@@ -302,7 +302,8 @@ async function runAIAutofillTask(slot: "evening" | "night") {
 		slot,
 		userToken,
 		customChannelId || undefined,
-		mentions || undefined
+		mentions || undefined,
+		"Scheduler"
 	)
 
 	if (!result.success) {
