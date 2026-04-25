@@ -290,8 +290,6 @@ async function runAIAutofillTask(slot: "evening" | "night") {
 		})
 	}
 
-	const mentions =
-		slot === "evening" ? await getEveningMentions() : await getNightMentions()
 	const customChannelId = await getCustomChannelId()
 
 	const slackMessaging = new SlackMessagingService()
@@ -302,7 +300,7 @@ async function runAIAutofillTask(slot: "evening" | "night") {
 		slot,
 		botToken,
 		customChannelId || undefined,
-		mentions || undefined,
+		undefined,
 		"Scheduler"
 	)
 
