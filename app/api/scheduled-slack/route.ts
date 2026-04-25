@@ -10,6 +10,7 @@ import {
 } from "@/lib/services"
 import { SlackMessagingService } from "@/server/services"
 import { apiSuccess, badRequest, handleApiError } from "@/lib/api"
+import { getCurrentUser } from "@/lib/auth/current-user"
 
 const slackMessaging = new SlackMessagingService()
 
@@ -43,12 +44,16 @@ export async function POST(request: NextRequest) {
 
 		const ticketData = slackMessaging.convertTicketsToMessageData(tickets)
 
+		const user = await getCurrentUser()
+		const sentBy = user?.name || user?.email || "Unknown"
+
 		const result = await slackMessaging.postShiftHandover(
 			ticketData,
 			shift,
 			userToken,
 			customChannelId || undefined,
-			mentions || undefined
+			mentions || undefined,
+			sentBy
 		)
 
 		if (!result.success) {

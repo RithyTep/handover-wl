@@ -90,6 +90,9 @@ export async function middleware(request: NextRequest) {
 				const res = applySecurityHeaders(NextResponse.next())
 				res.headers.set("x-user-id", claims.sub)
 				res.headers.set("x-user-email", claims.email)
+				if (claims.name) {
+					res.headers.set("x-user-name", encodeURIComponent(claims.name))
+				}
 				return res
 			}
 		}
@@ -102,6 +105,9 @@ export async function middleware(request: NextRequest) {
 				const res = applySecurityHeaders(NextResponse.next())
 				res.headers.set("x-user-id", claims.sub)
 				res.headers.set("x-user-email", claims.email)
+				if (claims.name) {
+					res.headers.set("x-user-name", encodeURIComponent(claims.name))
+				}
 				return res
 			}
 		}
