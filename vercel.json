@@ -2,8 +2,12 @@
   "regions": ["sin1"],
   "crons": [
     {
-      "path": "/api/cron?task=backup",
-      "schedule": "0 0 * * *"
+      "path": "/api/cron?task=ai-autofill",
+      "schedule": "43 4 * * *"
+    },
+    {
+      "path": "/api/cron?task=ai-autofill",
+      "schedule": "44 16 * * *"
     }
   ]
 }

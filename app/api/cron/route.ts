@@ -6,6 +6,7 @@ import {
 	createBackup,
 	cleanupOldBackups,
 	loadTicketData,
+	saveTicketData,
 	getCustomChannelId,
 	getEveningUserToken,
 	getNightUserToken,
@@ -13,7 +14,11 @@ import {
 	getNightMentions,
 	getTicketsWithSavedData,
 } from "@/lib/services"
-import { HandoverService, SlackMessagingService } from "@/server/services"
+import {
+	AIAutofillService,
+	HandoverService,
+	SlackMessagingService,
+} from "@/server/services"
 import { logger } from "@/lib/logger"
 import { BACKUP, TIMEZONE } from "@/lib/config"
 
@@ -23,7 +28,7 @@ const log = logger.scheduler
  * Vercel Cron endpoint for scheduled tasks
  *
  * Query params:
- * - task: "shift" | "backup" | "handover"
+ * - task: "shift" | "backup" | "handover" | "ai-autofill"
  *
  * For "shift" task:
  * - Runs every minute via Vercel cron
@@ -46,7 +51,7 @@ export async function GET(request: NextRequest) {
 
 		if (!task) {
 			return handleApiError(
-				new Error("Task parameter required: shift, backup, or handover"),
+				new Error("Task parameter required: shift, backup, handover, or ai-autofill"),
 				"GET /api/cron"
 			)
 		}
@@ -68,6 +73,9 @@ export async function GET(request: NextRequest) {
 
 			case "handover":
 				return await runHandoverReplyTask()
+
+			case "ai-autofill":
+				return await runAIAutofillTask()
 
 			default:
 				return handleApiError(
@@ -206,5 +214,71 @@ async function runHandoverReplyTask() {
 		success: true,
 		replied: result.replied,
 		message: result.message,
+	})
+}
+
+function isMissingField(value: string | null | undefined): boolean {
+	if (!value) return true
+	const trimmed = value.trim()
+	return trimmed === "" || trimmed === "--"
+}
+
+async function runAIAutofillTask() {
+	log.info("Running AI autofill task via Vercel cron")
+
+	const savedData = await loadTicketData()
+	const tickets = await getTicketsWithSavedData(savedData)
+
+	const missing = tickets.filter(
+		(t) => isMissingField(t.savedStatus) || isMissingField(t.savedAction)
+	)
+
+	if (missing.length === 0) {
+		log.info("No tickets with missing status/action")
+		return apiSuccess({
+			success: true,
+			processed: 0,
+			total: tickets.length,
+			reason: "no_missing_fields",
+		})
+	}
+
+	log.info("Found tickets needing autofill", { count: missing.length })
+
+	const aiService = new AIAutofillService()
+	const updates: Record<string, { status: string; action: string }> = {}
+	const failures: Array<{ key: string; error: string }> = []
+
+	for (const ticket of missing) {
+		try {
+			const { suggestion } = await aiService.generateSuggestion(ticket)
+			updates[ticket.key] = {
+				status: suggestion.status,
+				action: suggestion.action,
+			}
+		} catch (error) {
+			const message = error instanceof Error ? error.message : "Unknown error"
+			log.error("AI autofill failed for ticket", { key: ticket.key, error: message })
+			failures.push({ key: ticket.key, error: message })
+		}
+	}
+
+	const succeededCount = Object.keys(updates).length
+	if (succeededCount > 0) {
+		await saveTicketData(updates)
+	}
+
+	log.info("AI autofill task completed", {
+		total: missing.length,
+		succeeded: succeededCount,
+		failed: failures.length,
+	})
+
+	return apiSuccess({
+		success: true,
+		total: missing.length,
+		processed: succeededCount,
+		failed: failures.length,
+		failures,
 	})
 }
