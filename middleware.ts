@@ -9,7 +9,8 @@ import {
 	SESSION_MAX_AGE_S,
 } from "@/lib/security/ip-whitelist"
 import { verifyAccessToken } from "@/lib/auth/jwt"
-import { AUTH_COOKIE_NAME } from "@/lib/auth/cookies"
+
+const AUTH_COOKIE_NAME = "auth_token"
 
 const securityHeaders = {
 	"X-Content-Type-Options": "nosniff",
