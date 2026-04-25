@@ -20,6 +20,7 @@ import {
 	SlackMessagingService,
 } from "@/server/services"
 import { logger } from "@/lib/logger"
+import { getSlackConfig } from "@/lib/env"
 import { BACKUP, TIMEZONE } from "@/lib/config"
 
 const log = logger.scheduler
@@ -271,11 +272,10 @@ async function runAIAutofillTask(slot: "evening" | "night") {
 			: t
 	})
 
-	const userToken =
-		slot === "evening" ? await getEveningUserToken() : await getNightUserToken()
+	const botToken = getSlackConfig().botToken
 
-	if (!userToken) {
-		log.info("Skipping Slack post - no token configured", { slot })
+	if (!botToken) {
+		log.warn("Skipping Slack post - SLACK_BOT_TOKEN not configured")
 		return apiSuccess({
 			success: true,
 			slot,
@@ -286,7 +286,7 @@ async function runAIAutofillTask(slot: "evening" | "night") {
 				failures,
 			},
 			slackPosted: false,
-			reason: "no_token",
+			reason: "no_bot_token",
 		})
 	}
 
@@ -300,7 +300,7 @@ async function runAIAutofillTask(slot: "evening" | "night") {
 	const result = await slackMessaging.postShiftHandover(
 		ticketData,
 		slot,
-		userToken,
+		botToken,
 		customChannelId || undefined,
 		mentions || undefined,
 		"Scheduler"
