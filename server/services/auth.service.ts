@@ -1,9 +1,8 @@
 import { prisma } from "@/lib/prisma"
 import { env } from "@/lib/env"
+import { generateRefreshToken, hashRefreshToken } from "@/lib/auth/refresh-token"
 import {
 	signAccessToken,
-	generateRefreshToken,
-	hashRefreshToken,
 } from "@/lib/auth/jwt"
 import { verifyGoogleIdToken } from "@/lib/auth/google"
 
