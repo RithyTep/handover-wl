@@ -435,6 +435,103 @@
     color: #e2e8f0;
   }
 
+  body.theme-sakura {
+    font-family: 'JetBrains Mono', "Kantumruy Pro", 'Inter', sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(254, 205, 211, 0.9), transparent 28%),
+      radial-gradient(circle at top right, rgba(251, 207, 232, 0.8), transparent 26%),
+      linear-gradient(180deg, #fffdfd 0%, #fff7fb 35%, #fff8f6 100%);
+    color: #4a3340;
+  }
+
+  body.theme-sakura {
+    cursor: url('/cursors/sakura-cursor.svg'), auto;
+  }
+
+  body.theme-sakura a,
+  body.theme-sakura button,
+  body.theme-sakura [role="button"],
+  body.theme-sakura input[type="submit"],
+  body.theme-sakura input[type="button"],
+  body.theme-sakura select,
+  body.theme-sakura .cursor-pointer,
+  body.theme-sakura [onclick],
+  body.theme-sakura label[for] {
+    cursor: url('/cursors/sakura-pointer.svg'), pointer !important;
+  }
+
+  body.theme-sakura a[href*="jira"],
+  body.theme-sakura a[href*="atlassian"] {
+    color: #e25586 !important;
+    font-weight: 500;
+  }
+
+  body.theme-sakura a[href*="jira"]:hover,
+  body.theme-sakura a[href*="atlassian"]:hover {
+    color: #c24173 !important;
+    text-decoration: underline;
+  }
+
+  body.theme-sakura input[type="text"],
+  body.theme-sakura input:not([type]) {
+    background-color: rgba(255, 255, 255, 0.82) !important;
+    border: 1px solid rgba(251, 191, 203, 0.95) !important;
+    color: #7a405a !important;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 24px rgba(244, 114, 182, 0.06);
+  }
+
+  body.theme-sakura input[type="text"]::placeholder,
+  body.theme-sakura input:not([type])::placeholder {
+    color: #d48ca5 !important;
+  }
+
+  body.theme-sakura input[type="text"]:focus,
+  body.theme-sakura input:not([type]):focus {
+    border-color: rgba(244, 114, 182, 0.95) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(251, 113, 133, 0.12) !important;
+  }
+
+  body.theme-sakura td,
+  body.theme-sakura td div,
+  body.theme-sakura td span,
+  body.theme-sakura main p,
+  body.theme-sakura main div,
+  body.theme-sakura main span {
+    color: #5a3d49;
+  }
+
+  body.theme-sakura main label {
+    color: #df6f93 !important;
+  }
+
+  body.theme-sakura .rounded-lg span,
+  body.theme-sakura .rounded-lg p,
+  body.theme-sakura .space-y-4 span,
+  body.theme-sakura .space-y-4 p {
+    color: #5a3d49 !important;
+  }
+
+  body.theme-sakura ::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+
+  body.theme-sakura ::-webkit-scrollbar-track {
+    background: rgba(255, 240, 245, 0.7);
+  }
+
+  body.theme-sakura ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #f9a8d4, #fda4af);
+    border-radius: 999px;
+    border: 2px solid rgba(255, 245, 248, 0.95);
+  }
+
+  body.theme-sakura ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #fb7185, #f472b6);
+  }
+
   /* Default theme - ticket link color */
   body.theme-default a[href*="jira"],
   body.theme-default a[href*="atlassian"] {
@@ -701,6 +798,72 @@
     background: linear-gradient(to bottom, #20202c 0%, #515175 100%);
     position: relative;
     font-family: var(--font-sans-serif);
+  }
+
+  .sakura-layout-bg {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.68), rgba(255,255,255,0.45));
+  }
+
+  .sakura-image-soften {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.12)),
+      radial-gradient(circle at center, rgba(255,255,255,0) 34%, rgba(255,255,255,0.1) 100%);
+  }
+
+  .sakura-table-shell {
+    position: relative;
+  }
+
+  .sakura-table-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.3), transparent 20%),
+      radial-gradient(circle at top right, rgba(251, 191, 203, 0.18), transparent 34%);
+    pointer-events: none;
+  }
+
+  .sakura-table-header {
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.82), rgba(255,248,251,0.72));
+  }
+
+  .sakura-table-row {
+    background-color: rgba(255,255,255,0.52);
+  }
+
+  .sakura-table-row:hover {
+    background-color: rgba(255, 241, 246, 0.82);
+  }
+
+  .sakura-table-cell {
+    background-color: transparent;
+  }
+
+  .sakura-toggle-btn:hover {
+    color: #be185d;
+  }
+
+  .sakura-mobile-card {
+    box-shadow: 0 18px 40px rgba(244, 114, 182, 0.12);
+  }
+
+  .sakura-scene-gradient {
+    background:
+      radial-gradient(circle at 16% 16%, rgba(254, 205, 211, 0.52), transparent 20%),
+      radial-gradient(circle at 84% 12%, rgba(251, 207, 232, 0.42), transparent 20%),
+      radial-gradient(circle at 72% 84%, rgba(249, 168, 212, 0.22), transparent 18%),
+      linear-gradient(180deg, #fffefe 0%, #fff7fb 48%, #fff8f7 100%);
+  }
+
+  .sakura-paper-noise {
+    opacity: 0.16;
+    background-image:
+      radial-gradient(circle at 20% 25%, rgba(255,255,255,0.9) 0, rgba(255,255,255,0.2) 26%, transparent 27%),
+      radial-gradient(circle at 72% 58%, rgba(255,255,255,0.6) 0, rgba(255,255,255,0.05) 22%, transparent 24%);
+    mix-blend-mode: screen;
   }
 
   .font-script {

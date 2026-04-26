@@ -37,6 +37,18 @@ const christmasStyles: TableThemeStyles = {
 	emptyCell: "h-24 text-center text-muted-foreground text-sm",
 }
 
+const sakuraStyles: TableThemeStyles = {
+	container:
+		"sakura-table-shell border border-rose-200/80 rounded-[1.25rem] shadow-[0_22px_60px_rgba(244,114,182,0.14)] bg-white/65 backdrop-blur-md",
+	header: "sakura-table-header backdrop-blur-md",
+	headerRow: "border-b border-rose-200/80",
+	headerCell: "text-rose-400 border-r border-rose-100/90 last:border-r-0",
+	body: "text-sm",
+	row: () => "sakura-table-row",
+	cell: () => "sakura-table-cell border-r border-rose-100/90 last:border-r-0 text-stone-700",
+	emptyCell: "h-24 text-center text-rose-400 text-sm",
+}
+
 const pixelStyles: TableThemeStyles = {
 	container: "border-2 border-slate-700 bg-slate-900/50 backdrop-blur-sm pixel-shadow",
 	header: "bg-slate-950",
@@ -94,6 +106,7 @@ const angkorPixelStyles: TableThemeStyles = {
 }
 
 const themeStylesMap: Record<string, TableThemeStyles> = {
+	sakura: sakuraStyles,
 	christmas: christmasStyles,
 	pixel: pixelStyles,
 	lunar: lunarStyles,
@@ -112,6 +125,8 @@ export interface ButtonThemeStyles {
 }
 
 const buttonThemeMap: Record<string, string> = {
+	sakura:
+		"sakura-toggle-btn text-rose-500 bg-white/80 hover:bg-rose-50 border border-rose-200 shadow-[0_8px_24px_rgba(244,114,182,0.12)]",
 	christmas: "text-white/80 hover:text-white hover:bg-white/10 border-white/20",
 	pixel: "bg-slate-900 border-2 border-slate-700 hover:border-indigo-500 hover:text-indigo-400 pixel-shadow",
 	lunar: "text-stone-300 bg-stone-800/50 hover:bg-stone-800 border border-stone-700 rounded-lg",

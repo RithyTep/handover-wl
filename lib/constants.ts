@@ -9,6 +9,12 @@ export const THEMES: ThemeInfo[] = [
 		icon: "🎨",
 	},
 	{
+		id: Theme.SAKURA,
+		name: "Sakura",
+		description: "Soft cherry blossom theme scaffold with pastel accents",
+		icon: "🌸",
+	},
+	{
 		id: Theme.CHRISTMAS,
 		name: "Christmas",
 		description: "Festive holiday theme with snow and decorations",

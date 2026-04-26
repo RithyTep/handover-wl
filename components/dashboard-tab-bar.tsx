@@ -17,6 +17,34 @@ interface TabConfig {
 	count: number
 }
 
+const getTabButtonClassName = (theme: Theme, isActive: boolean) => {
+	if (theme === "sakura") {
+		return isActive
+			? "bg-white/80 text-rose-500 border border-b-0 border-rose-200 shadow-[0_-8px_24px_rgba(244,114,182,0.08)]"
+			: "bg-white/45 text-rose-300 hover:text-rose-500 hover:bg-white/70 border border-transparent"
+	}
+
+	if (theme === "coding") {
+		return isActive ? "bg-zinc-800 text-green-400" : "text-zinc-500 hover:text-zinc-400"
+	}
+
+	return isActive
+		? "bg-white/15 text-white"
+		: "bg-white/5 text-white/50 hover:text-white/70 hover:bg-white/8"
+}
+
+const getTabCountClassName = (theme: Theme, isActive: boolean) => {
+	if (theme === "sakura") {
+		return isActive ? "bg-rose-100 text-rose-500" : "bg-rose-50/80 text-rose-300"
+	}
+
+	if (theme === "coding") {
+		return isActive ? "bg-green-500/20 text-green-400" : "bg-zinc-700 text-zinc-500"
+	}
+
+	return isActive ? "bg-white/20 text-white" : "bg-white/10 text-white/40"
+}
+
 export function DashboardTabBar({
 	activeTab,
 	onTabChange,
@@ -38,21 +66,13 @@ export function DashboardTabBar({
 						onClick={() => onTabChange(tab.id)}
 						className={cn(
 							"px-4 py-1.5 text-xs font-medium rounded-t-md transition-colors",
-							activeTab === tab.id
-								? "bg-white/15 text-white"
-								: "bg-white/5 text-white/50 hover:text-white/70 hover:bg-white/8",
-							theme === "coding" && activeTab === tab.id && "bg-zinc-800 text-green-400",
-							theme === "coding" && activeTab !== tab.id && "text-zinc-500 hover:text-zinc-400",
+							getTabButtonClassName(theme, activeTab === tab.id),
 						)}
 					>
 						{tab.label}
 						<span className={cn(
 							"ml-1.5 px-1.5 py-0.5 text-[10px] rounded-full",
-							activeTab === tab.id
-								? "bg-white/20 text-white"
-								: "bg-white/10 text-white/40",
-							theme === "coding" && activeTab === tab.id && "bg-green-500/20 text-green-400",
-							theme === "coding" && activeTab !== tab.id && "bg-zinc-700 text-zinc-500",
+							getTabCountClassName(theme, activeTab === tab.id),
 						)}>
 							{tab.count}
 						</span>

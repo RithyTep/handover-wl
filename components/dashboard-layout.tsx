@@ -17,6 +17,7 @@ import type { Theme, Ticket, DashboardTab } from "@/lib/types"
 // Dynamically import heavy theme scenes for code splitting
 const NewYearScene = dynamic(() => import("@/components/new-year-scene").then(m => ({ default: m.NewYearScene })), { ssr: false })
 const LunarScene = dynamic(() => import("@/components/lunar-scene").then(m => ({ default: m.LunarScene })), { ssr: false })
+const SakuraScene = dynamic(() => import("@/components/sakura-scene").then(m => ({ default: m.SakuraScene })), { ssr: false })
 const CodingScene = dynamic(() => import("@/components/coding-scene").then(m => ({ default: m.CodingScene })), { ssr: false })
 const ProfessionalScene = dynamic(() => import("@/components/professional-scene").then(m => ({ default: m.ProfessionalScene })), { ssr: false })
 const AngkorPixelScene = dynamic(() => import("@/components/angkor-pixel-scene").then(m => ({ default: m.AngkorPixelScene })), { ssr: false })
@@ -50,6 +51,7 @@ interface DashboardLayoutProps {
 
 const THEME_SCENES: Record<Theme, React.ComponentType | null> = {
 	default: ProfessionalScene,
+	sakura: SakuraScene,
 	christmas: NewYearScene,
 	pixel: PixelStatusBar,
 	lunar: LunarScene,
@@ -88,6 +90,7 @@ export const DashboardLayout = ({
 		document.body.classList.remove(
 			"theme-christmas",
 			"theme-default",
+			"theme-sakura",
 			"theme-pixel",
 			"theme-lunar",
 			"theme-coding",

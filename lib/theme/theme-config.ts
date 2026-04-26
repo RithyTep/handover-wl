@@ -70,6 +70,12 @@ export const getHeaderNavItems = (theme: Theme): HeaderNavItem[] => {
 			{ href: "/changelog", label: "Changelog", svgIcon: "/icons/christmas/holly.svg" },
 		]
 	}
+	if (theme === "sakura") {
+		return [
+			{ href: "/feedback", label: "Feedback", svgIcon: "/icons/sakura/fan.svg" },
+			{ href: "/changelog", label: "Changelog", svgIcon: "/icons/sakura/branch.svg" },
+		]
+	}
 	if (theme === "clash") {
 		return [
 			{ href: "/feedback", label: "War Log", svgIcon: "/icons/clash/attack-btn.svg" },

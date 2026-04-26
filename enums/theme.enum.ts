@@ -1,5 +1,6 @@
 export enum Theme {
 	DEFAULT = "default",
+	SAKURA = "sakura",
 	CHRISTMAS = "christmas",
 	PIXEL = "pixel",
 	LUNAR = "lunar",

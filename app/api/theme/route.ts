@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { initDatabase, getThemePreference, setThemePreference } from "@/lib/services/database"
 import { logger } from "@/lib/logger"
-import type { Theme } from "@/lib/types"
+import { isValidTheme, THEME_VALUES, type Theme } from "@/lib/types"
 
 const log = logger.api
 
@@ -29,9 +29,9 @@ export async function POST(request: NextRequest) {
 		const body = await request.json()
 		const { theme } = body
 
-		if (!theme || (theme !== "default" && theme !== "christmas")) {
+		if (!isValidTheme(theme)) {
 			return NextResponse.json(
-				{ success: false, error: "Invalid theme. Must be 'default' or 'christmas'" },
+				{ success: false, error: `Invalid theme. Must be one of: ${THEME_VALUES.join(", ")}` },
 				{ status: 400 }
 			)
 		}

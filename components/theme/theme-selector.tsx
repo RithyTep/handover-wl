@@ -26,6 +26,7 @@ interface ThemeSelectorProps {
 }
 
 const THEME_BUTTON_STYLES: Record<Theme, string> = {
+	[Theme.SAKURA]: "text-rose-500 hover:text-rose-600 hover:bg-rose-100/70 transition-colors",
 	[Theme.CHRISTMAS]: "text-white/70 hover:text-white hover:bg-white/10",
 	[Theme.PIXEL]: "text-slate-300 hover:text-indigo-400 transition-colors",
 	[Theme.LUNAR]: "text-stone-400 hover:text-amber-400 hover:bg-stone-800/50 transition-colors",

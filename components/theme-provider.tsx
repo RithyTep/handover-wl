@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import type { Theme } from "@/lib/types";
+import { THEME_VALUES } from "@/lib/types";
 
 interface ThemeContextType {
   theme: Theme;
@@ -17,8 +18,9 @@ export function ThemeProvider({ children, initialTheme }: { children: ReactNode;
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
-    document.body.classList.toggle("theme-christmas", newTheme === "christmas");
-    document.body.classList.toggle("theme-default", newTheme === "default");
+    THEME_VALUES.forEach((themeValue) => {
+      document.body.classList.toggle(`theme-${themeValue}`, newTheme === themeValue);
+    });
   };
 
   useEffect(() => {

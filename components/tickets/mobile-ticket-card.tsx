@@ -14,6 +14,7 @@ interface MobileTicketCardProps<TData> {
 // Theme-specific style mappings - keys must match Theme enum values
 const themeStyles: Record<string, Record<string, string>> = {
 	card: {
+		sakura: "border-rose-200/80 bg-white/75 sakura-mobile-card",
 		christmas: "border-white/20",
 		lunar: "border-stone-800/50 lunar-card",
 		coding: "border-green-900/30 coding-card",
@@ -23,6 +24,7 @@ const themeStyles: Record<string, Record<string, string>> = {
 		default: "border-slate-700 bg-slate-900 default-mobile-card",
 	},
 	header: {
+		sakura: "border-rose-200/80 bg-white/80",
 		christmas: "border-white/20 bg-black/10",
 		lunar: "border-stone-800/50 bg-stone-900/30",
 		coding: "border-green-900/30 bg-black/50",
@@ -32,6 +34,7 @@ const themeStyles: Record<string, Record<string, string>> = {
 		default: "border-slate-600 bg-slate-800/90",
 	},
 	indexNumber: {
+		sakura: "text-rose-400",
 		christmas: "text-white/80",
 		lunar: "text-stone-500",
 		coding: "text-green-600/70 font-mono",
@@ -41,6 +44,7 @@ const themeStyles: Record<string, Record<string, string>> = {
 		default: "text-slate-300",
 	},
 	ticketLink: {
+		sakura: "text-rose-500 hover:text-rose-600",
 		christmas: "text-white hover:text-white/80",
 		lunar: "text-amber-400 hover:text-amber-300",
 		coding: "text-green-500/80 hover:text-green-400 font-mono",
@@ -50,6 +54,7 @@ const themeStyles: Record<string, Record<string, string>> = {
 		default: "text-sky-400 hover:text-sky-300",
 	},
 	avatarRing: {
+		sakura: "ring-rose-200",
 		christmas: "ring-white/30",
 		lunar: "ring-stone-700",
 		coding: "ring-green-900/50",
@@ -59,6 +64,7 @@ const themeStyles: Record<string, Record<string, string>> = {
 		default: "ring-slate-600",
 	},
 	avatarPlaceholder: {
+		sakura: "bg-rose-100 text-rose-500",
 		christmas: "bg-white/20 text-white",
 		lunar: "bg-stone-800 text-stone-400",
 		coding: "bg-green-900/30 text-green-500/80 font-mono",
@@ -68,6 +74,7 @@ const themeStyles: Record<string, Record<string, string>> = {
 		default: "bg-slate-600 text-white",
 	},
 	summary: {
+		sakura: "text-stone-700",
 		christmas: "text-white/90",
 		lunar: "text-stone-300",
 		coding: "text-green-400/80",
@@ -77,6 +84,7 @@ const themeStyles: Record<string, Record<string, string>> = {
 		default: "text-slate-100",
 	},
 	label: {
+		sakura: "text-rose-400",
 		christmas: "text-white/70",
 		lunar: "text-stone-500",
 		coding: "text-green-600/70 font-mono",

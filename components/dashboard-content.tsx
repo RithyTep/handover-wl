@@ -73,7 +73,7 @@ export function DashboardContent({
                 variant="ghost"
                 size="sm"
                 onClick={onRefresh}
-                className="text-white/70 hover:text-white text-xs"
+                className={theme === "sakura" ? "text-rose-400 hover:text-rose-500 hover:bg-white/70 text-xs border border-rose-200 bg-white/65" : "text-white/70 hover:text-white text-xs"}
               >
                 <RefreshCw className="w-3.5 h-3.5 mr-1.5" />
                 Refresh

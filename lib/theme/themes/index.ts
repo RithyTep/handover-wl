@@ -2,6 +2,7 @@ import type { Theme } from "@/lib/types"
 import type { ThemeConfig } from "../types"
 
 export { defaultThemeConfig } from "./default"
+export { sakuraThemeConfig } from "./sakura"
 export { pixelThemeConfig } from "./pixel"
 export { lunarThemeConfig } from "./lunar"
 export { christmasThemeConfig } from "./christmas"
@@ -10,6 +11,7 @@ export { clashThemeConfig } from "./clash"
 export { angkorPixelThemeConfig } from "./angkor-pixel"
 
 import { defaultThemeConfig } from "./default"
+import { sakuraThemeConfig } from "./sakura"
 import { pixelThemeConfig } from "./pixel"
 import { lunarThemeConfig } from "./lunar"
 import { christmasThemeConfig } from "./christmas"
@@ -19,6 +21,7 @@ import { angkorPixelThemeConfig } from "./angkor-pixel"
 
 export const THEME_CONFIGS: Record<Theme, ThemeConfig> = {
 	default: defaultThemeConfig,
+	sakura: sakuraThemeConfig,
 	pixel: pixelThemeConfig,
 	lunar: lunarThemeConfig,
 	christmas: christmasThemeConfig,
