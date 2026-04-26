@@ -9,6 +9,7 @@ describe("sakura ticket theme styles", () => {
 		expect(styles.container).toContain("sakura-table-shell")
 		expect(styles.header).toContain("sakura-table-header")
 		expect(styles.row(0)).toContain("sakura-table-row")
+		expect(styles.row(0)).toContain("data-[state=selected]:bg-rose-50/95")
 		expect(styles.cell(0)).toContain("sakura-table-cell")
 	})
 

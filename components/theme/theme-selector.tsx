@@ -25,6 +25,21 @@ interface ThemeSelectorProps {
 	variant?: Theme
 }
 
+interface ThemeSelectorSurfaceStyles {
+	dialogContent: string
+	title: string
+	description: string
+	selectTrigger: string
+	selectContent: string
+	selectItem: string
+	changeText: string
+	aboutCard: string
+	aboutTitle: string
+	aboutText: string
+	cancelButton: string
+	saveButton: string
+}
+
 const THEME_BUTTON_STYLES: Record<Theme, string> = {
 	[Theme.SAKURA]: "text-rose-500 hover:text-rose-600 hover:bg-rose-100/70 transition-colors",
 	[Theme.CHRISTMAS]: "text-white/70 hover:text-white hover:bg-white/10",
@@ -34,6 +49,47 @@ const THEME_BUTTON_STYLES: Record<Theme, string> = {
 	[Theme.CLASH]: "text-[#ccc] hover:text-[#fbcc14] transition-colors",
 	[Theme.ANGKOR_PIXEL]: "text-[#f5e6d3] hover:text-[#ffd700] hover:bg-[#3d5a4a]/50 transition-colors",
 	[Theme.DEFAULT]: "text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-colors",
+}
+
+const DEFAULT_SURFACE_STYLES: ThemeSelectorSurfaceStyles = {
+	dialogContent: "bg-card border-border",
+	title: "text-foreground",
+	description: "text-muted-foreground",
+	selectTrigger: "w-full border",
+	selectContent: "border",
+	selectItem: "cursor-pointer",
+	changeText: "text-amber-500",
+	aboutCard: "p-4 bg-muted rounded-lg",
+	aboutTitle: "font-semibold mb-2 text-foreground",
+	aboutText: "text-sm text-muted-foreground",
+	cancelButton: "",
+	saveButton: "",
+}
+
+const SAKURA_SURFACE_STYLES: ThemeSelectorSurfaceStyles = {
+	dialogContent:
+		"bg-white/92 border border-rose-200 shadow-[0_28px_80px_rgba(244,114,182,0.22)] rounded-[1.5rem] backdrop-blur-xl",
+	title: "text-rose-950",
+	description: "text-rose-400",
+	selectTrigger:
+		"w-full border border-rose-200 bg-white/90 text-rose-500 rounded-xl shadow-[0_10px_30px_rgba(244,114,182,0.12)] focus:ring-rose-300 focus:ring-offset-0",
+	selectContent:
+		"border border-rose-200 bg-white/95 text-rose-500 rounded-xl shadow-[0_18px_50px_rgba(244,114,182,0.18)] backdrop-blur-xl",
+	selectItem: "cursor-pointer text-rose-500 focus:bg-rose-50 focus:text-rose-600 rounded-lg",
+	changeText: "text-rose-500",
+	aboutCard: "p-4 rounded-xl border border-rose-100 bg-rose-50/70 shadow-inner",
+	aboutTitle: "font-semibold mb-2 text-rose-700",
+	aboutText: "text-sm text-rose-400",
+	cancelButton: "border-rose-200 bg-white/85 text-rose-500 hover:bg-rose-50 hover:text-rose-600",
+	saveButton: "bg-white text-rose-500 border border-rose-200 hover:bg-rose-50 shadow-[0_10px_24px_rgba(244,114,182,0.12)]",
+}
+
+export const getThemeSelectorSurfaceStyles = (variant: Theme): ThemeSelectorSurfaceStyles => {
+	if (variant === Theme.SAKURA) {
+		return SAKURA_SURFACE_STYLES
+	}
+
+	return DEFAULT_SURFACE_STYLES
 }
 
 export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) => {
@@ -68,6 +124,7 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 	}, [handleSaveToServer, handleThemeSelect, pendingTheme, selectedTheme])
 
 	const buttonClassName = THEME_BUTTON_STYLES[variant] ?? THEME_BUTTON_STYLES.default
+	const surfaceStyles = getThemeSelectorSurfaceStyles(variant)
 
 	return (
 		<>
@@ -84,10 +141,10 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 			</Button>
 
 			<Dialog open={isOpen} onOpenChange={setIsOpen}>
-				<DialogContent className="sm:max-w-md">
+				<DialogContent className={cn("sm:max-w-md", surfaceStyles.dialogContent)}>
 					<DialogHeader>
-						<DialogTitle>Select Theme</DialogTitle>
-						<DialogDescription>
+						<DialogTitle className={surfaceStyles.title}>Select Theme</DialogTitle>
+						<DialogDescription className={surfaceStyles.description}>
 							Choose a theme. Click save to apply changes.
 						</DialogDescription>
 					</DialogHeader>
@@ -102,22 +159,19 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 						<div className="space-y-6 py-4">
 							<Select value={pendingTheme} onValueChange={handlePendingChange} disabled={isSaving}>
 								<SelectTrigger
-									className="w-full border"
-									style={{ backgroundColor: '#1f2937', borderColor: '#374151', color: '#f3f4f6' }}
+									className={surfaceStyles.selectTrigger}
 									aria-label="Select theme"
 								>
 									<SelectValue placeholder="Select theme" />
 								</SelectTrigger>
 								<SelectContent
-									className="border"
-									style={{ backgroundColor: '#1f2937', borderColor: '#374151' }}
+									className={surfaceStyles.selectContent}
 								>
 									{themes.map((theme) => (
 										<SelectItem
 											key={theme.id}
 											value={theme.id}
-											className="cursor-pointer"
-											style={{ color: '#f3f4f6' }}
+											className={surfaceStyles.selectItem}
 										>
 											{theme.name}
 										</SelectItem>
@@ -126,14 +180,14 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 							</Select>
 
 							{hasChanges && (
-								<p className="text-sm text-amber-500">
+								<p className={cn("text-sm", surfaceStyles.changeText)}>
 									Theme changed to "{themes.find(t => t.id === pendingTheme)?.name}". Click save to apply.
 								</p>
 							)}
 
-							<div className="p-4 bg-muted rounded-lg">
-								<h4 className="font-semibold mb-2">About Rithy</h4>
-								<p className="text-sm text-muted-foreground">
+							<div className={surfaceStyles.aboutCard}>
+								<h4 className={surfaceStyles.aboutTitle}>About Rithy</h4>
+								<p className={surfaceStyles.aboutText}>
 									ABA 003 791 262
 								</p>
 							</div>
@@ -143,6 +197,7 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 									variant="outline"
 									onClick={() => setIsOpen(false)}
 									disabled={isSaving}
+									className={surfaceStyles.cancelButton}
 								>
 									Cancel
 								</Button>
@@ -150,6 +205,7 @@ export const ThemeSelector = ({ variant = Theme.DEFAULT }: ThemeSelectorProps) =
 									onClick={handleSave}
 									disabled={isSaving}
 									aria-busy={isSaving}
+									className={surfaceStyles.saveButton}
 								>
 									<Save className="w-4 h-4 mr-2" />
 									{isSaving ? "Saving..." : "Save Preference"}

@@ -44,7 +44,8 @@ const sakuraStyles: TableThemeStyles = {
 	headerRow: "border-b border-rose-200/80",
 	headerCell: "text-rose-400 border-r border-rose-100/90 last:border-r-0",
 	body: "text-sm",
-	row: () => "sakura-table-row",
+	row: () =>
+		"sakura-table-row data-[state=selected]:bg-rose-50/95 data-[state=selected]:hover:bg-rose-50/95",
 	cell: () => "sakura-table-cell border-r border-rose-100/90 last:border-r-0 text-stone-700",
 	emptyCell: "h-24 text-center text-rose-400 text-sm",
 }
