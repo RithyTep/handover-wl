@@ -38,7 +38,7 @@ export const sakuraThemeConfig: ThemeConfig = {
 			id: "ai-fill",
 			label: "Petal Fill",
 			svgIcon: "/icons/sakura/blossom.svg",
-			className: "h-9 px-4 text-white bg-gradient-to-r from-rose-400 to-pink-300 hover:from-rose-500 hover:to-pink-400 border-none shadow-[0_10px_24px_rgba(244,114,182,0.28)] rounded-xl",
+			className: "h-9 px-4 text-rose-500 bg-white/95 hover:bg-rose-50 border border-rose-200 rounded-xl shadow-[0_10px_24px_rgba(244,114,182,0.16)]",
 		},
 		quickFill: {
 			id: "quick-fill",
@@ -74,7 +74,7 @@ export const sakuraThemeConfig: ThemeConfig = {
 			id: "send",
 			label: "Send",
 			svgIcon: "/icons/sakura/branch.svg",
-			className: "h-9 px-4 text-white bg-rose-400 hover:bg-rose-500 border-none shadow-[0_10px_24px_rgba(251,113,133,0.22)] rounded-xl",
+			className: "h-9 px-4 text-rose-500 bg-white/95 hover:bg-rose-50 border border-rose-200 rounded-xl shadow-[0_10px_24px_rgba(244,114,182,0.16)]",
 		},
 	},
 	mobileActions: {
