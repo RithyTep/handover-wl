@@ -237,6 +237,51 @@
     box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.2) !important;
   }
 
+  /* Pchum Ben theme styles */
+  body.theme-pchum_ben {
+    font-family: 'Inter', sans-serif;
+    background-color: #0d0a14;
+    color: #e4ddf5;
+  }
+
+  /* Pchum Ben theme - ticket link color */
+  body.theme-pchum_ben a[href*="jira"],
+  body.theme-pchum_ben a[href*="atlassian"] {
+    color: #fcd34d;
+  }
+
+  body.theme-pchum_ben a[href*="jira"]:hover,
+  body.theme-pchum_ben a[href*="atlassian"]:hover {
+    color: #fde68a;
+  }
+
+  /* Pchum Ben theme - table input styles */
+  body.theme-pchum_ben input[type="text"],
+  body.theme-pchum_ben input:not([type]) {
+    background-color: #16101f !important;
+    border: 1px solid rgba(139, 92, 246, 0.15) !important;
+    color: #e4ddf5 !important;
+    border-radius: 4px !important;
+  }
+
+  body.theme-pchum_ben input[type="text"]::placeholder,
+  body.theme-pchum_ben input:not([type])::placeholder {
+    color: #6d5f8a !important;
+  }
+
+  body.theme-pchum_ben input[type="text"]:focus,
+  body.theme-pchum_ben input:not([type]):focus {
+    border-color: rgba(251, 191, 36, 0.5) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.2) !important;
+  }
+
+  /* Pchum Ben theme - custom scrollbar */
+  body.theme-pchum_ben ::-webkit-scrollbar-thumb {
+    background: rgba(251, 191, 36, 0.3);
+    border-radius: 3px;
+  }
+
   /* Lunar theme - custom scrollbar */
   body.theme-lunar ::-webkit-scrollbar {
     width: 6px;
@@ -1353,6 +1398,116 @@
     background: linear-gradient(to right, rgba(220, 38, 38, 0.2), rgba(245, 158, 11, 0.2));
     color: #fbbf24;
     border: 1px solid rgba(245, 158, 11, 0.3);
+  }
+
+  /* Pchum Ben theme utilities */
+  .pchum-bg {
+    background-color: #0d0a14;
+    background-image: radial-gradient(ellipse at bottom, rgba(120, 53, 15, 0.12), transparent 60%);
+    font-family: 'Inter', sans-serif;
+    position: relative;
+  }
+
+  .pchum-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    pointer-events: none;
+  }
+
+  .pchum-glow-violet {
+    background: rgba(76, 29, 149, 0.18);
+  }
+
+  .pchum-glow-amber {
+    background: rgba(180, 83, 9, 0.14);
+  }
+
+  .pchum-btn-primary {
+    background: linear-gradient(to right, #b45309, #f59e0b);
+    color: white;
+  }
+
+  .pchum-btn-primary:hover {
+    background: linear-gradient(to right, #92400e, #d97706);
+  }
+
+  .pchum-table-header {
+    background-color: rgba(24, 16, 38, 0.7);
+  }
+
+  .pchum-table-row {
+    border-bottom: 1px solid rgba(46, 16, 101, 0.4);
+  }
+
+  .pchum-table-row:hover {
+    background-color: rgba(46, 16, 101, 0.3);
+  }
+
+  .pchum-table-cell {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .pchum-card {
+    background-color: rgba(24, 16, 38, 0.5);
+    border: 1px solid rgba(139, 92, 246, 0.08);
+    border-radius: 0.75rem;
+  }
+
+  .pchum-badge {
+    @apply text-xs font-medium px-2 py-0.5 rounded-full;
+    background: linear-gradient(to right, rgba(76, 29, 149, 0.25), rgba(180, 83, 9, 0.25));
+    color: #fcd34d;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+  }
+
+  /* Pchum Ben - rising candle ember */
+  @keyframes pchum-ember-rise {
+    0% {
+      transform: translateY(0) translateX(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 0.8;
+    }
+    50% {
+      transform: translateY(-45vh) translateX(12px);
+      opacity: 0.5;
+    }
+    100% {
+      transform: translateY(-90vh) translateX(-8px);
+      opacity: 0;
+    }
+  }
+
+  .pchum-ember {
+    position: absolute;
+    bottom: 0;
+    border-radius: 50%;
+    background: #fbbf24;
+    box-shadow: 0 0 6px 2px rgba(251, 191, 36, 0.5);
+    animation: pchum-ember-rise linear infinite;
+  }
+
+  /* Pchum Ben - candle flicker */
+  @keyframes pchum-flicker {
+    0%, 100% {
+      opacity: 0.5;
+      filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6));
+    }
+    50% {
+      opacity: 0.85;
+      filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.9));
+    }
+  }
+
+  .pchum-candle {
+    font-size: 1.5rem;
+    animation: pchum-flicker 2.4s ease-in-out infinite;
+  }
+
+  .pchum-candle-slow {
+    animation-duration: 3.6s;
   }
 
   /* Lunar Hongbao floating animation */

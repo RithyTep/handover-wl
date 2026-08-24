@@ -7,6 +7,7 @@ export enum Theme {
 	CODING = "coding",
 	CLASH = "clash",
 	ANGKOR_PIXEL = "angkor_pixel",
+	PCHUM_BEN = "pchum_ben",
 }
 
 export const ThemeValues = Object.values(Theme) as [Theme, ...Theme[]]

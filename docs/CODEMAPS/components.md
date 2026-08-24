@@ -93,6 +93,11 @@ File: `components/new-year-scene.tsx`
 Props: none
 Uses: re-exports from `components/new-year/new-year-scene.tsx`
 
+## PchumBenScene
+File: `components/pchum-ben-scene.tsx`
+Props: none
+Uses: nothing (static candlelight/ember animation only)
+
 ## PixelStatusBar
 File: `components/pixel-status-bar.tsx`
 Props: none

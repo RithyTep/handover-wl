@@ -21,6 +21,7 @@ const SakuraScene = dynamic(() => import("@/components/sakura-scene").then(m => 
 const CodingScene = dynamic(() => import("@/components/coding-scene").then(m => ({ default: m.CodingScene })), { ssr: false })
 const ProfessionalScene = dynamic(() => import("@/components/professional-scene").then(m => ({ default: m.ProfessionalScene })), { ssr: false })
 const AngkorPixelScene = dynamic(() => import("@/components/angkor-pixel-scene").then(m => ({ default: m.AngkorPixelScene })), { ssr: false })
+const PchumBenScene = dynamic(() => import("@/components/pchum-ben-scene").then(m => ({ default: m.PchumBenScene })), { ssr: false })
 const PixelStatusBar = dynamic(() => import("@/components/pixel-status-bar").then(m => ({ default: m.PixelStatusBar })), { ssr: false })
 const CodingFooter = dynamic(() => import("@/components/coding-footer").then(m => ({ default: m.CodingFooter })), { ssr: false })
 
@@ -58,6 +59,7 @@ const THEME_SCENES: Record<Theme, React.ComponentType | null> = {
 	coding: CodingScene,
 	clash: null,
 	angkor_pixel: AngkorPixelScene,
+	pchum_ben: PchumBenScene,
 }
 
 export const DashboardLayout = ({
@@ -95,7 +97,8 @@ export const DashboardLayout = ({
 			"theme-lunar",
 			"theme-coding",
 			"theme-clash",
-			"theme-angkor_pixel"
+			"theme-angkor_pixel",
+			"theme-pchum_ben"
 		)
 		document.body.classList.add(`theme-${theme}`)
 	}, [theme])

@@ -106,6 +106,17 @@ const angkorPixelStyles: TableThemeStyles = {
 	emptyCell: "h-24 text-center text-muted-foreground text-sm",
 }
 
+const pchumBenStyles: TableThemeStyles = {
+	container: "pchum-card border border-violet-950/50 shadow-xl shadow-amber-900/10",
+	header: "pchum-table-header backdrop-blur-md",
+	headerRow: "border-b border-violet-950/50",
+	headerCell: "text-amber-300/80 border-r border-violet-950/40 last:border-r-0",
+	body: "text-sm",
+	row: () => "pchum-table-row",
+	cell: () => "pchum-table-cell border-r border-violet-950/40 last:border-r-0 text-violet-100/80",
+	emptyCell: "h-24 text-center text-muted-foreground text-sm",
+}
+
 const themeStylesMap: Record<string, TableThemeStyles> = {
 	sakura: sakuraStyles,
 	christmas: christmasStyles,
@@ -114,6 +125,7 @@ const themeStylesMap: Record<string, TableThemeStyles> = {
 	coding: codingStyles,
 	clash: clashStyles,
 	angkor_pixel: angkorPixelStyles,
+	pchum_ben: pchumBenStyles,
 }
 
 export function getTableThemeStyles(theme: Theme): TableThemeStyles {

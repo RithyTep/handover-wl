@@ -50,6 +50,12 @@ export const THEMES: ThemeInfo[] = [
 		description: "Cambodian pixel art theme with Angkor temples",
 		icon: "🏯",
 	},
+	{
+		id: Theme.PCHUM_BEN,
+		name: "Pchum Ben",
+		description: "Khmer Ancestors' Festival theme with candlelight and incense",
+		icon: "🕯️",
+	},
 ]
 
 export const DEFAULT_THEME = Theme.CLASH

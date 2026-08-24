@@ -9,6 +9,7 @@ export { christmasThemeConfig } from "./christmas"
 export { codingThemeConfig } from "./coding"
 export { clashThemeConfig } from "./clash"
 export { angkorPixelThemeConfig } from "./angkor-pixel"
+export { pchumBenThemeConfig } from "./pchum-ben"
 
 import { defaultThemeConfig } from "./default"
 import { sakuraThemeConfig } from "./sakura"
@@ -18,6 +19,7 @@ import { christmasThemeConfig } from "./christmas"
 import { codingThemeConfig } from "./coding"
 import { clashThemeConfig } from "./clash"
 import { angkorPixelThemeConfig } from "./angkor-pixel"
+import { pchumBenThemeConfig } from "./pchum-ben"
 
 export const THEME_CONFIGS: Record<Theme, ThemeConfig> = {
 	default: defaultThemeConfig,
@@ -28,4 +30,5 @@ export const THEME_CONFIGS: Record<Theme, ThemeConfig> = {
 	coding: codingThemeConfig,
 	clash: clashThemeConfig,
 	angkor_pixel: angkorPixelThemeConfig,
+	pchum_ben: pchumBenThemeConfig,
 }
