@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 64" width="48" height="64">
+  <!-- Glow -->
+  <ellipse cx="24" cy="16" rx="14" ry="15" fill="#fbbf24" opacity="0.18"/>
+  <!-- Flame -->
+  <path d="M24 4 Q30 12 27 18 Q25 22 24 22 Q23 22 21 18 Q18 12 24 4Z" fill="#fbbf24"/>
+  <path d="M24 10 Q26.5 14 25.2 17.5 Q24.5 19 24 19 Q23.5 19 22.8 17.5 Q21.5 14 24 10Z" fill="#fef3c7"/>
+  <!-- Wick -->
+  <rect x="23.2" y="21" width="1.6" height="4" fill="#78350f"/>
+  <!-- Candle body -->
+  <rect x="15" y="25" width="18" height="32" rx="3" fill="#f59e0b"/>
+  <rect x="15" y="25" width="7" height="32" rx="3" fill="#fbbf24" opacity="0.55"/>
+  <!-- Wax drips -->
+  <path d="M15 25 Q17 32 15.5 35 L15 35 Z" fill="#fde68a"/>
+  <path d="M33 25 Q31.5 31 32.5 34 L33 34 Z" fill="#fde68a"/>
+  <!-- Base dish -->
+  <ellipse cx="24" cy="58" rx="16" ry="4" fill="#7c2d12"/>
+  <ellipse cx="24" cy="57" rx="16" ry="3.4" fill="#9a3412"/>
+</svg>

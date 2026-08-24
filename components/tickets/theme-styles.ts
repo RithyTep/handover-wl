@@ -107,14 +107,15 @@ const angkorPixelStyles: TableThemeStyles = {
 }
 
 const pchumBenStyles: TableThemeStyles = {
-	container: "pchum-card border border-violet-950/50 shadow-xl shadow-amber-900/10",
-	header: "pchum-table-header backdrop-blur-md",
-	headerRow: "border-b border-violet-950/50",
-	headerCell: "text-amber-300/80 border-r border-violet-950/40 last:border-r-0",
+	container: "pchum-card shadow-xl",
+	header: "pchum-table-header",
+	headerRow: "border-b border-[#d4af37]/40",
+	headerCell:
+		"text-[#e8b64c] uppercase tracking-wide border-r border-[#d4af37]/20 last:border-r-0",
 	body: "text-sm",
 	row: () => "pchum-table-row",
-	cell: () => "pchum-table-cell border-r border-violet-950/40 last:border-r-0 text-violet-100/80",
-	emptyCell: "h-24 text-center text-muted-foreground text-sm",
+	cell: () => "pchum-table-cell border-r border-[#d4af37]/15 last:border-r-0 text-[#f0e6d2]",
+	emptyCell: "h-24 text-center text-[#e8b64c]/60 text-sm",
 }
 
 const themeStylesMap: Record<string, TableThemeStyles> = {

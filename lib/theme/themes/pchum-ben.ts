@@ -1,115 +1,117 @@
-import { Zap, Trash2, RefreshCw, Copy, Save, Send, Flame } from "lucide-react"
+import { Zap, Trash2, Save, Send, Sparkles } from "lucide-react"
 import type { ThemeConfig } from "../types"
 
 export const pchumBenThemeConfig: ThemeConfig = {
 	header: {
 		container:
-			"h-12 sm:h-[52px] flex-shrink-0 flex items-center justify-between px-4 sm:px-6 border-b border-violet-950/60 bg-[#120c1c]/60 backdrop-blur-sm z-10",
+			"h-14 sm:h-16 flex-shrink-0 flex items-center justify-between px-4 sm:px-8 border-b border-[#d4af37]/30 bg-gradient-to-b from-[#241030] to-[#1b0b26] backdrop-blur-sm z-10 shadow-lg",
 		logo: {
-			title: "text-2xl flex items-center gap-2 text-amber-100",
-			titleGradient:
-				"font-semibold bg-gradient-to-r from-amber-300 to-orange-400 bg-clip-text text-transparent",
+			svgIcon: "/icons/pchum-ben/temple.svg",
+			title: "text-xl flex items-center gap-2 font-bold text-[#f0e6d2] tracking-tight",
+			subtitle:
+				"text-[10px] text-[#e8b64c] font-medium -mt-0.5 hidden sm:block uppercase tracking-wider",
 		},
 		badge: "text-xs font-bold px-2 py-0.5 pchum-badge",
 		nav: {
-			link: "text-violet-300/70 hover:text-amber-300 hover:bg-violet-950/40 transition-colors flex items-center gap-1",
-			kbd: "hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-violet-400/60 bg-[#120c1c]/70 border border-violet-950/60 rounded",
+			link: "text-[#f0e6d2]/90 hover:text-[#e8b64c] transition-colors font-semibold uppercase tracking-wide flex items-center gap-1",
+			kbd: "hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-[#e8b64c] bg-[#1b0b26] border border-[#d4af37]/40 rounded-md font-bold",
+			kbdIcon: "/icons/pchum-ben/moon.svg",
 		},
 	},
 	layout: {
 		body: "theme-pchum_ben",
 		background: "pchum-bg",
-		mobileBar: "bg-[#120c1c]/95 border-violet-950/60",
+		mobileBar: "bg-gradient-to-b from-[#241030] to-[#1b0b26] border-t border-[#d4af37]/30",
 	},
 	table: {
-		container: "border border-violet-950/50 rounded-xl overflow-hidden",
-		header: "bg-[#181026]/70",
-		headerCell: "text-amber-300/80 font-medium",
-		row: "border-b border-violet-950/40 hover:bg-violet-950/30",
-		cell: "text-violet-100/80",
-		mobileCard: "bg-[#181026]/70 border border-violet-950/50 rounded-xl",
-		detailsButton: "text-violet-300/70 hover:text-amber-300 hover:bg-violet-950/40",
+		container: "pchum-card overflow-hidden",
+		header: "pchum-table-header",
+		headerCell: "text-[#e8b64c] font-semibold uppercase tracking-wide",
+		row: "border-b border-[#d4af37]/15 hover:bg-[#3a1745]/40",
+		cell: "text-[#f0e6d2]",
+		mobileCard: "pchum-card",
+		detailsButton: "text-[#e8b64c] hover:text-[#f5d78a] hover:bg-[#3a1745]/50 border border-[#d4af37]/40 rounded-full",
 	},
 	actions: {
 		aiFill: {
 			id: "ai-fill",
-			label: "Blessing Fill",
-			icon: Flame,
-			className: "h-9 px-4 pchum-btn-primary text-white border-none",
+			label: "Harvest",
+			svgIcon: "/icons/pchum-ben/bay-ben.svg",
+			className: "h-9 px-4 pchum-btn",
+			iconClassName: "w-5 h-4",
 		},
 		quickFill: {
 			id: "quick-fill",
-			label: "Fill",
-			icon: Zap,
-			className:
-				"h-9 px-4 text-violet-100/80 bg-violet-950/40 hover:bg-violet-950/60 border border-violet-900/50 rounded-lg",
+			label: "Craft",
+			svgIcon: "/icons/pchum-ben/lotus.svg",
+			className: "h-9 px-4 pchum-btn",
+			iconClassName: "w-5 h-4",
 		},
 		clear: {
 			id: "clear",
-			label: "Clear",
-			icon: Trash2,
-			className:
-				"h-9 px-4 text-violet-100/80 bg-violet-950/40 hover:bg-violet-950/60 border border-violet-900/50 rounded-lg",
+			label: "Destroy",
+			svgIcon: "/icons/pchum-ben/incense.svg",
+			className: "h-9 px-4 pchum-btn",
+			iconClassName: "w-3 h-5",
 		},
 		refresh: {
 			id: "refresh",
-			label: "Refresh",
-			icon: RefreshCw,
-			className:
-				"h-9 px-4 text-violet-100/80 bg-violet-950/40 hover:bg-violet-950/60 border border-violet-900/50 rounded-lg",
+			label: "Explore",
+			svgIcon: "/icons/pchum-ben/moon.svg",
+			className: "h-9 px-4 pchum-btn",
+			iconClassName: "animate-spin-slow",
 		},
 		copy: {
 			id: "copy",
-			label: "Copy",
-			icon: Copy,
-			className:
-				"h-9 px-4 text-violet-100/80 bg-violet-950/40 hover:bg-violet-950/60 border border-violet-900/50 rounded-lg",
+			label: "Clone",
+			svgIcon: "/icons/pchum-ben/temple.svg",
+			className: "h-9 px-4 pchum-btn",
 		},
 		save: {
 			id: "save",
-			label: "Save",
-			icon: Save,
-			className:
-				"h-9 px-4 text-violet-100/80 bg-violet-950/40 hover:bg-violet-950/60 border border-violet-900/50 rounded-lg",
+			label: "Store",
+			svgIcon: "/icons/pchum-ben/alms-bowl.svg",
+			className: "h-9 px-4 pchum-btn",
+			iconClassName: "w-5 h-4",
 		},
 		send: {
 			id: "send",
-			label: "Send",
-			icon: Send,
-			className:
-				"h-9 px-4 text-amber-200 bg-amber-900/30 hover:bg-amber-900/50 border border-amber-700/50 rounded-lg",
+			label: "Attack!",
+			svgIcon: "/icons/pchum-ben/candle.svg",
+			className: "h-9 px-4 pchum-btn pchum-btn-primary",
+			iconClassName: "w-3.5 h-5",
 		},
 	},
 	mobileActions: {
 		aiFill: {
 			id: "ai-fill",
-			icon: Flame,
+			icon: Sparkles,
 			className: "pchum-btn-primary active:opacity-80",
-			iconColor: "text-white",
+			iconColor: "text-[#f5d78a]",
 		},
 		quickFill: {
 			id: "quick-fill",
 			icon: Zap,
-			className: "bg-violet-950/40 border border-violet-900/50 active:bg-violet-950/60",
-			iconColor: "text-violet-100/80",
+			className: "bg-[#2a1233] border border-[#d4af37]/40 active:bg-[#3a1745]",
+			iconColor: "text-[#e8b64c]",
 		},
 		clear: {
 			id: "clear",
 			icon: Trash2,
-			className: "bg-violet-950/40 border border-violet-900/50 active:bg-violet-950/60",
-			iconColor: "text-violet-100/80",
+			className: "bg-[#2a1233] border border-[#d4af37]/40 active:bg-[#3a1745]",
+			iconColor: "text-[#e8b64c]",
 		},
 		save: {
 			id: "save",
 			icon: Save,
-			className: "bg-violet-950/40 border border-violet-900/50 active:bg-violet-950/60",
-			iconColor: "text-violet-100/80",
+			className: "bg-[#2a1233] border border-[#d4af37]/40 active:bg-[#3a1745]",
+			iconColor: "text-[#e8b64c]",
 		},
 		send: {
 			id: "send",
 			icon: Send,
-			className: "bg-amber-900/30 border border-amber-700/50 active:bg-amber-900/50",
-			iconColor: "text-amber-200",
+			className: "bg-[#2a1233] border border-[#e8b64c]/60 active:bg-[#3a1745]",
+			iconColor: "text-[#f5d78a]",
 		},
 	},
 }

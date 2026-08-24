@@ -239,46 +239,46 @@
 
   /* Pchum Ben theme styles */
   body.theme-pchum_ben {
-    font-family: 'Inter', sans-serif;
-    background-color: #0d0a14;
-    color: #e4ddf5;
+    font-family: 'Kantumruy Pro', 'Inter', sans-serif;
+    background-color: #150a1d;
+    color: #f0e6d2;
   }
 
   /* Pchum Ben theme - ticket link color */
   body.theme-pchum_ben a[href*="jira"],
   body.theme-pchum_ben a[href*="atlassian"] {
-    color: #fcd34d;
+    color: #e8b64c;
   }
 
   body.theme-pchum_ben a[href*="jira"]:hover,
   body.theme-pchum_ben a[href*="atlassian"]:hover {
-    color: #fde68a;
+    color: #f5d78a;
   }
 
   /* Pchum Ben theme - table input styles */
   body.theme-pchum_ben input[type="text"],
   body.theme-pchum_ben input:not([type]) {
-    background-color: #16101f !important;
-    border: 1px solid rgba(139, 92, 246, 0.15) !important;
-    color: #e4ddf5 !important;
-    border-radius: 4px !important;
+    background-color: #1d0e28 !important;
+    border: 1px solid rgba(212, 175, 55, 0.35) !important;
+    color: #f0e6d2 !important;
+    border-radius: 6px !important;
   }
 
   body.theme-pchum_ben input[type="text"]::placeholder,
   body.theme-pchum_ben input:not([type])::placeholder {
-    color: #6d5f8a !important;
+    color: #8a7a9a !important;
   }
 
   body.theme-pchum_ben input[type="text"]:focus,
   body.theme-pchum_ben input:not([type]):focus {
-    border-color: rgba(251, 191, 36, 0.5) !important;
+    border-color: rgba(232, 182, 76, 0.7) !important;
     outline: none !important;
-    box-shadow: 0 0 0 1px rgba(251, 191, 36, 0.2) !important;
+    box-shadow: 0 0 0 1px rgba(232, 182, 76, 0.3) !important;
   }
 
   /* Pchum Ben theme - custom scrollbar */
   body.theme-pchum_ben ::-webkit-scrollbar-thumb {
-    background: rgba(251, 191, 36, 0.3);
+    background: rgba(212, 175, 55, 0.4);
     border-radius: 3px;
   }
 
@@ -1402,46 +1402,54 @@
 
   /* Pchum Ben theme utilities */
   .pchum-bg {
-    background-color: #0d0a14;
-    background-image: radial-gradient(ellipse at bottom, rgba(120, 53, 15, 0.12), transparent 60%);
-    font-family: 'Inter', sans-serif;
+    background-color: #150a1d;
+    background-image: url('/assets/pchum-ben/bg1.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: 'Kantumruy Pro', 'Inter', sans-serif;
     position: relative;
   }
 
-  .pchum-glow {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    pointer-events: none;
+  .pchum-btn {
+    background: linear-gradient(180deg, #31163f 0%, #241030 100%);
+    border: 2px solid rgba(212, 175, 55, 0.6);
+    border-radius: 0.5rem;
+    color: #f5d78a;
+    font-weight: 600;
+    transition: all 0.15s ease;
   }
 
-  .pchum-glow-violet {
-    background: rgba(76, 29, 149, 0.18);
-  }
-
-  .pchum-glow-amber {
-    background: rgba(180, 83, 9, 0.14);
+  .pchum-btn:hover {
+    border-color: #e8b64c;
+    color: #ffe9ab;
+    box-shadow: 0 0 12px rgba(232, 182, 76, 0.25);
+    background: linear-gradient(180deg, #3a1a4a 0%, #2a1338 100%);
   }
 
   .pchum-btn-primary {
-    background: linear-gradient(to right, #b45309, #f59e0b);
-    color: white;
+    background: linear-gradient(180deg, #3d1c4e 0%, #2a1035 100%);
+    border: 2px solid #e8b64c;
+    border-radius: 0.5rem;
+    color: #ffe9ab;
+    font-weight: 700;
   }
 
   .pchum-btn-primary:hover {
-    background: linear-gradient(to right, #92400e, #d97706);
+    box-shadow: 0 0 16px rgba(232, 182, 76, 0.4);
+    background: linear-gradient(180deg, #48225c 0%, #32143f 100%);
   }
 
   .pchum-table-header {
-    background-color: rgba(24, 16, 38, 0.7);
+    background-color: rgba(26, 10, 36, 0.95);
   }
 
   .pchum-table-row {
-    border-bottom: 1px solid rgba(46, 16, 101, 0.4);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.15);
   }
 
   .pchum-table-row:hover {
-    background-color: rgba(46, 16, 101, 0.3);
+    background-color: rgba(58, 23, 69, 0.45);
   }
 
   .pchum-table-cell {
@@ -1449,16 +1457,18 @@
   }
 
   .pchum-card {
-    background-color: rgba(24, 16, 38, 0.5);
-    border: 1px solid rgba(139, 92, 246, 0.08);
-    border-radius: 0.75rem;
+    background-color: rgba(38, 16, 50, 0.92);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 0.5rem;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45);
   }
 
   .pchum-badge {
     @apply text-xs font-medium px-2 py-0.5 rounded-full;
-    background: linear-gradient(to right, rgba(76, 29, 149, 0.25), rgba(180, 83, 9, 0.25));
-    color: #fcd34d;
-    border: 1px solid rgba(251, 191, 36, 0.3);
+    background: rgba(42, 18, 51, 0.9);
+    color: #e8b64c;
+    border: 1px solid rgba(212, 175, 55, 0.5);
   }
 
   /* Pchum Ben - rising candle ember */
@@ -1489,26 +1499,6 @@
     animation: pchum-ember-rise linear infinite;
   }
 
-  /* Pchum Ben - candle flicker */
-  @keyframes pchum-flicker {
-    0%, 100% {
-      opacity: 0.5;
-      filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6));
-    }
-    50% {
-      opacity: 0.85;
-      filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.9));
-    }
-  }
-
-  .pchum-candle {
-    font-size: 1.5rem;
-    animation: pchum-flicker 2.4s ease-in-out infinite;
-  }
-
-  .pchum-candle-slow {
-    animation-duration: 3.6s;
-  }
 
   /* Lunar Hongbao floating animation */
   @keyframes hongbao-float {

@@ -28,6 +28,12 @@ const getTabButtonClassName = (theme: Theme, isActive: boolean) => {
 		return isActive ? "bg-zinc-800 text-green-400" : "text-zinc-500 hover:text-zinc-400"
 	}
 
+	if (theme === "pchum_ben") {
+		return isActive
+			? "bg-[#2a1233]/95 text-[#f0e6d2] border border-b-0 border-[#d4af37]/50"
+			: "bg-[#1b0b26]/60 text-[#e8b64c]/60 hover:text-[#e8b64c] border border-transparent"
+	}
+
 	return isActive
 		? "bg-white/15 text-white"
 		: "bg-white/5 text-white/50 hover:text-white/70 hover:bg-white/8"
@@ -40,6 +46,10 @@ const getTabCountClassName = (theme: Theme, isActive: boolean) => {
 
 	if (theme === "coding") {
 		return isActive ? "bg-green-500/20 text-green-400" : "bg-zinc-700 text-zinc-500"
+	}
+
+	if (theme === "pchum_ben") {
+		return isActive ? "bg-[#e8b64c]/20 text-[#f5d78a]" : "bg-[#2a1233] text-[#e8b64c]/50"
 	}
 
 	return isActive ? "bg-white/20 text-white" : "bg-white/10 text-white/40"

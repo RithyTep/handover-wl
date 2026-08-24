@@ -82,6 +82,12 @@ export const getHeaderNavItems = (theme: Theme): HeaderNavItem[] => {
 			{ href: "/changelog", label: "News", svgIcon: "/icons/clash/clan-btn.svg" },
 		]
 	}
+	if (theme === "pchum_ben") {
+		return [
+			{ href: "/feedback", label: "Feedback", svgIcon: "/icons/pchum-ben/lotus.svg" },
+			{ href: "/changelog", label: "Changelog", svgIcon: "/icons/pchum-ben/temple.svg" },
+		]
+	}
 	return [
 		{ href: "/feedback", label: "Feedback", icon: MessageSquare },
 		{ href: "/changelog", label: "Changelog", icon: FileText },

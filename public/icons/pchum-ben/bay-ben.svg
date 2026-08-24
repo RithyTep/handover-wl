@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 48" width="56" height="48">
+  <!-- Banana leaf -->
+  <ellipse cx="28" cy="34" rx="24" ry="8" fill="#15803d"/>
+  <ellipse cx="28" cy="33" rx="21" ry="6.5" fill="#16a34a"/>
+  <path d="M8 33 Q28 29 48 33" stroke="#14532d" stroke-width="1" fill="none" opacity="0.6"/>
+  <!-- Rice balls (bay ben) -->
+  <circle cx="18" cy="26" r="8" fill="#fef9ec"/>
+  <circle cx="38" cy="26" r="8" fill="#fef9ec"/>
+  <circle cx="28" cy="18" r="8.5" fill="#fffdf5"/>
+  <!-- Rice texture -->
+  <circle cx="16" cy="24" r="1" fill="#e7dcc3"/>
+  <circle cx="21" cy="28" r="1" fill="#e7dcc3"/>
+  <circle cx="36" cy="23" r="1" fill="#e7dcc3"/>
+  <circle cx="40" cy="28" r="1" fill="#e7dcc3"/>
+  <circle cx="26" cy="15" r="1" fill="#e7dcc3"/>
+  <circle cx="31" cy="19" r="1" fill="#e7dcc3"/>
+  <!-- Sesame sprinkle -->
+  <rect x="27" y="11" width="2" height="1" rx="0.5" fill="#57534e" transform="rotate(20 28 11.5)"/>
+  <rect x="17" y="21" width="2" height="1" rx="0.5" fill="#57534e" transform="rotate(-15 18 21.5)"/>
+  <rect x="37" y="21" width="2" height="1" rx="0.5" fill="#57534e" transform="rotate(30 38 21.5)"/>
+</svg>

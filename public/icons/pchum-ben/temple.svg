@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56" width="56" height="56">
+  <!-- Central prang -->
+  <path d="M23 34 L24 20 Q25 13 26.5 10 L28 4 L29.5 10 Q31 13 32 20 L33 34 Z" fill="#d4af37"/>
+  <path d="M27 6 L28 2 L29 6 Z" fill="#fbbf24"/>
+  <!-- Side prangs -->
+  <path d="M9 40 L10 29 Q10.8 24 12 21.5 L13.5 16 L15 21.5 Q16.2 24 17 29 L18 40 Z" fill="#b8942e"/>
+  <path d="M38 40 L39 29 Q39.8 24 41 21.5 L42.5 16 L44 21.5 Q45.2 24 46 29 L47 40 Z" fill="#b8942e"/>
+  <!-- Terraces -->
+  <rect x="18" y="34" width="20" height="6" fill="#a17c1f"/>
+  <rect x="12" y="40" width="32" height="6" fill="#8a691a"/>
+  <rect x="6" y="46" width="44" height="6" fill="#6b5214"/>
+  <!-- Doorway -->
+  <path d="M25 52 L25 45 Q28 42 31 45 L31 52 Z" fill="#2a1745"/>
+  <!-- Steps shading -->
+  <rect x="18" y="34" width="20" height="1.5" fill="#fbbf24" opacity="0.35"/>
+  <rect x="12" y="40" width="32" height="1.5" fill="#fbbf24" opacity="0.3"/>
+  <rect x="6" y="46" width="44" height="1.5" fill="#fbbf24" opacity="0.25"/>
+</svg>

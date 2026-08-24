@@ -96,7 +96,7 @@ Uses: re-exports from `components/new-year/new-year-scene.tsx`
 ## PchumBenScene
 File: `components/pchum-ben-scene.tsx`
 Props: none
-Uses: nothing (static candlelight/ember animation only)
+Uses: next/image (candle/incense SVG decorations over ember animation)
 
 ## PixelStatusBar
 File: `components/pixel-status-bar.tsx`

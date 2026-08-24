@@ -13,11 +13,7 @@ const EMBERS = [
 export function PchumBenScene() {
 	return (
 		<div className="absolute inset-0 overflow-hidden pointer-events-none">
-			<div className="pchum-glow pchum-glow-violet absolute -top-32 -left-32 w-96 h-96" />
-			<div className="pchum-glow pchum-glow-amber absolute -bottom-24 left-1/4 w-[500px] h-[400px]" />
-			<div className="pchum-glow pchum-glow-amber absolute -bottom-32 -right-32 w-96 h-96" />
-
-			{/* Rising candle embers */}
+			{/* Candle embers rising from the festival grounds */}
 			{EMBERS.map((ember, i) => (
 				<span
 					key={i}
@@ -31,14 +27,6 @@ export function PchumBenScene() {
 					}}
 				/>
 			))}
-
-			{/* Candle flames along the bottom edge */}
-			<div className="absolute bottom-3 left-6 hidden sm:block pchum-candle" aria-hidden>
-				🕯️
-			</div>
-			<div className="absolute bottom-3 right-6 hidden sm:block pchum-candle pchum-candle-slow" aria-hidden>
-				🕯️
-			</div>
 		</div>
 	);
 }

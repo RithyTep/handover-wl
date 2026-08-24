@@ -48,7 +48,7 @@ const THEME_BUTTON_STYLES: Record<Theme, string> = {
 	[Theme.CODING]: "text-zinc-500 hover:text-indigo-400 transition-colors",
 	[Theme.CLASH]: "text-[#ccc] hover:text-[#fbcc14] transition-colors",
 	[Theme.ANGKOR_PIXEL]: "text-[#f5e6d3] hover:text-[#ffd700] hover:bg-[#3d5a4a]/50 transition-colors",
-	[Theme.PCHUM_BEN]: "text-violet-300/70 hover:text-amber-300 hover:bg-violet-950/40 transition-colors",
+	[Theme.PCHUM_BEN]: "text-[#f0e6d2]/90 hover:text-[#e8b64c] hover:bg-[#2a1233] transition-colors",
 	[Theme.DEFAULT]: "text-slate-400 hover:text-blue-400 hover:bg-slate-800 transition-colors",
 }
 
