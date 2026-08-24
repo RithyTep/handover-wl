@@ -1,0 +1,2052 @@
+{
+  "/Users/mercy/side-project/handover-wl/.claude/hooks/check-file-size.sh": {
+    "mtime": 1781069473.0167253,
+    "ast_hash": "fcbe65191b88aab6ca30960193d50250",
+    "semantic_hash": "fcbe65191b88aab6ca30960193d50250"
+  },
+  "/Users/mercy/side-project/handover-wl/.claude/settings.local.json": {
+    "mtime": 1781069473.0168269,
+    "ast_hash": "25ab429c552d89bd33fdd0ecc5382b01",
+    "semantic_hash": "25ab429c552d89bd33fdd0ecc5382b01"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/AppDelegate.swift": {
+    "mtime": 1781069473.0565794,
+    "ast_hash": "fa846ceae09704bfc509ef819b082968",
+    "semantic_hash": "fa846ceae09704bfc509ef819b082968"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Assets.xcassets/AppIcon.appiconset/Contents.json": {
+    "mtime": 1781069473.056708,
+    "ast_hash": "312293803cc066cebe794885fe1ddcfe",
+    "semantic_hash": "312293803cc066cebe794885fe1ddcfe"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Assets.xcassets/Contents.json": {
+    "mtime": 1781069473.0567844,
+    "ast_hash": "9deb2ada1cc834bbebf8bbad9c8978a1",
+    "semantic_hash": "9deb2ada1cc834bbebf8bbad9c8978a1"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/LazyhandBarApp.swift": {
+    "mtime": 1781069473.0569148,
+    "ast_hash": "aad4b8ca38adab488ed70b972f17e708",
+    "semantic_hash": "aad4b8ca38adab488ed70b972f17e708"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Models/AppConfig.swift": {
+    "mtime": 1781069473.0569997,
+    "ast_hash": "b8341a38bd1188f1ed3dd2bee161f5ab",
+    "semantic_hash": "b8341a38bd1188f1ed3dd2bee161f5ab"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Models/HandoverResponse.swift": {
+    "mtime": 1781069473.0570674,
+    "ast_hash": "6166976f9e876b8cbf416a4cdb4b6c92",
+    "semantic_hash": "6166976f9e876b8cbf416a4cdb4b6c92"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Models/SchedulePreset.swift": {
+    "mtime": 1781069473.0571187,
+    "ast_hash": "b6f3f5b9e61e6636a6ba8ed3a208084f",
+    "semantic_hash": "b6f3f5b9e61e6636a6ba8ed3a208084f"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Models/Ticket.swift": {
+    "mtime": 1781069473.0571697,
+    "ast_hash": "15ed642bf064421e87a69a8bcb2defa8",
+    "semantic_hash": "15ed642bf064421e87a69a8bcb2defa8"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Services/ConfigService.swift": {
+    "mtime": 1781069473.0572677,
+    "ast_hash": "41e16684a5f1e7beec4f6f716828b10e",
+    "semantic_hash": "41e16684a5f1e7beec4f6f716828b10e"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Services/HandoverAPIService.swift": {
+    "mtime": 1781069473.057361,
+    "ast_hash": "a90948d9c259f591ca4de2b9c844c199",
+    "semantic_hash": "a90948d9c259f591ca4de2b9c844c199"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Services/NotificationPanel.swift": {
+    "mtime": 1781069473.0574214,
+    "ast_hash": "19127ef929ed1e172cf54055769572a3",
+    "semantic_hash": "19127ef929ed1e172cf54055769572a3"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Services/NotificationSoundService.swift": {
+    "mtime": 1781069473.0574803,
+    "ast_hash": "9ca855fa745d34356530dd1071ecd8ce",
+    "semantic_hash": "9ca855fa745d34356530dd1071ecd8ce"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Services/SchedulerService.swift": {
+    "mtime": 1781069473.0575364,
+    "ast_hash": "2019e7c9ed680425a78bcf7ba63385ed",
+    "semantic_hash": "2019e7c9ed680425a78bcf7ba63385ed"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Services/TicketAPIService.swift": {
+    "mtime": 1781069473.057613,
+    "ast_hash": "22eba0762e178a0f86f2885c01476e4f",
+    "semantic_hash": "22eba0762e178a0f86f2885c01476e4f"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Services/WindowManager.swift": {
+    "mtime": 1781069473.0576704,
+    "ast_hash": "13fd6a3f12fbf07bf4ba0546500ecc06",
+    "semantic_hash": "13fd6a3f12fbf07bf4ba0546500ecc06"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Utilities/LaunchAtLogin.swift": {
+    "mtime": 1781069473.0577745,
+    "ast_hash": "c16c2b4d8caa96527e765d7af1f4185e",
+    "semantic_hash": "c16c2b4d8caa96527e765d7af1f4185e"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Utilities/Theme.swift": {
+    "mtime": 1781069473.0578365,
+    "ast_hash": "4eb981943c93e1d55bdfcd5d5053e753",
+    "semantic_hash": "4eb981943c93e1d55bdfcd5d5053e753"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/ViewModels/AppViewModel.swift": {
+    "mtime": 1781069473.0580578,
+    "ast_hash": "e5093594b009f1cd7038d14d966757a1",
+    "semantic_hash": "e5093594b009f1cd7038d14d966757a1"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/ViewModels/TicketDetailViewModel.swift": {
+    "mtime": 1781069473.058132,
+    "ast_hash": "cb1a617ddfe39245702cb5b2f5706f0b",
+    "semantic_hash": "cb1a617ddfe39245702cb5b2f5706f0b"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/ViewModels/TicketListViewModel.swift": {
+    "mtime": 1781069473.058201,
+    "ast_hash": "0c7572bb5e5a8a1cf814889e5ff6ac4e",
+    "semantic_hash": "0c7572bb5e5a8a1cf814889e5ff6ac4e"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/ConnectionSection.swift": {
+    "mtime": 1781069473.0583384,
+    "ast_hash": "3e08f4f8b33ebe4ea48aa5b2abe6443f",
+    "semantic_hash": "3e08f4f8b33ebe4ea48aa5b2abe6443f"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/MiniWidgetView.swift": {
+    "mtime": 1781069473.0584292,
+    "ast_hash": "3e98714f945ca54d7f9288c2a914347e",
+    "semantic_hash": "3e98714f945ca54d7f9288c2a914347e"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/NewTicketBanner.swift": {
+    "mtime": 1781069473.0585005,
+    "ast_hash": "02ec6d737d4a12c50b65cc2202b5a46e",
+    "semantic_hash": "02ec6d737d4a12c50b65cc2202b5a46e"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/PopoverContentView.swift": {
+    "mtime": 1781069473.0585845,
+    "ast_hash": "75f7efd748ac5a4518794c067ffa4ea2",
+    "semantic_hash": "75f7efd748ac5a4518794c067ffa4ea2"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/PreferencesSection.swift": {
+    "mtime": 1781069473.058656,
+    "ast_hash": "9288be6ea239de8b24da21ca920f96df",
+    "semantic_hash": "9288be6ea239de8b24da21ca920f96df"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/ScheduleSection.swift": {
+    "mtime": 1781069473.0587392,
+    "ast_hash": "0e851eb96f55ca0b37822e19d50e24ff",
+    "semantic_hash": "0e851eb96f55ca0b37822e19d50e24ff"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/SettingsView.swift": {
+    "mtime": 1781069473.0588052,
+    "ast_hash": "e4a58d108bac387ecdb05b1041974e7b",
+    "semantic_hash": "e4a58d108bac387ecdb05b1041974e7b"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/StatusBar.swift": {
+    "mtime": 1781069473.0588572,
+    "ast_hash": "b6136a405b105d2c94fcaf923d5278cc",
+    "semantic_hash": "b6136a405b105d2c94fcaf923d5278cc"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/TicketDetailView.swift": {
+    "mtime": 1781069473.0589256,
+    "ast_hash": "279a4442f2e32e7c38a237b8001b28b7",
+    "semantic_hash": "279a4442f2e32e7c38a237b8001b28b7"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/TicketListView.swift": {
+    "mtime": 1781069473.0590076,
+    "ast_hash": "d062baaa6714d7d06b9d5785604184f5",
+    "semantic_hash": "d062baaa6714d7d06b9d5785604184f5"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/Views/TicketRowView.swift": {
+    "mtime": 1781069473.0590904,
+    "ast_hash": "c660ac03a67bab0c66bb3651c3baf209",
+    "semantic_hash": "c660ac03a67bab0c66bb3651c3baf209"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/WindowControllers/MainWindowController.swift": {
+    "mtime": 1781069473.0592384,
+    "ast_hash": "fecf09b5ae4a68c1e0ed710443c8f27a",
+    "semantic_hash": "fecf09b5ae4a68c1e0ed710443c8f27a"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/LazyhandBar/WindowControllers/TicketDetailWindowController.swift": {
+    "mtime": 1781069473.0592935,
+    "ast_hash": "cf1f360f8106f4e974be1387229741f6",
+    "semantic_hash": "cf1f360f8106f4e974be1387229741f6"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/Package.swift": {
+    "mtime": 1781069473.059364,
+    "ast_hash": "68e974213ea47fc395d4370eeabf8421",
+    "semantic_hash": "68e974213ea47fc395d4370eeabf8421"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/build-app.sh": {
+    "mtime": 1781069473.0594616,
+    "ast_hash": "e96d1df7d63b5db11e07e00699a4aef7",
+    "semantic_hash": "e96d1df7d63b5db11e07e00699a4aef7"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/install.sh": {
+    "mtime": 1781069473.0595188,
+    "ast_hash": "bc36a035868bbe57450f2cef44ab9288",
+    "semantic_hash": "bc36a035868bbe57450f2cef44ab9288"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/ai-autofill/route.ts": {
+    "mtime": 1781069473.0600588,
+    "ast_hash": "4d0cf482bda1198286790b85df263220",
+    "semantic_hash": "4d0cf482bda1198286790b85df263220"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/auth/google/route.ts": {
+    "mtime": 1781069473.060172,
+    "ast_hash": "b3613d8d6066b0396171a565be2a6d78",
+    "semantic_hash": "b3613d8d6066b0396171a565be2a6d78"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/auth/logout/route.ts": {
+    "mtime": 1781069473.0602503,
+    "ast_hash": "cc5851b2b2c5e6026d4f18609023ee5f",
+    "semantic_hash": "cc5851b2b2c5e6026d4f18609023ee5f"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/auth/refresh/route.ts": {
+    "mtime": 1781069473.0603304,
+    "ast_hash": "f5de828de47a5cb02c1916a7fd6e2da1",
+    "semantic_hash": "f5de828de47a5cb02c1916a7fd6e2da1"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/backup/restore/route.ts": {
+    "mtime": 1781069473.0604675,
+    "ast_hash": "c77808e455b0aea12d70bb4e096c8749",
+    "semantic_hash": "c77808e455b0aea12d70bb4e096c8749"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/backup/route.ts": {
+    "mtime": 1781069473.0605114,
+    "ast_hash": "70f25eee140a14d09d6ce956b6543fde",
+    "semantic_hash": "70f25eee140a14d09d6ce956b6543fde"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/challenge/route.ts": {
+    "mtime": 1781069473.0606103,
+    "ast_hash": "39161f734d9c970b7b8c182da4e6a1f9",
+    "semantic_hash": "39161f734d9c970b7b8c182da4e6a1f9"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/cron/route.ts": {
+    "mtime": 1781069473.060719,
+    "ast_hash": "750842079bf706c641421e54e0c59f62",
+    "semantic_hash": "750842079bf706c641421e54e0c59f62"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/custom-channel/route.ts": {
+    "mtime": 1781069473.0608618,
+    "ast_hash": "f3d8f821a36e0ccf154df844ed95a794",
+    "semantic_hash": "f3d8f821a36e0ccf154df844ed95a794"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/debug/route.ts": {
+    "mtime": 1781069473.060961,
+    "ast_hash": "4309873f92d2f16c73ec66a4efc07fa0",
+    "semantic_hash": "4309873f92d2f16c73ec66a4efc07fa0"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/feedback/route.ts": {
+    "mtime": 1781069473.0610728,
+    "ast_hash": "2ae0d3cfa482695edc2868fb7358294f",
+    "semantic_hash": "2ae0d3cfa482695edc2868fb7358294f"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/handover-copy/route.ts": {
+    "mtime": 1781069473.0611854,
+    "ast_hash": "1fc4de978490ddd8e9fc6787d8cbe232",
+    "semantic_hash": "1fc4de978490ddd8e9fc6787d8cbe232"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/handover-reply/route.ts": {
+    "mtime": 1781069473.0613115,
+    "ast_hash": "96faea72e05d7a1d23c2d755363109e0",
+    "semantic_hash": "96faea72e05d7a1d23c2d755363109e0"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/handover-send/route.ts": {
+    "mtime": 1781069473.0614176,
+    "ast_hash": "5ff61a9f31f48fd78e780aea5bb66c32",
+    "semantic_hash": "5ff61a9f31f48fd78e780aea5bb66c32"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/health/route.ts": {
+    "mtime": 1781069473.0615237,
+    "ast_hash": "2cd2ad61866233290bc2fa1990861c7c",
+    "semantic_hash": "2cd2ad61866233290bc2fa1990861c7c"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/jira-image/route.ts": {
+    "mtime": 1781069473.0616245,
+    "ast_hash": "7b39b92f8ff1ddb98b29ead02ec86891",
+    "semantic_hash": "7b39b92f8ff1ddb98b29ead02ec86891"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/lazyhand-auth/route.ts": {
+    "mtime": 1781069473.0617292,
+    "ast_hash": "189144454ce6a160548450a11d780aa6",
+    "semantic_hash": "189144454ce6a160548450a11d780aa6"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/member-mentions/route.ts": {
+    "mtime": 1781069473.061819,
+    "ast_hash": "c22b04bd5217aef22208c63c6adf4c11",
+    "semantic_hash": "c22b04bd5217aef22208c63c6adf4c11"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/post-jira-comment/route.ts": {
+    "mtime": 1781069473.0619175,
+    "ast_hash": "c07f4c8c81cf1880466c1d9b64065148",
+    "semantic_hash": "c07f4c8c81cf1880466c1d9b64065148"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/post-slack-thread/route.ts": {
+    "mtime": 1781069473.0620282,
+    "ast_hash": "163f8f7b2a3b3f85546717e7211f1754",
+    "semantic_hash": "163f8f7b2a3b3f85546717e7211f1754"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/revalidate/route.ts": {
+    "mtime": 1781069473.062164,
+    "ast_hash": "f40e65c2a5531815291e00899023cb71",
+    "semantic_hash": "f40e65c2a5531815291e00899023cb71"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/save/route.ts": {
+    "mtime": 1781069473.0622811,
+    "ast_hash": "9f8e0864debca1274659c85d50f95720",
+    "semantic_hash": "9f8e0864debca1274659c85d50f95720"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/scan-and-reply-handover/route.ts": {
+    "mtime": 1781069473.0623891,
+    "ast_hash": "130ff261f047c2a18666d1a71036c22a",
+    "semantic_hash": "130ff261f047c2a18666d1a71036c22a"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/scheduled-comments/route.ts": {
+    "mtime": 1781069473.0624957,
+    "ast_hash": "23bcda44a0fea27c0e86f91726e703fd",
+    "semantic_hash": "23bcda44a0fea27c0e86f91726e703fd"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/scheduled-slack/route.ts": {
+    "mtime": 1781069473.0626087,
+    "ast_hash": "e9cf71464aad785deed423a003a210d4",
+    "semantic_hash": "e9cf71464aad785deed423a003a210d4"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/scheduler-state/route.ts": {
+    "mtime": 1781069473.0627003,
+    "ast_hash": "c02197459cc753d3ae1b55073a439d87",
+    "semantic_hash": "c02197459cc753d3ae1b55073a439d87"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/send-slack/route.ts": {
+    "mtime": 1781069473.0628006,
+    "ast_hash": "5fbdca9bc88194146f225956f244e05f",
+    "semantic_hash": "5fbdca9bc88194146f225956f244e05f"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/set-duedate/route.ts": {
+    "mtime": 1781069473.0628998,
+    "ast_hash": "bce083221a9e35b27faeb5e411773ada",
+    "semantic_hash": "bce083221a9e35b27faeb5e411773ada"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/shift-tokens/route.ts": {
+    "mtime": 1781069473.063015,
+    "ast_hash": "f4feb7ebb01df3c372f7fdf9a44ef0ab",
+    "semantic_hash": "f4feb7ebb01df3c372f7fdf9a44ef0ab"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/slack-thread/route.ts": {
+    "mtime": 1781069473.0631216,
+    "ast_hash": "f2a143844cfe955dfd7a59043640659b",
+    "semantic_hash": "f2a143844cfe955dfd7a59043640659b"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/slack/commands/route.ts": {
+    "mtime": 1781069473.0632563,
+    "ast_hash": "f6956e36afab3cc7cc78f611e4525ee0",
+    "semantic_hash": "f6956e36afab3cc7cc78f611e4525ee0"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/test-storage/route.ts": {
+    "mtime": 1781069473.0633476,
+    "ast_hash": "12817329d89509475abaed40d5945ab6",
+    "semantic_hash": "12817329d89509475abaed40d5945ab6"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/theme/route.ts": {
+    "mtime": 1781069473.0634627,
+    "ast_hash": "203edc0ad58cd7a3bf0d84c8f30f1725",
+    "semantic_hash": "203edc0ad58cd7a3bf0d84c8f30f1725"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/ticket-attachments/route.ts": {
+    "mtime": 1781069473.0635684,
+    "ast_hash": "5395962e9db87fd5c7102bf0ae4a1188",
+    "semantic_hash": "5395962e9db87fd5c7102bf0ae4a1188"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/ticket-comments/route.ts": {
+    "mtime": 1781069473.0636716,
+    "ast_hash": "455aab3bddf6be3a1590cbff3885e3a1",
+    "semantic_hash": "455aab3bddf6be3a1590cbff3885e3a1"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/ticket-transitions/route.ts": {
+    "mtime": 1781069473.0637608,
+    "ast_hash": "138e5bc1b7b7ef70b7d2cb4f77463d90",
+    "semantic_hash": "138e5bc1b7b7ef70b7d2cb4f77463d90"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/ticket_data.json/route.ts": {
+    "mtime": 1781069473.0638793,
+    "ast_hash": "6f0af957faa34725e2559685a2444881",
+    "semantic_hash": "6f0af957faa34725e2559685a2444881"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/tickets-poll/route.ts": {
+    "mtime": 1781069473.0639803,
+    "ast_hash": "553b14b176f3bd518874e3c1af80ecd6",
+    "semantic_hash": "553b14b176f3bd518874e3c1af80ecd6"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/tickets/route.ts": {
+    "mtime": 1781069473.0640795,
+    "ast_hash": "14ea75e2557d2a1df94dcd544fef11f4",
+    "semantic_hash": "14ea75e2557d2a1df94dcd544fef11f4"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/transition-ticket/route.ts": {
+    "mtime": 1781069473.0641751,
+    "ast_hash": "a1bffa80f40efec2a1ab597d093a1b5e",
+    "semantic_hash": "a1bffa80f40efec2a1ab597d093a1b5e"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/trigger-schedule/route.ts": {
+    "mtime": 1781069473.064288,
+    "ast_hash": "6161589ee2be2464013ab4c0a7f38278",
+    "semantic_hash": "6161589ee2be2464013ab4c0a7f38278"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/trigger-times/route.ts": {
+    "mtime": 1781069473.0643663,
+    "ast_hash": "209c8dab6bf0f97239fd9f588e7417ad",
+    "semantic_hash": "209c8dab6bf0f97239fd9f588e7417ad"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/trpc/[trpc]/route.ts": {
+    "mtime": 1781069473.0644817,
+    "ast_hash": "84b48a1da3c1ef3dab340f21dc2e2599",
+    "semantic_hash": "84b48a1da3c1ef3dab340f21dc2e2599"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/upload-attachment/route.ts": {
+    "mtime": 1781069473.064574,
+    "ast_hash": "78ad1d9691c96b4dfa9b4fdf78f325d8",
+    "semantic_hash": "78ad1d9691c96b4dfa9b4fdf78f325d8"
+  },
+  "/Users/mercy/side-project/handover-wl/app/api/webhook-jira/route.ts": {
+    "mtime": 1781069473.0646753,
+    "ast_hash": "2fe52cfaabc5f4cbe4e52383babea1d5",
+    "semantic_hash": "2fe52cfaabc5f4cbe4e52383babea1d5"
+  },
+  "/Users/mercy/side-project/handover-wl/app/backup/page.tsx": {
+    "mtime": 1781069473.0647619,
+    "ast_hash": "52aaaeb1bb144d8f4110b03773828be1",
+    "semantic_hash": "52aaaeb1bb144d8f4110b03773828be1"
+  },
+  "/Users/mercy/side-project/handover-wl/app/changelog/page.tsx": {
+    "mtime": 1781069473.0648499,
+    "ast_hash": "3b546e9670d253e5c712bbc0c2bd0321",
+    "semantic_hash": "3b546e9670d253e5c712bbc0c2bd0321"
+  },
+  "/Users/mercy/side-project/handover-wl/app/columns-release-date.tsx": {
+    "mtime": 1781069473.0649111,
+    "ast_hash": "ad1b8dc9eb3de4782d9bd85d5d1fd5b4",
+    "semantic_hash": "ad1b8dc9eb3de4782d9bd85d5d1fd5b4"
+  },
+  "/Users/mercy/side-project/handover-wl/app/columns.tsx": {
+    "mtime": 1781069473.0649984,
+    "ast_hash": "29bc53e3431a6d3464ebe4613cd4457a",
+    "semantic_hash": "29bc53e3431a6d3464ebe4613cd4457a"
+  },
+  "/Users/mercy/side-project/handover-wl/app/error.tsx": {
+    "mtime": 1781069473.0650506,
+    "ast_hash": "fb023e924259fce038005b606b291fbd",
+    "semantic_hash": "fb023e924259fce038005b606b291fbd"
+  },
+  "/Users/mercy/side-project/handover-wl/app/feedback/page.tsx": {
+    "mtime": 1781069473.0651312,
+    "ast_hash": "24e7a8bf110a31d877fba3c3b42845e7",
+    "semantic_hash": "24e7a8bf110a31d877fba3c3b42845e7"
+  },
+  "/Users/mercy/side-project/handover-wl/app/handover-copy/page.tsx": {
+    "mtime": 1781069473.065384,
+    "ast_hash": "59ca0aa68b64fe5e1bce1db2534c4875",
+    "semantic_hash": "59ca0aa68b64fe5e1bce1db2534c4875"
+  },
+  "/Users/mercy/side-project/handover-wl/app/layout.tsx": {
+    "mtime": 1781069473.0654407,
+    "ast_hash": "7b83ac0272222b71cb7c626530e9da46",
+    "semantic_hash": "7b83ac0272222b71cb7c626530e9da46"
+  },
+  "/Users/mercy/side-project/handover-wl/app/lazyhand/lazyhand-login.tsx": {
+    "mtime": 1781069473.06555,
+    "ast_hash": "e342099446f454488b0fbeca0960515c",
+    "semantic_hash": "e342099446f454488b0fbeca0960515c"
+  },
+  "/Users/mercy/side-project/handover-wl/app/lazyhand/lazyhand-shell.tsx": {
+    "mtime": 1781069473.065611,
+    "ast_hash": "652f2c34760e593e2a1e3280c617b32c",
+    "semantic_hash": "652f2c34760e593e2a1e3280c617b32c"
+  },
+  "/Users/mercy/side-project/handover-wl/app/lazyhand/page.tsx": {
+    "mtime": 1781069473.0656655,
+    "ast_hash": "12d68f246d7cc159c88e7e9a960e9db1",
+    "semantic_hash": "12d68f246d7cc159c88e7e9a960e9db1"
+  },
+  "/Users/mercy/side-project/handover-wl/app/loading.tsx": {
+    "mtime": 1781069473.06571,
+    "ast_hash": "6ed38e1c8bd6a609c56efaf0b53d6b2c",
+    "semantic_hash": "6ed38e1c8bd6a609c56efaf0b53d6b2c"
+  },
+  "/Users/mercy/side-project/handover-wl/app/login/login-card.tsx": {
+    "mtime": 1781069473.065815,
+    "ast_hash": "dcbdf1169e17b105a3aeab4440885fd1",
+    "semantic_hash": "dcbdf1169e17b105a3aeab4440885fd1"
+  },
+  "/Users/mercy/side-project/handover-wl/app/login/page.tsx": {
+    "mtime": 1781069473.0658748,
+    "ast_hash": "ec6915a07cca0af40ce7ff84527c29ae",
+    "semantic_hash": "ec6915a07cca0af40ce7ff84527c29ae"
+  },
+  "/Users/mercy/side-project/handover-wl/app/page.tsx": {
+    "mtime": 1781069473.065936,
+    "ast_hash": "cfa000fe294ce99e656891929b7295b4",
+    "semantic_hash": "cfa000fe294ce99e656891929b7295b4"
+  },
+  "/Users/mercy/side-project/handover-wl/app/s/page.tsx": {
+    "mtime": 1781069473.066018,
+    "ast_hash": "52a6c8adc55eb71d3d13baaa5a661865",
+    "semantic_hash": "52a6c8adc55eb71d3d13baaa5a661865"
+  },
+  "/Users/mercy/side-project/handover-wl/components/angkor-pixel-scene.tsx": {
+    "mtime": 1781069473.066148,
+    "ast_hash": "09177ba2fe29b93272d1926278f4509b",
+    "semantic_hash": "09177ba2fe29b93272d1926278f4509b"
+  },
+  "/Users/mercy/side-project/handover-wl/components/auth/silent-refresh.tsx": {
+    "mtime": 1781069473.0662663,
+    "ast_hash": "2f522988b6af0239c2fddbc6810895ba",
+    "semantic_hash": "2f522988b6af0239c2fddbc6810895ba"
+  },
+  "/Users/mercy/side-project/handover-wl/components/backup-client.tsx": {
+    "mtime": 1781069473.066328,
+    "ast_hash": "39df0acc23ef256e91520d76e111c83b",
+    "semantic_hash": "39df0acc23ef256e91520d76e111c83b"
+  },
+  "/Users/mercy/side-project/handover-wl/components/backup/backup-stats.tsx": {
+    "mtime": 1781069473.0664253,
+    "ast_hash": "3a7d01f0bf1a96bcfd451b04672e0154",
+    "semantic_hash": "3a7d01f0bf1a96bcfd451b04672e0154"
+  },
+  "/Users/mercy/side-project/handover-wl/components/backup/backup-table.tsx": {
+    "mtime": 1781069473.066506,
+    "ast_hash": "0d9b0d889a830a7a1beed02cbcbb3744",
+    "semantic_hash": "0d9b0d889a830a7a1beed02cbcbb3744"
+  },
+  "/Users/mercy/side-project/handover-wl/components/backup/backup-types.ts": {
+    "mtime": 1781069473.0665793,
+    "ast_hash": "06ae39ba1d437ea3ad2da66ebf337ddc",
+    "semantic_hash": "06ae39ba1d437ea3ad2da66ebf337ddc"
+  },
+  "/Users/mercy/side-project/handover-wl/components/backup/index.ts": {
+    "mtime": 1781069473.0666296,
+    "ast_hash": "74740769bc91a205b72c74e52b345b4a",
+    "semantic_hash": "74740769bc91a205b72c74e52b345b4a"
+  },
+  "/Users/mercy/side-project/handover-wl/components/backup/restore-dialog.tsx": {
+    "mtime": 1781069473.0666864,
+    "ast_hash": "b2db4bae7add7bee9bf92db07c888940",
+    "semantic_hash": "b2db4bae7add7bee9bf92db07c888940"
+  },
+  "/Users/mercy/side-project/handover-wl/components/clear-dialog.tsx": {
+    "mtime": 1781069473.066773,
+    "ast_hash": "d225916f91cd0516fb52d159ba6f7c18",
+    "semantic_hash": "d225916f91cd0516fb52d159ba6f7c18"
+  },
+  "/Users/mercy/side-project/handover-wl/components/coding-footer.tsx": {
+    "mtime": 1781069473.06682,
+    "ast_hash": "45794a51a8a5cee83a30a33e445e1e99",
+    "semantic_hash": "45794a51a8a5cee83a30a33e445e1e99"
+  },
+  "/Users/mercy/side-project/handover-wl/components/coding-scene.tsx": {
+    "mtime": 1781069473.0668695,
+    "ast_hash": "9c700b7c2e70628c85927fdcd4342598",
+    "semantic_hash": "9c700b7c2e70628c85927fdcd4342598"
+  },
+  "/Users/mercy/side-project/handover-wl/components/command-palette.tsx": {
+    "mtime": 1781069473.0669367,
+    "ast_hash": "e67ae15dfd9dc1af175e924d61d9500c",
+    "semantic_hash": "e67ae15dfd9dc1af175e924d61d9500c"
+  },
+  "/Users/mercy/side-project/handover-wl/components/dashboard-actions.tsx": {
+    "mtime": 1781069473.0670228,
+    "ast_hash": "b94538ec52cb29a5969abfc341e9c18f",
+    "semantic_hash": "b94538ec52cb29a5969abfc341e9c18f"
+  },
+  "/Users/mercy/side-project/handover-wl/components/dashboard-client.tsx": {
+    "mtime": 1781069473.0670798,
+    "ast_hash": "f66c3c2bfff9d839657e74e66a3be166",
+    "semantic_hash": "f66c3c2bfff9d839657e74e66a3be166"
+  },
+  "/Users/mercy/side-project/handover-wl/components/dashboard-content.tsx": {
+    "mtime": 1781069473.0671332,
+    "ast_hash": "711757460335ab6579b0840513be09bf",
+    "semantic_hash": "711757460335ab6579b0840513be09bf"
+  },
+  "/Users/mercy/side-project/handover-wl/components/dashboard-header.tsx": {
+    "mtime": 1781069473.067192,
+    "ast_hash": "db34d1126484aa4c326afb7dec2a1317",
+    "semantic_hash": "db34d1126484aa4c326afb7dec2a1317"
+  },
+  "/Users/mercy/side-project/handover-wl/components/dashboard-layout.tsx": {
+    "mtime": 1781069473.067397,
+    "ast_hash": "d5090d3de200e4de948579431796c188",
+    "semantic_hash": "d5090d3de200e4de948579431796c188"
+  },
+  "/Users/mercy/side-project/handover-wl/components/dashboard-mobile-actions.tsx": {
+    "mtime": 1781069473.0674927,
+    "ast_hash": "358c450dc0f8674f60be74894d805b5b",
+    "semantic_hash": "358c450dc0f8674f60be74894d805b5b"
+  },
+  "/Users/mercy/side-project/handover-wl/components/dashboard-tab-bar.tsx": {
+    "mtime": 1781069473.067555,
+    "ast_hash": "a2ed44ecfd83e71c9267c5c12a547969",
+    "semantic_hash": "a2ed44ecfd83e71c9267c5c12a547969"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback-client.tsx": {
+    "mtime": 1781069473.067618,
+    "ast_hash": "d76333e4f5b55a461aade1b42a64da1c",
+    "semantic_hash": "d76333e4f5b55a461aade1b42a64da1c"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback/anonymous-notice.tsx": {
+    "mtime": 1781069473.067734,
+    "ast_hash": "023e07123d991046bee2bae0803bee1d",
+    "semantic_hash": "023e07123d991046bee2bae0803bee1d"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback/feedback-details-card.tsx": {
+    "mtime": 1781069473.06784,
+    "ast_hash": "7a71b8d47254516927dee9d9d7c09c4f",
+    "semantic_hash": "7a71b8d47254516927dee9d9d7c09c4f"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback/feedback-form.tsx": {
+    "mtime": 1781069473.0680046,
+    "ast_hash": "d5d34a1e341a7c55678291e100cd92a8",
+    "semantic_hash": "d5d34a1e341a7c55678291e100cd92a8"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback/feedback-list.tsx": {
+    "mtime": 1781069473.068092,
+    "ast_hash": "5853ac481b28715053196dc3f4a7166c",
+    "semantic_hash": "5853ac481b28715053196dc3f4a7166c"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback/feedback-success.tsx": {
+    "mtime": 1781069473.068177,
+    "ast_hash": "68f187dce1dd7a3eba5ddc41acb7e9d4",
+    "semantic_hash": "68f187dce1dd7a3eba5ddc41acb7e9d4"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback/feedback-type-selector.tsx": {
+    "mtime": 1781069473.068234,
+    "ast_hash": "a7031ea23beb197dcbc44542fe43055f",
+    "semantic_hash": "a7031ea23beb197dcbc44542fe43055f"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback/feedback-types.ts": {
+    "mtime": 1781069473.068287,
+    "ast_hash": "a2323cc9fba4a186ed09daac40ea803d",
+    "semantic_hash": "a2323cc9fba4a186ed09daac40ea803d"
+  },
+  "/Users/mercy/side-project/handover-wl/components/feedback/index.ts": {
+    "mtime": 1781069473.0683374,
+    "ast_hash": "03ebddbed2c7d6ecc8977d47883882e4",
+    "semantic_hash": "03ebddbed2c7d6ecc8977d47883882e4"
+  },
+  "/Users/mercy/side-project/handover-wl/components/filters/filter-form.tsx": {
+    "mtime": 1781069473.0684814,
+    "ast_hash": "13696ef8a5969aaec9baaadba1e83ba9",
+    "semantic_hash": "13696ef8a5969aaec9baaadba1e83ba9"
+  },
+  "/Users/mercy/side-project/handover-wl/components/filters/filter-select.tsx": {
+    "mtime": 1781069473.06854,
+    "ast_hash": "ef18d0f6138b605faecc27ceb3c7dff6",
+    "semantic_hash": "ef18d0f6138b605faecc27ceb3c7dff6"
+  },
+  "/Users/mercy/side-project/handover-wl/components/filters/filter-types.ts": {
+    "mtime": 1781069473.068594,
+    "ast_hash": "299e5abd988b071dc01306a7affccb4a",
+    "semantic_hash": "299e5abd988b071dc01306a7affccb4a"
+  },
+  "/Users/mercy/side-project/handover-wl/components/filters/index.ts": {
+    "mtime": 1781069473.0686417,
+    "ast_hash": "3d229a5f60e1bf8cb4395998562ebfae",
+    "semantic_hash": "3d229a5f60e1bf8cb4395998562ebfae"
+  },
+  "/Users/mercy/side-project/handover-wl/components/filters/saved-filters.tsx": {
+    "mtime": 1781069473.0687277,
+    "ast_hash": "db911314daf27c5158537f49041c9091",
+    "semantic_hash": "db911314daf27c5158537f49041c9091"
+  },
+  "/Users/mercy/side-project/handover-wl/components/loading/angkor-pixel-loading.tsx": {
+    "mtime": 1781069473.0688348,
+    "ast_hash": "2e6214c0e9615459a9c373c372389018",
+    "semantic_hash": "2e6214c0e9615459a9c373c372389018"
+  },
+  "/Users/mercy/side-project/handover-wl/components/loading/christmas-loading.tsx": {
+    "mtime": 1781069473.0688975,
+    "ast_hash": "ff8db654a6277ab267397737cc487ecd",
+    "semantic_hash": "ff8db654a6277ab267397737cc487ecd"
+  },
+  "/Users/mercy/side-project/handover-wl/components/loading/clash-loading.tsx": {
+    "mtime": 1781069473.0689585,
+    "ast_hash": "753ad99af8a0c5e0b722bfcb06608e7e",
+    "semantic_hash": "753ad99af8a0c5e0b722bfcb06608e7e"
+  },
+  "/Users/mercy/side-project/handover-wl/components/loading/coding-loading.tsx": {
+    "mtime": 1781069473.069043,
+    "ast_hash": "f054d1f0ca5ffee37fc43f539964e755",
+    "semantic_hash": "f054d1f0ca5ffee37fc43f539964e755"
+  },
+  "/Users/mercy/side-project/handover-wl/components/loading/default-loading.tsx": {
+    "mtime": 1781069473.06911,
+    "ast_hash": "8aa4dd5a9f519bfa08b5fd44d01d6caf",
+    "semantic_hash": "8aa4dd5a9f519bfa08b5fd44d01d6caf"
+  },
+  "/Users/mercy/side-project/handover-wl/components/loading/index.tsx": {
+    "mtime": 1781069473.069181,
+    "ast_hash": "3d7bc5cdbbb6224a689b12effc36b62b",
+    "semantic_hash": "3d7bc5cdbbb6224a689b12effc36b62b"
+  },
+  "/Users/mercy/side-project/handover-wl/components/loading/lunar-loading.tsx": {
+    "mtime": 1781069473.0692472,
+    "ast_hash": "0b0a141d52616515ff3bef21d5b2a92a",
+    "semantic_hash": "0b0a141d52616515ff3bef21d5b2a92a"
+  },
+  "/Users/mercy/side-project/handover-wl/components/loading/pixel-loading.tsx": {
+    "mtime": 1781069473.069328,
+    "ast_hash": "413918c24374856ef712a418398f4b6c",
+    "semantic_hash": "413918c24374856ef712a418398f4b6c"
+  },
+  "/Users/mercy/side-project/handover-wl/components/lunar-hongbao.tsx": {
+    "mtime": 1781069473.0694005,
+    "ast_hash": "645b3749d1d265228e28a6334a029e76",
+    "semantic_hash": "645b3749d1d265228e28a6334a029e76"
+  },
+  "/Users/mercy/side-project/handover-wl/components/lunar-scene.tsx": {
+    "mtime": 1781069473.0694754,
+    "ast_hash": "e5c4fabbe5f4659203b4e2d6048366cc",
+    "semantic_hash": "e5c4fabbe5f4659203b4e2d6048366cc"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year-scene.tsx": {
+    "mtime": 1781069473.069537,
+    "ast_hash": "c71f732d7f0e16bdb6ad79cb66bb401d",
+    "semantic_hash": "c71f732d7f0e16bdb6ad79cb66bb401d"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year/constants.ts": {
+    "mtime": 1781069473.069651,
+    "ast_hash": "766812946a6d09bfe66566c26c340b3e",
+    "semantic_hash": "766812946a6d09bfe66566c26c340b3e"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year/floating-decorations.tsx": {
+    "mtime": 1781069473.0697093,
+    "ast_hash": "d67e98364ecb4936d848a013e6da324d",
+    "semantic_hash": "d67e98364ecb4936d848a013e6da324d"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year/index.ts": {
+    "mtime": 1781069473.0697615,
+    "ast_hash": "5e22c45428eb15f74bc97d4ddc919649",
+    "semantic_hash": "5e22c45428eb15f74bc97d4ddc919649"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year/mailbox.tsx": {
+    "mtime": 1781069473.0698204,
+    "ast_hash": "f697bfbf523023cb50c44cafdc721dc6",
+    "semantic_hash": "f697bfbf523023cb50c44cafdc721dc6"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year/new-year-scene.tsx": {
+    "mtime": 1781069473.069895,
+    "ast_hash": "dea009eb251838dfb87c0c5627a8bc50",
+    "semantic_hash": "dea009eb251838dfb87c0c5627a8bc50"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year/santa-mail-modal.tsx": {
+    "mtime": 1781069473.0699568,
+    "ast_hash": "92b29228ac1f235a05bacd5d4d0a58d0",
+    "semantic_hash": "92b29228ac1f235a05bacd5d4d0a58d0"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year/use-fireworks.ts": {
+    "mtime": 1781069473.0700192,
+    "ast_hash": "6882046674776c3e4844df88029e0e68",
+    "semantic_hash": "6882046674776c3e4844df88029e0e68"
+  },
+  "/Users/mercy/side-project/handover-wl/components/new-year/use-snowflakes.ts": {
+    "mtime": 1781069473.070081,
+    "ast_hash": "1fb92906e77023cf02670eb29dc5161d",
+    "semantic_hash": "1fb92906e77023cf02670eb29dc5161d"
+  },
+  "/Users/mercy/side-project/handover-wl/components/pixel-status-bar.tsx": {
+    "mtime": 1781069473.0701647,
+    "ast_hash": "edaccf8bde544b00a8f96a4e1cc4aef2",
+    "semantic_hash": "edaccf8bde544b00a8f96a4e1cc4aef2"
+  },
+  "/Users/mercy/side-project/handover-wl/components/professional-scene.tsx": {
+    "mtime": 1781069473.070228,
+    "ast_hash": "89ed427da977c3d627d2fea2781eeabd",
+    "semantic_hash": "89ed427da977c3d627d2fea2781eeabd"
+  },
+  "/Users/mercy/side-project/handover-wl/components/quick-fill-dialog.tsx": {
+    "mtime": 1781069473.070283,
+    "ast_hash": "1757eff40ad8c6e40487991b0d335b5b",
+    "semantic_hash": "1757eff40ad8c6e40487991b0d335b5b"
+  },
+  "/Users/mercy/side-project/handover-wl/components/sakura-scene.tsx": {
+    "mtime": 1781069473.07034,
+    "ast_hash": "fa90b8f0fa5b221f022d5e940d663699",
+    "semantic_hash": "fa90b8f0fa5b221f022d5e940d663699"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduled-comments-parts/comment-card.tsx": {
+    "mtime": 1781069473.0704675,
+    "ast_hash": "3d677b9e901185324031118ac1b87fa3",
+    "semantic_hash": "3d677b9e901185324031118ac1b87fa3"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduled-comments-parts/comment-dialog.tsx": {
+    "mtime": 1781069473.070543,
+    "ast_hash": "34a1509267660b94aef5d48801e20fe4",
+    "semantic_hash": "34a1509267660b94aef5d48801e20fe4"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduled-comments-parts/index.ts": {
+    "mtime": 1781069473.0706062,
+    "ast_hash": "b30ff4a3311187193f9cab6dc4811a0b",
+    "semantic_hash": "b30ff4a3311187193f9cab6dc4811a0b"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduled-comments-parts/scheduled-comment-types.ts": {
+    "mtime": 1781069473.070665,
+    "ast_hash": "63041f6521863640253bdf9faf173560",
+    "semantic_hash": "63041f6521863640253bdf9faf173560"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduled-comments.tsx": {
+    "mtime": 1781069473.0707452,
+    "ast_hash": "2e38718300f1bf90dbff3de1d4dff32e",
+    "semantic_hash": "2e38718300f1bf90dbff3de1d4dff32e"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduler-dialog.tsx": {
+    "mtime": 1781069473.0708158,
+    "ast_hash": "75efbfad79cb7e064b6036b1a49ed8cc",
+    "semantic_hash": "75efbfad79cb7e064b6036b1a49ed8cc"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduler-page.tsx": {
+    "mtime": 1781069473.0708957,
+    "ast_hash": "83fc54b9264847eb08f9f47c9f535fb4",
+    "semantic_hash": "83fc54b9264847eb08f9f47c9f535fb4"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduler/channel-settings.tsx": {
+    "mtime": 1781069473.0709882,
+    "ast_hash": "886c20303b68cfaa42d829f474be96cf",
+    "semantic_hash": "886c20303b68cfaa42d829f474be96cf"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduler/index.ts": {
+    "mtime": 1781069473.0710618,
+    "ast_hash": "80e19e3f49e7c810314a26797cdff1e2",
+    "semantic_hash": "80e19e3f49e7c810314a26797cdff1e2"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduler/manual-trigger.tsx": {
+    "mtime": 1781069473.0711212,
+    "ast_hash": "c07d184a746e5bdab5357a91c42bcaec",
+    "semantic_hash": "c07d184a746e5bdab5357a91c42bcaec"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduler/scheduler-status.tsx": {
+    "mtime": 1781069473.0711782,
+    "ast_hash": "4d218229c80551a025076665d81e2ba3",
+    "semantic_hash": "4d218229c80551a025076665d81e2ba3"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduler/shift-config.tsx": {
+    "mtime": 1781069473.0712354,
+    "ast_hash": "ba25022b64fcda96b63f9af4320d98d2",
+    "semantic_hash": "ba25022b64fcda96b63f9af4320d98d2"
+  },
+  "/Users/mercy/side-project/handover-wl/components/scheduler/trigger-times-config.tsx": {
+    "mtime": 1781069473.0713122,
+    "ast_hash": "dd7d356d26eab053187a0150aca2de0e",
+    "semantic_hash": "dd7d356d26eab053187a0150aca2de0e"
+  },
+  "/Users/mercy/side-project/handover-wl/components/send-slack-dialog.tsx": {
+    "mtime": 1781069473.0713773,
+    "ast_hash": "cbe70beecca9dc82953c42eb7e6e6a13",
+    "semantic_hash": "cbe70beecca9dc82953c42eb7e6e6a13"
+  },
+  "/Users/mercy/side-project/handover-wl/components/theme-provider.tsx": {
+    "mtime": 1781069473.071435,
+    "ast_hash": "d119c7b0d024671ffc8c1b4d0da04fbf",
+    "semantic_hash": "d119c7b0d024671ffc8c1b4d0da04fbf"
+  },
+  "/Users/mercy/side-project/handover-wl/components/theme-toggle.tsx": {
+    "mtime": 1781069473.0714915,
+    "ast_hash": "5f17e6ba7520d8b457ef93fdc89bc4fe",
+    "semantic_hash": "5f17e6ba7520d8b457ef93fdc89bc4fe"
+  },
+  "/Users/mercy/side-project/handover-wl/components/theme/__tests__/theme-selector.test.ts": {
+    "mtime": 1781069473.0716176,
+    "ast_hash": "aca38ed6fb2eabdffc8cc0eabab0fd51",
+    "semantic_hash": "aca38ed6fb2eabdffc8cc0eabab0fd51"
+  },
+  "/Users/mercy/side-project/handover-wl/components/theme/index.ts": {
+    "mtime": 1781069473.07166,
+    "ast_hash": "611ab7b4110c9870ff0976c57248081a",
+    "semantic_hash": "611ab7b4110c9870ff0976c57248081a"
+  },
+  "/Users/mercy/side-project/handover-wl/components/theme/theme-button.tsx": {
+    "mtime": 1781069473.0717149,
+    "ast_hash": "feb65086066183ef81efe4613077901b",
+    "semantic_hash": "feb65086066183ef81efe4613077901b"
+  },
+  "/Users/mercy/side-project/handover-wl/components/theme/theme-list.tsx": {
+    "mtime": 1781069473.0717688,
+    "ast_hash": "52bbe753b2f2f07bbf4d08d09111b6be",
+    "semantic_hash": "52bbe753b2f2f07bbf4d08d09111b6be"
+  },
+  "/Users/mercy/side-project/handover-wl/components/theme/theme-selector.tsx": {
+    "mtime": 1781069473.0718544,
+    "ast_hash": "ea4c60294f2374d5bd12298d5836a99c",
+    "semantic_hash": "ea4c60294f2374d5bd12298d5836a99c"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ticket-filters.tsx": {
+    "mtime": 1781069473.0719147,
+    "ast_hash": "52f79a0040572d7f699b1ee6914487d6",
+    "semantic_hash": "52f79a0040572d7f699b1ee6914487d6"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ticket-preview.tsx": {
+    "mtime": 1781069473.0719752,
+    "ast_hash": "20cbff3edc75aa88b4f632d0db46cf8a",
+    "semantic_hash": "20cbff3edc75aa88b4f632d0db46cf8a"
+  },
+  "/Users/mercy/side-project/handover-wl/components/tickets-table.tsx": {
+    "mtime": 1781069473.072049,
+    "ast_hash": "f776f5eee7a6a5476b8b928ab9d41401",
+    "semantic_hash": "f776f5eee7a6a5476b8b928ab9d41401"
+  },
+  "/Users/mercy/side-project/handover-wl/components/tickets/__tests__/theme-styles.test.ts": {
+    "mtime": 1781069473.0722134,
+    "ast_hash": "2d3f5586e3d7e0ccfdfdc2ab4d518361",
+    "semantic_hash": "2d3f5586e3d7e0ccfdfdc2ab4d518361"
+  },
+  "/Users/mercy/side-project/handover-wl/components/tickets/desktop-table.tsx": {
+    "mtime": 1781069473.072271,
+    "ast_hash": "ad124f030156d8894865e6ca0ceab634",
+    "semantic_hash": "ad124f030156d8894865e6ca0ceab634"
+  },
+  "/Users/mercy/side-project/handover-wl/components/tickets/index.ts": {
+    "mtime": 1781069473.0723422,
+    "ast_hash": "1ca1b9a76614c829a2e4314dfdd818f9",
+    "semantic_hash": "1ca1b9a76614c829a2e4314dfdd818f9"
+  },
+  "/Users/mercy/side-project/handover-wl/components/tickets/mobile-ticket-card.tsx": {
+    "mtime": 1781069473.072412,
+    "ast_hash": "c8a9add72e009e3d9d6ba787369c4bee",
+    "semantic_hash": "c8a9add72e009e3d9d6ba787369c4bee"
+  },
+  "/Users/mercy/side-project/handover-wl/components/tickets/theme-styles.ts": {
+    "mtime": 1781069473.072487,
+    "ast_hash": "bfdddfae77d78670f61fc59101ceecab",
+    "semantic_hash": "bfdddfae77d78670f61fc59101ceecab"
+  },
+  "/Users/mercy/side-project/handover-wl/components/tickets/ticket-table-types.ts": {
+    "mtime": 1781069473.072544,
+    "ast_hash": "6b26f84734713f85f6f2b369763595ce",
+    "semantic_hash": "6b26f84734713f85f6f2b369763595ce"
+  },
+  "/Users/mercy/side-project/handover-wl/components/tickets/use-ticket-filters.ts": {
+    "mtime": 1781069473.072596,
+    "ast_hash": "7158469d0bbd91f2778ccfe50347b034",
+    "semantic_hash": "7158469d0bbd91f2778ccfe50347b034"
+  },
+  "/Users/mercy/side-project/handover-wl/components/trpc-provider.tsx": {
+    "mtime": 1781069473.072659,
+    "ast_hash": "c1e1e970b973389a29d606aefc7af251",
+    "semantic_hash": "c1e1e970b973389a29d606aefc7af251"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/badge.tsx": {
+    "mtime": 1781069473.0727642,
+    "ast_hash": "f9c097d427c421f83eb92772a4b8ec06",
+    "semantic_hash": "f9c097d427c421f83eb92772a4b8ec06"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/button.tsx": {
+    "mtime": 1781069473.0728269,
+    "ast_hash": "b0bc53e54c0d1fa6eb97894219a572a3",
+    "semantic_hash": "b0bc53e54c0d1fa6eb97894219a572a3"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/card.tsx": {
+    "mtime": 1781069473.0728898,
+    "ast_hash": "a8c37b8b2cb24a44f46cbae530c075af",
+    "semantic_hash": "a8c37b8b2cb24a44f46cbae530c075af"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/command.tsx": {
+    "mtime": 1781069473.0729415,
+    "ast_hash": "7dac2da616e29f2d3f2c2f2dc99b8482",
+    "semantic_hash": "7dac2da616e29f2d3f2c2f2dc99b8482"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/dialog.tsx": {
+    "mtime": 1781069473.073015,
+    "ast_hash": "7d22f2d04fb14d91b0d1928a60f6bc3b",
+    "semantic_hash": "7d22f2d04fb14d91b0d1928a60f6bc3b"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/input.tsx": {
+    "mtime": 1781069473.073067,
+    "ast_hash": "068fd12870d73308d506119c87b21108",
+    "semantic_hash": "068fd12870d73308d506119c87b21108"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/label.tsx": {
+    "mtime": 1781069473.0731146,
+    "ast_hash": "7ea839d3fa873fb063a9709a79e47561",
+    "semantic_hash": "7ea839d3fa873fb063a9709a79e47561"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/popover.tsx": {
+    "mtime": 1781069473.073184,
+    "ast_hash": "c8bf2474f9dd4584188af696af1fb0ad",
+    "semantic_hash": "c8bf2474f9dd4584188af696af1fb0ad"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/select.tsx": {
+    "mtime": 1781069473.0732522,
+    "ast_hash": "03ecf87b3b0eff2ad63d279e3a6b6b9f",
+    "semantic_hash": "03ecf87b3b0eff2ad63d279e3a6b6b9f"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/separator.tsx": {
+    "mtime": 1781069473.0733037,
+    "ast_hash": "85fd1a835601a122f1f226ccb31a0d67",
+    "semantic_hash": "85fd1a835601a122f1f226ccb31a0d67"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/switch.tsx": {
+    "mtime": 1781069473.0733633,
+    "ast_hash": "a5726b18e2e60130048b5662aa866034",
+    "semantic_hash": "a5726b18e2e60130048b5662aa866034"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/table.tsx": {
+    "mtime": 1781069473.073415,
+    "ast_hash": "2b8069e0fd3c01b58d8a98a70c7e7f4e",
+    "semantic_hash": "2b8069e0fd3c01b58d8a98a70c7e7f4e"
+  },
+  "/Users/mercy/side-project/handover-wl/components/ui/textarea.tsx": {
+    "mtime": 1781069473.0734823,
+    "ast_hash": "fb19dce4f1d33ed093b75db5cefed562",
+    "semantic_hash": "fb19dce4f1d33ed093b75db5cefed562"
+  },
+  "/Users/mercy/side-project/handover-wl/enums/backup.enum.ts": {
+    "mtime": 1781069473.0745692,
+    "ast_hash": "6dee6fbaf4480f16c30e6a82bb4936fe",
+    "semantic_hash": "6dee6fbaf4480f16c30e6a82bb4936fe"
+  },
+  "/Users/mercy/side-project/handover-wl/enums/comment.enum.ts": {
+    "mtime": 1781069473.0746334,
+    "ast_hash": "4df004bb1a2dbad8ac1afe43b7243de5",
+    "semantic_hash": "4df004bb1a2dbad8ac1afe43b7243de5"
+  },
+  "/Users/mercy/side-project/handover-wl/enums/feedback.enum.ts": {
+    "mtime": 1781069473.0747316,
+    "ast_hash": "f27e0fb359d69a5b9109f67057819a03",
+    "semantic_hash": "f27e0fb359d69a5b9109f67057819a03"
+  },
+  "/Users/mercy/side-project/handover-wl/enums/index.ts": {
+    "mtime": 1781069473.0748067,
+    "ast_hash": "f05dfc0fc50ab5b3f8d17c238ecd74d2",
+    "semantic_hash": "f05dfc0fc50ab5b3f8d17c238ecd74d2"
+  },
+  "/Users/mercy/side-project/handover-wl/enums/theme.enum.ts": {
+    "mtime": 1781069473.0748744,
+    "ast_hash": "ad6c08bb9f3ae2da694d905e2b4127df",
+    "semantic_hash": "ad6c08bb9f3ae2da694d905e2b4127df"
+  },
+  "/Users/mercy/side-project/handover-wl/eslint.config.mjs": {
+    "mtime": 1781069473.0749595,
+    "ast_hash": "339a0e93d9b85e52c4e19562b144b89f",
+    "semantic_hash": "339a0e93d9b85e52c4e19562b144b89f"
+  },
+  "/Users/mercy/side-project/handover-wl/handover_gui.py": {
+    "mtime": 1781069473.0750675,
+    "ast_hash": "73cc22642b651e6ee201cd428afc0319",
+    "semantic_hash": "73cc22642b651e6ee201cd428afc0319"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/index.ts": {
+    "mtime": 1781069473.07517,
+    "ast_hash": "74b3fc33c7426d2f1300f7d24f398c23",
+    "semantic_hash": "74b3fc33c7426d2f1300f7d24f398c23"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/theme/index.ts": {
+    "mtime": 1781069473.0752952,
+    "ast_hash": "ad7caf176eb6172534962f90167f3d96",
+    "semantic_hash": "ad7caf176eb6172534962f90167f3d96"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/theme/use-theme.ts": {
+    "mtime": 1781069473.0753622,
+    "ast_hash": "8c5af5554f4c60cb68f502ead75fdf43",
+    "semantic_hash": "8c5af5554f4c60cb68f502ead75fdf43"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/ticket/index.ts": {
+    "mtime": 1781069473.0754611,
+    "ast_hash": "0e687a9cec124493ad04c77a7a84006a",
+    "semantic_hash": "0e687a9cec124493ad04c77a7a84006a"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/ticket/use-ai-autofill.ts": {
+    "mtime": 1781069473.0755208,
+    "ast_hash": "a82b7e46c568ce7aab4117b9288a4e8b",
+    "semantic_hash": "a82b7e46c568ce7aab4117b9288a4e8b"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/ticket/use-release-date-tickets.ts": {
+    "mtime": 1781069473.0755956,
+    "ast_hash": "fccaa2c8b782a5fc0d8dad9f6d965aac",
+    "semantic_hash": "fccaa2c8b782a5fc0d8dad9f6d965aac"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/ticket/use-slack-integration.ts": {
+    "mtime": 1781069473.0756655,
+    "ast_hash": "20729acac216932c64fee7bb3c764f70",
+    "semantic_hash": "20729acac216932c64fee7bb3c764f70"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/ticket/use-ticket-actions.ts": {
+    "mtime": 1781069473.075741,
+    "ast_hash": "83cc639b1426788b8b1c76a4842fcea1",
+    "semantic_hash": "83cc639b1426788b8b1c76a4842fcea1"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/ticket/use-tickets.ts": {
+    "mtime": 1781069473.0757933,
+    "ast_hash": "ec9fef095313e511bde82920bb6f03af",
+    "semantic_hash": "ec9fef095313e511bde82920bb6f03af"
+  },
+  "/Users/mercy/side-project/handover-wl/hooks/use-challenge.ts": {
+    "mtime": 1781069473.0758507,
+    "ast_hash": "e891cdc30f090a518fabd395af8938ee",
+    "semantic_hash": "e891cdc30f090a518fabd395af8938ee"
+  },
+  "/Users/mercy/side-project/handover-wl/instrumentation.ts": {
+    "mtime": 1781069473.0759013,
+    "ast_hash": "2fedbc0c222dcb1f11bd00c02f5097de",
+    "semantic_hash": "2fedbc0c222dcb1f11bd00c02f5097de"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/common/backup.interface.ts": {
+    "mtime": 1781069473.0760434,
+    "ast_hash": "0ec3de078b06ca8ccbc9cc53f8c793a4",
+    "semantic_hash": "0ec3de078b06ca8ccbc9cc53f8c793a4"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/common/feedback.interface.ts": {
+    "mtime": 1781069473.0761,
+    "ast_hash": "bb5e6274ec01557edc242006ad9f50d5",
+    "semantic_hash": "bb5e6274ec01557edc242006ad9f50d5"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/common/index.ts": {
+    "mtime": 1781069473.0761504,
+    "ast_hash": "8c74dbbb80c079f44bc4ea2373f47fc0",
+    "semantic_hash": "8c74dbbb80c079f44bc4ea2373f47fc0"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/common/scheduled-comment.interface.ts": {
+    "mtime": 1781069473.0762045,
+    "ast_hash": "e1cabd28a49fcf2aad64eba1a4af6612",
+    "semantic_hash": "e1cabd28a49fcf2aad64eba1a4af6612"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/common/theme.interface.ts": {
+    "mtime": 1781069473.0762804,
+    "ast_hash": "43db592403bdad49dbc132fb9274897b",
+    "semantic_hash": "43db592403bdad49dbc132fb9274897b"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/common/ticket.interface.ts": {
+    "mtime": 1781069473.076333,
+    "ast_hash": "32b0c2903300b48c7c7cd51478869215",
+    "semantic_hash": "32b0c2903300b48c7c7cd51478869215"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/index.ts": {
+    "mtime": 1781069473.0763872,
+    "ast_hash": "838ef5b87453d68d8f43ae24a404cdc7",
+    "semantic_hash": "838ef5b87453d68d8f43ae24a404cdc7"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/request/backup.request.ts": {
+    "mtime": 1781069473.0764747,
+    "ast_hash": "18781b15cea72b22d125eb81fa3ce20b",
+    "semantic_hash": "18781b15cea72b22d125eb81fa3ce20b"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/request/feedback.request.ts": {
+    "mtime": 1781069473.0765598,
+    "ast_hash": "6cb7f2d31dea8f68a34cf46291f459e2",
+    "semantic_hash": "6cb7f2d31dea8f68a34cf46291f459e2"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/request/index.ts": {
+    "mtime": 1781069473.0766263,
+    "ast_hash": "122afe304e3f897f1207ff894c86ddfa",
+    "semantic_hash": "122afe304e3f897f1207ff894c86ddfa"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/request/scheduled-comment.request.ts": {
+    "mtime": 1781069473.0766873,
+    "ast_hash": "bfdbaafbd21d4423e0680972a3ddaa7c",
+    "semantic_hash": "bfdbaafbd21d4423e0680972a3ddaa7c"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/request/settings.request.ts": {
+    "mtime": 1781069473.0767434,
+    "ast_hash": "2b3eb49ea4e2febcebd980d80e0c50a9",
+    "semantic_hash": "2b3eb49ea4e2febcebd980d80e0c50a9"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/request/theme.request.ts": {
+    "mtime": 1781069473.0768187,
+    "ast_hash": "ee40e53cbd613e4c1bc20d09e1ab0c00",
+    "semantic_hash": "ee40e53cbd613e4c1bc20d09e1ab0c00"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/request/ticket.request.ts": {
+    "mtime": 1781069473.0768769,
+    "ast_hash": "be58445ebe2df3ebd0498cd28fa493c5",
+    "semantic_hash": "be58445ebe2df3ebd0498cd28fa493c5"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/response/api.response.ts": {
+    "mtime": 1781069473.0769732,
+    "ast_hash": "1629df51d5fcc0b53edd911a09b9af0c",
+    "semantic_hash": "1629df51d5fcc0b53edd911a09b9af0c"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/response/backup.response.ts": {
+    "mtime": 1781069473.0770302,
+    "ast_hash": "af658b72e2e97434d53e27991b02e548",
+    "semantic_hash": "af658b72e2e97434d53e27991b02e548"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/response/feedback.response.ts": {
+    "mtime": 1781069473.0771008,
+    "ast_hash": "e4abd4b5fe76823b88d15255a36337ed",
+    "semantic_hash": "e4abd4b5fe76823b88d15255a36337ed"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/response/index.ts": {
+    "mtime": 1781069473.0771558,
+    "ast_hash": "850caf49796bd70b7051578921c6075b",
+    "semantic_hash": "850caf49796bd70b7051578921c6075b"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/response/scheduled-comment.response.ts": {
+    "mtime": 1781069473.0772145,
+    "ast_hash": "5ae129f3d61eb992b090b1aed2c24958",
+    "semantic_hash": "5ae129f3d61eb992b090b1aed2c24958"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/response/settings.response.ts": {
+    "mtime": 1781069473.0772727,
+    "ast_hash": "04ecc3fb591ef113a61e1ecda3ffb228",
+    "semantic_hash": "04ecc3fb591ef113a61e1ecda3ffb228"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/response/theme.response.ts": {
+    "mtime": 1781069473.0773427,
+    "ast_hash": "6034f4455dd07852437cdf583db44404",
+    "semantic_hash": "6034f4455dd07852437cdf583db44404"
+  },
+  "/Users/mercy/side-project/handover-wl/interfaces/response/ticket.response.ts": {
+    "mtime": 1781069473.0773995,
+    "ast_hash": "4c82673ef83c357ff5383f93e7546c3c",
+    "semantic_hash": "4c82673ef83c357ff5383f93e7546c3c"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/api/index.ts": {
+    "mtime": 1781069473.0775256,
+    "ast_hash": "9e693249484621273759bdad3c7817a8",
+    "semantic_hash": "9e693249484621273759bdad3c7817a8"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/api/response.ts": {
+    "mtime": 1781069473.0775847,
+    "ast_hash": "afd502b2b4a63fe400d2e8bddd464473",
+    "semantic_hash": "afd502b2b4a63fe400d2e8bddd464473"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/auth/__tests__/jwt-runtime.test.ts": {
+    "mtime": 1781069473.077729,
+    "ast_hash": "17d57f93697c680a9eb429992478b4ca",
+    "semantic_hash": "17d57f93697c680a9eb429992478b4ca"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/auth/cookies.ts": {
+    "mtime": 1781069473.0777822,
+    "ast_hash": "6c51e2df49650ebca4154d2cded3426b",
+    "semantic_hash": "6c51e2df49650ebca4154d2cded3426b"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/auth/current-user.ts": {
+    "mtime": 1781069473.0778353,
+    "ast_hash": "8f06c6f78f72a99d5a6c1c4cc345ef82",
+    "semantic_hash": "8f06c6f78f72a99d5a6c1c4cc345ef82"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/auth/google.ts": {
+    "mtime": 1781069473.0778885,
+    "ast_hash": "864c99ec24b3110dbdefab3c8cb6bff5",
+    "semantic_hash": "864c99ec24b3110dbdefab3c8cb6bff5"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/auth/jwt.ts": {
+    "mtime": 1781069473.0779634,
+    "ast_hash": "4ed8509a0c9b22b4c95ec0de7573bfd2",
+    "semantic_hash": "4ed8509a0c9b22b4c95ec0de7573bfd2"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/config/index.ts": {
+    "mtime": 1781069473.0780983,
+    "ast_hash": "2e323fa2c8cda8f4059a39668a8b12e4",
+    "semantic_hash": "2e323fa2c8cda8f4059a39668a8b12e4"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/constants.ts": {
+    "mtime": 1781069473.0781512,
+    "ast_hash": "3a07e8d78528d204ab28b845e97905d8",
+    "semantic_hash": "3a07e8d78528d204ab28b845e97905d8"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/env.ts": {
+    "mtime": 1781069473.0782285,
+    "ast_hash": "6708b4f676c9a0395513547258ae78ca",
+    "semantic_hash": "6708b4f676c9a0395513547258ae78ca"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/health/health.service.ts": {
+    "mtime": 1781069473.0783226,
+    "ast_hash": "7d15eaa60285532ddc8463b350d8cebc",
+    "semantic_hash": "7d15eaa60285532ddc8463b350d8cebc"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/health/health.types.ts": {
+    "mtime": 1781069473.078376,
+    "ast_hash": "bf0df18f75a3d0124439d965bd827c02",
+    "semantic_hash": "bf0df18f75a3d0124439d965bd827c02"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/health/index.ts": {
+    "mtime": 1781069473.078421,
+    "ast_hash": "931a661d348e886707283314ddf6c1a3",
+    "semantic_hash": "931a661d348e886707283314ddf6c1a3"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/lazyhand-auth.ts": {
+    "mtime": 1781069473.0784907,
+    "ast_hash": "3ef5e518eb7dea4b050ed0bcd64e9492",
+    "semantic_hash": "3ef5e518eb7dea4b050ed0bcd64e9492"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/logger.ts": {
+    "mtime": 1781069473.0785553,
+    "ast_hash": "af7ca7ea3b17ad7f6d11943469162505",
+    "semantic_hash": "af7ca7ea3b17ad7f6d11943469162505"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/prisma.ts": {
+    "mtime": 1781069473.0786154,
+    "ast_hash": "b06c89fd88720475b5c56225c9789382",
+    "semantic_hash": "b06c89fd88720475b5c56225c9789382"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/scheduler.ts": {
+    "mtime": 1781069473.0786648,
+    "ast_hash": "9cf13e707e5700b6c5bb3425deaaec4a",
+    "semantic_hash": "9cf13e707e5700b6c5bb3425deaaec4a"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/scheduler/backup-scheduler.ts": {
+    "mtime": 1781069473.0787609,
+    "ast_hash": "0f96383c401df3ca0e628fc56dce6cb9",
+    "semantic_hash": "0f96383c401df3ca0e628fc56dce6cb9"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/scheduler/comment-scheduler.ts": {
+    "mtime": 1781069473.078809,
+    "ast_hash": "1a7591b41eed7945a99b9b5d63b0d3a0",
+    "semantic_hash": "1a7591b41eed7945a99b9b5d63b0d3a0"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/scheduler/cron-utils.ts": {
+    "mtime": 1781069473.0788686,
+    "ast_hash": "bdf89f0e627cf88b1a813eb6aa3e8be1",
+    "semantic_hash": "bdf89f0e627cf88b1a813eb6aa3e8be1"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/scheduler/index.ts": {
+    "mtime": 1781069473.078918,
+    "ast_hash": "2277c6d16ce51cfd8f392eefad8504e7",
+    "semantic_hash": "2277c6d16ce51cfd8f392eefad8504e7"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/scheduler/shift-scheduler.ts": {
+    "mtime": 1781069473.078985,
+    "ast_hash": "ed8fd1ddb1c23117730adc2ca6589a98",
+    "semantic_hash": "ed8fd1ddb1c23117730adc2ca6589a98"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/__tests__/ip-whitelist.test.ts": {
+    "mtime": 1781069473.0790973,
+    "ast_hash": "6cc8ecfdb12a83a20c62d322d1ec053a",
+    "semantic_hash": "6cc8ecfdb12a83a20c62d322d1ec053a"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/challenge.service.ts": {
+    "mtime": 1781069473.0791676,
+    "ast_hash": "4ae2976b8a76c19fd8467a2e9f077a26",
+    "semantic_hash": "4ae2976b8a76c19fd8467a2e9f077a26"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/client/challenge-manager.ts": {
+    "mtime": 1781069473.0792577,
+    "ast_hash": "b5a55c36d41d7eaff2528eb34d0f1d2f",
+    "semantic_hash": "b5a55c36d41d7eaff2528eb34d0f1d2f"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/client/fingerprint.ts": {
+    "mtime": 1781069473.0793335,
+    "ast_hash": "85c81b3529b740885bb4592bd58a6dc8",
+    "semantic_hash": "85c81b3529b740885bb4592bd58a6dc8"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/client/pow-solver.ts": {
+    "mtime": 1781069473.079386,
+    "ast_hash": "650a791fec9786ebb5c1e0f44f8b043c",
+    "semantic_hash": "650a791fec9786ebb5c1e0f44f8b043c"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/constants.ts": {
+    "mtime": 1781069473.0794358,
+    "ast_hash": "304e32c99f146730b5f7d199ad992c61",
+    "semantic_hash": "304e32c99f146730b5f7d199ad992c61"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/fingerprint.ts": {
+    "mtime": 1781069473.0794804,
+    "ast_hash": "e8acaa7e58f618f1e0f54b66ffd0cbce",
+    "semantic_hash": "e8acaa7e58f618f1e0f54b66ffd0cbce"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/ip-whitelist.ts": {
+    "mtime": 1781069473.0795622,
+    "ast_hash": "7b5f186d66c7752e2932ca61585d68f8",
+    "semantic_hash": "7b5f186d66c7752e2932ca61585d68f8"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/nonce.ts": {
+    "mtime": 1781069473.0796177,
+    "ast_hash": "fc961ba3c6053b38f41634baae13b99b",
+    "semantic_hash": "fc961ba3c6053b38f41634baae13b99b"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/pow.ts": {
+    "mtime": 1781069473.079668,
+    "ast_hash": "202bfc4ba0d104920ee514864961d3b6",
+    "semantic_hash": "202bfc4ba0d104920ee514864961d3b6"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/rate-limit.ts": {
+    "mtime": 1781069473.0797155,
+    "ast_hash": "a97af8a37b02454c886b2db88439e963",
+    "semantic_hash": "a97af8a37b02454c886b2db88439e963"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/slack-verify.ts": {
+    "mtime": 1781069473.0797873,
+    "ast_hash": "d16246103ed0a4b461208982325806a7",
+    "semantic_hash": "d16246103ed0a4b461208982325806a7"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/security/types.ts": {
+    "mtime": 1781069473.0798318,
+    "ast_hash": "d068886935810fa110a7969fb1ed5d5b",
+    "semantic_hash": "d068886935810fa110a7969fb1ed5d5b"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/backup-database.ts": {
+    "mtime": 1781069473.0799456,
+    "ast_hash": "b7c49cef5c139cf2d89edd5c98045d6b",
+    "semantic_hash": "b7c49cef5c139cf2d89edd5c98045d6b"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/database.ts": {
+    "mtime": 1781069473.0800135,
+    "ast_hash": "79ae9febbd3814c8b4039341bbd6050f",
+    "semantic_hash": "79ae9febbd3814c8b4039341bbd6050f"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/index.ts": {
+    "mtime": 1781069473.0800993,
+    "ast_hash": "3315d76cff750ba982a105d520f32db7",
+    "semantic_hash": "3315d76cff750ba982a105d520f32db7"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/jira.ts": {
+    "mtime": 1781069473.0802999,
+    "ast_hash": "d194193d94c13cdfc4b624b6deae0179",
+    "semantic_hash": "d194193d94c13cdfc4b624b6deae0179"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/scheduled-comment-database.ts": {
+    "mtime": 1781069473.0803528,
+    "ast_hash": "7ab7a73a47febeee7f004e682915dd26",
+    "semantic_hash": "7ab7a73a47febeee7f004e682915dd26"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/settings-database.ts": {
+    "mtime": 1781069473.080408,
+    "ast_hash": "038171ad7bc804fd7c8968179825b736",
+    "semantic_hash": "038171ad7bc804fd7c8968179825b736"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/slack-commands.ts": {
+    "mtime": 1781069473.0804863,
+    "ast_hash": "6ddb9c4ee176e23d65f576febf3220f9",
+    "semantic_hash": "6ddb9c4ee176e23d65f576febf3220f9"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/slack.ts": {
+    "mtime": 1781069473.0805447,
+    "ast_hash": "f50164e0339fe8e5e4a126b4e1820f8a",
+    "semantic_hash": "f50164e0339fe8e5e4a126b4e1820f8a"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/services/ticket-database.ts": {
+    "mtime": 1781069473.080595,
+    "ast_hash": "ba32cf82a10ac6348b3d5aaaa886221c",
+    "semantic_hash": "ba32cf82a10ac6348b3d5aaaa886221c"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/stores/theme-store.ts": {
+    "mtime": 1781069473.0806863,
+    "ast_hash": "42b229d9de575aabc62601463e347b60",
+    "semantic_hash": "42b229d9de575aabc62601463e347b60"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/__tests__/theme-config.test.ts": {
+    "mtime": 1781069473.0808349,
+    "ast_hash": "2adc6de01c8a19d5faa5f16f464afd98",
+    "semantic_hash": "2adc6de01c8a19d5faa5f16f464afd98"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/index.ts": {
+    "mtime": 1781069473.0808892,
+    "ast_hash": "21c4cffb27a898e8aaef8b6aecc97a31",
+    "semantic_hash": "21c4cffb27a898e8aaef8b6aecc97a31"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/theme-config.ts": {
+    "mtime": 1781069473.0809417,
+    "ast_hash": "c2d56a710afe502b6e9a984ec3e7095a",
+    "semantic_hash": "c2d56a710afe502b6e9a984ec3e7095a"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/angkor-pixel.ts": {
+    "mtime": 1781069473.0810504,
+    "ast_hash": "3ad56df8d037ce727a6b4fd33e0f28fd",
+    "semantic_hash": "3ad56df8d037ce727a6b4fd33e0f28fd"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/christmas.ts": {
+    "mtime": 1781069473.081137,
+    "ast_hash": "91138c042ff72b31b865b617ec606ec7",
+    "semantic_hash": "91138c042ff72b31b865b617ec606ec7"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/clash.ts": {
+    "mtime": 1781069473.081196,
+    "ast_hash": "a6154f231708825b398c19b75cb985ef",
+    "semantic_hash": "a6154f231708825b398c19b75cb985ef"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/coding.ts": {
+    "mtime": 1781069473.0812597,
+    "ast_hash": "de8380f7890c9178918a3c589f5d910e",
+    "semantic_hash": "de8380f7890c9178918a3c589f5d910e"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/default.ts": {
+    "mtime": 1781069473.0813258,
+    "ast_hash": "d6d3e875fdf223e867673ea565c1e3e3",
+    "semantic_hash": "d6d3e875fdf223e867673ea565c1e3e3"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/index.ts": {
+    "mtime": 1781069473.081402,
+    "ast_hash": "5c07aa26506596b8947177fbc7d129bb",
+    "semantic_hash": "5c07aa26506596b8947177fbc7d129bb"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/lunar.ts": {
+    "mtime": 1781069473.0814624,
+    "ast_hash": "bdfc06154815a9290cd42604e6a76186",
+    "semantic_hash": "bdfc06154815a9290cd42604e6a76186"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/pixel.ts": {
+    "mtime": 1781069473.0815184,
+    "ast_hash": "af2edd94d9bdbdcefddd74ef2cfc1823",
+    "semantic_hash": "af2edd94d9bdbdcefddd74ef2cfc1823"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/themes/sakura.ts": {
+    "mtime": 1781069473.0815794,
+    "ast_hash": "b322cab642f1de1fbd793769d7a18b92",
+    "semantic_hash": "b322cab642f1de1fbd793769d7a18b92"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/theme/types.ts": {
+    "mtime": 1781069473.0816584,
+    "ast_hash": "fb91fd53af65e6ed60e3938980337ccc",
+    "semantic_hash": "fb91fd53af65e6ed60e3938980337ccc"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/root.ts": {
+    "mtime": 1781069473.0817528,
+    "ast_hash": "1518bda39cac33e009cc826b2802bb6a",
+    "semantic_hash": "1518bda39cac33e009cc826b2802bb6a"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/__tests__/backup.router.test.ts": {
+    "mtime": 1781069473.0818975,
+    "ast_hash": "6197d3ce34b91855eea94cecc088c7c3",
+    "semantic_hash": "6197d3ce34b91855eea94cecc088c7c3"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/__tests__/feedback.router.test.ts": {
+    "mtime": 1781069473.0819669,
+    "ast_hash": "cabd424da3045075623b72b8e847d55b",
+    "semantic_hash": "cabd424da3045075623b72b8e847d55b"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/__tests__/scheduledComments.router.test.ts": {
+    "mtime": 1781069473.082041,
+    "ast_hash": "b834c2df323e167daa152d098af99317",
+    "semantic_hash": "b834c2df323e167daa152d098af99317"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/__tests__/ticketData.router.test.ts": {
+    "mtime": 1781069473.0820997,
+    "ast_hash": "e95602ae51ec52c521ca19a785762fe3",
+    "semantic_hash": "e95602ae51ec52c521ca19a785762fe3"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/ai.ts": {
+    "mtime": 1781069473.0821643,
+    "ast_hash": "355fc8e37dc032cd455601910fd292a6",
+    "semantic_hash": "355fc8e37dc032cd455601910fd292a6"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/backup.ts": {
+    "mtime": 1781069473.082223,
+    "ast_hash": "a87074cdb232f24e2055101453a0ce0b",
+    "semantic_hash": "a87074cdb232f24e2055101453a0ce0b"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/feedback.ts": {
+    "mtime": 1781069473.0823097,
+    "ast_hash": "fe87c132f59cde439e0f52dcfbb02bca",
+    "semantic_hash": "fe87c132f59cde439e0f52dcfbb02bca"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/scheduledComments.ts": {
+    "mtime": 1781069473.0823662,
+    "ast_hash": "7687497499f0233caee77804aa56c64a",
+    "semantic_hash": "7687497499f0233caee77804aa56c64a"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/scheduler.ts": {
+    "mtime": 1781069473.0824268,
+    "ast_hash": "89c14e97d350ccfc95fc4eb3fa0a7446",
+    "semantic_hash": "89c14e97d350ccfc95fc4eb3fa0a7446"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/settings.ts": {
+    "mtime": 1781069473.0824883,
+    "ast_hash": "d456ca54c4890a69c12301e982a037bc",
+    "semantic_hash": "d456ca54c4890a69c12301e982a037bc"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/slack.ts": {
+    "mtime": 1781069473.082573,
+    "ast_hash": "58040ba9c59937c969423aea3e3b5386",
+    "semantic_hash": "58040ba9c59937c969423aea3e3b5386"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/ticketData.ts": {
+    "mtime": 1781069473.0826561,
+    "ast_hash": "a4bfe672edf740d6b3f680ecaaa8f520",
+    "semantic_hash": "a4bfe672edf740d6b3f680ecaaa8f520"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/routers/tickets.ts": {
+    "mtime": 1781069473.0827155,
+    "ast_hash": "9ae5cc1347878a114cd5defb68b721a3",
+    "semantic_hash": "9ae5cc1347878a114cd5defb68b721a3"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/trpc/server.ts": {
+    "mtime": 1781069473.082776,
+    "ast_hash": "b1e60c89117850bf7840591cd29e4512",
+    "semantic_hash": "b1e60c89117850bf7840591cd29e4512"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/__tests__/theme.test.ts": {
+    "mtime": 1781069473.083011,
+    "ast_hash": "bd7fe4ecce950fe9330d93cf47f9e027",
+    "semantic_hash": "bd7fe4ecce950fe9330d93cf47f9e027"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/ai-autofill.ts": {
+    "mtime": 1781069473.08307,
+    "ast_hash": "3b579dcef8f6951f43fb05a277340e25",
+    "semantic_hash": "3b579dcef8f6951f43fb05a277340e25"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/api.ts": {
+    "mtime": 1781069473.0831351,
+    "ast_hash": "d2e489f758ebd597189661cd1a2428c1",
+    "semantic_hash": "d2e489f758ebd597189661cd1a2428c1"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/backup.ts": {
+    "mtime": 1781069473.0832033,
+    "ast_hash": "9fe53b32d7c99893466b5c317c49b782",
+    "semantic_hash": "9fe53b32d7c99893466b5c317c49b782"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/feedback.ts": {
+    "mtime": 1781069473.083295,
+    "ast_hash": "27acd9803443d06e50f075ee93cf6dbb",
+    "semantic_hash": "27acd9803443d06e50f075ee93cf6dbb"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/index.ts": {
+    "mtime": 1781069473.0833602,
+    "ast_hash": "da96fd8324ee39db318d3743571d79c6",
+    "semantic_hash": "da96fd8324ee39db318d3743571d79c6"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/scheduled-comment.ts": {
+    "mtime": 1781069473.0834293,
+    "ast_hash": "b581c5a8138a5ac4aeaa7ea8e9d27eff",
+    "semantic_hash": "b581c5a8138a5ac4aeaa7ea8e9d27eff"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/slack.ts": {
+    "mtime": 1781069473.0834956,
+    "ast_hash": "4aec86cbcecc3e4ee2d9005f4c2bdc9f",
+    "semantic_hash": "4aec86cbcecc3e4ee2d9005f4c2bdc9f"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/theme.ts": {
+    "mtime": 1781069473.0835752,
+    "ast_hash": "a3e071660484797c933b4515d750aa78",
+    "semantic_hash": "a3e071660484797c933b4515d750aa78"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/types/ticket.ts": {
+    "mtime": 1781069473.0836384,
+    "ast_hash": "98caa733fd259422ad536cd5fc5f2171",
+    "semantic_hash": "98caa733fd259422ad536cd5fc5f2171"
+  },
+  "/Users/mercy/side-project/handover-wl/lib/utils.ts": {
+    "mtime": 1781069473.083705,
+    "ast_hash": "ea1c194ee828369e6fcdde84b4d8b8ba",
+    "semantic_hash": "ea1c194ee828369e6fcdde84b4d8b8ba"
+  },
+  "/Users/mercy/side-project/handover-wl/middleware.ts": {
+    "mtime": 1781069473.0837843,
+    "ast_hash": "bac96037544f4fc1f2a529ac655b3d62",
+    "semantic_hash": "bac96037544f4fc1f2a529ac655b3d62"
+  },
+  "/Users/mercy/side-project/handover-wl/next.config.js": {
+    "mtime": 1781069473.0838697,
+    "ast_hash": "2b4d32a0d3096c31067a14839c594793",
+    "semantic_hash": "2b4d32a0d3096c31067a14839c594793"
+  },
+  "/Users/mercy/side-project/handover-wl/package.json": {
+    "mtime": 1781069473.0848093,
+    "ast_hash": "250fbaade8b7ad19591aafdbd6898008",
+    "semantic_hash": "250fbaade8b7ad19591aafdbd6898008"
+  },
+  "/Users/mercy/side-project/handover-wl/postcss.config.js": {
+    "mtime": 1781069473.08489,
+    "ast_hash": "8640f9b2e6475cc3f5b1ff4548925765",
+    "semantic_hash": "8640f9b2e6475cc3f5b1ff4548925765"
+  },
+  "/Users/mercy/side-project/handover-wl/prisma.config.ts": {
+    "mtime": 1781069473.0849457,
+    "ast_hash": "d87b65826bba324bc4e7f378083dfce0",
+    "semantic_hash": "d87b65826bba324bc4e7f378083dfce0"
+  },
+  "/Users/mercy/side-project/handover-wl/prisma/sql/add-auth.sql": {
+    "mtime": 1781069473.0851252,
+    "ast_hash": "e5cbdf5a84ea53b8ab11c0fa5c45e14d",
+    "semantic_hash": "e5cbdf5a84ea53b8ab11c0fa5c45e14d"
+  },
+  "/Users/mercy/side-project/handover-wl/public/pow-worker.js": {
+    "mtime": 1781069473.1251829,
+    "ast_hash": "557a99d58ab476456c346342a64b2430",
+    "semantic_hash": "557a99d58ab476456c346342a64b2430"
+  },
+  "/Users/mercy/side-project/handover-wl/railway.json": {
+    "mtime": 1781069473.125254,
+    "ast_hash": "324f86844dad185003700652463d1798",
+    "semantic_hash": "324f86844dad185003700652463d1798"
+  },
+  "/Users/mercy/side-project/handover-wl/schemas/backup.schema.ts": {
+    "mtime": 1781069473.1253438,
+    "ast_hash": "6aa3c0f00215c12e31ae00de554de079",
+    "semantic_hash": "6aa3c0f00215c12e31ae00de554de079"
+  },
+  "/Users/mercy/side-project/handover-wl/schemas/feedback.schema.ts": {
+    "mtime": 1781069473.1254058,
+    "ast_hash": "2d54b314158caebf32d43062f3fa6283",
+    "semantic_hash": "2d54b314158caebf32d43062f3fa6283"
+  },
+  "/Users/mercy/side-project/handover-wl/schemas/scheduled-comment.schema.ts": {
+    "mtime": 1781069473.125462,
+    "ast_hash": "be296bd8a31475f86067b0d68f890255",
+    "semantic_hash": "be296bd8a31475f86067b0d68f890255"
+  },
+  "/Users/mercy/side-project/handover-wl/schemas/settings.schema.ts": {
+    "mtime": 1781069473.1255183,
+    "ast_hash": "c9c394c23b5a46507897092f1c70546c",
+    "semantic_hash": "c9c394c23b5a46507897092f1c70546c"
+  },
+  "/Users/mercy/side-project/handover-wl/scripts/build-lazyhand-app.sh": {
+    "mtime": 1781069473.1256037,
+    "ast_hash": "36bbb183de2a801e291ec95e5e72dc61",
+    "semantic_hash": "36bbb183de2a801e291ec95e5e72dc61"
+  },
+  "/Users/mercy/side-project/handover-wl/scripts/build-lazyhand-dmg.sh": {
+    "mtime": 1781069473.125659,
+    "ast_hash": "8a57ca597f2b7e8d01aa85cf64e862ec",
+    "semantic_hash": "8a57ca597f2b7e8d01aa85cf64e862ec"
+  },
+  "/Users/mercy/side-project/handover-wl/scripts/handover-gui.sh": {
+    "mtime": 1781069473.1257124,
+    "ast_hash": "87610a011b9f382a181383b40f34f858",
+    "semantic_hash": "87610a011b9f382a181383b40f34f858"
+  },
+  "/Users/mercy/side-project/handover-wl/scripts/handover.mjs": {
+    "mtime": 1781069473.1257765,
+    "ast_hash": "0f29cc564138e80c36dce0c3aea1ab47",
+    "semantic_hash": "0f29cc564138e80c36dce0c3aea1ab47"
+  },
+  "/Users/mercy/side-project/handover-wl/scripts/install-cli.sh": {
+    "mtime": 1781069473.1258256,
+    "ast_hash": "3164e19b7fda38c836f8e9f0dba2fab2",
+    "semantic_hash": "3164e19b7fda38c836f8e9f0dba2fab2"
+  },
+  "/Users/mercy/side-project/handover-wl/scripts/lazyhand-ui.mjs": {
+    "mtime": 1781069473.126102,
+    "ast_hash": "b011cf2155b654f57700e747d88bb8ea",
+    "semantic_hash": "b011cf2155b654f57700e747d88bb8ea"
+  },
+  "/Users/mercy/side-project/handover-wl/scripts/setup-lazyhand-macos.sh": {
+    "mtime": 1781069473.1261868,
+    "ast_hash": "ce6237aa5070329da26ab146274a3b97",
+    "semantic_hash": "ce6237aa5070329da26ab146274a3b97"
+  },
+  "/Users/mercy/side-project/handover-wl/scripts/setup-lazyhand-ui-macos.sh": {
+    "mtime": 1781069473.1262379,
+    "ast_hash": "75951490742ac63e8d00892158b799ce",
+    "semantic_hash": "75951490742ac63e8d00892158b799ce"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/__tests__/feedback.repository.test.ts": {
+    "mtime": 1781069473.1264193,
+    "ast_hash": "646e63a730e521d462270955b4161ea9",
+    "semantic_hash": "646e63a730e521d462270955b4161ea9"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/__tests__/scheduled-comment.repository.test.ts": {
+    "mtime": 1781069473.12648,
+    "ast_hash": "7de488cf0f94d86a13d57a0ff5802ec1",
+    "semantic_hash": "7de488cf0f94d86a13d57a0ff5802ec1"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/__tests__/ticket.repository.test.ts": {
+    "mtime": 1781069473.1265507,
+    "ast_hash": "74cf026b608f9ee286742a8c50d66288",
+    "semantic_hash": "74cf026b608f9ee286742a8c50d66288"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/backup.repository.ts": {
+    "mtime": 1781069473.1266167,
+    "ast_hash": "d0e58d0ba86135ae35d44c7fc62c2a45",
+    "semantic_hash": "d0e58d0ba86135ae35d44c7fc62c2a45"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/database.repository.ts": {
+    "mtime": 1781069473.1266696,
+    "ast_hash": "980d8788de66bbf5461823ed0ca7d6f3",
+    "semantic_hash": "980d8788de66bbf5461823ed0ca7d6f3"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/feedback.repository.ts": {
+    "mtime": 1781069473.1268554,
+    "ast_hash": "e44e1ce431c5259b51c4675c7fa7482c",
+    "semantic_hash": "e44e1ce431c5259b51c4675c7fa7482c"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/scheduled-comment.repository.ts": {
+    "mtime": 1781069473.1272526,
+    "ast_hash": "2b59aaad849ad49bb13b3527786c7ffc",
+    "semantic_hash": "2b59aaad849ad49bb13b3527786c7ffc"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/settings.repository.ts": {
+    "mtime": 1781069473.1273663,
+    "ast_hash": "e350830c17420a75612f0e8508aacbae",
+    "semantic_hash": "e350830c17420a75612f0e8508aacbae"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/theme.repository.ts": {
+    "mtime": 1781069473.1274424,
+    "ast_hash": "1312af1f8fa714412a2b12bc30c62114",
+    "semantic_hash": "1312af1f8fa714412a2b12bc30c62114"
+  },
+  "/Users/mercy/side-project/handover-wl/server/repository/ticket.repository.ts": {
+    "mtime": 1781069473.1275125,
+    "ast_hash": "845fa20747543959ea94fe6ada2c8cc0",
+    "semantic_hash": "845fa20747543959ea94fe6ada2c8cc0"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/__tests__/scheduled-comment.service.test.ts": {
+    "mtime": 1781069473.1276755,
+    "ast_hash": "da425a7fe0f5f04d471ecd184aa2655f",
+    "semantic_hash": "da425a7fe0f5f04d471ecd184aa2655f"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/__tests__/slack-formatter.service.test.ts": {
+    "mtime": 1781069473.1277514,
+    "ast_hash": "66088e7f9ac51a52f4467a6ac57b1a4d",
+    "semantic_hash": "66088e7f9ac51a52f4467a6ac57b1a4d"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/__tests__/ticket.service.test.ts": {
+    "mtime": 1781069473.127814,
+    "ast_hash": "3426125ae5278e55b14acd836c65ae03",
+    "semantic_hash": "3426125ae5278e55b14acd836c65ae03"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/ai-autofill.service.ts": {
+    "mtime": 1781069473.1278827,
+    "ast_hash": "896a038a13364ccfb9bb65ee8161286b",
+    "semantic_hash": "896a038a13364ccfb9bb65ee8161286b"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/ai-prompt.service.ts": {
+    "mtime": 1781069473.12797,
+    "ast_hash": "09a875795b39ae2ba6ba894b2f4cdff3",
+    "semantic_hash": "09a875795b39ae2ba6ba894b2f4cdff3"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/auth.service.ts": {
+    "mtime": 1781069473.1280346,
+    "ast_hash": "9cda2861455b53131121a5a3e5fa6f19",
+    "semantic_hash": "9cda2861455b53131121a5a3e5fa6f19"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/backup.service.ts": {
+    "mtime": 1781069473.1281097,
+    "ast_hash": "9b862cad0416da127dd6ae23508aff75",
+    "semantic_hash": "9b862cad0416da127dd6ae23508aff75"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/feedback.service.ts": {
+    "mtime": 1781069473.1281796,
+    "ast_hash": "6f4af1f849e03a55c9455a1250ff8f1d",
+    "semantic_hash": "6f4af1f849e03a55c9455a1250ff8f1d"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/handover-ai.service.ts": {
+    "mtime": 1781069473.1282494,
+    "ast_hash": "f9542b581901da28ba0d100141c0a3b7",
+    "semantic_hash": "f9542b581901da28ba0d100141c0a3b7"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/handover.service.ts": {
+    "mtime": 1781069473.1283114,
+    "ast_hash": "98895d436b7d8e5cff00834045586d3e",
+    "semantic_hash": "98895d436b7d8e5cff00834045586d3e"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/index.ts": {
+    "mtime": 1781069473.1283708,
+    "ast_hash": "878faa90338007623567f5c6826eaa49",
+    "semantic_hash": "878faa90338007623567f5c6826eaa49"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/jira-history.service.ts": {
+    "mtime": 1781069473.1284447,
+    "ast_hash": "d70977c826595a43a8ec218f8477820f",
+    "semantic_hash": "d70977c826595a43a8ec218f8477820f"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/scheduled-comment.service.ts": {
+    "mtime": 1781069473.1285264,
+    "ast_hash": "d02ddee5f9057a9760c18b4b0cd4599d",
+    "semantic_hash": "d02ddee5f9057a9760c18b4b0cd4599d"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/settings.service.ts": {
+    "mtime": 1781069473.1286,
+    "ast_hash": "a5c2cf83d6f59bf769716405fa225a68",
+    "semantic_hash": "a5c2cf83d6f59bf769716405fa225a68"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/slack-formatter.service.ts": {
+    "mtime": 1781069473.1286707,
+    "ast_hash": "105ec885370ca4981e0e66c9c96f26b9",
+    "semantic_hash": "105ec885370ca4981e0e66c9c96f26b9"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/slack-messaging.service.ts": {
+    "mtime": 1781069473.1287339,
+    "ast_hash": "984d04fe7e938adbb0aac54eaf2674eb",
+    "semantic_hash": "984d04fe7e938adbb0aac54eaf2674eb"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/theme.service.ts": {
+    "mtime": 1781069473.1287992,
+    "ast_hash": "c0ee22609103061b3ff3e5b39738a0a3",
+    "semantic_hash": "c0ee22609103061b3ff3e5b39738a0a3"
+  },
+  "/Users/mercy/side-project/handover-wl/server/services/ticket.service.ts": {
+    "mtime": 1781069473.128866,
+    "ast_hash": "901d2fa7418b5dcb5c64acc42f27e94b",
+    "semantic_hash": "901d2fa7418b5dcb5c64acc42f27e94b"
+  },
+  "/Users/mercy/side-project/handover-wl/server/trpc/routers/theme.router.ts": {
+    "mtime": 1781069473.1290076,
+    "ast_hash": "c1526b0f37db8fd458e94b4e4ebc20ce",
+    "semantic_hash": "c1526b0f37db8fd458e94b4e4ebc20ce"
+  },
+  "/Users/mercy/side-project/handover-wl/server/trpc/server.ts": {
+    "mtime": 1781069473.1290658,
+    "ast_hash": "d5c6771982fa28eb60423cea60ba7322",
+    "semantic_hash": "d5c6771982fa28eb60423cea60ba7322"
+  },
+  "/Users/mercy/side-project/handover-wl/tailwind.config.ts": {
+    "mtime": 1781069473.1291358,
+    "ast_hash": "bbe24851f6468359d820eb6b6d5e034b",
+    "semantic_hash": "bbe24851f6468359d820eb6b6d5e034b"
+  },
+  "/Users/mercy/side-project/handover-wl/ticket_data.json": {
+    "mtime": 1781069473.1292994,
+    "ast_hash": "ec704ceb5bd6da59d44c66634b55a862",
+    "semantic_hash": "ec704ceb5bd6da59d44c66634b55a862"
+  },
+  "/Users/mercy/side-project/handover-wl/tsconfig.json": {
+    "mtime": 1781069473.1293795,
+    "ast_hash": "7831df54b0184c9a88a681bd02b3e9e4",
+    "semantic_hash": "7831df54b0184c9a88a681bd02b3e9e4"
+  },
+  "/Users/mercy/side-project/handover-wl/vercel.json": {
+    "mtime": 1781069473.1294386,
+    "ast_hash": "def95e5519e9c9509b1cffc4522bba23",
+    "semantic_hash": "def95e5519e9c9509b1cffc4522bba23"
+  },
+  "/Users/mercy/side-project/handover-wl/vitest.config.ts": {
+    "mtime": 1781069473.129499,
+    "ast_hash": "95c1dd792588bded0dad0343e09d97b2",
+    "semantic_hash": "95c1dd792588bded0dad0343e09d97b2"
+  },
+  "/Users/mercy/side-project/handover-wl/vitest.setup.ts": {
+    "mtime": 1781069473.1295671,
+    "ast_hash": "ac377241a923b83d57d98f8bfb6e9f94",
+    "semantic_hash": "ac377241a923b83d57d98f8bfb6e9f94"
+  },
+  "/Users/mercy/side-project/handover-wl/.claude/commands/check-file-size.md": {
+    "mtime": 1781069473.0160444,
+    "ast_hash": "eb8b4b30d8db25f268ed38fa7e3ba9ad",
+    "semantic_hash": "eb8b4b30d8db25f268ed38fa7e3ba9ad"
+  },
+  "/Users/mercy/side-project/handover-wl/.claude/commands/feature.md": {
+    "mtime": 1781069473.0162039,
+    "ast_hash": "57a4f03c068290eb811c21db35461cd6",
+    "semantic_hash": "57a4f03c068290eb811c21db35461cd6"
+  },
+  "/Users/mercy/side-project/handover-wl/.claude/commands/new-api.md": {
+    "mtime": 1781069473.0162933,
+    "ast_hash": "39f9602fe43918760c159f00d04266cc",
+    "semantic_hash": "39f9602fe43918760c159f00d04266cc"
+  },
+  "/Users/mercy/side-project/handover-wl/.claude/commands/refactor-check.md": {
+    "mtime": 1781069473.0163906,
+    "ast_hash": "4c39aaaaaec42d8cef1301f0d4ca0469",
+    "semantic_hash": "4c39aaaaaec42d8cef1301f0d4ca0469"
+  },
+  "/Users/mercy/side-project/handover-wl/.claude/docs/nextjs-best-practices-2025.md": {
+    "mtime": 1781069473.016566,
+    "ast_hash": "430ce664ff55f80d10732788d37ce97a",
+    "semantic_hash": "430ce664ff55f80d10732788d37ce97a"
+  },
+  "/Users/mercy/side-project/handover-wl/.github/workflows/ci.yml": {
+    "mtime": 1781069473.0172126,
+    "ast_hash": "bffc98bc78408c761d3a70f75a58b206",
+    "semantic_hash": "bffc98bc78408c761d3a70f75a58b206"
+  },
+  "/Users/mercy/side-project/handover-wl/.serena/memories/architecture-guide.md": {
+    "mtime": 1781069473.0295184,
+    "ast_hash": "4a8f7f3210fab2e99c8cf6fd500c6fb4",
+    "semantic_hash": "4a8f7f3210fab2e99c8cf6fd500c6fb4"
+  },
+  "/Users/mercy/side-project/handover-wl/.serena/memories/clean-code-standards.md": {
+    "mtime": 1781069473.029599,
+    "ast_hash": "2a593979ba139f9f3d55ec6effdfad98",
+    "semantic_hash": "2a593979ba139f9f3d55ec6effdfad98"
+  },
+  "/Users/mercy/side-project/handover-wl/.serena/memories/jira-slack-integration-infrastructure.md": {
+    "mtime": 1781069473.0296938,
+    "ast_hash": "95c460091aac6c6b9e46b3224cda729b",
+    "semantic_hash": "95c460091aac6c6b9e46b3224cda729b"
+  },
+  "/Users/mercy/side-project/handover-wl/.serena/memories/nextjs-best-practices-2025.md": {
+    "mtime": 1781069473.0297978,
+    "ast_hash": "430ce664ff55f80d10732788d37ce97a",
+    "semantic_hash": "430ce664ff55f80d10732788d37ce97a"
+  },
+  "/Users/mercy/side-project/handover-wl/.serena/memories/project-overview.md": {
+    "mtime": 1781069473.0298815,
+    "ast_hash": "fbae2a7906778c13ec33b306999cd289",
+    "semantic_hash": "fbae2a7906778c13ec33b306999cd289"
+  },
+  "/Users/mercy/side-project/handover-wl/.serena/memories/refactoring-roadmap.md": {
+    "mtime": 1781069473.0299735,
+    "ast_hash": "4e73902948190fe6433c4fa37f8d15cf",
+    "semantic_hash": "4e73902948190fe6433c4fa37f8d15cf"
+  },
+  "/Users/mercy/side-project/handover-wl/.serena/memories/theme-integration-checklist.md": {
+    "mtime": 1781069473.0300694,
+    "ast_hash": "c00f9004c922c35757445dff0764b1a0",
+    "semantic_hash": "c00f9004c922c35757445dff0764b1a0"
+  },
+  "/Users/mercy/side-project/handover-wl/.serena/project.yml": {
+    "mtime": 1781069473.0301692,
+    "ast_hash": "9c2695dc636f15b994c106847c875d99",
+    "semantic_hash": "9c2695dc636f15b994c106847c875d99"
+  },
+  "/Users/mercy/side-project/handover-wl/CLAUDE.md": {
+    "mtime": 1781069473.0510502,
+    "ast_hash": "9a12d7df207577e250eadefd7b3e8759",
+    "semantic_hash": "9a12d7df207577e250eadefd7b3e8759"
+  },
+  "/Users/mercy/side-project/handover-wl/CONTRIBUTING.md": {
+    "mtime": 1781069473.0511236,
+    "ast_hash": "6a2e68ed27ce6a157554b336d1bf82cf",
+    "semantic_hash": "6a2e68ed27ce6a157554b336d1bf82cf"
+  },
+  "/Users/mercy/side-project/handover-wl/FRONTEND-BEST-PRACTICES.md": {
+    "mtime": 1781069473.0563598,
+    "ast_hash": "ec53dedd06bd5bad8f63994c083b51f0",
+    "semantic_hash": "ec53dedd06bd5bad8f63994c083b51f0"
+  },
+  "/Users/mercy/side-project/handover-wl/LazyhandBar/README.md": {
+    "mtime": 1781069473.0594153,
+    "ast_hash": "e7b62fe816065736f1bec576e9fe0144",
+    "semantic_hash": "e7b62fe816065736f1bec576e9fe0144"
+  },
+  "/Users/mercy/side-project/handover-wl/README.md": {
+    "mtime": 1781069473.0597775,
+    "ast_hash": "c9d229e8836afbf3ad06e6f1ac03d2e2",
+    "semantic_hash": "c9d229e8836afbf3ad06e6f1ac03d2e2"
+  },
+  "/Users/mercy/side-project/handover-wl/SECURITY.md": {
+    "mtime": 1781069473.0598373,
+    "ast_hash": "7faa88c526b15eb052b9dbbc83cdb0cd",
+    "semantic_hash": "7faa88c526b15eb052b9dbbc83cdb0cd"
+  },
+  "/Users/mercy/side-project/handover-wl/SPECKIT.md": {
+    "mtime": 1781069473.0598915,
+    "ast_hash": "a0151c633803d4fdcd3c37d21f90faf8",
+    "semantic_hash": "a0151c633803d4fdcd3c37d21f90faf8"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/API.md": {
+    "mtime": 1781069473.0735757,
+    "ast_hash": "4ddc8f2e8187c750897a656090910990",
+    "semantic_hash": "4ddc8f2e8187c750897a656090910990"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/CODEMAPS/api-routes.md": {
+    "mtime": 1781069473.073792,
+    "ast_hash": "426d675684042c74dbee766e4f65dc51",
+    "semantic_hash": "426d675684042c74dbee766e4f65dc51"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/CODEMAPS/components.md": {
+    "mtime": 1781069473.073981,
+    "ast_hash": "553f5d459c83163d5f28b50becf35b83",
+    "semantic_hash": "553f5d459c83163d5f28b50becf35b83"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/CODEMAPS/services.md": {
+    "mtime": 1781069473.0740747,
+    "ast_hash": "021153ec6bdbccfabdf42f031ca4aa44",
+    "semantic_hash": "021153ec6bdbccfabdf42f031ca4aa44"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/DATABASE.md": {
+    "mtime": 1781069473.074148,
+    "ast_hash": "bc61d1b724bc6dffa6a049fa67fdabce",
+    "semantic_hash": "bc61d1b724bc6dffa6a049fa67fdabce"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/sakura-asset-manifest.md": {
+    "mtime": 1781069473.0742064,
+    "ast_hash": "96d03a2557533c6b4361899037d3883c",
+    "semantic_hash": "96d03a2557533c6b4361899037d3883c"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/superpowers/plans/2026-04-09-token-effective-claude-ecosystem.md": {
+    "mtime": 1781069473.0743144,
+    "ast_hash": "59bb6badacda9dcc60a7fb4a2054f9f2",
+    "semantic_hash": "59bb6badacda9dcc60a7fb4a2054f9f2"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/superpowers/plans/2026-04-26-sakura-theme-finish.md": {
+    "mtime": 1781069473.074405,
+    "ast_hash": "d6b7f5566018b430381c178629cb41aa",
+    "semantic_hash": "d6b7f5566018b430381c178629cb41aa"
+  },
+  "/Users/mercy/side-project/handover-wl/docs/superpowers/specs/2026-04-09-token-effective-claude-ecosystem-design.md": {
+    "mtime": 1781069473.0744913,
+    "ast_hash": "4c4bc41a16ef8c2a93eecfa404f40b49",
+    "semantic_hash": "4c4bc41a16ef8c2a93eecfa404f40b49"
+  }
+}
